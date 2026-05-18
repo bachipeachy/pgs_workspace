@@ -1,0 +1,55 @@
+{
+  "artifact_code": "CONSTITUTION_INTENT_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_INTENT_V0\n\n## Machine\n```yaml\nfqdn: fb.topology::CONSTITUTION_INTENT_V0\nconstitution_code: CONSTITUTION_INTENT_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  description: Governs system entry points and payload schema validation\n  scope: artifact\n  governs:\n    - IN\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: IN_SCHEMA_REQUIRED\n    applies_to: IN\n    constraint: intent MUST define an input schema\n    enforced_by: ASSERT_IN_SCHEMA_REQUIRED_V0\n\n  - rule_id: IN_NO_EXECUTION_LOGIC\n    applies_to: IN\n    constraint: intent MUST NOT contain execution logic; it is an admission gate only\n    enforced_by: ASSERT_IN_NO_EXECUTION_LOGIC_V0\n\n  - rule_id: IN_WORKFLOW_BINDING\n    applies_to: IN\n    constraint: intent MUST map to exactly one workflow\n    enforced_by: ASSERT_IN_WORKFLOW_BINDING_V0\n\n  - rule_id: IN_FQDN_REFERENCES\n    applies_to: IN\n    constraint: all artifact references in intent MUST use FQDN\n    enforced_by: ASSERT_FQDN_ONLY_REFERENCES_V0\n```\n\n---\n\n## 1. Purpose\n\nThis constitution defines the governance and enforcement rules for Intent (IN) artifacts.\n\nIntents are the declared entry points of the protocol. They define the input schema for a workflow invocation and act as the admission gate \u2014 validating that incoming payloads meet the declared preconditions before execution begins.\n\n---\n\n## 2. Core Principles\n\n- **Schema Required:** Every intent MUST define a schema that incoming payloads must conform to.\n- **No Execution Logic:** Intents declare admission conditions only. They MUST NOT encode routing, transformation, or side-effect logic.\n- **Single Workflow Binding:** Each intent maps to exactly one workflow. One-to-one binding is required.\n- **FQDN References:** All artifact references within an intent MUST use fully-qualified names.\n\n---\n\n## 3. Required Fields\n\n- `in_code`: Unique identifier for the intent.\n- `version`: Version of the intent artifact.\n- `governed_by`: The constitution governing this intent.\n- `core`: Metadata including summary and input schema declaration.\n\n---\n\n## 4. Validation Rules\n\n- Intent MUST declare an input schema with at least one field.\n- Intent MUST reference its target workflow via FQDN.\n- Intent MUST NOT contain conditional logic or transformation expressions.\n\n---\n\n## End of Constitution\n",
+  "content_hash": "59fce93782530d73df90696afd853778767653bfe03c54bce1ea0476bb826a10",
+  "fqdn_id": "fb.topology::CONSTITUTION_INTENT_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_INTENT_V0",
+    "core": {
+      "description": "Governs system entry points and payload schema validation",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "IN"
+      ],
+      "scope": "artifact"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_INTENT_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "rules": [
+      {
+        "applies_to": "IN",
+        "constraint": "intent MUST define an input schema",
+        "enforced_by": "ASSERT_IN_SCHEMA_REQUIRED_V0",
+        "rule_id": "IN_SCHEMA_REQUIRED"
+      },
+      {
+        "applies_to": "IN",
+        "constraint": "intent MUST NOT contain execution logic; it is an admission gate only",
+        "enforced_by": "ASSERT_IN_NO_EXECUTION_LOGIC_V0",
+        "rule_id": "IN_NO_EXECUTION_LOGIC"
+      },
+      {
+        "applies_to": "IN",
+        "constraint": "intent MUST map to exactly one workflow",
+        "enforced_by": "ASSERT_IN_WORKFLOW_BINDING_V0",
+        "rule_id": "IN_WORKFLOW_BINDING"
+      },
+      {
+        "applies_to": "IN",
+        "constraint": "all artifact references in intent MUST use FQDN",
+        "enforced_by": "ASSERT_FQDN_ONLY_REFERENCES_V0",
+        "rule_id": "IN_FQDN_REFERENCES"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

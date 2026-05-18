@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TRANSPORT_TARGET_EXISTS_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TRANSPORT_TARGET_EXISTS_V0\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TRANSPORT_TARGET_EXISTS_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_transport_target_exists_v0\n  callable: execute\n```\n\n---\n\n## Purpose\n\nValidates at compile time that every TI_ artifact declares an explicit workflow\ntarget and that the target workflow exists in the protocol snapshot.\n\n**Validates:**\n- Every TI_ artifact has a `workflow` field in its `core` block\n- The declared workflow FQDN resolves to an artifact in the compiled snapshot\n- No TI_ artifact declares a null, empty, or wildcard target\n\n**Does NOT validate:**\n- Whether the workflow is currently enabled or reachable at runtime\n- Whether the workflow accepts the TI admission schema fields\n\n---\n\n## Enforcement\n\n**Phase:** COMPILER_VALIDATION\n\n**Severity:** HARD FAIL \u2014 build stops immediately on violation\n\n**Trigger:** Every TI_ artifact discovered during compilation\n\n## Violation Examples\n\n```yaml\n# VIOLATION: missing workflow binding\nti_code: TI_HTTP_SUBMIT_TRANSACTION_V0\ncore:\n  route:\n    method: POST\n    path: /api/v0/transaction/submit\n  # Missing: workflow field\n```\n\n```yaml\n# VIOLATION: workflow not in snapshot\nti_code: TI_HTTP_SUBMIT_TRANSACTION_V0\ncore:\n  workflow: blockchain::WF_NONEXISTENT_V0  # Does not exist in snapshot\n```\n\n## Correct Form\n\n```yaml\nti_code: TI_HTTP_SUBMIT_TRANSACTION_V0\ncore:\n  workflow: blockchain::WF_HTTP_SUBMIT_TRANSACTION_V0  # Exists in snapshot\n```\n",
+  "content_hash": "420ab6c75eb5ed57ccd070426b05cf6bc441e30399ab18f4edfb1e59d451ac69",
+  "fqdn_id": "fb.transport::ASSERT_TRANSPORT_TARGET_EXISTS_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TRANSPORT_TARGET_EXISTS_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_transport_target_exists_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.assertions",
+  "namespace": "fb.transport",
+  "references": [],
+  "version": "0"
+}

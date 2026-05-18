@@ -1,0 +1,51 @@
+{
+  "artifact_code": "IN_RECLAIM_LICENSE_V0",
+  "artifact_type": "IN",
+  "content": "# IN_RECLAIM_LICENSE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_RECLAIM_LICENSE_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_AUTO_RECLAIM_V0\n\n---\n\n## 1. Intent\n\nRequest to evaluate and potentially reclaim an inactive license.\n\n---\n\n## 2. Rationale\n\nReclamation intent enables autonomous license management:\n- Evaluates inactivity against threshold\n- Reclaims if inactive, retains if active\n- No human intervention required\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_AUTO_RECLAIM_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| license_id | string | true | License to evaluate |\n| threshold_days | integer | false | Inactivity threshold (default: 30) |\n| context | object | false | Runtime context data (employee_id, last_active_date, days_inactive) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Reclamation request accepted for processing |\n| NACK | Reclamation request rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.ai_licensing\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_RECLAIM_LICENSE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Request license reclamation evaluation\n  workflow: WF_AUTO_RECLAIM_V0\n\n  inputs:\n    license_id:\n      type: string\n      required: true\n      description: License to evaluate\n    threshold_days:\n      type: integer\n      default: 30\n      description: Inactivity threshold in days\n    context:\n      type: object\n      required: false\n      description: Runtime context data (employee_id, last_active_date, days_inactive)\n\n  outcomes:\n    ACK:\n      description: Reclamation request accepted for processing\n    NACK:\n      description: Reclamation request rejected\n\nextensions:\n  domain: pgs.testbed\n```\n",
+  "content_hash": "7a3f88838ed5ac71f0cd98aa3feeaf2f148e78dfb7cb31cb61f65703ffa66a11",
+  "fqdn_id": "ai_governance::IN_RECLAIM_LICENSE_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "context": {
+          "description": "Runtime context data (employee_id, last_active_date, days_inactive)",
+          "required": false,
+          "type": "object"
+        },
+        "license_id": {
+          "description": "License to evaluate",
+          "required": true,
+          "type": "string"
+        },
+        "threshold_days": {
+          "default": 30,
+          "description": "Inactivity threshold in days",
+          "type": "integer"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Reclamation request accepted for processing"
+        },
+        "NACK": {
+          "description": "Reclamation request rejected"
+        }
+      },
+      "summary": "Request license reclamation evaluation",
+      "workflow": "WF_AUTO_RECLAIM_V0"
+    },
+    "extensions": {
+      "domain": "pgs.testbed"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_RECLAIM_LICENSE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.intents",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

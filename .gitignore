@@ -1,0 +1,88 @@
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# =========================
+# Virtual environments
+# =========================
+.venv/
+venv/
+env/
+ENV/
+
+# =========================
+# Build / packaging
+# =========================
+build/
+dist/
+
+# =========================
+# Testing / coverage
+# =========================
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# =========================
+# OS / editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.tmp
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Secrets / local config
+# =========================
+.env
+.env.*
+*.local
+parkinglot/
+snapshot_status.json
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Claude Code (local only — never push)
+# =========================
+CLAUDE.md
+.claude/
+
+# =========================
+# PGS Workspace
+# =========================
+
+# Runtime data (user-specific, never commit)
+data/
+traces/
+
+# Local script state
+scripts/.env
+scripts/.cache
+
+# Snapshot policy:
+# Option A (active): snapshot committed for reproducibility — runtime reads from here
+# Option B (compile-driven): uncomment below to ignore snapshot
+# protocol_snapshot/

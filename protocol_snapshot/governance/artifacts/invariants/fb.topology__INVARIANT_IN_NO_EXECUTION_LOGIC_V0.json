@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_IN_NO_EXECUTION_LOGIC_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_IN_NO_EXECUTION_LOGIC_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: IN artifacts must not contain execution logic fields\n  rule: IN artifacts must not declare execute, callable, implementation, logic, transform, code, or handler fields\n  scope:\n    - IN\n```\n\n## Summary\n\nIntent artifacts are admission gates. They declare the preconditions for workflow entry\nand validate incoming payloads. They are not executors. An IN artifact that contains\nexecution logic fields has violated its constitutional role \u2014 execution belongs in CC\nand CT artifacts.\n\n## Rule\n\nFor every IN artifact, the frontmatter MUST NOT contain any of the following fields\nat any nesting level:\n- `execute`\n- `callable`\n- `implementation`\n- `logic`\n- `transform`\n- `code`\n- `handler`\n\n## Enforcement Scope\n\n- **Artifact Types**: IN\n- **Validation Phase**: ASSERT (Phase 5, compile-time, hard fail)\n- **Enforced By**: ASSERT_IN_NO_EXECUTION_LOGIC_V0\n\n## Rationale\n\nIf an IN artifact contains execution logic fields, it has begun to absorb responsibilities\nthat belong in the execution layer. This violates separation of concerns and makes the\nintent's role ambiguous. The compiler must reject any IN artifact that declares execution\nfields so that this boundary remains crisp.\n",
+  "content_hash": "fbcca14b2424bfe80f86e214bd01895cd0ecd17b86b44d1f31caa51464e6a8ec",
+  "fqdn_id": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "IN artifacts must not declare execute, callable, implementation, logic, transform, code, or handler fields",
+      "scope": [
+        "IN"
+      ],
+      "summary": "IN artifacts must not contain execution logic fields"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "invariant_code": "INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

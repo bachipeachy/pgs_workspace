@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0\n\ncore:\n  summary: All execution traces must bind actor identity, workflow FQDN, authority provenance, and admissibility outcome \u2014 ungoverned execution has no audit chain\n  rule: Execution without complete authority trace binding is ungoverned execution; actor_id, workflow_fqdn, authority_provenance, and admissibility_outcome are required trace fields\n  scope:\n    - WF\n```\n\n## Summary\n\nAuthority without trace is not accountable. Non-repudiation requires that every execution can be attributed to an actor, under a specific authority grant, at a specific time, with a recorded admissibility outcome. Authority trace binding is the accountability complement to authority evaluation: it closes the loop between the pre-execution authority decision and the post-execution audit record.\n\n## Rule\n\nFor every execution trace:\n1. MUST bind `actor_id` \u2014 the identity of the actor whose authority was evaluated\n2. MUST bind `workflow_fqdn` \u2014 the fully qualified workflow that was authorized\n3. MUST bind `authority_provenance` \u2014 the source, chain, and timestamp of authority that produced the admissibility decision\n4. MUST bind `admissibility_outcome` \u2014 the resolved admissibility result (admitted / denied)\n5. These fields are required, not optional \u2014 absent authority trace bindings constitute ungoverned execution\n\n## Enforcement Scope\n\n- **Artifact Types**: WF (trace output)\n- **Validation Phase**: ASSERT (compile-time declaration check)\n- **Enforced By**: ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\n\n## Rationale\n\nAmbient authority has no trace. Implicit permissions produce no audit record. This invariant is the accountability complement to the no-ambient-authority rule: not only must authority be explicit, but its exercise must be recorded. The authority trace binding transforms authority governance from a pre-execution gate into a complete, deterministic accountability chain spanning execution and post-execution.\n\nFull authority trace binding enforcement is implemented in Phase 5.\n",
+  "content_hash": "400e2ea2fef0e3ddd1ee60852450d1367cb48b11acacaa213f044d3569700c73",
+  "fqdn_id": "fb.authority::INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "Execution without complete authority trace binding is ungoverned execution; actor_id, workflow_fqdn, authority_provenance, and admissibility_outcome are required trace fields",
+      "scope": [
+        "WF"
+      ],
+      "summary": "All execution traces must bind actor identity, workflow FQDN, authority provenance, and admissibility outcome \u2014 ungoverned execution has no audit chain"
+    },
+    "governed_by": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "invariant_code": "INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.invariants",
+  "namespace": "fb.authority",
+  "references": [
+    "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

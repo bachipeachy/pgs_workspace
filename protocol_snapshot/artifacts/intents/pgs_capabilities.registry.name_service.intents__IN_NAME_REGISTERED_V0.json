@@ -1,0 +1,43 @@
+{
+  "artifact_code": "IN_NAME_REGISTERED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_NAME_REGISTERED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_NAME_REGISTERED_V0\n- **Artifact Kind:** intent\n- **Governed By:** fb.topology::CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0\n\n---\n\n## 1. Intent\n\nRequest to register or update a name-to-resource-addresses mapping in the name registry.\n\n---\n\n## 2. Rationale\n\nName registration intent is a protocol entry point:\n- Declares desired outcome (name is registered/updated)\n- Protocol validates and persists mapping\n- Outcome is deterministic (SUCCESS or FAILURE)\n\nThis enables:\n- External invocation via transport layer (HTTP, message queue, etc.)\n- Internal invocation from other workflows\n- Consistent entry point regardless of invocation source\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_REGISTER_NAME_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| name | string | true | Human-readable name (e.g., email address) |\n| resource_addresses | array | true | List of resource addresses to associate with name |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Registration request accepted for processing |\n| NACK | Registration request rejected (validation failure) |\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_NAME_REGISTERED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Register or update name-to-resource-addresses mapping\n  workflow: pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0\n\n  inputs:\n    name:\n      type: string\n      required: true\n      description: Human-readable name (e.g., email address)\n\n    resource_addresses:\n      type: array\n      required: true\n      description: List of resource addresses to associate with name\n\n  outcomes:\n    ACK:\n      description: Registration request accepted for processing\n    NACK:\n      description: Registration request rejected (validation failure)\n```\n",
+  "content_hash": "046b544a127528a835c9611d9919b8bb1830565fbdcd6eb3cd408a99cc015220",
+  "fqdn_id": "pgs_capabilities.registry.name_service.intents::IN_NAME_REGISTERED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "name": {
+          "description": "Human-readable name (e.g., email address)",
+          "required": true,
+          "type": "string"
+        },
+        "resource_addresses": {
+          "description": "List of resource addresses to associate with name",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Registration request accepted for processing"
+        },
+        "NACK": {
+          "description": "Registration request rejected (validation failure)"
+        }
+      },
+      "summary": "Register or update name-to-resource-addresses mapping",
+      "workflow": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_NAME_REGISTERED_V0",
+    "version": "v0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.intents",
+  "namespace": "pgs_capabilities.registry.name_service.intents",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

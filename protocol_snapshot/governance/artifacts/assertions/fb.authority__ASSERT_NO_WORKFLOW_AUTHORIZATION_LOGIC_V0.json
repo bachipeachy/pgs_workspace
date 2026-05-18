@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.authority::INVARIANT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_no_workflow_authorization_logic_v0\n  callable: execute\n```\n\n## Summary\n\nAuthorization logic embedded inside execution artifacts is a constitutional violation. Workflows, capability contracts, transforms, and side effects must assume admissibility has already succeeded. They may not inspect roles, check permissions, branch on authority semantics, or perform any authorization evaluation.\n\n## Rule\n\nFor every WF_, CC_, CT_, and CS_ artifact:\n1. The artifact MUST NOT contain fields or declarations that perform role checks (e.g., `if actor == \"admin\"`, `required_role`, `permission_check`)\n2. The artifact MUST NOT declare inline ACL logic, permission gates, or authorization branching\n3. The artifact MUST NOT reference authorization databases, permission tables, or runtime role resolution\n4. Authorization semantics belong exclusively to the authority governance plane \u2014 not inside execution\n\n## Enforcement\n\n- **Artifact Types**: WF, CC, CT, CS\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_no_workflow_authorization_logic_v0`\n- **Paired Invariant**: INVARIANT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0\n\n## Rationale\n\nThis is one of the highest-value assertions in authority governance. Authorization logic inside execution artifacts is the most common form of authority/execution conflation. Once introduced, it grows: role checks proliferate, permission branching creates undeclared topology variation, and authority semantics become embedded in domain logic.\n\nThe architectural remedy is constitutional: detect authorization logic at compile time and prevent it from entering the artifact surface. Execution assumes admissibility. It does not perform admissibility.\n\nThis is a Phase 1 stub. Pattern-matching for authorization field names and inline permission logic is implemented in Phase 4.\n",
+  "content_hash": "0675907c9a29272abe6fe648f7277807460d219400363d679c1ce56ca7a41c07",
+  "fqdn_id": "fb.authority::ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.authority::INVARIANT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_no_workflow_authorization_logic_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.assertions",
+  "namespace": "fb.authority",
+  "references": [],
+  "version": "0"
+}

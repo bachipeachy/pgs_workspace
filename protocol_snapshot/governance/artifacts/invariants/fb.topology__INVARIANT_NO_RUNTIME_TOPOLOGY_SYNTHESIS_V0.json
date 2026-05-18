@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: execution topology MUST NOT be synthesized, generated, or inferred at runtime; all topology steps must be explicitly declared in the compiled artifact before execution begins\n  rule: no runtime component may construct topology steps from dynamic inputs, environment state, payload content, authority grants, or any form of runtime inference; the complete topology graph must exist in the compiled artifact\n  scope:\n    - CC\n\n  enforced_by:\n    - ASSERT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0\n```\n\n---\n\n## Summary\n\nRuntime topology synthesis is the most dangerous form of topology violation: it produces\nexecution graphs that the compiler never saw, never validated, and cannot govern. A runtime\nthat generates steps from payload content, infers steps from authority grants, or constructs\ntopology from environment state is an ungovernatable orchestration engine \u2014 not a PGS runtime.\n\nAll topology exists in the compiled artifact. The runtime reads it. The runtime does not write it.\n\n## Rule\n\nExecution topology MUST NOT be:\n1. Generated from payload content at runtime\n2. Inferred from authority grants or actor type\n3. Constructed from environment variables or configuration\n4. Synthesized by the runtime based on execution state\n5. Derived from prior execution traces or runtime observations\n\nThe topology that executes is identical to the topology in the compiled artifact \u2014 always.\n\n## Enforcement Scope\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time (structural constraint)\n- **Enforced By**: ASSERT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0\n\n## Rationale\n\nThe distinction between compilation and execution is fundamental to PGS governance. Compilation\nis where topology is constructed, validated, and fixed. Execution is where it is traversed.\nAny blurring of this boundary \u2014 any mechanism by which execution can create topology \u2014\ndestroys the governance model. Runtime topology synthesis is not a performance concern or\na style concern: it is an architectural violation.\n\nThis is a Phase 1 stub. Full enforcement is implemented in Phase 3.\n",
+  "content_hash": "5998720483cd588a9799bca81fc3dbcec0e0e210b3c66b9c231c2491229d5f41",
+  "fqdn_id": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0"
+      ],
+      "rule": "no runtime component may construct topology steps from dynamic inputs, environment state, payload content, authority grants, or any form of runtime inference; the complete topology graph must exist in the compiled artifact",
+      "scope": [
+        "CC"
+      ],
+      "summary": "execution topology MUST NOT be synthesized, generated, or inferred at runtime; all topology steps must be explicitly declared in the compiled artifact before execution begins"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

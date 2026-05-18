@@ -1,0 +1,45 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "allowed_set": "$.inputs.allowed_set",
+          "value": "$.inputs.value"
+        },
+        "atom": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_set_membership_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "input_types": {
+      "allowed_set": "array",
+      "value": "string"
+    },
+    "inputs": {
+      "allowed_set": [
+        "active",
+        "pending",
+        "inactive"
+      ],
+      "value": "active"
+    },
+    "outputs": {
+      "is_member": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "is_member": true
+  },
+  "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0::value_in_set",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
+}

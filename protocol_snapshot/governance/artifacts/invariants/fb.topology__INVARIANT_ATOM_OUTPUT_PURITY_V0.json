@@ -1,0 +1,28 @@
+{
+  "artifact_code": "INVARIANT_ATOM_OUTPUT_PURITY_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_ATOM_OUTPUT_PURITY_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\nartifact_code: INVARIANT_ATOM_OUTPUT_PURITY_V0\nartifact_type: INVARIANT\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  summary: Atoms must return explicit outputs in ALL cases, never raise exceptions for business logic\n  rule: CT atom execute() functions must return dict outputs for all code paths including error states\n  scope:\n    - CT\n```\n\n## Summary\n\nCT atom implementations must be pure functions that return explicit output dictionaries in ALL execution paths. Exceptions may only be raised for INPUT VALIDATION (missing required inputs, wrong types), never for business logic or \"failure\" states.\n\n## Rule\n\nFor all CT atom implementations:\n1. `execute()` must return dict in ALL business logic paths\n2. Exceptions allowed ONLY for input validation (missing keys, wrong types)\n3. Business logic \"failures\" must return explicit outputs (e.g., `{\"is_eligible\": false}`)\n4. NO exceptions for quota exhaustion, training incomplete, etc.\n5. Output structure must match CC contract in success AND \"failure\" cases\n\n## Enforcement Scope\n\n- **Artifact Types**: CT\n- **Code Layer**: pgs_transforms/implementation/transforms/atoms/\n- **Validation Phase**: Phase 5 (ASSERT)\n- **Enforcement**: MANDATORY (build fails on violation)\n\n## Examples\n\n### \u2705 VALID - Pure Function\n\n```python\ndef execute(inputs: dict, context=None) -> dict:\n    # Input validation (exceptions OK)\n    if \"training_completed\" not in inputs:\n        raise ValueError(\"Missing required input 'training_completed'\")\n\n    if not isinstance(inputs[\"training_completed\"], bool):\n        raise TypeError(\"training_completed must be bool\")\n\n    # Business logic (explicit outputs)\n    is_eligible = inputs[\"training_completed\"]\n\n    return {\n        \"is_eligible\": is_eligible  # \u2705 Explicit output in ALL cases\n    }\n```\n\n### \u274c INVALID - Exception for Business Logic\n\n```python\ndef execute(inputs: dict, context=None) -> dict:\n    training_completed = inputs[\"training_completed\"]\n\n    if not training_completed:\n        raise ValueError(\"Training not completed\")  # \u274c VIOLATION\n\n    return {\"is_eligible\": True}\n```\n\n### \u274c INVALID - Missing \"Failure\" Output\n\n```python\ndef execute(inputs: dict, context=None) -> dict:\n    quota = inputs[\"quota\"]\n    assigned = inputs[\"assigned_count\"]\n\n    if assigned >= quota:\n        raise ValueError(\"Quota exhausted\")  # \u274c VIOLATION\n\n    return {\"quota_available\": True}\n    # \u274c No explicit output for quota exhausted case\n```\n\n## Rationale\n\nOutput purity ensures:\n- Predictable execution (no exception-based control flow)\n- Explicit state modeling (all outcomes are data)\n- Testability (all paths return data)\n- Traceability (no hidden execution paths)\n- Constitutional principle: Line 105 of CC contract requires explicit outputs\n\n## Detection Strategy\n\nScan CT atom code for:\n- `raise` statements outside input validation block\n- Exception raises after business logic starts\n- Missing return statement in conditional branches\n- Try/except blocks that re-raise business exceptions\n\n## Related Artifacts\n\n- `fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0` - Defines pure transform behavior\n- `governance::CC_*_V0` - Declares required output structure\n",
+  "content_hash": "893881a7ffa04186ab8840f495acb626411a3423eee2f8ae35518aef266629b8",
+  "fqdn_id": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0",
+  "frontmatter": {
+    "artifact_code": "INVARIANT_ATOM_OUTPUT_PURITY_V0",
+    "artifact_kind": "INVARIANT",
+    "artifact_type": "INVARIANT",
+    "core": {
+      "rule": "CT atom execute() functions must return dict outputs for all code paths including error states",
+      "scope": [
+        "CT"
+      ],
+      "summary": "Atoms must return explicit outputs in ALL cases, never raise exceptions for business logic"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

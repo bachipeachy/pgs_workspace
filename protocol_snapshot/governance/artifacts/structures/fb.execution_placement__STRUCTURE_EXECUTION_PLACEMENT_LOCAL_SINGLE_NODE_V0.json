@@ -1,0 +1,26 @@
+{
+  "artifact_code": "STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0\n\n## Machine\n\n```yaml\nartifact_code: STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0\nartifact_kind: STRUCTURE\nversion: V0\ngoverned_by: fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0\nfqdn: fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0\nstatus: active\n\nplacement_mode: LOCAL_SINGLE_NODE\nremote_execution_allowed: false\ncross_node_dispatch_allowed: false\nplacement_target: local_process\n```\n\n---\n\n## Purpose\n\nDeclares that this compiled snapshot authorizes local single-node placement only.\nAll execution units run in the same process on the same host. No remote dispatch,\nno cross-node coordination.\n\nThis is the correct and complete description of V0 runtime placement.\n\n## Active Declaration\n\nThis structure is the single active placement declaration for V0. The compiler validates\nits presence via `INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0` and materializes:\n\n```yaml\nfederation_profile:\n  execution_placement: LOCAL_SINGLE_NODE\n```\n\ninto every compiled snapshot.\n",
+  "content_hash": "39c123b7766510b893093309d0870b10a16e10077d9c0a2b06f9b9cce2c5f292",
+  "fqdn_id": "fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
+  "frontmatter": {
+    "artifact_code": "STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
+    "artifact_kind": "STRUCTURE",
+    "cross_node_dispatch_allowed": false,
+    "fqdn": "fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
+    "governed_by": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0",
+    "placement_mode": "LOCAL_SINGLE_NODE",
+    "placement_target": "local_process",
+    "remote_execution_allowed": false,
+    "status": "active",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_EXECUTION_PLACEMENT.placement_contracts",
+  "namespace": "fb.execution_placement",
+  "references": [
+    "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0"
+  ],
+  "version": "0"
+}

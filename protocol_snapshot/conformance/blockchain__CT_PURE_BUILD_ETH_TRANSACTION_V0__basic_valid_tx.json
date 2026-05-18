@@ -1,0 +1,62 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "access_list": "$.inputs.access_list",
+          "chain_id": "$.inputs.chain_id",
+          "data": "$.inputs.data",
+          "gas_limit": "$.inputs.gas_limit",
+          "max_fee_per_gas": "$.inputs.max_fee_per_gas",
+          "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
+          "nonce": "$.inputs.nonce",
+          "to": "$.inputs.to",
+          "value": "$.inputs.value"
+        },
+        "atom": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_build_eth_transaction_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_BUILD_ETH_TRANSACTION_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+    "input_types": {
+      "access_list": "array",
+      "chain_id": "integer",
+      "data": "string",
+      "gas_limit": "integer",
+      "max_fee_per_gas": "string",
+      "max_priority_fee_per_gas": "string",
+      "nonce": "integer",
+      "to": "string",
+      "value": "string"
+    },
+    "inputs": {
+      "access_list": [],
+      "chain_id": 1,
+      "data": "0x",
+      "gas_limit": 21000,
+      "max_fee_per_gas": "20000000000",
+      "max_priority_fee_per_gas": "1000000000",
+      "nonce": 10,
+      "to": "0x1234567890123456789012345678901234567890",
+      "value": "1000000000000000000"
+    },
+    "outputs": {
+      "unsigned_tx_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "unsigned_tx_bytes": "0x02f0010a843b9aca008504a817c800825208941234567890123456789012345678901234567890880de0b6b3a764000080c0"
+  },
+  "fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0::basic_valid_tx",
+  "test_data_source": "blockchain::TEST_DATA_CT_PURE_BUILD_ETH_TRANSACTION_V0"
+}

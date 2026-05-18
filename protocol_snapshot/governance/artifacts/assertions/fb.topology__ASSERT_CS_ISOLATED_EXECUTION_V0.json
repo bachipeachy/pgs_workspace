@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_CS_ISOLATED_EXECUTION_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_CS_ISOLATED_EXECUTION_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_CS_ISOLATED_EXECUTION_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_cs_isolated_execution_v0\n  callable: execute\n```\n\n## Summary\n\nParity stub for INVARIANT_CS_ISOLATED_EXECUTION_V0.\n\nIsolation enforcement (CS executes only through dedicated executors, never inline in CT or CC)\nis a runtime architectural invariant. Static analysis of compiled artifact declarations cannot\nfully verify executor routing at build time. This ASSERT exists to maintain 1:1 INVARIANT/ASSERT\nparity.\n\nFull static enforcement requires inter-artifact dependency graph analysis across CT and CC\nimplementations (future work).\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT) \u2014 parity registration only\n- **Primary Enforcement**: Runtime (executor routing)\n- **Failure Mode**: PASSED (enforcement delegated to runtime)\n- **Scope**: All CS artifacts\n\n## Version History\n\n- **V0**: Initial stub (2026-05-08)\n",
+  "content_hash": "aee1d8715c978b00ad97d55776c07ac42b2ac638eee9d241a236c32b79b56c0f",
+  "fqdn_id": "fb.topology::ASSERT_CS_ISOLATED_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_CS_ISOLATED_EXECUTION_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_cs_isolated_execution_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

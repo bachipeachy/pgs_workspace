@@ -1,0 +1,51 @@
+{
+  "artifact_code": "INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Transport artifacts MUST declare explicit normalization schemas.\n    No passthrough of raw payloads or raw execution results is permitted.\n\n    (1) TI_ admission normalization: Every TI_ artifact must declare an explicit\n    admission_schema that specifies which fields are accepted. Raw payload\n    passthrough (forwarding the entire incoming payload without schema enforcement)\n    is a boundary violation.\n\n    (2) TE_ projection normalization: Every TE_ artifact must declare an explicit\n    projection schema (response_schema, projection_schema, or projection) that\n    specifies which execution result fields are emitted. Raw execution result\n    passthrough leaks internal state through the boundary.\n\n    Normalization is deterministic and pure: given the same input, the same\n    canonical envelope is always produced.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - TRANSPORT_INGRESS\n    - TRANSPORT_EGRESS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0\n\n  anti_patterns:\n    - ti_passthrough_mode: >\n        TI artifact declares passthrough: true instead of an admission schema\n    - ti_no_admission_schema: >\n        TI artifact missing core.admission_schema declaration\n    - ti_empty_admission_schema: >\n        TI core.admission_schema contains no fields\n    - te_no_projection_schema: >\n        TE artifact missing response_schema, projection_schema, or projection field\n    - te_raw_result_passthrough: >\n        TE artifact forwards raw execution result without projection\n```\n\n---\n\n## Purpose\n\nThe system boundary is not transparent \u2014 it is a normalization membrane. Transport\ningress must normalize inbound payloads into a canonical admission envelope before\nhanding off to execution. Transport egress must project execution results into a\ncanonical response envelope before emitting to the caller.\n\nThis invariant enforces that both boundaries are explicit, governed, and closed.\n\n---\n\n## Scope\n\n**Applies to:** All TI_ and TE_ artifacts\n\n**Does NOT validate:**\n- Type compatibility between admission schema fields and workflow payload schema\n- Completeness of projection (whether all execution output fields are projected)\n",
+  "content_hash": "1b4321ac1651cb03251ae308e9ecf3c80c902f0ba9e029d24ca7ec8d8fe109ae",
+  "fqdn_id": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "ti_passthrough_mode": "TI artifact declares passthrough: true instead of an admission schema\n"
+        },
+        {
+          "ti_no_admission_schema": "TI artifact missing core.admission_schema declaration\n"
+        },
+        {
+          "ti_empty_admission_schema": "TI core.admission_schema contains no fields\n"
+        },
+        {
+          "te_no_projection_schema": "TE artifact missing response_schema, projection_schema, or projection field\n"
+        },
+        {
+          "te_raw_result_passthrough": "TE artifact forwards raw execution result without projection"
+        }
+      ],
+      "description": "Transport artifacts MUST declare explicit normalization schemas. No passthrough of raw payloads or raw execution results is permitted.\n(1) TI_ admission normalization: Every TI_ artifact must declare an explicit admission_schema that specifies which fields are accepted. Raw payload passthrough (forwarding the entire incoming payload without schema enforcement) is a boundary violation.\n(2) TE_ projection normalization: Every TE_ artifact must declare an explicit projection schema (response_schema, projection_schema, or projection) that specifies which execution result fields are emitted. Raw execution result passthrough leaks internal state through the boundary.\nNormalization is deterministic and pure: given the same input, the same canonical envelope is always produced.\n",
+      "enforced_by": [
+        "ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "TRANSPORT_INGRESS",
+        "TRANSPORT_EGRESS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.invariants",
+  "namespace": "fb.transport",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.conformance::INVARIANT_CONFORMANCE_ASSERTION_MODE_VALID_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_conformance_assertion_mode_valid_v0\n  callable: execute\n```\n\n## Summary\n\nRegisters the INVARIANT_CONFORMANCE_ASSERTION_MODE_VALID_V0 invariant in the assertion parity surface.\n\nThe actual closed-vocabulary enforcement (mode \u2208 {exact, property, schema}, type constraints) is performed\nby the VALIDATE_TEST_DATA compiler phase. This ASSERT exists to maintain 1:1 parity between INVARIANT\nand ASSERT artifacts and to make the invariant visible in the compiler assertion surface.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT) \u2014 parity registration only\n- **Primary Enforcement**: Phase 7 (VALIDATE_TEST_DATA) \u2014 hard fail on unknown modes/types\n- **Failure Mode**: PASSED (enforcement delegated to VALIDATE_TEST_DATA phase)\n- **Scope**: All TEST_DATA artifacts\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-08)",
+  "content_hash": "6a45f857cb2aad419fa38b6698713a199640405762c7604edd2f7a3c4c0fed39",
+  "fqdn_id": "fb.conformance::ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.conformance::INVARIANT_CONFORMANCE_ASSERTION_MODE_VALID_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_conformance_assertion_mode_valid_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONFORMANCE.assertions",
+  "namespace": "fb.conformance",
+  "references": [],
+  "version": "0"
+}

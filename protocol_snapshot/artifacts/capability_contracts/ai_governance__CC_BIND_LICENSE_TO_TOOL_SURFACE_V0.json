@@ -1,0 +1,141 @@
+{
+  "artifact_code": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "key": "in.license_tier"
+        },
+        "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+        "id": "CT_PURE_LOOKUP_V0",
+        "inputs": [
+          "key",
+          "map"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "result"
+        ]
+      },
+      {
+        "bindings": {
+          "allowed_set": "lookup_tier_tools.allowed_tools",
+          "value": "in.tool_name"
+        },
+        "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "inputs": [
+          "value",
+          "allowed_set"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "is_member"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_BIND_LICENSE_TO_TOOL_SURFACE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_BIND_LICENSE_TO_TOOL_SURFACE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_LOOKUP_V0, CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n\n---\n\n## 1. Intent\n\nMap the user's license tier to an allowed tool set and verify the requested tool is authorized.\n\n---\n\n## 2. Rationale\n\nLicense-to-tool binding is the fourth governance gate:\n- Declarative tier-to-tool mapping defines the authority surface\n- Each license tier grants access to a specific, closed set of tools\n- Enforces Invariant I-A3 (License-Bound Authority)\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_LOOKUP_V0 | CT | LOOKUP |\n| 2 | CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tool_name | string | true | Requested tool identifier |\n| license_tier | string | true | Resolved license tier |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| allowed_tools | array | Tools authorized for this tier |\n| is_authorized | boolean | Whether requested tool is authorized |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Tool is authorized for license tier |\n| VIOLATION | Tool is not authorized for license tier |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_BIND_LICENSE_TO_TOOL_SURFACE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Map license tier to allowed tool set and verify tool authorization\n\n  inputs:\n    tool_name:\n      type: string\n      required: true\n    license_tier:\n      type: string\n      required: true\n\n  outputs:\n    allowed_tools:\n      type: array\n    is_authorized:\n      type: boolean\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: lookup_tier_tools\n      transform: capability_transforms::CT_PURE_LOOKUP_V0\n      inputs:\n        key: $.inputs.license_tier\n        map:\n          none:\n            - READ_RECORD\n          standard:\n            - READ_RECORD\n            - PROVISION_STANDARD_LICENSE\n          enterprise:\n            - READ_RECORD\n            - PROVISION_STANDARD_LICENSE\n            - PROVISION_PREMIUM_LICENSE\n      outputs:\n        allowed_tools: $.capability_result.result\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: validate_tool_membership\n      transform: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n      inputs:\n        value: $.inputs.tool_name\n        allowed_set: $.results.lookup_tier_tools.allowed_tools\n      outputs:\n        is_authorized: $.capability_result.is_member\n        allowed_tools: $.results.lookup_tier_tools.allowed_tools\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\nextensions:\n  description: Enforces license-bound authority \u2014 tier determines tool surface\n```\n",
+  "content_hash": "77f40ba49e51b0b395ae3012517058dd2c83cbfc67b903b0048b18d767918df3",
+  "fqdn_id": "ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+  "frontmatter": {
+    "cc_code": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+    "core": {
+      "inputs": {
+        "license_tier": {
+          "required": true,
+          "type": "string"
+        },
+        "tool_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "allowed_tools": {
+          "type": "array"
+        },
+        "is_authorized": {
+          "type": "boolean"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.license_tier",
+            "map": {
+              "enterprise": [
+                "READ_RECORD",
+                "PROVISION_STANDARD_LICENSE",
+                "PROVISION_PREMIUM_LICENSE"
+              ],
+              "none": [
+                "READ_RECORD"
+              ],
+              "standard": [
+                "READ_RECORD",
+                "PROVISION_STANDARD_LICENSE"
+              ]
+            }
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "allowed_tools": "$.capability_result.result"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "lookup_tier_tools",
+          "transform": "capability_transforms::CT_PURE_LOOKUP_V0"
+        },
+        {
+          "inputs": {
+            "allowed_set": "$.results.lookup_tier_tools.allowed_tools",
+            "value": "$.inputs.tool_name"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "allowed_tools": "$.results.lookup_tier_tools.allowed_tools",
+            "is_authorized": "$.capability_result.is_member"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "validate_tool_membership",
+          "transform": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Map license tier to allowed tool set and verify tool authorization"
+    },
+    "extensions": {
+      "description": "Enforces license-bound authority \u2014 tier determines tool surface"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_transforms::CT_PURE_LOOKUP_V0",
+    "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0\n\ncore:\n  summary: Execution may not proceed without a declared authority boundary requirement\n  rule: Every WF_ artifact must declare an authority requirement; ungoverned execution entry points are a constitutional violation\n  scope:\n    - WF\n```\n\n## Summary\n\nThe invariant of execution requiring authority is the foundational constraint of the authority governance plane. If a workflow can be invoked without any authority declaration, the entire authority plane is optional rather than sovereign. This invariant makes authority mandatory for all workflows.\n\n## Rule\n\nFor every WF_ artifact:\n1. The workflow MUST have an associated authority declaration before execution may begin\n2. No workflow may be invoked by the runtime without a resolved authority boundary\n3. The compiler MUST reject WF_ artifacts that lack authority declarations\n\n## Enforcement Scope\n\n- **Artifact Types**: WF\n- **Validation Phase**: ASSERT (compile-time)\n- **Enforced By**: ASSERT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0\n\n## Rationale\n\nAuthority governance determines whether execution may exist. If that determination is optional, authority governance is advisory rather than constitutional. This invariant makes the determination mandatory at the architectural level: no authority declaration, no execution.\n",
+  "content_hash": "9ca05cb8de03e670cfe00a56f18f975a22fc8c33b4e0faef2c7bd111a6e84a46",
+  "fqdn_id": "fb.authority::INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "Every WF_ artifact must declare an authority requirement; ungoverned execution entry points are a constitutional violation",
+      "scope": [
+        "WF"
+      ],
+      "summary": "Execution may not proceed without a declared authority boundary requirement"
+    },
+    "governed_by": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "invariant_code": "INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.invariants",
+  "namespace": "fb.authority",
+  "references": [
+    "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

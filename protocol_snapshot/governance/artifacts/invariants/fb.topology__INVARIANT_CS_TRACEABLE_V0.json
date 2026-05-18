@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_CS_TRACEABLE_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CS_TRACEABLE_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CS_TRACEABLE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Every CS execution must be recorded in the execution trace\n  rule: CS executors must emit a trace entry for every side-effect execution\n  scope:\n    - CS\n```\n\n## Summary\n\nEvery execution of a Capability Side Effect must leave an observable record in the execution\ntrace. Traceability is what makes the system auditable, replayable, and debuggable. A CS\nexecution that does not appear in the trace is an invisible side effect \u2014 a constitutional\nviolation.\n\n## Rule\n\nFor every CS artifact execution:\n1. The executor MUST emit a trace entry recording the CS invocation\n2. The trace entry MUST include the CS code, inputs, output result, and timestamp\n\nThis invariant is enforced at runtime by the execution engine. Compile-time static\nanalysis cannot verify executor behavior.\n\n## Enforcement Scope\n\n- **Artifact Types**: CS\n- **Validation Phase**: Runtime (execution engine)\n- **Compile-Time**: ASSERT_CS_TRACEABLE_V0 (parity stub \u2014 runtime enforcement)\n- **Enforced By**: ASSERT_CS_TRACEABLE_V0\n\n## Rationale\n\nWithout traceability, the system cannot provide a complete audit trail. Side effects that\noccur outside the trace are indistinguishable from unrecorded mutations, undermining the\nguarantee that the trace is the definitive record of what happened.\n",
+  "content_hash": "4ab138ae2b9258d1b611020dadef0f466afad196af4a26e85ae07beb97b391e7",
+  "fqdn_id": "fb.topology::INVARIANT_CS_TRACEABLE_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "CS executors must emit a trace entry for every side-effect execution",
+      "scope": [
+        "CS"
+      ],
+      "summary": "Every CS execution must be recorded in the execution trace"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "invariant_code": "INVARIANT_CS_TRACEABLE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+  ],
+  "version": "0"
+}

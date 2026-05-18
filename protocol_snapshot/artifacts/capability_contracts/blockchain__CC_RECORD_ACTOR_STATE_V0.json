@@ -1,0 +1,107 @@
+{
+  "artifact_code": "CC_RECORD_ACTOR_STATE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL",
+          "GET_RANGE",
+          "GET_SINCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RECORD_ACTOR_STATE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RECORD_ACTOR_STATE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nRecord an actor state transition to the actor state log.\n\n---\n\n## 2. Rationale\n\nActor state transitions require:\n- Immutable audit trail\n- Timestamped state changes\n- Support for state machine reconstruction\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_id | string | true | Actor identifier |\n| old_state | string | false | Previous state (optional for initial) |\n| new_state | string | true | New state |\n| reason | string | false | Reason for transition |\n| timestamp | string | true | ISO-8601 timestamp |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | State recorded successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- Invalid inputs result in VIOLATION\n- Storage failure results in BACKEND_ERROR\n- APPEND is not idempotent; retries create duplicates\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RECORD_ACTOR_STATE_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Record actor state transition\n\n  inputs:\n    actor_id:\n      type: string\n      required: true\n    old_state:\n      type: string\n      required: false\n    new_state:\n      type: string\n      required: true\n    reason:\n      type: string\n      required: false\n    timestamp:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: record_state_transition\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: ACTOR_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.actor_id\n        actor_id: $.inputs.actor_id\n        record:\n          actor_id: $.inputs.actor_id\n          old_state: $.inputs.old_state\n          new_state: $.inputs.new_state\n          reason: $.inputs.reason\n          timestamp: $.inputs.timestamp\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "1e468896c07c62c2a6cf8e388442a3e3c6587d4cc4ba574ce49afbcac6f6fbac",
+  "fqdn_id": "blockchain::CC_RECORD_ACTOR_STATE_V0",
+  "frontmatter": {
+    "cc_code": "CC_RECORD_ACTOR_STATE_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "new_state": {
+          "required": true,
+          "type": "string"
+        },
+        "old_state": {
+          "required": false,
+          "type": "string"
+        },
+        "reason": {
+          "required": false,
+          "type": "string"
+        },
+        "timestamp": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "actor_id": "$.inputs.actor_id",
+            "record": {
+              "actor_id": "$.inputs.actor_id",
+              "new_state": "$.inputs.new_state",
+              "old_state": "$.inputs.old_state",
+              "reason": "$.inputs.reason",
+              "timestamp": "$.inputs.timestamp"
+            },
+            "stream_id": "$.inputs.actor_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "record_state_transition",
+          "store": "ACTOR_EVENTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Record actor state transition"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,88 @@
+{
+  "artifact_code": "CC_CHECK_TOOL_DECLARED_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "value": "in.tool_name"
+        },
+        "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "inputs": [
+          "value",
+          "allowed_set"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "is_member"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_CHECK_TOOL_DECLARED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CHECK_TOOL_DECLARED_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n\n---\n\n## 1. Intent\n\nVerify that the requested tool exists in the closed tool registry.\n\n---\n\n## 2. Rationale\n\nTool declaration is the second governance gate:\n- Only declared tools may be referenced\n- The tool surface is closed \u2014 undeclared tools are structurally absent\n- This enforces Invariant I-A2 (Closed Tool Surface)\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tool_name | string | true | Requested tool identifier |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| is_declared | boolean | Whether tool is in the closed registry |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Tool is declared |\n| VIOLATION | Tool is not declared |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CHECK_TOOL_DECLARED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Verify requested tool exists in closed tool registry\n\n  inputs:\n    tool_name:\n      type: string\n      required: true\n\n  outputs:\n    is_declared:\n      type: boolean\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: check_tool_declared\n      transform: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n      inputs:\n        value: $.inputs.tool_name\n        allowed_set:\n          - READ_RECORD\n          - PROVISION_STANDARD_LICENSE\n          - PROVISION_PREMIUM_LICENSE\n      outputs:\n        is_declared: $.capability_result.is_member\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\nextensions:\n  description: Enforces closed tool surface \u2014 only declared tools may be referenced\n```\n",
+  "content_hash": "6b3ce3fba1e3b87ee3c154baae66edc00e54981c1d8f27f19f7e6920aa3f66a5",
+  "fqdn_id": "ai_governance::CC_CHECK_TOOL_DECLARED_V0",
+  "frontmatter": {
+    "cc_code": "CC_CHECK_TOOL_DECLARED_V0",
+    "core": {
+      "inputs": {
+        "tool_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "is_declared": {
+          "type": "boolean"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "allowed_set": [
+              "READ_RECORD",
+              "PROVISION_STANDARD_LICENSE",
+              "PROVISION_PREMIUM_LICENSE"
+            ],
+            "value": "$.inputs.tool_name"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "is_declared": "$.capability_result.is_member"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "check_tool_declared",
+          "transform": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Verify requested tool exists in closed tool registry"
+    },
+    "extensions": {
+      "description": "Enforces closed tool surface \u2014 only declared tools may be referenced"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

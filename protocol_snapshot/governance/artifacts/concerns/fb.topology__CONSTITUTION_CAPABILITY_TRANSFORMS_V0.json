@@ -1,0 +1,55 @@
+{
+  "artifact_code": "CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\n## Machine\n```yaml\nfqdn: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\nconstitution_code: CONSTITUTION_CAPABILITY_TRANSFORMS_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Governs Capability Transform (CT) artifacts \u2014 purity, determinism, and explicit IO\n  scope: artifact\n  governs:\n    - CT\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: CT_PURITY\n    applies_to: CT\n    constraint: CT MUST be a pure function; same inputs MUST always produce same outputs\n    enforced_by: TBD\n\n  - rule_id: CT_NO_SIDE_EFFECTS\n    applies_to: CT\n    constraint: CT MUST NOT produce side effects; side effects belong in CS\n    enforced_by: TBD\n\n  - rule_id: CT_IMPLEMENTATION_DECLARED\n    applies_to: CT\n    constraint: atom CT MUST declare machine.implementation with non-empty module and callable\n    enforced_by: ASSERT_CT_SURFACE_CLOSED_V0\n\n  - rule_id: CT_EXPLICIT_IO\n    applies_to: CT\n    constraint: all CT inputs and outputs MUST be explicitly declared\n    enforced_by: TBD\n```\n\n---\n\n## 1. Purpose\n\nThis constitution defines the governance and enforcement rules for Capability Transforms (CT).\n\nCapability Transforms are pure functions that transform data within the protocol. They are the primary mechanism for logic in the system.\n\n---\n\n## 2. Core Principles\n\n- **Purity:** All CTs MUST be pure functions.\n- **Determinism:** Given the same input, a CT MUST always produce the same output.\n- **Side-Effect Free:** CTs MUST NOT have side effects. Side effects are delegated to Capability Side Effects (CS).\n- **Explicit Inputs/Outputs:** All data required by a CT must be passed as explicit inputs. All results must be returned as explicit outputs.\n\n---\n\n## 3. Required Fields\n\n- `ct_code`: Unique identifier for the transform.\n- `version`: Version of the transform.\n- `governed_by`: The constitution governing this transform.\n- `core`: Metadata and description.\n- `inputs`: Definition of input parameters.\n- `outputs`: Definition of output parameters.\n- `logic`: Reference to the implementation.\n\n---\n\n## 4. Validation Rules\n\n- CT implementations must be discoverable.\n- Input and output types must match the capability contract.\n- Implementation must adhere to the purity principle.\n",
+  "content_hash": "d84b8706875b2920a4204c94de303ed8e0778531a277fd01492508b4fd9df3c4",
+  "fqdn_id": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "core": {
+      "description": "Governs Capability Transform (CT) artifacts \u2014 purity, determinism, and explicit IO",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "CT"
+      ],
+      "scope": "artifact"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "CT",
+        "constraint": "CT MUST be a pure function; same inputs MUST always produce same outputs",
+        "enforced_by": "TBD",
+        "rule_id": "CT_PURITY"
+      },
+      {
+        "applies_to": "CT",
+        "constraint": "CT MUST NOT produce side effects; side effects belong in CS",
+        "enforced_by": "TBD",
+        "rule_id": "CT_NO_SIDE_EFFECTS"
+      },
+      {
+        "applies_to": "CT",
+        "constraint": "atom CT MUST declare machine.implementation with non-empty module and callable",
+        "enforced_by": "ASSERT_CT_SURFACE_CLOSED_V0",
+        "rule_id": "CT_IMPLEMENTATION_DECLARED"
+      },
+      {
+        "applies_to": "CT",
+        "constraint": "all CT inputs and outputs MUST be explicitly declared",
+        "enforced_by": "TBD",
+        "rule_id": "CT_EXPLICIT_IO"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

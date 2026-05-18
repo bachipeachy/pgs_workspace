@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_NO_SHORT_NAME_REFERENCE_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_NO_SHORT_NAME_REFERENCE_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_NO_SHORT_NAME_REFERENCE_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_fqdn_only_references_v0\n  callable: execute\n```\n\n## Summary\n\nValidates all artifact references use FQDN format (no short names).\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All compiled artifacts\n\n---\n\n## Purpose\n\nEnforce INVARIANT_NO_SHORT_NAME_REFERENCE_V0 during compilation.\n\n**Execution Phase**: ASSERT (after VALIDATE, before MATERIALIZE)\n\n**Failure Mode**: Build fails immediately on any violation (no warnings).\n",
+  "content_hash": "eb4101279dd666c0dd95f375b1ea1df9283ce17d84b892d6d76914f57225dcd1",
+  "fqdn_id": "fb.constitution::ASSERT_NO_SHORT_NAME_REFERENCE_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_NO_SHORT_NAME_REFERENCE_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_fqdn_only_references_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.assertions",
+  "namespace": "fb.constitution",
+  "references": [],
+  "version": "0"
+}

@@ -1,0 +1,58 @@
+{
+  "artifact_code": "INVARIANT_WF_EXECUTION_PATH_VALID_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_WF_EXECUTION_PATH_VALID_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_WF_EXECUTION_PATH_VALID_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    WF execution graph must be valid: start_node exists and is type IN or TI,\n    all nodes reachable from start_node, no cycles (DAG constraint),\n    all node.next references point to existing nodes, all EXIT nodes\n    are terminal, all CC nodes reference valid CC codes (FQDN resolution).\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - WORKFLOWS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_WF_EXECUTION_PATH_VALID_V0\n\n  anti_patterns:\n    - unreachable_node: \"Node exists but not reachable from start_node\"\n    - cyclic_graph: \"Graph contains cycle (violates DAG constraint)\"\n    - invalid_next_reference: \"node.next references non-existent node\"\n    - invalid_start_node: \"start_node does not exist or is not type IN/TI\"\n    - non_terminal_exit: \"EXIT node has outbound edges\"\n    - invalid_cc_reference: \"CC node references non-existent CC (FQDN not found)\"\n\n  clarification:\n    dag_model: >\n      WF defines execution as DAG (Directed Acyclic Graph) via nodes structure.\n      This is the authoritative execution model. Compiler derives linear paths\n      from DAG for validation purposes.\n    branching_allowed: >\n      Branching is valid and expected (SUCCESS/VIOLATION/etc paths).\n      Each branch is validated independently.\n    execution_paths: >\n      Execution paths are derived projections, not declared fields.\n      Compiler extracts all possible paths from IN \u2192 EXIT for validation.\n```\n\n---\n\n## Purpose\n\nEnsure WF execution graph is structurally valid and all references resolve.\n\n**Core Principle**: WF nodes structure is single source of truth for execution flow.\n\n---\n\n## Validation Rules\n\n### Rule 1: Valid Start Node\n\nWF must have `start_node` field referencing existing node of type IN or TI.\n\n**Rationale**: Domain workflows start with IN (Intent), transport workflows start with TI (Transport Ingress).\n\n**Violation**:\n```yaml\ncore:\n  start_node: IN_MISSING_V0  # Does not exist in nodes\n  nodes:\n    IN_OTHER_V0:\n      type: IN\n```\n\n**Detection**: Check `start_node` exists in `nodes` map and has `type: IN` or `type: TI`.\n\n---\n\n### Rule 2: Graph Connectivity\n\nAll nodes must be reachable from `start_node`.\n\n**Violation**:\n```yaml\ncore:\n  start_node: IN_START_V0\n  nodes:\n    IN_START_V0:\n      type: IN\n      next:\n        ACK: EXIT\n    CC_ORPHAN_V0:  # Unreachable!\n      type: CC\n```\n\n**Detection**: Traverse graph from start_node, collect reachable nodes, compare with all nodes.\n\n---\n\n### Rule 3: Acyclic Graph (DAG)\n\nGraph must not contain cycles.\n\n**Violation**:\n```yaml\nnodes:\n  CC_A_V0:\n    next:\n      SUCCESS: CC_B_V0\n  CC_B_V0:\n    next:\n      SUCCESS: CC_A_V0  # Cycle!\n```\n\n**Detection**: Topological sort must succeed (no cycles).\n\n---\n\n### Rule 4: Valid Next References\n\nAll `node.next` values must reference existing nodes.\n\n**Violation**:\n```yaml\nnodes:\n  CC_EXAMPLE_V0:\n    type: CC\n    next:\n      SUCCESS: CC_MISSING_V0  # Does not exist!\n```\n\n**Detection**: For each node, validate all `next` values exist in `nodes` map.\n\n---\n\n### Rule 5: Terminal EXIT Nodes\n\nEXIT nodes must have no outbound edges.\n\n**Violation**:\n```yaml\nnodes:\n  EXIT:\n    type: EXIT\n    next:\n      CONTINUE: CC_INVALID_V0  # EXIT cannot have next!\n```\n\n**Detection**: EXIT nodes must not have `next` field.\n\n---\n\n### Rule 6: Valid CC References\n\nCC nodes must reference existing CC artifacts (FQDN resolution).\n\n**Violation**:\n```yaml\nnodes:\n  CC_GENERATE_ID_V0:\n    type: CC\n    code: CC_NONEXISTENT_V0  # CC not found in compilation graph\n```\n\n**Detection**: Resolve CC FQDN via existing `INVARIANT_FQDN_ONLY_REFERENCES_V0`.\n\n---\n\n## Scope\n\n**Applies to**:\n- All WF artifacts (platform + domains)\n- All node types (IN, CC, EXIT)\n- All transition conditions (ACK, SUCCESS, VIOLATION, etc.)\n\n**Does NOT validate**:\n- Data availability (Phase 5)\n- Type safety (out of scope)\n- Mapping correctness (out of scope)\n\n---\n\n## Execution Path Model (Critical)\n\n**WF = DAG (authoritative)**\n\nCompiler MUST:\n1. Treat WF `nodes` graph as single source of truth\n2. Derive ALL linear execution paths from DAG (IN \u2192 ... \u2192 EXIT)\n3. Use derived paths for validation (not declared paths)\n\n**Prohibited**:\n- \u274c No replacement of DAG with linear `execution_path` field\n- \u274c No dual source of truth\n- \u274c No global topological order (validate per-path)\n\n**Per-Path Validation**:\n- A dependency valid in Path A may be invalid in Path B\n- Each branch validated independently\n- No false positives from unreachable branches\n\n---\n\n## Rationale\n\n**Closed WF surface = bounded, predictable execution**\n\n### Architectural Purity\n- Execution graph is explicit (no implicit behavior)\n- No runtime discovery of nodes\n- All transitions declared in protocol\n\n### Compile-Time Safety\n- Structure errors caught before runtime\n- No \"node not found\" failures during execution\n- Fast feedback for protocol authors\n\n### Debugging Support\n- Graph visualization available (Phase 8)\n- Trace correlation with validated graph\n- Clear error messages with location\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-12) - WF Execution Path Validation\n",
+  "content_hash": "012f44fe9726afccf430a3c05bb8c604c5c46eca093e5f804380e594c66c7857",
+  "fqdn_id": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "unreachable_node": "Node exists but not reachable from start_node"
+        },
+        {
+          "cyclic_graph": "Graph contains cycle (violates DAG constraint)"
+        },
+        {
+          "invalid_next_reference": "node.next references non-existent node"
+        },
+        {
+          "invalid_start_node": "start_node does not exist or is not type IN/TI"
+        },
+        {
+          "non_terminal_exit": "EXIT node has outbound edges"
+        },
+        {
+          "invalid_cc_reference": "CC node references non-existent CC (FQDN not found)"
+        }
+      ],
+      "clarification": {
+        "branching_allowed": "Branching is valid and expected (SUCCESS/VIOLATION/etc paths). Each branch is validated independently.\n",
+        "dag_model": "WF defines execution as DAG (Directed Acyclic Graph) via nodes structure. This is the authoritative execution model. Compiler derives linear paths from DAG for validation purposes.\n",
+        "execution_paths": "Execution paths are derived projections, not declared fields. Compiler extracts all possible paths from IN \u2192 EXIT for validation."
+      },
+      "description": "WF execution graph must be valid: start_node exists and is type IN or TI, all nodes reachable from start_node, no cycles (DAG constraint), all node.next references point to existing nodes, all EXIT nodes are terminal, all CC nodes reference valid CC codes (FQDN resolution).\n",
+      "enforced_by": [
+        "ASSERT_WF_EXECUTION_PATH_VALID_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "WORKFLOWS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_WF_EXECUTION_PATH_VALID_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

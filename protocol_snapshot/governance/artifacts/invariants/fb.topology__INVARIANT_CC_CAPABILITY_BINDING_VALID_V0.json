@@ -1,0 +1,48 @@
+{
+  "artifact_code": "INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CC_CAPABILITY_BINDING_VALID_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CC_CAPABILITY_BINDING_VALID_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Each CC pipeline step must bind exactly ONE capability:\n    - Either CT (transform) for pure computation\n    - Or CS (side_effect) for I/O operations\n    - Never both (violates single responsibility)\n    - Never zero (step has no implementation)\n\n    Binding must use valid FQDN that resolves to existing artifact.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - CAPABILITY_CONTRACTS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_CC_CAPABILITY_BINDING_VALID_V0\n\n  anti_patterns:\n    - zero_bindings: \"Pipeline step has no capability binding (neither transform nor side_effect)\"\n    - dual_bindings: \"Pipeline step binds both CT and CS (violates single responsibility)\"\n    - invalid_fqdn: \"Capability FQDN does not resolve to existing artifact\"\n\n  clarification:\n    single_responsibility: >\n      Each pipeline step is atomic capability invocation.\n      One step = one capability = one CT or one CS.\n      Multiple capabilities = multiple steps.\n    fqdn_resolution: >\n      Capability binding validation delegates to INVARIANT_FQDN_ONLY_REFERENCES_V0.\n      This invariant validates cardinality (exactly one), that invariant validates resolution.\n```\n\n---\n\n## Purpose\n\nEnsure CC pipeline steps are well-formed capability bindings.\n\n**Core Principle**: One step, one capability, one execution.\n\n---\n\n## Validation Rules\n\n### Rule 1: Exactly One Binding\n\nEach pipeline step must have exactly one of:\n- `transform` field (CT binding)\n- `side_effect` field (CS binding)\n\n**Violation - Zero Bindings**:\n```yaml\n# \u274c FORBIDDEN\npipeline:\n  - step: validate_input\n    inputs:\n      data: $.inputs.data\n    # \u274c No transform, no side_effect - what capability?\n```\n\n**Violation - Dual Bindings**:\n```yaml\n# \u274c FORBIDDEN\npipeline:\n  - step: process_and_save\n    transform: CT_PROCESS_V0      # \u274c Transform\n    side_effect: CS_SAVE_V0       # \u274c Side effect\n    # \u274c Both bindings - violates single responsibility\n```\n\n**Correct**:\n```yaml\n# \u2705 One capability per step\npipeline:\n  - step: process\n    transform: CT_PROCESS_V0      # \u2713 Pure computation\n    inputs:\n      data: $.inputs.data\n\n  - step: save\n    side_effect: CS_SAVE_V0       # \u2713 I/O operation\n    inputs:\n      data: $.results.process.data\n```\n\n**Detection**: Count `transform` and `side_effect` fields per step. Assert count == 1.\n\n---\n\n### Rule 2: Valid FQDN (Delegated)\n\nCapability FQDN must resolve to existing CT or CS artifact.\n\n**Violation**:\n```yaml\n# \u274c FORBIDDEN\npipeline:\n  - step: process\n    transform: CT_NONEXISTENT_V0  # \u274c CT not found\n```\n\n**Detection**: Delegate to `INVARIANT_FQDN_ONLY_REFERENCES_V0` (existing validation).\n\n---\n\n## Scope\n\n**Applies to**:\n- All CC artifacts (platform + domains)\n- All pipeline steps\n- Both `transform` and `side_effect` bindings\n\n**Does NOT validate**:\n- Input/output availability (Phase 5)\n- Mapping correctness (out of scope)\n- CT/CS implementation correctness (execution layer)\n\n---\n\n## Rationale\n\n**Architectural purity**\n\n### Single Responsibility\n- One step = one capability\n- Clear, atomic operations\n- No hidden complexity\n\n### Execution Clarity\n- Each step has unambiguous implementation\n- Trace shows exact capability invoked\n- No guessing what happened\n\n### Type Safety Foundation\n- CT always returns outputs\n- CS may have side effects\n- Different contracts, enforced by binding type\n\n### Composability\n- Steps are independently testable\n- Same capability reusable across CCs\n- No coupling between steps\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-12) - CC Capability Binding Validation\n",
+  "content_hash": "cef037181e722827399286d3c2a237df3c901288151328fd670ff746f184249e",
+  "fqdn_id": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "zero_bindings": "Pipeline step has no capability binding (neither transform nor side_effect)"
+        },
+        {
+          "dual_bindings": "Pipeline step binds both CT and CS (violates single responsibility)"
+        },
+        {
+          "invalid_fqdn": "Capability FQDN does not resolve to existing artifact"
+        }
+      ],
+      "clarification": {
+        "fqdn_resolution": "Capability binding validation delegates to INVARIANT_FQDN_ONLY_REFERENCES_V0. This invariant validates cardinality (exactly one), that invariant validates resolution.",
+        "single_responsibility": "Each pipeline step is atomic capability invocation. One step = one capability = one CT or one CS. Multiple capabilities = multiple steps.\n"
+      },
+      "description": "Each CC pipeline step must bind exactly ONE capability: - Either CT (transform) for pure computation - Or CS (side_effect) for I/O operations - Never both (violates single responsibility) - Never zero (step has no implementation)\nBinding must use valid FQDN that resolves to existing artifact.\n",
+      "enforced_by": [
+        "ASSERT_CC_CAPABILITY_BINDING_VALID_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "CAPABILITY_CONTRACTS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

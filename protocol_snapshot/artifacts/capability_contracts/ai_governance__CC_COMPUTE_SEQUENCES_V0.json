@@ -1,0 +1,82 @@
+{
+  "artifact_code": "CC_COMPUTE_SEQUENCES_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "numbers": "in.numbers"
+        },
+        "fqdn": "ai_governance::CT_PURE_COLLATZ_STEP_V0",
+        "id": "CT_PURE_COLLATZ_STEP_V0",
+        "inputs": [
+          "numbers"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "sequences"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_COMPUTE_SEQUENCES_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_COMPUTE_SEQUENCES_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_COLLATZ_STEP_V0\n\n---\n\n## 1. Intent\n\nCompute Collatz sequences for all numbers in the input list.\n\n---\n\n## 2. Rationale\n\nSequence computation is the first analytical step:\n- Applies the Collatz rule iteratively to each input number\n- Captures the complete path from n to 1\n- Output feeds the termination verification step\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_COLLATZ_STEP_V0 | CT | COLLATZ_STEP |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| numbers | array | true | List of positive integers from the admission-validated payload |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| sequences | object | Mapping from str(n) to full Collatz sequence |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All sequences computed successfully |\n| VIOLATION | Input invalid (non-positive, non-integer, or transform error) |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_COMPUTE_SEQUENCES_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Compute Collatz sequences for all input numbers\n\n  inputs:\n    numbers:\n      type: array\n      required: true\n\n  outputs:\n    sequences:\n      type: object\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: compute_sequences\n      transform: ai_governance::CT_PURE_COLLATZ_STEP_V0\n      inputs:\n        numbers: $.inputs.numbers\n      outputs:\n        sequences: $.capability_result.sequences\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  description: Computes full Collatz iteration path for each input integer\n```\n",
+  "content_hash": "8b7d0599ca9df226bbdfdd81661c41c1d08d6e1a51e4c72fe6bc1fe0ea05985b",
+  "fqdn_id": "ai_governance::CC_COMPUTE_SEQUENCES_V0",
+  "frontmatter": {
+    "cc_code": "CC_COMPUTE_SEQUENCES_V0",
+    "core": {
+      "inputs": {
+        "numbers": {
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "sequences": {
+          "type": "object"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "numbers": "$.inputs.numbers"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "sequences": "$.capability_result.sequences"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "compute_sequences",
+          "transform": "ai_governance::CT_PURE_COLLATZ_STEP_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Compute Collatz sequences for all input numbers"
+    },
+    "extensions": {
+      "description": "Computes full Collatz iteration path for each input integer"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.collatz_conjecture.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "ai_governance::CT_PURE_COLLATZ_STEP_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

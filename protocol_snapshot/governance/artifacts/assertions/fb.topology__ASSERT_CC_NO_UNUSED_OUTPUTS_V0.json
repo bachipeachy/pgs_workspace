@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_CC_NO_UNUSED_OUTPUTS_V0\n\nArchitectural Assertion (Warning Level)\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_CC_NO_UNUSED_OUTPUTS_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_cc_no_unused_outputs_v0\n  callable: execute\n```\n\n---\n\n## Summary\n\nDetects unused CC outputs as code smell indicator.\n\n**Enforcement Level**: WARNING (not ERROR)\n- Build succeeds with warnings\n- Warnings logged for author review\n- Not blocking\n\n## Purpose\n\nIdentify optimization opportunities and incomplete workflows.\n\n**Detects**:\n- CC outputs never consumed by downstream nodes\n- Dead computation (result never used)\n- Potential workflow inefficiencies\n\n**Does NOT block**:\n- Terminal state outputs (final results)\n- Debugging/observability outputs\n- Future extensibility outputs\n\n---\n\n## Enforcement\n\n**Stage**: compile_time\n**Trigger**: During assertion phase of build pipeline\n**Handler**: `assert_cc_no_unused_outputs_v0.execute()`\n\n**Detection Process**:\n1. For each WF artifact, extract all CC nodes\n2. Track all outputs produced by each CC\n3. Track all inputs consumed by each CC\n4. Identify outputs never referenced\n5. Emit warnings (not errors)\n\n**Violation Response**: WARN (build continues)\n\n---\n\n## Rationale\n\n**Code quality indicator**: Unused outputs suggest incomplete or inefficient workflows\n\n**Non-blocking feedback**: Warnings provide guidance without preventing builds\n\n**Optimization opportunity**: Identifies computation that could be removed\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-12) - Unused Output Detection Assertion (Warning Level)\n",
+  "content_hash": "a97ed72ce3d17a34036131d652082ecf26e3fedc2029a08b0ce435eac4309f94",
+  "fqdn_id": "fb.topology::ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_cc_no_unused_outputs_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

@@ -1,0 +1,29 @@
+{
+  "artifact_code": "INVARIANT_NO_SMART_EXECUTION_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_NO_SMART_EXECUTION_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\nartifact_code: INVARIANT_NO_SMART_EXECUTION_V0\nartifact_type: INVARIANT\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  summary: Execution layer must not interpret type declarations or perform conversions\n  rule: Runtime executors must pass inputs to transforms without type-based interpretation or conversion\n  scope:\n    - CS\n    - RUNTIME\n```\n\n## Summary\n\nExecution layer code (atom_registry, workflow_runner, etc.) must be \"dumb executors\" - they pass inputs to transforms and return outputs without interpreting type metadata or performing conversions.\n\n## Rule\n\nFor all execution layer code:\n1. NO type-based input conversion (e.g., hex_string \u2192 bytes)\n2. NO type-based output conversion (e.g., bytes \u2192 hex_string)\n3. NO interpretation of CC type declarations as execution instructions\n4. NO caching of type metadata for runtime decisions\n5. Type declarations are METADATA ONLY for validation\n\nAll canonicalization must happen inside atom implementations.\n\n## Enforcement Scope\n\n- **Artifact Types**: CS (Capability Side Effects - executors)\n- **Code Layer**: pgs_execution\n- **Validation Phase**: Phase 5 (ASSERT)\n- **Enforcement**: MANDATORY (build fails on violation)\n\n## Examples\n\n### \u2705 VALID - Dumb Executor\n\n```python\ndef adapter(ctx, step: dict):\n    # Resolve inputs without type interpretation\n    resolved_inputs = {}\n    for key, value in step.items():\n        if key in RESERVED_KEYS:\n            continue\n        resolved_inputs[key] = resolve_value(value)\n\n    # Call atom - atom handles its own canonicalization\n    result = execute_fn(inputs=resolved_inputs)\n\n    # Store result without conversion\n    ctx.set_value(step[\"as\"], result)\n```\n\n### \u274c INVALID - Smart Executor\n\n```python\n# \u274c Type-based input conversion\ninput_types = load_contract_input_types(atom_code)\nfor key, value in inputs.items():\n    if input_types[key] == \"hex_string\":\n        inputs[key] = bytes.fromhex(value[2:])  # \u274c VIOLATION\n\n# \u274c Type-based output conversion\noutput_types = load_contract_output_types(atom_code)\nfor key, value in result.items():\n    if output_types[key] == \"hex_string\":\n        result[key] = \"0x\" + value.hex()  # \u274c VIOLATION\n```\n\n## Rationale\n\nDumb executors ensure:\n- Single source of truth (atoms own their canonicalization)\n- No hidden transformations\n- Explicit type handling in atoms\n- No executor-atom coupling via type metadata\n- Constitutional principle: \"Code is executor, not decision maker\"\n\n## Detection Strategy\n\nScan execution layer code for:\n- Calls to `load_contract()` or type metadata loaders\n- Conditional logic based on type names (if type == \"hex_string\")\n- `.hex()` calls on values (output conversion)\n- `bytes.fromhex()` calls on values (input conversion)\n- `_OUTPUT_TYPES_CACHE` or similar type caching\n\n## Related Artifacts\n\n- `fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0` - Defines pure atom behavior\n- `fb.topology::CONSTITUTION_RUNTIME_BINDING_V0` - Defines executor boundaries\n",
+  "content_hash": "8f92b5c347adff75c6a117763c2280c5f458651571f0f8401e7913e965654f26",
+  "fqdn_id": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_code": "INVARIANT_NO_SMART_EXECUTION_V0",
+    "artifact_kind": "INVARIANT",
+    "artifact_type": "INVARIANT",
+    "core": {
+      "rule": "Runtime executors must pass inputs to transforms without type-based interpretation or conversion",
+      "scope": [
+        "CS",
+        "RUNTIME"
+      ],
+      "summary": "Execution layer must not interpret type declarations or perform conversions"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

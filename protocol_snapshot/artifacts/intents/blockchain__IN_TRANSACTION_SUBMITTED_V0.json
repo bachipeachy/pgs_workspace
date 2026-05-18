@@ -1,0 +1,86 @@
+{
+  "artifact_code": "IN_TRANSACTION_SUBMITTED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_TRANSACTION_SUBMITTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_TRANSACTION_SUBMITTED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_SUBMIT_TRANSACTION_V0\n\n---\n\n## 1. Intent\n\nSubmit an ETH transaction from a wallet, validating, signing, and persisting to the local mempool.\n\n---\n\n## 2. Rationale\n\nTransaction submission requires:\n- Actor must be resolved (verified)\n- Transaction structure and policy must be validated\n- Nonce must be atomically reserved\n- Transaction must be signed with the user-supplied mnemonic\n- Signed transaction is persisted to append-only mempool\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_SUBMIT_TRANSACTION_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Actor record for resolution |\n| wallet_id | string | true | Source wallet identifier |\n| to_address | string | true | Destination address (0x-prefixed) |\n| value | string | true | Transfer value in wei |\n| gas_limit | integer | false | Gas limit (default 21000) |\n| max_fee_per_gas | string | false | Max fee per gas in wei (default \"20000000000\") |\n| max_priority_fee_per_gas | string | false | Max priority fee in wei (default \"1000000000\") |\n| data | string | false | Transaction data (default \"0x\") |\n| mnemonic | string | true | BIP-39 mnemonic for key re-derivation (transient secret) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Transaction submission initiated |\n| NACK | Transaction submission rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.finance.transaction\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_TRANSACTION_SUBMITTED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit ETH transaction from wallet\n  workflow: WF_SUBMIT_TRANSACTION_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Actor record for resolution\n    wallet_id:\n      type: string\n      required: true\n      description: Source wallet identifier\n    to_address:\n      type: string\n      required: true\n      description: Destination address (0x-prefixed hex)\n    value:\n      type: string\n      required: true\n      description: Transfer value in wei\n    gas_limit:\n      type: integer\n      default: 21000\n      description: Gas limit\n    max_fee_per_gas:\n      type: string\n      default: \"20000000000\"\n      description: Max fee per gas in wei\n    max_priority_fee_per_gas:\n      type: string\n      default: \"1000000000\"\n      description: Max priority fee per gas in wei\n    data:\n      type: string\n      default: \"0x\"\n      description: Transaction data hex\n    mnemonic:\n      type: string\n      required: true\n      description: BIP-39 mnemonic for key re-derivation (transient secret)\n\n  outcomes:\n    ACK:\n      description: Transaction submission initiated\n    NACK:\n      description: Transaction submission rejected\n\n  admission:\n    requires:\n      - EV_WALLET_CREATED_V0\n\nextensions:\n  domain: pgs.finance.transaction\n```\n",
+  "content_hash": "99e4efc724d33bb9ab8cbf6c97ab1319adb8a347754bbd39388d6a130a6b30d3",
+  "fqdn_id": "blockchain::IN_TRANSACTION_SUBMITTED_V0",
+  "frontmatter": {
+    "core": {
+      "admission": {
+        "requires": [
+          "EV_WALLET_CREATED_V0"
+        ]
+      },
+      "inputs": {
+        "actor_record": {
+          "description": "Actor record for resolution",
+          "required": true,
+          "type": "object"
+        },
+        "data": {
+          "default": "0x",
+          "description": "Transaction data hex",
+          "type": "string"
+        },
+        "gas_limit": {
+          "default": 21000,
+          "description": "Gas limit",
+          "type": "integer"
+        },
+        "max_fee_per_gas": {
+          "default": "20000000000",
+          "description": "Max fee per gas in wei",
+          "type": "string"
+        },
+        "max_priority_fee_per_gas": {
+          "default": "1000000000",
+          "description": "Max priority fee per gas in wei",
+          "type": "string"
+        },
+        "mnemonic": {
+          "description": "BIP-39 mnemonic for key re-derivation (transient secret)",
+          "required": true,
+          "type": "string"
+        },
+        "to_address": {
+          "description": "Destination address (0x-prefixed hex)",
+          "required": true,
+          "type": "string"
+        },
+        "value": {
+          "description": "Transfer value in wei",
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "description": "Source wallet identifier",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Transaction submission initiated"
+        },
+        "NACK": {
+          "description": "Transaction submission rejected"
+        }
+      },
+      "summary": "Submit ETH transaction from wallet",
+      "workflow": "WF_SUBMIT_TRANSACTION_V0"
+    },
+    "extensions": {
+      "domain": "pgs.finance.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_TRANSACTION_SUBMITTED_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

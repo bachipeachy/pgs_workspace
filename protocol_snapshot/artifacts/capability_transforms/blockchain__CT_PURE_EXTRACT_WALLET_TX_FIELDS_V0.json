@@ -1,0 +1,84 @@
+{
+  "artifact_code": "CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0\n- **Artifact Kind:** atom\n- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nExtract transaction-relevant fields from a wallet record, including EOA address\nand current nonce.\n\n---\n\n### 2. Rationale\n\nThe wallet record stores addresses in arrays and nonce in nested objects.\nThis atom provides structured extraction for fields needed during transaction\nsubmission, handling array indexing that the expression resolver cannot perform.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0\n- **Operation:** EXTRACT_WALLET_TX_FIELDS\n\n---\n\n### 4. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same record yields same fields |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure extraction |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Extract transaction fields from wallet record\n  description: Extract transaction-relevant fields from a wallet record, including EOA address and current nonce\n  inputs:\n    wallet_record:\n      type: object\n      required: true\n  outputs:\n    from_address:\n      type: string\n    current_nonce:\n      type: integer\n    actor_id:\n      type: string\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: EXTRACT_WALLET_TX_FIELDS\n  implementation:\n    module: pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_extract_wallet_tx_fields_v0\n    callable: execute\n```\n",
+  "content_hash": "ec5a05e8586932582336990ecc79fea6e9a719eb5de8c46535c5139b120c44d2",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "wallet_record": "$.inputs.wallet_record"
+        },
+        "atom": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_extract_wallet_tx_fields_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+    "inputs": {
+      "wallet_record": {
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "actor_id": {
+        "from": "__atom_result__"
+      },
+      "current_nonce": {
+        "from": "__atom_result__"
+      },
+      "from_address": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Extract transaction-relevant fields from a wallet record, including EOA address and current nonce",
+      "inputs": {
+        "wallet_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "actor_id": {
+          "type": "string"
+        },
+        "current_nonce": {
+          "type": "integer"
+        },
+        "from_address": {
+          "type": "string"
+        }
+      },
+      "summary": "Extract transaction fields from wallet record"
+    },
+    "ct_code": "CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_extract_wallet_tx_fields_v0"
+      },
+      "operation": "EXTRACT_WALLET_TX_FIELDS"
+    },
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_transforms",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

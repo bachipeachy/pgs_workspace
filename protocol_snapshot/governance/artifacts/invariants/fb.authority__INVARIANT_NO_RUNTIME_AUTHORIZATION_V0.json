@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_NO_RUNTIME_AUTHORIZATION_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_NO_RUNTIME_AUTHORIZATION_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_NO_RUNTIME_AUTHORIZATION_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0\n\ncore:\n  summary: The runtime must never perform authorization evaluation; it consumes resolved authority state only\n  rule: Runtime must consume pre-resolved authority state; dynamic authorization, role inference, policy evaluation, and permission negotiation at runtime are constitutional violations\n  scope:\n    - WF\n    - CC\n    - CT\n    - CS\n```\n\n## Summary\n\nRuntime dumbness is a core PGS architectural principle. The runtime is a graph traversal engine \u2014 it executes what is declared, without interpretation. This invariant extends that principle to authority: the runtime must never perform authorization evaluation. Authority is resolved before execution begins. The runtime reads the resolved state; it does not participate in producing it.\n\n## Rule\n\nFor every runtime interaction with authority state:\n1. The runtime MUST NOT evaluate permissions, resolve roles, or execute authorization logic\n2. The runtime MUST NOT query authorization databases at execution time\n3. The runtime MUST NOT negotiate permissions with external systems during execution\n4. Authority state MUST be fully resolved before the runtime receives it\n5. The runtime treats authority state as immutable input \u2014 not as a source to be re-evaluated\n\n## Enforcement Scope\n\n- **Artifact Types**: WF, CC, CT, CS (runtime boundary)\n- **Validation Phase**: ASSERT (compile-time)\n- **Enforced By**: ASSERT_NO_RUNTIME_AUTHORIZATION_V0\n\n## Rationale\n\nIf the runtime evaluates authorization, it becomes a policy engine. Policy engines are not graph traversal engines. They are dynamic, stateful, non-deterministic, and difficult to audit. PGS explicitly forbids this evolution. The authority state envelope is the output of pre-execution authority evaluation \u2014 the runtime consumes it without contributing to it.\n",
+  "content_hash": "6b04bf439b8192e4c0c60e1cb56f8bcc01e003214ee59dedea42fdbaa14d4268",
+  "fqdn_id": "fb.authority::INVARIANT_NO_RUNTIME_AUTHORIZATION_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "Runtime must consume pre-resolved authority state; dynamic authorization, role inference, policy evaluation, and permission negotiation at runtime are constitutional violations",
+      "scope": [
+        "WF",
+        "CC",
+        "CT",
+        "CS"
+      ],
+      "summary": "The runtime must never perform authorization evaluation; it consumes resolved authority state only"
+    },
+    "governed_by": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "invariant_code": "INVARIANT_NO_RUNTIME_AUTHORIZATION_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.invariants",
+  "namespace": "fb.authority",
+  "references": [
+    "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

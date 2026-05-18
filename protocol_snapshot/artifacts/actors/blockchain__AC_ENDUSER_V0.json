@@ -1,0 +1,47 @@
+{
+  "artifact_code": "AC_ENDUSER_V0",
+  "artifact_type": "AC",
+  "content": "# AC_ENDUSER_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_ENDUSER_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nAn end-user actor represents a human user interacting with the system.\n\n---\n\n## 2. Rationale\n\nEnd-user actors are the primary participants in the system:\n- Represent human identities\n- Track KYC verification status\n- Provide natural key attributes for resolution\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | person |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| email | string | true | User's email address |\n| first_name | string | true | User's first name |\n| last_name | string | true | User's last name |\n| kyc_status | string (enum) | false | Verification status: UNVERIFIED, VERIFIED, REJECTED |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_ENDUSER_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: End-User Actor\n  description: Represents a human user interacting with the layers\n  type: person\n\n  attributes:\n    email:\n      type: string\n      required: true\n    first_name:\n      type: string\n      required: true\n    last_name:\n      type: string\n      required: true\n    kyc_status:\n      type: string\n      enum:\n        - UNVERIFIED\n        - VERIFIED\n        - REJECTED\n      default: UNVERIFIED\n```\n",
+  "content_hash": "9bf5e3859f3951b082bce241e3745fe9dc10678d495fb9362e025421682a8fb2",
+  "fqdn_id": "blockchain::AC_ENDUSER_V0",
+  "frontmatter": {
+    "ac_code": "AC_ENDUSER_V0",
+    "core": {
+      "attributes": {
+        "email": {
+          "required": true,
+          "type": "string"
+        },
+        "first_name": {
+          "required": true,
+          "type": "string"
+        },
+        "kyc_status": {
+          "default": "UNVERIFIED",
+          "enum": [
+            "UNVERIFIED",
+            "VERIFIED",
+            "REJECTED"
+          ],
+          "type": "string"
+        },
+        "last_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Represents a human user interacting with the layers",
+      "summary": "End-User Actor",
+      "type": "person"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.actors",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

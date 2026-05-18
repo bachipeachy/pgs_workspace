@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_CC_CAPABILITY_BINDING_VALID_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_CC_CAPABILITY_BINDING_VALID_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_cc_capability_binding_valid_v0\n  callable: execute\n```\n\n## Summary\n\nValidates CC pipeline step capability bindings:\n1. Each step has exactly one binding (never zero, never dual)\n2. Binding is either `transform` (CT) or `side_effect` (CS)\n3. FQDN validation delegated to existing FQDN invariant\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All CC artifacts, all pipeline steps\n\n## Handler Behavior\n\n### 1. Validate Step Bindings\n\nFor each pipeline step:\n- Count `transform` bindings\n- Count `side_effect` bindings\n- Assert total == 1\n\nViolations:\n- Zero bindings: No capability specified\n- Dual bindings: Both CT and CS present\n\n### 2. Delegate FQDN Validation\n\nFQDN resolution validated by existing `INVARIANT_FQDN_ONLY_REFERENCES_V0`.\n\nThis assertion validates cardinality only (exactly one binding).\n\n### 3. Aggregate Violations\n\nCollect violations across all CC artifacts.\n\nReturn result with violation details.\n\n## Error Messages\n\n### Zero Bindings\n```\n\u274c ASSERT_CC_CAPABILITY_BINDING_VALID_V0: Missing capability binding\n   CC: CC_EXAMPLE_V0\n   Step: validate_input\n   Violation: Pipeline step has no capability binding (neither transform nor side_effect)\n   Fix: Add either transform (for CT) or side_effect (for CS)\n```\n\n### Dual Bindings\n```\n\u274c ASSERT_CC_CAPABILITY_BINDING_VALID_V0: Dual capability binding\n   CC: CC_EXAMPLE_V0\n   Step: process_and_save\n   Transform: CT_PROCESS_V0\n   Side Effect: CS_SAVE_V0\n   Violation: Pipeline step binds both CT and CS (violates single responsibility)\n   Fix: Split into two steps - one for transform, one for side_effect\n```\n\n### Invalid Binding Type\n```\n\u274c ASSERT_CC_CAPABILITY_BINDING_VALID_V0: Invalid binding field\n   CC: CC_EXAMPLE_V0\n   Step: custom_step\n   Field: custom_capability\n   Violation: Unknown binding field (expected transform or side_effect)\n   Fix: Use transform (for CT) or side_effect (for CS)\n```\n\n## Rationale\n\n**Single responsibility enforcement**\n\n### Architectural Clarity\n- One step = one capability\n- No ambiguity about what executes\n- Clear execution model\n\n### Foundation for Data Flow\n- Phase 5 validates inputs/outputs\n- Requires knowing which capability executes\n- Single binding = deterministic data flow\n\n### Type Safety Preparation\n- CT always pure (outputs deterministic)\n- CS may have side effects (outputs + effects)\n- Different contracts enforced by binding type\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-12) - CC Capability Binding Validation\n",
+  "content_hash": "d46961f0f34ae9d47b46ba7d7d5da908d1ad0b43712a76ffd1d5cdd2e157a96f",
+  "fqdn_id": "fb.topology::ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_cc_capability_binding_valid_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

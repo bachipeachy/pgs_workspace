@@ -1,0 +1,78 @@
+{
+  "artifact_code": "CT_PURE_INCREMENT_WALLET_NONCE_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_INCREMENT_WALLET_NONCE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_INCREMENT_WALLET_NONCE_V0\n- **Artifact Kind:** atom\n- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nCreate a copy of a wallet record with the EOA nonce incremented by 1,\nreturning both the updated record and the reserved nonce value.\n\n---\n\n### 2. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same record yields same result |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure transform |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_INCREMENT_WALLET_NONCE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Increment wallet EOA nonce and return reserved value\n  description: Create a copy of a wallet record with the EOA nonce incremented by 1, returning both the updated record and the reserved nonce value\n  inputs:\n    wallet_record:\n      type: object\n      required: true\n  outputs:\n    updated_wallet_record:\n      type: object\n    nonce:\n      type: integer\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: INCREMENT_WALLET_NONCE\n  implementation:\n    module: pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_increment_wallet_nonce_v0\n    callable: execute\n```\n",
+  "content_hash": "63d2d3242a7c2df06d064e15212a8e17fe667f201b759b738c09a742200c66bf",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "wallet_record": "$.inputs.wallet_record"
+        },
+        "atom": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_increment_wallet_nonce_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_INCREMENT_WALLET_NONCE_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+    "inputs": {
+      "wallet_record": {
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "nonce": {
+        "from": "__atom_result__"
+      },
+      "updated_wallet_record": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Create a copy of a wallet record with the EOA nonce incremented by 1, returning both the updated record and the reserved nonce value",
+      "inputs": {
+        "wallet_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "nonce": {
+          "type": "integer"
+        },
+        "updated_wallet_record": {
+          "type": "object"
+        }
+      },
+      "summary": "Increment wallet EOA nonce and return reserved value"
+    },
+    "ct_code": "CT_PURE_INCREMENT_WALLET_NONCE_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_increment_wallet_nonce_v0"
+      },
+      "operation": "INCREMENT_WALLET_NONCE"
+    },
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_transforms",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

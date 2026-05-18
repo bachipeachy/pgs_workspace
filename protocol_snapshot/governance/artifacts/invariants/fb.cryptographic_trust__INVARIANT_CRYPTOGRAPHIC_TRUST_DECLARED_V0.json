@@ -1,0 +1,32 @@
+{
+  "artifact_code": "INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0\n\n## Machine\n\n```yaml\nartifact_code: INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\nfqdn: fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0\n\ncore:\n  summary: Every compiled snapshot must declare exactly one active cryptographic trust contract\n  rule: >\n    The compiler MUST locate exactly one active trust contract within\n    FB_CRYPTOGRAPHIC_TRUST. Zero contracts is a missing declaration violation.\n    More than one active contract is an ambiguity violation.\n  scope:\n    - compiled_snapshot\n  enforcement_stage:\n    - compiler_validation\n  violation_response: FAIL_COMPILE\n```\n\n---\n\n## Purpose\n\nThis invariant makes the V0 trust contract load-bearing. Trust posture is explicitly\ndeclared for every snapshot \u2014 even in local unsigned development. The declaration\n`LOCAL_DEV_UNSIGNED` is not an absence of trust governance; it is an explicit statement\nthat no cryptographic verification is required in this context. This sets up the\ngovernance axis that future signed and attested execution modes will extend.\n\n## Rule\n\nFor every compiled snapshot:\n1. The compiler MUST scan `FB_CRYPTOGRAPHIC_TRUST/trust_contracts/` for active contracts\n2. Exactly one MUST be present\n3. The active contract's trust mode MUST be materialized into `federation_profile.cryptographic_trust`\n4. Compile MUST fail if no contract is found or more than one is found\n\n## Anti-Patterns\n\n- `no_trust_contract`: Snapshot compiled without any trust contract present\n- `multiple_active_contracts`: More than one trust contract marked active simultaneously\n- `runtime_trust_negotiation`: Runtime selecting or upgrading trust mode at execution time\n\n## Enforcement\n\n- **Stage:** compiler_validation\n- **Failure Mode:** FAIL_COMPILE \u2014 no snapshot is produced if violated\n",
+  "content_hash": "f1384c0ebe5683561e66da1a2f42bfedc05271d6ad3f6b5a86c9d983b329af3a",
+  "fqdn_id": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+  "frontmatter": {
+    "artifact_code": "INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "rule": "The compiler MUST locate exactly one active trust contract within FB_CRYPTOGRAPHIC_TRUST. Zero contracts is a missing declaration violation. More than one active contract is an ambiguity violation.\n",
+      "scope": [
+        "compiled_snapshot"
+      ],
+      "summary": "Every compiled snapshot must declare exactly one active cryptographic trust contract",
+      "violation_response": "FAIL_COMPILE"
+    },
+    "fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CRYPTOGRAPHIC_TRUST.invariants",
+  "namespace": "fb.cryptographic_trust",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

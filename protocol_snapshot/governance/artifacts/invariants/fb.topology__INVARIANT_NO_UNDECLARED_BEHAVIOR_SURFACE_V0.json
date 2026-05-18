@@ -1,0 +1,111 @@
+{
+  "artifact_code": "INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    All runtime behavior must originate from declared protocol artifacts.\n    Eliminate fallback logic, heuristic resolution, and smart coding that\n    makes implicit decisions outside protocol governance.\n\n  enforcement_stage:\n    - compiler_validation\n    - structure_resolution\n    - workflow_execution\n    - side_effect_execution\n\n  scope:\n    - STRUCTURE\n    - WF\n    - CC\n    - CS\n    - RB\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_NO_UNDECLARED_BEHAVIOR_V0\n\n  anti_patterns:\n    - fallback_defaults_for_protocol_values: \"config.get('trace_output_path', 'default') when trace_output_path SHOULD be in STRUCTURE\"\n    - hardcoded_paths: \"literal path strings outside STRUCTURE\"\n    - implicit_domain: \"layer='DOMAINS' without domain field\"\n    - manual_traversal: \".parent navigation outside LayerResolver\"\n    - heuristic_selection: \"filesystem checks to choose behavior\"\n\n  clarification:\n    illegal_fallback: \"config.get('required_protocol_field', 'default') \u2192 field MUST be in STRUCTURE\"\n    legal_fallback: \"config.get('optional_metadata', {}) \u2192 truly optional field, not protocol-required\"\n    rule: \"If STRUCTURE/WF/RB SHOULD declare it \u2192 fallback is illegal. If genuinely optional \u2192 fallback is OK.\"\n\nexamples:\n    violation_1:\n      code: |\n        # \u274c WRONG - Fallback for protocol-required field\n        output_config = structure.get('output_configuration', {})\n      fix: |\n        # \u2705 CORRECT - Fail hard if missing\n        if 'output_configuration' not in structure:\n            raise ValueError(\"PROTOCOL_INCOMPLETE: 'output_configuration' not declared\")\n        output_config = structure['output_configuration']\n\n    violation_2:\n      code: |\n        # \u274c WRONG - Manual path traversal\n        module_root = resolver.resolve_layer_root(\"COMPILER\")\n        repo_root = module_root.parent\n        output_path = repo_root / \"testbed\" / \"outputs\"\n      fix: |\n        # \u2705 CORRECT - Use STRUCTURE-declared path\n        output_path = paths.resolve_output_path(\n            'testbed_output_path',\n            structure_artifact,\n            domain=domain\n        )\n\n    violation_3:\n      code: |\n        # \u274c WRONG - Lossy domain resolution\n        layer_code = \"DOMAINS\"  # Lost which domain!\n      fix: |\n        # \u2705 CORRECT - Explicit domain binding\n        layer_code = \"DOMAINS\"\n        domain = extract_domain_from_path(artifact_source_path)\n        if not domain:\n            raise ValueError(\"PROTOCOL_INCOMPLETE: domain required for DOMAINS layer\")\n\n    legal_pattern_1:\n      code: |\n        # \u2705 OK - Genuinely optional metadata\n        metadata = artifact.get('optional_metadata', {})\n      reason: \"optional_metadata is not protocol-required, genuinely optional\"\n\n    legal_pattern_2:\n      code: |\n        # \u2705 OK - Static error message lookup\n        message = ERROR_MESSAGES.get(code, DEFAULT_MESSAGE)\n      reason: \"Static mapping, not protocol data\"\n\nextensions:\n  enforcement_locations:\n    - \"pgs_structure/structure/resolution/path_registry.py::resolve_output_path()\"\n    - \"pgs_structure/structure/resolution/layer_resolver.py::resolve_layer_root()\"\n    - \"pgs_execution/execution/host/runtime_loader.py::load_runtime_binding()\"\n    - \"pgs_execution/execution/host/workflow_runner.py::execute()\"\n    - \"pgs_compiler/compiler/transforms/*::validate()\"\n    - \"pgs_ingress/ingress/gateway/workflow_gateway.py::execute_workflow()\"\n\n  error_codes:\n    - PROTOCOL_INCOMPLETE: \"Required protocol field not declared\"\n    - UNDECLARED_OUTPUT_PATH: \"Output path not declared in STRUCTURE\"\n    - UNDECLARED_SIDE_EFFECT: \"CS runtime attempted undeclared I/O operation\"\n    - DOMAIN_REQUIRED: \"Domain parameter required but not provided\"\n    - REFERENCE_UNRESOLVED: \"Artifact reference does not resolve\"\n```\n\n---\n\n## Enforcement Rules\n\n### Rule 1: No Fallback Defaults for Protocol-Required Fields\n\n**Violation Pattern**:\n```python\n# \u274c WRONG\nvalue = config.get(\"protocol_required_field\", \"default_value\")\n```\n\n**Correct Pattern**:\n```python\n# \u2705 CORRECT\nif \"protocol_required_field\" not in config:\n    raise ValueError(\n        f\"PROTOCOL_INCOMPLETE: 'protocol_required_field' not declared in {artifact_code}. \"\n        f\"Protocol artifacts must explicitly declare all required fields.\"\n    )\nvalue = config[\"protocol_required_field\"]\n```\n\n### Rule 2: No Hardcoded Paths\n\n**Violation Pattern**:\n```python\n# \u274c WRONG\noutput_path = \"/Users/bp/pgs/pgs_compiler/compiled/artifacts\"\noutput_path = Path(\"pgs_domains/domains/blockchain/outputs\")\n```\n\n**Correct Pattern**:\n```python\n# \u2705 CORRECT - Declared in STRUCTURE\noutput_path = paths.resolve_output_path(\n    'build_manifest_path',\n    structure_artifact,\n    domain=domain\n)\n```\n\n### Rule 3: No Implicit Domain Resolution\n\n**Violation Pattern**:\n```python\n# \u274c WRONG - Lost domain information\nlayer_code = \"DOMAINS\"\nlayer_root = resolver.resolve_layer_root(layer_code)  # Which domain?\n```\n\n**Correct Pattern**:\n```python\n# \u2705 CORRECT - Explicit domain binding\nlayer_code = \"DOMAINS\"\ndomain = extract_domain_from_path(artifact_source_path)\nif not domain:\n    raise ValueError(\"PROTOCOL_INCOMPLETE: domain required for DOMAINS layer\")\nlayer_root = resolver.resolve_layer_root(layer_code, domain=domain)\n```\n\n### Rule 4: No Manual Path Traversal\n\n**Violation Pattern**:\n```python\n# \u274c WRONG - Manual .parent calls\nmodule_root = resolver.resolve_layer_root(\"COMPILER\")\nrepo_root = module_root.parent\noutput_path = repo_root / \"compiled\" / \"artifacts\"\n```\n\n**Correct Pattern**:\n```python\n# \u2705 CORRECT - Use LayerResolver API\noutput_path = resolver.resolve_output_path(\"artifacts\", \"COMPILER\", structure)\n```\n\n### Rule 5: No Heuristic Selection\n\n**Violation Pattern**:\n```python\n# \u274c WRONG - Filesystem heuristic\nfor path in module.__path__:\n    if (Path(path).parent / \"schemas\").exists():\n        return path  # Guessing based on filesystem\n```\n\n**Correct Pattern**:\n```python\n# \u2705 CORRECT - Protocol-declared authority\nfor path in module.__path__:\n    authority_artifact = Path(path) / \"layers\" / \"STRUCTURE_LAYER_AUTHORITY_V0.md\"\n    if parse(authority_artifact).get(\"role\") == \"platform_root\":\n        return path  # Declared in protocol\n```\n\n---\n\n## Clarification: Legal vs Illegal Fallbacks\n\n### Illegal Fallbacks (Protocol-Required Fields)\n\nFields that SHOULD be declared in protocol artifacts:\n\n**STRUCTURE artifacts**:\n- `output_configuration` (required)\n- `build_manifest_path` (required in output_configuration)\n- `trace_output_path` (required in output_configuration)\n- `artifact_discovery.search_roots` (required)\n\n**Workflow artifacts**:\n- `runtime_binding` (required - can be in WF or passed as parameter)\n- `workflow_code` (required)\n- `states` (required)\n\n**Intent artifacts**:\n- `core` (required)\n- `core.workflow` (required)\n\n**Runtime Binding artifacts**:\n- `core.bindings` (required)\n\n### Legal Fallbacks (Truly Optional Fields)\n\nFields that are genuinely optional:\n\n- `optional_metadata` - Not protocol-required\n- Static error message lookups - Not protocol data\n- Runtime execution context defaults (e.g., `exit_reason or \"COMPLETED\"`) - Runtime values\n\n**Test**: If removing the field would make the artifact invalid per constitution \u2192 illegal fallback. If field is supplementary \u2192 legal fallback.\n\n---\n\n## Version History\n\n- **V0**: Initial invariant declaration (2026-03-24) - Protocol Surface Closure Phase 1\n",
+  "content_hash": "a5ac651cd24ca14e67500c284f50216ac27052bf4294a1d2790b257ac8a8e119",
+  "fqdn_id": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "fallback_defaults_for_protocol_values": "config.get('trace_output_path', 'default') when trace_output_path SHOULD be in STRUCTURE"
+        },
+        {
+          "hardcoded_paths": "literal path strings outside STRUCTURE"
+        },
+        {
+          "implicit_domain": "layer='DOMAINS' without domain field"
+        },
+        {
+          "manual_traversal": ".parent navigation outside LayerResolver"
+        },
+        {
+          "heuristic_selection": "filesystem checks to choose behavior"
+        }
+      ],
+      "clarification": {
+        "illegal_fallback": "config.get('required_protocol_field', 'default') \u2192 field MUST be in STRUCTURE",
+        "legal_fallback": "config.get('optional_metadata', {}) \u2192 truly optional field, not protocol-required",
+        "rule": "If STRUCTURE/WF/RB SHOULD declare it \u2192 fallback is illegal. If genuinely optional \u2192 fallback is OK."
+      },
+      "description": "All runtime behavior must originate from declared protocol artifacts. Eliminate fallback logic, heuristic resolution, and smart coding that makes implicit decisions outside protocol governance.\n",
+      "enforced_by": [
+        "ASSERT_NO_UNDECLARED_BEHAVIOR_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation",
+        "structure_resolution",
+        "workflow_execution",
+        "side_effect_execution"
+      ],
+      "scope": [
+        "STRUCTURE",
+        "WF",
+        "CC",
+        "CS",
+        "RB"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "examples": {
+      "legal_pattern_1": {
+        "code": "# \u2705 OK - Genuinely optional metadata\nmetadata = artifact.get('optional_metadata', {})\n",
+        "reason": "optional_metadata is not protocol-required, genuinely optional"
+      },
+      "legal_pattern_2": {
+        "code": "# \u2705 OK - Static error message lookup\nmessage = ERROR_MESSAGES.get(code, DEFAULT_MESSAGE)\n",
+        "reason": "Static mapping, not protocol data"
+      },
+      "violation_1": {
+        "code": "# \u274c WRONG - Fallback for protocol-required field\noutput_config = structure.get('output_configuration', {})\n",
+        "fix": "# \u2705 CORRECT - Fail hard if missing\nif 'output_configuration' not in structure:\n    raise ValueError(\"PROTOCOL_INCOMPLETE: 'output_configuration' not declared\")\noutput_config = structure['output_configuration']\n"
+      },
+      "violation_2": {
+        "code": "# \u274c WRONG - Manual path traversal\nmodule_root = resolver.resolve_layer_root(\"COMPILER\")\nrepo_root = module_root.parent\noutput_path = repo_root / \"testbed\" / \"outputs\"\n",
+        "fix": "# \u2705 CORRECT - Use STRUCTURE-declared path\noutput_path = paths.resolve_output_path(\n    'testbed_output_path',\n    structure_artifact,\n    domain=domain\n)\n"
+      },
+      "violation_3": {
+        "code": "# \u274c WRONG - Lossy domain resolution\nlayer_code = \"DOMAINS\"  # Lost which domain!\n",
+        "fix": "# \u2705 CORRECT - Explicit domain binding\nlayer_code = \"DOMAINS\"\ndomain = extract_domain_from_path(artifact_source_path)\nif not domain:\n    raise ValueError(\"PROTOCOL_INCOMPLETE: domain required for DOMAINS layer\")\n"
+      }
+    },
+    "extensions": {
+      "enforcement_locations": [
+        "pgs_structure/structure/resolution/path_registry.py::resolve_output_path()",
+        "pgs_structure/structure/resolution/layer_resolver.py::resolve_layer_root()",
+        "pgs_execution/execution/host/runtime_loader.py::load_runtime_binding()",
+        "pgs_execution/execution/host/workflow_runner.py::execute()",
+        "pgs_compiler/compiler/transforms/*::validate()",
+        "pgs_ingress/ingress/gateway/workflow_gateway.py::execute_workflow()"
+      ],
+      "error_codes": [
+        {
+          "PROTOCOL_INCOMPLETE": "Required protocol field not declared"
+        },
+        {
+          "UNDECLARED_OUTPUT_PATH": "Output path not declared in STRUCTURE"
+        },
+        {
+          "UNDECLARED_SIDE_EFFECT": "CS runtime attempted undeclared I/O operation"
+        },
+        {
+          "DOMAIN_REQUIRED": "Domain parameter required but not provided"
+        },
+        {
+          "REFERENCE_UNRESOLVED": "Artifact reference does not resolve"
+        }
+      ]
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,89 @@
+{
+  "artifact_code": "CC_NOTIFY_WALLET_CREATED_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_SEND_EMAIL_V0",
+        "id": "CS_SEND_EMAIL_V0",
+        "kind": "CS",
+        "ops": [
+          "SEND"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_NOTIFY_WALLET_CREATED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_NOTIFY_WALLET_CREATED_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_SEND_EMAIL_V0\n\n---\n\n## 1. Intent\n\nSend wallet creation notification email to the wallet owner.\n\n---\n\n## 2. Rationale\n\nPost-creation notification:\n- Confirms wallet creation to the actor via email\n- Best-effort delivery \u2014 failure does not cascade to workflow failure\n- Non-structural: email is informational, not part of the wallet creation contract\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_SEND_EMAIL_V0 | CS | SEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| recipient_email | string | true | Recipient email address |\n| wallet_id | string | true | Wallet identifier for notification content |\n| wallet_type | string | true | Wallet type for notification content |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Email sent or skipped (testbed-safe) |\n| VIOLATION | Invalid input (e.g., missing email address) |\n| BACKEND_ERROR | SMTP connection failure |\n\n---\n\n## 7. Failure Semantics\n\n- **Non-structural.** Email failure does NOT cascade to workflow failure.\n- BACKEND_ERROR maps to `exit` (not `fail`) \u2014 workflow transitions to EXIT with SUCCESS status.\n- Does NOT emit a StructuredError with structural error_code.\n- Does NOT rethrow exceptions as structural failures.\n- SMTP unavailable or skipped results in `delivery_status: \"skipped\"` with SUCCESS.\n\nThis is the first CC in the wallet domain that tolerates failure \u2014 exercises the BUSINESS_VIOLATION vs structural distinction.\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_NOTIFY_WALLET_CREATED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Send wallet creation notification email\n\n  inputs:\n    recipient_email:\n      type: string\n      required: true\n    wallet_id:\n      type: string\n      required: true\n    wallet_type:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: send_wallet_notification\n      side_effect: capability_side_effects::CS_SEND_EMAIL_V0\n      op: SEND\n      inputs:\n        recipient: $.inputs.recipient_email\n        subject: \"Wallet Created\"\n        body: \"Your wallet has been created successfully.\"\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "8c7b62ae5c98c8f7901a699489f6b2a8bef596985fa1ce346f57c5e87f9f14ba",
+  "fqdn_id": "blockchain::CC_NOTIFY_WALLET_CREATED_V0",
+  "frontmatter": {
+    "cc_code": "CC_NOTIFY_WALLET_CREATED_V0",
+    "core": {
+      "inputs": {
+        "recipient_email": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_type": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "body": "Your wallet has been created successfully.",
+            "recipient": "$.inputs.recipient_email",
+            "subject": "Wallet Created"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "SEND",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_SEND_EMAIL_V0",
+          "step": "send_wallet_notification"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Send wallet creation notification email"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

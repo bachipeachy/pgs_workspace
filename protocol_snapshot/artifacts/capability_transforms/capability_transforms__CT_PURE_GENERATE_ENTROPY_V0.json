@@ -1,0 +1,90 @@
+{
+  "artifact_code": "CT_PURE_GENERATE_ENTROPY_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_GENERATE_ENTROPY_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_GENERATE_ENTROPY_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** OS-provided cryptographically secure random source\n\n---\n\n## Human\n\n### 1. Intent\n\nGenerate cryptographically secure entropy bytes of a specified strength.\n\nThis transform produces raw entropy suitable as the root input for higher-order cryptographic constructions such as mnemonic generation, seed derivation, or cryptographic key material.\n\n---\n\n### 2. Rationale\n\nAll cryptographic key material ultimately depends on high-quality entropy.\n\nIn the existing crypto implementation, entropy generation is embedded within mnemonic generation. This atom extracts that responsibility into a single, protocol-governed primitive, enabling explicit audit, reuse, and isolation of entropy generation from downstream derivation logic.\n\nThis atom performs **only entropy generation** \u2014 nothing more.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_GENERATE_ENTROPY_V0 (full versioned identifier)\n- **Operation:** GENERATE_ENTROPY (execution opcode used in molecules)\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n\n- Generating entropy for:\n  - Mnemonic generation\n  - Seed derivation\n  - Cryptographic key material\n- Any context requiring cryptographically secure random bytes\n\n#### 4.2 Invalid Use Cases\n\n- Generating deterministic identifiers\n- Deriving mnemonics, keys, or hashes\n- Persisting or caching entropy\n- Reusing entropy across executions\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | NO | Entropy is non-deterministic by definition |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Uses OS entropy source only |\n| Replay Safe | NO | Replay requires captured outputs |\n\n**Note:**  \nNon-determinism is explicit and intentional. This atom is pure in the sense of capability isolation, not reproducibility.\n\n---\n\n### 6. Structural Checklist\n\nAuthor MUST confirm all items before writing YAML:\n\n- [x] Single responsibility (entropy generation only)\n- [x] No implicit state\n- [x] No domain semantics\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] Fail-loud on invalid input\n- [x] No hidden control flow\n\n---\n\n### 7. Composition Rules (Atom-Specific)\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs (atoms or molecules)\n- MUST perform exactly one atomic operation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Static validation MUST fail if:**\n- `ct_kind` is not `atom`\n- `operation` is not `GENERATE_ENTROPY`\n- `ct_purity` is not `ct_pure`\n- Required input `entropy_bits` is not declared\n\n**Runtime validation MUST fail if:**\n- `entropy_bits` is not one of `{128, 160, 192, 224, 256}`\n- `entropy_bits` is not an integer\n- Entropy generation returns an invalid length or fails\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit domain events.\n\nExecution traces MAY record start and end events but MUST NOT record entropy contents.\n\n---\n\n### 10. Security Considerations\n\n- Entropy MUST originate from a cryptographically secure OS source\n- Entropy MUST NOT be reused, cached, or persisted\n- Entropy MUST NOT be logged or exposed via traces\n- Downstream handling is the caller\u2019s responsibility\n\n---\n\n### 11. Common Pitfalls\n\n- Treating entropy as deterministic\n- Reusing entropy across multiple derivations\n- Persisting entropy in logs or traces\n- Assuming mnemonic or key semantics at this level\n\n---\n\n### 12. Minimal Usage Shape\n\ninputs \u2192 CT_PURE_GENERATE_ENTROPY_V0 \u2192 entropy_bytes\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_GENERATE_ENTROPY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Generate secure random entropy\n  description: Produces cryptographically secure random bytes of a specified bit strength.\n  \n  inputs:\n    entropy_bits:\n      type: integer\n      required: true\n      allowed_values: [128, 160, 192, 224, 256]\n      description: \"Strength of entropy in bits\"\n\n  outputs:\n    entropy_bytes:\n      type: hex_string\n      required: true\n      description: \"Raw random bytes as hex string with '0x' prefix\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: GENERATE_ENTROPY\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_generate_entropy_v0\n    callable: execute\n```\n",
+  "content_hash": "a451348001e9dc25735d81c1e901c91518eaaee7f4968fe3fdd932c5f7e67b78",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "entropy_bits": "$.inputs.entropy_bits"
+        },
+        "atom": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_entropy_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_GENERATE_ENTROPY_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+    "inputs": {
+      "entropy_bits": {
+        "allowed_values": [
+          128,
+          160,
+          192,
+          224,
+          256
+        ],
+        "description": "Strength of entropy in bits",
+        "required": true,
+        "type": "integer"
+      }
+    },
+    "outputs": {
+      "entropy_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Produces cryptographically secure random bytes of a specified bit strength.",
+      "inputs": {
+        "entropy_bits": {
+          "allowed_values": [
+            128,
+            160,
+            192,
+            224,
+            256
+          ],
+          "description": "Strength of entropy in bits",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "entropy_bytes": {
+          "description": "Raw random bytes as hex string with '0x' prefix",
+          "required": true,
+          "type": "hex_string"
+        }
+      },
+      "summary": "Generate secure random entropy"
+    },
+    "ct_code": "CT_PURE_GENERATE_ENTROPY_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_entropy_v0"
+      },
+      "operation": "GENERATE_ENTROPY"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

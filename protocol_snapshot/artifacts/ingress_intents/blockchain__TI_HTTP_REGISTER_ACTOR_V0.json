@@ -1,0 +1,45 @@
+{
+  "artifact_code": "TI_HTTP_REGISTER_ACTOR_V0",
+  "artifact_type": "TI",
+  "content": "# TI_HTTP_REGISTER_ACTOR_V0\n\n## Machine\n\n```yaml\nartifact_code: TI_HTTP_REGISTER_ACTOR_V0\nartifact_type: TI\nartifact_kind: intent\nversion: 0\n\ngoverned_by:\n  - fb.transport::CONSTITUTION_TRANSPORT_V0\n\ncore:\n  summary: HTTP ingress for actor registration\n  description: >\n    Declares the HTTP transport ingress point for actor registration.\n    Defines the route, admission schema, and explicit workflow binding.\n\n  route:\n    method: POST\n    path: /api/v0/register_actor\n    content_type: application/json\n\n  admission_schema:\n    actor_record:\n      type: object\n      required: true\n\n  workflow: blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0\n\n  outcomes:\n    ACK:\n      description: Actor record accepted for registration workflow\n    NACK:\n      description: Actor record rejected at admission\n```\n\n---\n\n## Purpose\n\nDeclares the HTTP transport ingress point for actor registration.\n\nGoverns the boundary between the external HTTP client and\n`blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0`. Transport ends at admission.\n\n## Route\n\n| Field | Value |\n|-------|-------|\n| Method | POST |\n| Path | /api/v0/register_actor |\n| Content-Type | application/json |\n\n## Admission Schema\n\n| Field | Type | Required | Notes |\n|-------|------|----------|-------|\n| actor_record | object | yes | Proposed actor registration payload |\n",
+  "content_hash": "05a83ae19346247658c0f9b7a9f34cddabaaef89966b7fe0d4849df53c8218f3",
+  "fqdn_id": "blockchain::TI_HTTP_REGISTER_ACTOR_V0",
+  "frontmatter": {
+    "artifact_code": "TI_HTTP_REGISTER_ACTOR_V0",
+    "artifact_kind": "intent",
+    "artifact_type": "TI",
+    "core": {
+      "admission_schema": {
+        "actor_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "description": "Declares the HTTP transport ingress point for actor registration. Defines the route, admission schema, and explicit workflow binding.\n",
+      "outcomes": {
+        "ACK": {
+          "description": "Actor record accepted for registration workflow"
+        },
+        "NACK": {
+          "description": "Actor record rejected at admission"
+        }
+      },
+      "route": {
+        "content_type": "application/json",
+        "method": "POST",
+        "path": "/api/v0/register_actor"
+      },
+      "summary": "HTTP ingress for actor registration",
+      "workflow": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+    },
+    "governed_by": [
+      "fb.transport::CONSTITUTION_TRANSPORT_V0"
+    ],
+    "version": 0
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.ingress",
+  "namespace": "blockchain",
+  "references": [],
+  "version": "0"
+}

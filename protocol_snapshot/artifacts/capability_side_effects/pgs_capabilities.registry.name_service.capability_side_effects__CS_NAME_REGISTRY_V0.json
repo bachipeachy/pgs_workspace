@@ -1,0 +1,179 @@
+{
+  "artifact_code": "CS_NAME_REGISTRY_V0",
+  "artifact_type": "CS",
+  "content": "# CS_NAME_REGISTRY_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CS_NAME_REGISTRY_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nProvide persistent storage for name-to-resource-address mappings, enabling human-readable names (e.g., email addresses) to resolve to public resource addresses.\n\nThis capability allows:\n- Registering name \u2192 resource_addresses[] mappings\n- Looking up resource addresses by name\n- Domain-neutral address book functionality\n\n---\n\n## 2. Rationale\n\nWorkflows require stable, human-readable references to resources instead of hardcoded addresses. This CS provides:\n- Name resolution (like DNS for resources)\n- Public address book functionality\n- Test determinism without hardcoded inputs\n\n---\n\n## 3. Applicability & Non-Applicability\n\n### Valid Use Cases\n- Map email addresses to blockchain addresses\n- Resolve contact names to resource identifiers\n- Enable human-readable transaction targets\n- Test setup with stable name references\n\n### Invalid Use Cases\n- Direct data storage (use CS_MUTABLE_JSON_V0)\n- Internal user/wallet ID mappings (must use public projections only)\n- Complex filtering or ranking (belongs in domain logic)\n- Authentication or identity management\n\n---\n\n## 4. Side-Effect Category\n\n- **Category:** Storage / Mapping\n- **Side-Effect Type:** persistent\n- **Append Semantics:** NO\n- **Overwrite Semantics:** YES (names can be updated)\n\n---\n\n## 5. Properties\n\n| Property | Value | Description |\n|----------|-------|-------------|\n| durability | persistent | State survives restarts |\n| idempotent | true | WRITE with same data is idempotent |\n| replay_policy | last_write_wins | Overwrites allowed |\n| transactional | false | No atomic batch support |\n| concurrent_safe | false | No coordination for concurrent writes |\n\n---\n\n## 6. Guarantees\n\nThis CS guarantees:\n- `persistent_storage` \u2014 data survives restarts\n- `deterministic_lookup` \u2014 same name returns same addresses\n- `durable_across_restarts` \u2014 persisted to storage\n- `public_projection_only` \u2014 no internal IDs exposed\n\n---\n\n## 7. Non-Guarantees\n\nThis CS does NOT guarantee:\n- `data_validation` \u2014 does not validate address formats\n- `name_validation` \u2014 does not enforce name format rules\n- `ordering_guarantees` \u2014 no ordering of addresses in array\n- `history_tracking` \u2014 no history of changes\n- `audit_trail` \u2014 no audit log\n- `concurrent_write_safety` \u2014 last write wins\n- `atomic_batch_operations` \u2014 no batch support\n- `referential_integrity` \u2014 does not verify addresses exist\n\n---\n\n## 8. Constraints\n\n| Constraint | Value | Description |\n|------------|-------|-------------|\n| mutability | read_write | Names can be created and updated |\n| name_format | string | Any valid string (typically email) |\n| max_name_length | 256 | Maximum name string length |\n| address_format | string_array | Array of public address strings |\n| max_addresses_per_name | 100 | Maximum addresses per name |\n\n---\n\n## 9. Operations\n\n### 9.1 READ\n\nLook up resource addresses for a given name.\n\n- **Input:** `name` (string, required)\n- **Output:** `result_status`, `resource_addresses` (array of strings)\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR\n- **Note:** Returns empty array if name not found (NOT_FOUND status)\n\n### 9.2 WRITE\n\nRegister or update name \u2192 resource_addresses mapping.\n\n- **Input:** `name` (string, required), `resource_addresses` (array of strings, required)\n- **Output:** `result_status`, `success` (boolean)\n- **Idempotent:** true (same data)\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** Overwrites existing mapping if name exists. Creates new if not exists.\n\n---\n\n## 10. Failure Semantics\n\n### Failure Modes\n\n| Status | Condition | Error Type |\n|--------|-----------|------------|\n| VIOLATION | Name empty or invalid type | InvalidName |\n| VIOLATION | Addresses not array or invalid type | InvalidAddresses |\n| NOT_FOUND | Name not registered (READ only) | NameNotFound |\n| BACKEND_ERROR | Storage unavailable or corrupt | StorageUnavailable, StorageCorrupt |\n\n### Behavior\n- All failures are **fail-loud** \u2014 no silent failures\n- All failures emit trace events\n- All failures return explicit `result_status`\n\n---\n\n## 11. Observability Guarantees\n\nThis CS MUST emit:\n- `cs_start` \u2014 operation invocation begins\n- `cs_success` \u2014 operation completed with SUCCESS\n- `cs_failure` \u2014 operation completed with non-SUCCESS status\n\n---\n\n## 12. Configuration Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| path | string | true | Filesystem path to JSON storage file |\n\n**Note:** Configuration is provided via runtime binding, not embedded in artifacts.\n\n---\n\n## 13. Data Model\n\n**Storage Format:** JSON object with name keys mapping to address arrays\n\n```json\n{\n  \"alice@example.com\": {\n    \"resource_addresses\": [\n      \"0xABC123...\",\n      \"0xDEF456...\"\n    ]\n  },\n  \"bob@example.com\": {\n    \"resource_addresses\": [\n      \"0x789GHI...\"\n    ]\n  }\n}\n```\n\n**Constraints:**\n- Name = primary key (string)\n- Values = object with `resource_addresses` array field\n- No internal identifiers (user_id, wallet_id, etc.) allowed\n- All addresses are public, external references\n\n---\n\n## 14. Architecture\n\n### Role\nPublic name resolution capability\n\n### Purpose\nMaps human-readable names to public resource addresses\n\n### Public Projection\nOnly exposes:\n- Names (human-readable identifiers)\n- Resource addresses (public addresses)\n\nDoes NOT expose:\n- Internal user IDs\n- Internal wallet IDs\n- Private keys\n- Internal references\n\n---\n\n## 15. Structural Checklist\n\n- [x] No environment data embedded in artifacts\n- [x] All operations declared with inputs/outputs\n- [x] All result_status values declared\n- [x] Failure modes explicit\n- [x] Observability declared\n- [x] Configuration schema declared\n- [x] Public projection only (no internal IDs)\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_NAME_REGISTRY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Persistent storage for name-to-resource-address mappings\n  category: storage\n\n  policy:\n    operations: [READ, WRITE]\n\n  operations:\n    READ:\n      summary: Look up resource addresses for a given name\n      handler: read\n      input: [name]\n      output: [result_status, resource_addresses]\n      idempotent: true\n      result_status_values: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n    WRITE:\n      summary: Register or update name to resource addresses mapping\n      handler: write\n      input: [name, resource_addresses]\n      output: [result_status, success]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime\n  callable: NameRegistryRuntime\n\nextensions:\n  cs_kind: storage\n  side_effect_type: persistent\n\n  properties:\n    durability: persistent\n    idempotent: true\n    replay_policy: last_write_wins\n    transactional: false\n    concurrent_safe: false\n\n  constraints:\n    mutability: read_write\n    name_format: string\n    max_name_length: 256\n    address_format: string_array\n    max_addresses_per_name: 100\n\n  vocabulary:\n    result_status: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n  configuration_schema:\n    path:\n      type: string\n      required: true\n      description: Filesystem path to JSON storage file\n\n  failure_modes:\n    - \"VIOLATION: Name empty or invalid type\"\n    - \"VIOLATION: Addresses not array or invalid type\"\n    - \"NOT_FOUND: Name not registered (READ only)\"\n    - \"BACKEND_ERROR: Storage unavailable or corrupt\"\n\n  architecture:\n    role: Public name resolution capability\n    purpose: Maps human-readable names to public resource addresses\n    public_projection:\n      exposes: [names, resource_addresses]\n      does_not_expose: [user_id, wallet_id, internal_keys]\n```\n",
+  "content_hash": "77f864de71d7fb63d622c0d94bd2c8041d6468b0d59f78a6cd63c66e4faddbeb",
+  "cs_ir": {
+    "cs_metadata": {
+      "capability": {
+        "supported_operation_specs": [
+          "READ",
+          "WRITE"
+        ]
+      },
+      "operations": {
+        "operations": {
+          "READ": {
+            "handler": "read",
+            "idempotent": true,
+            "input": [
+              "name"
+            ],
+            "output": [
+              "result_status",
+              "resource_addresses"
+            ],
+            "result_status_values": [
+              "SUCCESS",
+              "NOT_FOUND",
+              "VIOLATION",
+              "BACKEND_ERROR"
+            ],
+            "summary": "Look up resource addresses for a given name"
+          },
+          "WRITE": {
+            "handler": "write",
+            "idempotent": true,
+            "input": [
+              "name",
+              "resource_addresses"
+            ],
+            "output": [
+              "result_status",
+              "success"
+            ],
+            "result_status_values": [
+              "SUCCESS",
+              "VIOLATION",
+              "BACKEND_ERROR"
+            ],
+            "summary": "Register or update name to resource addresses mapping"
+          }
+        }
+      }
+    },
+    "handler_ref": {
+      "callable": "NameRegistryRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
+    }
+  },
+  "fqdn_id": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+  "frontmatter": {
+    "core": {
+      "category": "storage",
+      "operations": {
+        "READ": {
+          "handler": "read",
+          "idempotent": true,
+          "input": [
+            "name"
+          ],
+          "output": [
+            "result_status",
+            "resource_addresses"
+          ],
+          "result_status_values": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "summary": "Look up resource addresses for a given name"
+        },
+        "WRITE": {
+          "handler": "write",
+          "idempotent": true,
+          "input": [
+            "name",
+            "resource_addresses"
+          ],
+          "output": [
+            "result_status",
+            "success"
+          ],
+          "result_status_values": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "summary": "Register or update name to resource addresses mapping"
+        }
+      },
+      "policy": {
+        "operations": [
+          "READ",
+          "WRITE"
+        ]
+      },
+      "summary": "Persistent storage for name-to-resource-address mappings"
+    },
+    "cs_code": "CS_NAME_REGISTRY_V0",
+    "extensions": {
+      "architecture": {
+        "public_projection": {
+          "does_not_expose": [
+            "user_id",
+            "wallet_id",
+            "internal_keys"
+          ],
+          "exposes": [
+            "names",
+            "resource_addresses"
+          ]
+        },
+        "purpose": "Maps human-readable names to public resource addresses",
+        "role": "Public name resolution capability"
+      },
+      "configuration_schema": {
+        "path": {
+          "description": "Filesystem path to JSON storage file",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "constraints": {
+        "address_format": "string_array",
+        "max_addresses_per_name": 100,
+        "max_name_length": 256,
+        "mutability": "read_write",
+        "name_format": "string"
+      },
+      "cs_kind": "storage",
+      "failure_modes": [
+        "VIOLATION: Name empty or invalid type",
+        "VIOLATION: Addresses not array or invalid type",
+        "NOT_FOUND: Name not registered (READ only)",
+        "BACKEND_ERROR: Storage unavailable or corrupt"
+      ],
+      "properties": {
+        "concurrent_safe": false,
+        "durability": "persistent",
+        "idempotent": true,
+        "replay_policy": "last_write_wins",
+        "transactional": false
+      },
+      "side_effect_type": "persistent",
+      "vocabulary": {
+        "result_status": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ]
+      }
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "implementation": {
+      "callable": "NameRegistryRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
+    },
+    "version": "v0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.capability_side_effects",
+  "namespace": "pgs_capabilities.registry.name_service.capability_side_effects",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+  ],
+  "version": "0"
+}

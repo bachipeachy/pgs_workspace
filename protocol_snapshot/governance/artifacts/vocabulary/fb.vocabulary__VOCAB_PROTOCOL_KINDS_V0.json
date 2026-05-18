@@ -1,0 +1,52 @@
+{
+  "artifact_code": "VOCAB_PROTOCOL_KINDS_V0",
+  "artifact_type": "VOCAB",
+  "content": "# VOCAB_PROTOCOL_KINDS_V0 \u2014 Protocol Ontology\n\n**Governance Header**\n- Vocabulary ID: VOCAB_PROTOCOL_KINDS_V0\n- Version: v0\n- Governed By: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n- Status: Active\n\n---\n\n## Purpose\n\nDefines what things ARE in the protocol: node type prefixes and artifact kind names.\n\n## Allowed Usage\n\n- `node_types`: As node type values in workflow DAG definitions\n- `artifact_kinds`: In artifact header `Artifact Kind` field and schema routing\n\n## Prohibited Usage\n\n- Must NOT be used as protocol identifiers (WF_*, CC_*, etc.)\n- Must NOT be used as parameter names or free-form identifiers\n- Node types and artifact kinds must not appear in other vocabulary files\n\n## Governance Rules\n\n- Node types are globally unique 2-letter UPPER_SNAKE prefixes\n- Artifact kinds are globally unique lower_snake names\n- Each artifact kind maps to exactly one JSON Schema\n- Not all node types have corresponding artifact kinds (EXIT, OP are structural)\n- TI artifacts use artifact_kind: intent\n- TE artifacts use artifact_kind: transport_egress\n\n---\n\n## Machine\n\n```yaml\nvocab_id: VOCAB_PROTOCOL_KINDS_V0\nversion: v0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\nnode_types:\n  casing: UPPER_SNAKE\n  entries:\n    - AC\n    - CC\n    - CS\n    - CT\n    - EV\n    - EXIT\n    - IN\n    - OP\n    - RB\n    - TE\n    - TI\n    - WF\n\nartifact_kinds:\n  casing: lower_snake\n  entries:\n    - actor\n    - assert\n    - capability_contract\n    - capability_side_effect\n    - capability_transform\n    - event\n    - registry\n    - intent\n    - transport_egress\n    - runtime_binding\n    - workflow\n```\n",
+  "content_hash": "740897b63745f15eb8a372c215eb865009c61c1380a972e5465f536fd0907799",
+  "fqdn_id": "fb.vocabulary::VOCAB_PROTOCOL_KINDS_V0",
+  "frontmatter": {
+    "artifact_kinds": {
+      "casing": "lower_snake",
+      "entries": [
+        "actor",
+        "assert",
+        "capability_contract",
+        "capability_side_effect",
+        "capability_transform",
+        "event",
+        "registry",
+        "intent",
+        "transport_egress",
+        "runtime_binding",
+        "workflow"
+      ]
+    },
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "node_types": {
+      "casing": "UPPER_SNAKE",
+      "entries": [
+        "AC",
+        "CC",
+        "CS",
+        "CT",
+        "EV",
+        "EXIT",
+        "IN",
+        "OP",
+        "RB",
+        "TE",
+        "TI",
+        "WF"
+      ]
+    },
+    "version": "v0",
+    "vocab_id": "VOCAB_PROTOCOL_KINDS_V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_VOCABULARY.vocabulary",
+  "namespace": "fb.vocabulary",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

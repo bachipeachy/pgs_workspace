@@ -1,0 +1,76 @@
+{
+  "artifact_code": "CT_PURE_KECCAK256_HASH_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_KECCAK256_HASH_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_KECCAK256_HASH_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** Keccak-256 (pycryptodome)\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_KECCAK256_HASH_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Compute Keccak-256 hash\n  description: Returns the Keccak-256 (SHA-3 variant) cryptographic digest of input bytes.\n  \n  inputs:\n    input_bytes:\n      type: string\n      required: true\n      description: \"Hex-encoded byte string (with or without 0x prefix)\"\n\n  outputs:\n    hash_hex:\n      type: string\n      required: true\n      description: \"Keccak-256 hash as 0x-prefixed hex string (66 characters)\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: KECCAK256_HASH\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_keccak256_hash_v0\n    callable: execute\n```\n",
+  "content_hash": "ff7edf09542bf76433ed14cbfedc5fb29b7a78e67db740f6428d36f6aa1fe3f0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "input_bytes": "$.inputs.input_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_keccak256_hash_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_KECCAK256_HASH_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+    "inputs": {
+      "input_bytes": {
+        "description": "Hex-encoded byte string (with or without 0x prefix)",
+        "required": true,
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "hash_hex": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Returns the Keccak-256 (SHA-3 variant) cryptographic digest of input bytes.",
+      "inputs": {
+        "input_bytes": {
+          "description": "Hex-encoded byte string (with or without 0x prefix)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "hash_hex": {
+          "description": "Keccak-256 hash as 0x-prefixed hex string (66 characters)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Compute Keccak-256 hash"
+    },
+    "ct_code": "CT_PURE_KECCAK256_HASH_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_keccak256_hash_v0"
+      },
+      "operation": "KECCAK256_HASH"
+    },
+    "version": "V0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

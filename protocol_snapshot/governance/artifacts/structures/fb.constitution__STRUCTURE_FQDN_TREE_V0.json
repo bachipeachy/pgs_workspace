@@ -1,0 +1,514 @@
+{
+  "artifact_code": "STRUCTURE_FQDN_TREE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_FQDN_TREE_V0\n\n## Header\n- Artifact Code: STRUCTURE_FQDN_TREE_V0\n- Tier: Sovereign Authority\n- Artifact Kind: structure\n- Governed By: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n- Version: v0\n- Status: active\n- Supersedes: NONE\n- Dependencies: []\n\n---\n\n## 1. Purpose\n\nDeclare the authoritative logical package (FQDN) tree for OmniBachi.\n\nThis document is the single source of truth for:\n- Build ordering\n- Registry discovery\n- Dependency resolution\n- Package authority levels\n\nNo implicit filesystem derivation is permitted.\n\n---\n\n## 2. Global Rules\n\n- Only packages declared here participate in build.\n- Build order is explicit and deterministic.\n- Dependencies must be acyclic and forward-only.\n- Physical directory layout is mapped, not inferred.\n- Undeclared packages or registries are build errors.\n- Runtime bindings, where declared, MUST be domain-scoped and SHALL NOT appear in shared registries.\n\n---\n\n## 3. Package Roles\n\n| Role | Description |\n|------|-------------|\n| `core` | Protocol infrastructure (omnibachi package) |\n| `capability_pack` | Reusable capability implementations (atoms, molecules) |\n| `domain_pack` | Domain-specific workflows, contracts, intents |\n\n### 3.1 Domain Isolation Invariant\n\nDomain artifacts SHALL NOT appear in platform infrastructure packages.\nThe platform TLD is reserved for protocol substrate only.\n\n- `core` packages may contain only platform artifacts (governance, schemas, transport constructs, and platform-level workflows/contracts/bindings for infrastructure concerns).\n- `capability_pack` packages may contain only reusable CT/CS artifacts.\n- `domain_pack` packages may contain domain artifacts (intents, events, actors, workflows, contracts, bindings, and domain-scoped CT/CS).\n- Any artifact type discovered outside its role-allowed set is a build violation.\n\nThis rule is machine-enforced at build time via `role_artifact_rules` in the Machine block.\nEnforcement severity: WARNING during rollout, promoted to ERROR once stable.\n\n---\n\n## 4. Authority Levels\n\n| Authority | Description |\n|-----------|-------------|\n| `sovereign` | Root authority, defines protocol semantics |\n| `delegated` | Authority derived from sovereign, must comply with core |\n\n---\n\n## 5. Build Contract\n\nBuilder MUST:\n- Load this document first\n- Validate schema and dependency order\n- Resolve physical paths explicitly\n- Iterate packages strictly by build_order\n- Load only declared registries\n- Respect `artifact_patterns` for file discovery\n\nBuilder MUST NOT:\n- Scan directories implicitly\n- Infer semantics from folder names\n- Include undeclared artifacts\n\n---\n\n## 6. Determinism & Trace Binding\n\n- This document is hashed as part of build manifest.\n- Trace metadata MUST reference the FQDN tree hash.\n- Any change to this file constitutes a governance-visible change.\n\n---\n\n## 7. Versioning\n\n- Changes require a new version (e.g., GOVERNANCE_FQDN_TREE_V1).\n- Backward compatibility is not assumed.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_FQDN_TREE_V0\nfqdn_tree_code: STRUCTURE_FQDN_TREE_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n# Compatibility shim: structure_tree.py expects fields at root\n# Compiler expects core block. Including both for transition.\n\ncore:\n  summary: Authoritative logical package (FQDN) tree configuration\n  description: >\n    Defines the logical package structure, roles, and build order for the platform and domains.\n\n  machine:\n    id: omnibachi-machine-v0\n    role: protocol_executor\n    authority: layers\n    responsibilities:\n      - protocol_loading\n      - registry_federation\n      - compilation\n      - execution\n      - conformance\n      - observability\n      - trace_sealing\n    execution_model:\n      determinism: strict\n      replay: required\n      side_effects: capability_guarded\n      concurrency: explicit_only\n    trace:\n      required: true\n      format: jsonl\n      schema: STRUCTURE_TRACE_SCHEMA_V0\n      hash_chain: enabled\n      seal_on_complete: true\n    security:\n      tamper_evidence: required\n      registry_snapshot_hash: required\n      trace_hash_chain: required\n    failure_policy:\n      on_violation: fail_build\n      on_runtime_violation: abort_execution\n    forbidden:\n      - implicit_filesystem_discovery\n      - dynamic_registry_mutation\n      - undeclared_capability_execution\n\n# Fields for structure_tree.py (mandatory)\npackages:\n\n  - package: structure\n    role: core\n    authority: foundational\n    build_order: 0\n    physical_root: ./pgs_structure\n    module_root: structure\n    contains:\n      - discovery\n      - loading\n      - resolution\n    registries: []\n    depends_on: []\n\n  - package: governance\n    role: core\n    authority: federal\n    build_order: 1\n    physical_root: ./pgs_governance\n    module_root: registry\n    contains:\n      - registry\n      - schemas\n      - vocabulary\n      - conformance\n      - constitution_validator\n    registries:\n      - path: registry/FB_CONSTITUTION\n        artifact_types:\n          - registry\n          - constitutions\n          - structures\n        notes: \"Constitutional federation boundary \u2014 sovereign authority artifacts\"\n      - path: registry/FB_TOPOLOGY\n        artifact_types:\n          - constitutions\n          - invariants\n        notes: \"Topology federation boundary\"\n      - path: registry/FB_TRANSPORT\n        artifact_types:\n          - constitutions\n          - invariants\n        notes: \"Transport federation boundary\"\n      - path: registry/FB_AUTHORITY\n        artifact_types:\n          - constitutions\n          - invariants\n        notes: \"Authority federation boundary\"\n      - path: registry/FB_VOCABULARY\n        artifact_types:\n          - constitutions\n          - invariants\n        notes: \"Vocabulary federation boundary\"\n      - path: registry/FB_CONFORMANCE\n        artifact_types:\n          - constitutions\n          - assertions\n          - invariants\n        notes: \"Conformance federation boundary\"\n      - path: registry/FB_IDENTITY\n        artifact_types:\n          - constitutions\n          - invariants\n        notes: \"Identity federation boundary\"\n    namespace_mappings:\n      constitution: registry/FB_CONSTITUTION\n      topology: registry/FB_TOPOLOGY\n      transport: registry/FB_TRANSPORT\n      authority: registry/FB_AUTHORITY\n      vocabulary: registry/FB_VOCABULARY\n      conformance: registry/FB_CONFORMANCE\n      identity: registry/FB_IDENTITY\n    depends_on: []\n\n  - package: execution\n    role: core\n    authority: delegated\n    build_order: 2\n    physical_root: ./pgs_execution\n    module_root: execution\n    contains:\n      - machine\n      - host\n    registries: []\n    depends_on:\n      - governance\n\n  - package: transforms\n    role: capability_pack\n    authority: delegated\n    build_order: 3\n    physical_root: ./pgs_transforms\n    module_root: transforms\n    contains:\n      - atoms\n      - molecules\n    registries:\n      - path: registry/registry\n        artifact_types:\n          - capability_transforms\n    depends_on:\n      - governance\n      - execution\n\n  - package: side_effects\n    role: capability_pack\n    authority: delegated\n    build_order: 4\n    physical_root: ./pgs_side_effects\n    module_root: side_effects\n    contains:\n      - persistent\n      - volatile\n    registries:\n      - path: registry/registry\n        artifact_types:\n          - capability_side_effects\n    depends_on:\n      - governance\n      - execution\n\n  - package: blockchain\n    role: domain_pack\n    authority: delegated\n    build_order: 5\n    physical_root: ./pgs_domains/domains/blockchain\n    module_root: pgs_domains.domains.blockchain\n    contains:\n      - registry\n      - protocol\n      - test_payloads\n      - capability_transforms\n    registries:\n      - path: domains/blockchain/registry/identity\n        artifact_types:\n          - capability_contracts\n          - intents\n          - workflows\n          - events\n          - actors\n      - path: domains/blockchain/registry/wallet\n        artifact_types:\n          - capability_contracts\n          - capability_transforms\n          - intents\n          - workflows\n          - events\n          - runtime_bindings\n      - path: domains/blockchain/registry/transaction\n        artifact_types:\n          - capability_contracts\n          - capability_transforms\n          - intents\n          - workflows\n          - events\n    depends_on:\n      - governance\n      - transforms\n      - side_effects\n\n  - package: ai_licensing\n    role: domain_pack\n    authority: delegated\n    build_order: 6\n    physical_root: ./pgs_domains/domains/ai_licensing\n    module_root: pgs_domains.domains.ai_licensing\n    contains:\n      - registry\n      - protocol\n      - test_payloads\n      - capability_transforms\n    registries:\n      - path: domains/ai_licensing/registry\n        artifact_types:\n          - capability_contracts\n          - capability_transforms\n          - intents\n          - workflows\n          - events\n          - actors\n          - runtime_bindings\n    depends_on:\n      - governance\n      - transforms\n      - side_effects\n\n  - package: agent_governance\n    role: domain_pack\n    authority: delegated\n    build_order: 7\n    physical_root: ./pgs_domains/domains/agent_governance\n    module_root: domains.agent_governance\n    contains:\n      - registry\n      - protocol\n      - testbed\n    registries:\n      - path: domains/agent_governance/registry\n        artifact_types:\n          - capability_contracts\n          - intents\n          - workflows\n          - events\n          - actors\n          - runtime_bindings\n    depends_on:\n      - governance\n      - transforms\n      - side_effects\n\n  - package: tooling\n    role: core\n    authority: delegated\n    build_order: 8\n    physical_root: ./pgs_tooling\n    module_root: tooling\n    contains:\n      - builder\n      - artifact_validation\n      - protocol_validation\n      - trace_examiner\n      - visualization\n      - experimental\n    registries: []\n    depends_on:\n      - governance\n      - execution\n\n  - package: transport\n    role: core\n    authority: delegated\n    build_order: 9\n    physical_root: ./pgs_transport\n    module_root: transport\n    conformance_generation: false\n    contains:\n      - registry\n      - gateway\n      - command_line\n      - http_rest\n    registries:\n      - path: registry/registry/http_gateway\n        artifact_types:\n          - transport_intents\n          - transport_egress\n          - workflows\n          - capability_contracts\n          - runtime_bindings\n    depends_on:\n      - governance\n      - execution\n\nrole_artifact_rules:\n  core:\n    - constitutions\n    - registry\n    - schemas\n    - capability_transforms\n    - capability_side_effects\n    - transport_intents\n    - transport_egress\n    - workflows\n    - capability_contracts\n    - runtime_bindings\n  capability_pack:\n    - capability_transforms\n    - capability_side_effects\n  domain_pack:\n    - capability_contracts\n    - capability_transforms\n    - capability_side_effects\n    - intents\n    - workflows\n    - events\n    - actors\n    - runtime_bindings\n\nartifact_patterns:\n\n  constitutions:\n    file_pattern: \"CONSTITUTION_*.md\"\n    code_key: constitution_id\n\n  governance:\n    file_pattern: \"*_V0.md\"\n    code_key: artifact_code\n\n  schemas:\n    file_pattern: \"SCHEMA_*.json\"\n    code_key: \"$id\"\n\n  capability_transforms:\n    file_pattern: \"CT_*.md\"\n    code_key: ct_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  capability_side_effects:\n    file_pattern: \"CS_*.md\"\n    code_key: cs_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  capability_contracts:\n    file_pattern: \"CC_*.md\"\n    code_key: cc_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  intents:\n    file_pattern: \"IN_*.md\"\n    code_key: in_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  workflows:\n    file_pattern: \"WF_*.md\"\n    code_key: wf_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  events:\n    file_pattern: \"EV_*.md\"\n    code_key: ev_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  actors:\n    file_pattern: \"AC_*.md\"\n    code_key: ac_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  runtime_bindings:\n    file_pattern: \"RB_*.md\"\n    code_key: rb_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  transport_intents:\n    file_pattern: \"TI_*.md\"\n    code_key: ti_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\n  transport_egress:\n    file_pattern: \"TE_*.md\"\n    code_key: te_code\n    exclude_patterns:\n      - \"CONSTITUTION_*.md\"\n\noutput_configuration:\n  _type: metadata  # This artifact defines metadata, not output paths\n```\n",
+  "content_hash": "3ca977b003361cf8bac1a63ef52006bd69801ec2bad29d5cfd251e803892605c",
+  "fqdn_id": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
+  "frontmatter": {
+    "artifact_patterns": {
+      "actors": {
+        "code_key": "ac_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "AC_*.md"
+      },
+      "capability_contracts": {
+        "code_key": "cc_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "CC_*.md"
+      },
+      "capability_side_effects": {
+        "code_key": "cs_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "CS_*.md"
+      },
+      "capability_transforms": {
+        "code_key": "ct_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "CT_*.md"
+      },
+      "constitutions": {
+        "code_key": "constitution_id",
+        "file_pattern": "CONSTITUTION_*.md"
+      },
+      "events": {
+        "code_key": "ev_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "EV_*.md"
+      },
+      "governance": {
+        "code_key": "artifact_code",
+        "file_pattern": "*_V0.md"
+      },
+      "intents": {
+        "code_key": "in_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "IN_*.md"
+      },
+      "runtime_bindings": {
+        "code_key": "rb_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "RB_*.md"
+      },
+      "schemas": {
+        "code_key": "$id",
+        "file_pattern": "SCHEMA_*.json"
+      },
+      "transport_egress": {
+        "code_key": "te_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "TE_*.md"
+      },
+      "transport_intents": {
+        "code_key": "ti_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "TI_*.md"
+      },
+      "workflows": {
+        "code_key": "wf_code",
+        "exclude_patterns": [
+          "CONSTITUTION_*.md"
+        ],
+        "file_pattern": "WF_*.md"
+      }
+    },
+    "core": {
+      "description": "Defines the logical package structure, roles, and build order for the platform and domains.\n",
+      "machine": {
+        "authority": "layers",
+        "execution_model": {
+          "concurrency": "explicit_only",
+          "determinism": "strict",
+          "replay": "required",
+          "side_effects": "capability_guarded"
+        },
+        "failure_policy": {
+          "on_runtime_violation": "abort_execution",
+          "on_violation": "fail_build"
+        },
+        "forbidden": [
+          "implicit_filesystem_discovery",
+          "dynamic_registry_mutation",
+          "undeclared_capability_execution"
+        ],
+        "id": "omnibachi-machine-v0",
+        "responsibilities": [
+          "protocol_loading",
+          "registry_federation",
+          "compilation",
+          "execution",
+          "conformance",
+          "observability",
+          "trace_sealing"
+        ],
+        "role": "protocol_executor",
+        "security": {
+          "registry_snapshot_hash": "required",
+          "tamper_evidence": "required",
+          "trace_hash_chain": "required"
+        },
+        "trace": {
+          "format": "jsonl",
+          "hash_chain": "enabled",
+          "required": true,
+          "schema": "STRUCTURE_TRACE_SCHEMA_V0",
+          "seal_on_complete": true
+        }
+      },
+      "summary": "Authoritative logical package (FQDN) tree configuration"
+    },
+    "fqdn_tree_code": "STRUCTURE_FQDN_TREE_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "_type": "metadata"
+    },
+    "packages": [
+      {
+        "authority": "foundational",
+        "build_order": 0,
+        "contains": [
+          "discovery",
+          "loading",
+          "resolution"
+        ],
+        "depends_on": [],
+        "module_root": "structure",
+        "package": "structure",
+        "physical_root": "./pgs_structure",
+        "registries": [],
+        "role": "core"
+      },
+      {
+        "authority": "federal",
+        "build_order": 1,
+        "contains": [
+          "registry",
+          "schemas",
+          "vocabulary",
+          "conformance",
+          "constitution_validator"
+        ],
+        "depends_on": [],
+        "module_root": "registry",
+        "namespace_mappings": {
+          "authority": "registry/FB_AUTHORITY",
+          "conformance": "registry/FB_CONFORMANCE",
+          "constitution": "registry/FB_CONSTITUTION",
+          "identity": "registry/FB_IDENTITY",
+          "topology": "registry/FB_TOPOLOGY",
+          "transport": "registry/FB_TRANSPORT",
+          "vocabulary": "registry/FB_VOCABULARY"
+        },
+        "package": "governance",
+        "physical_root": "./pgs_governance",
+        "registries": [
+          {
+            "artifact_types": [
+              "registry",
+              "constitutions",
+              "structures"
+            ],
+            "notes": "Constitutional federation boundary \u2014 sovereign authority artifacts",
+            "path": "registry/FB_CONSTITUTION"
+          },
+          {
+            "artifact_types": [
+              "constitutions",
+              "invariants"
+            ],
+            "notes": "Topology federation boundary",
+            "path": "registry/FB_TOPOLOGY"
+          },
+          {
+            "artifact_types": [
+              "constitutions",
+              "invariants"
+            ],
+            "notes": "Transport federation boundary",
+            "path": "registry/FB_TRANSPORT"
+          },
+          {
+            "artifact_types": [
+              "constitutions",
+              "invariants"
+            ],
+            "notes": "Authority federation boundary",
+            "path": "registry/FB_AUTHORITY"
+          },
+          {
+            "artifact_types": [
+              "constitutions",
+              "invariants"
+            ],
+            "notes": "Vocabulary federation boundary",
+            "path": "registry/FB_VOCABULARY"
+          },
+          {
+            "artifact_types": [
+              "constitutions",
+              "assertions",
+              "invariants"
+            ],
+            "notes": "Conformance federation boundary",
+            "path": "registry/FB_CONFORMANCE"
+          },
+          {
+            "artifact_types": [
+              "constitutions",
+              "invariants"
+            ],
+            "notes": "Identity federation boundary",
+            "path": "registry/FB_IDENTITY"
+          }
+        ],
+        "role": "core"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 2,
+        "contains": [
+          "machine",
+          "host"
+        ],
+        "depends_on": [
+          "governance"
+        ],
+        "module_root": "execution",
+        "package": "execution",
+        "physical_root": "./pgs_execution",
+        "registries": [],
+        "role": "core"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 3,
+        "contains": [
+          "atoms",
+          "molecules"
+        ],
+        "depends_on": [
+          "governance",
+          "execution"
+        ],
+        "module_root": "transforms",
+        "package": "transforms",
+        "physical_root": "./pgs_transforms",
+        "registries": [
+          {
+            "artifact_types": [
+              "capability_transforms"
+            ],
+            "path": "registry/registry"
+          }
+        ],
+        "role": "capability_pack"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 4,
+        "contains": [
+          "persistent",
+          "volatile"
+        ],
+        "depends_on": [
+          "governance",
+          "execution"
+        ],
+        "module_root": "side_effects",
+        "package": "side_effects",
+        "physical_root": "./pgs_side_effects",
+        "registries": [
+          {
+            "artifact_types": [
+              "capability_side_effects"
+            ],
+            "path": "registry/registry"
+          }
+        ],
+        "role": "capability_pack"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 5,
+        "contains": [
+          "registry",
+          "protocol",
+          "test_payloads",
+          "capability_transforms"
+        ],
+        "depends_on": [
+          "governance",
+          "transforms",
+          "side_effects"
+        ],
+        "module_root": "pgs_domains.domains.blockchain",
+        "package": "blockchain",
+        "physical_root": "./pgs_domains/domains/blockchain",
+        "registries": [
+          {
+            "artifact_types": [
+              "capability_contracts",
+              "intents",
+              "workflows",
+              "events",
+              "actors"
+            ],
+            "path": "domains/blockchain/registry/identity"
+          },
+          {
+            "artifact_types": [
+              "capability_contracts",
+              "capability_transforms",
+              "intents",
+              "workflows",
+              "events",
+              "runtime_bindings"
+            ],
+            "path": "domains/blockchain/registry/wallet"
+          },
+          {
+            "artifact_types": [
+              "capability_contracts",
+              "capability_transforms",
+              "intents",
+              "workflows",
+              "events"
+            ],
+            "path": "domains/blockchain/registry/transaction"
+          }
+        ],
+        "role": "domain_pack"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 6,
+        "contains": [
+          "registry",
+          "protocol",
+          "test_payloads",
+          "capability_transforms"
+        ],
+        "depends_on": [
+          "governance",
+          "transforms",
+          "side_effects"
+        ],
+        "module_root": "pgs_domains.domains.ai_licensing",
+        "package": "ai_licensing",
+        "physical_root": "./pgs_domains/domains/ai_licensing",
+        "registries": [
+          {
+            "artifact_types": [
+              "capability_contracts",
+              "capability_transforms",
+              "intents",
+              "workflows",
+              "events",
+              "actors",
+              "runtime_bindings"
+            ],
+            "path": "domains/ai_licensing/registry"
+          }
+        ],
+        "role": "domain_pack"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 7,
+        "contains": [
+          "registry",
+          "protocol",
+          "testbed"
+        ],
+        "depends_on": [
+          "governance",
+          "transforms",
+          "side_effects"
+        ],
+        "module_root": "domains.agent_governance",
+        "package": "agent_governance",
+        "physical_root": "./pgs_domains/domains/agent_governance",
+        "registries": [
+          {
+            "artifact_types": [
+              "capability_contracts",
+              "intents",
+              "workflows",
+              "events",
+              "actors",
+              "runtime_bindings"
+            ],
+            "path": "domains/agent_governance/registry"
+          }
+        ],
+        "role": "domain_pack"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 8,
+        "contains": [
+          "builder",
+          "artifact_validation",
+          "protocol_validation",
+          "trace_examiner",
+          "visualization",
+          "experimental"
+        ],
+        "depends_on": [
+          "governance",
+          "execution"
+        ],
+        "module_root": "tooling",
+        "package": "tooling",
+        "physical_root": "./pgs_tooling",
+        "registries": [],
+        "role": "core"
+      },
+      {
+        "authority": "delegated",
+        "build_order": 9,
+        "conformance_generation": false,
+        "contains": [
+          "registry",
+          "gateway",
+          "command_line",
+          "http_rest"
+        ],
+        "depends_on": [
+          "governance",
+          "execution"
+        ],
+        "module_root": "transport",
+        "package": "transport",
+        "physical_root": "./pgs_transport",
+        "registries": [
+          {
+            "artifact_types": [
+              "transport_intents",
+              "transport_egress",
+              "workflows",
+              "capability_contracts",
+              "runtime_bindings"
+            ],
+            "path": "registry/registry/http_gateway"
+          }
+        ],
+        "role": "core"
+      }
+    ],
+    "role_artifact_rules": {
+      "capability_pack": [
+        "capability_transforms",
+        "capability_side_effects"
+      ],
+      "core": [
+        "constitutions",
+        "registry",
+        "schemas",
+        "capability_transforms",
+        "capability_side_effects",
+        "transport_intents",
+        "transport_egress",
+        "workflows",
+        "capability_contracts",
+        "runtime_bindings"
+      ],
+      "domain_pack": [
+        "capability_contracts",
+        "capability_transforms",
+        "capability_side_effects",
+        "intents",
+        "workflows",
+        "events",
+        "actors",
+        "runtime_bindings"
+      ]
+    },
+    "structure_code": "STRUCTURE_FQDN_TREE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.structures",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

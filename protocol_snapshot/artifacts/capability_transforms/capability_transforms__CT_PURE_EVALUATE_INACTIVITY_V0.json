@@ -1,0 +1,110 @@
+{
+  "artifact_code": "CT_PURE_EVALUATE_INACTIVITY_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_EVALUATE_INACTIVITY_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_EVALUATE_INACTIVITY_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nEvaluate whether a license holder has been inactive beyond a threshold.\n\nThis transform compares last active date against a threshold and returns inactivity status.\n\n---\n\n### 2. Rationale\n\nInactivity evaluation enables autonomous license reclamation.\n\nThis transform provides:\n- Deterministic inactivity check\n- Domain-agnostic date comparison\n- Threshold-based evaluation\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_EVALUATE_INACTIVITY_V0 (full versioned identifier)\n- **Operation:** EVALUATE_INACTIVITY (execution opcode)\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n- Evaluating license holder inactivity\n- Gating reclamation workflows\n- Computing days since last activity\n\n#### 4.2 Invalid Use Cases\n- Modifying activity records\n- Querying external usage systems\n- Implementing complex reclamation policies\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same inputs yield same output |\n| Purity Class | ct_pure | No side effects, no state |\n| Side Effects | NONE | Fully pure computation |\n| Replay Safe | YES | Identical inputs produce identical output |\n\n---\n\n### 6. Structural Checklist\n\nAuthor MUST confirm all items before writing YAML:\n\n- [x] Single responsibility\n- [x] No implicit state\n- [x] No domain semantics\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] No hidden control flow\n- [x] Composition rules respected\n\n---\n\n### 7. Composition Rules (Atom-Specific)\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs (atoms or molecules)\n- MUST perform exactly one atomic operation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Static validation MUST fail if:**\n- `ct_kind` is not `atom`\n- `ct_purity` is not `ct_pure`\n- Required inputs (`last_active_date`, `threshold_days`, `current_date`) are not declared\n- Outputs (`is_inactive`, `days_inactive`) are not declared\n\n**Runtime validation MUST fail if:**\n- Date inputs are not valid ISO 8601 strings\n- Threshold is negative\n- Implementation raises an exception\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit traces.\n\n**Rationale:** Pure computation with no side effects or state changes.\n\n---\n\n### 10. Common Pitfalls\n\n- Using system clock instead of explicit current_date input (violates determinism)\n- Encoding reclamation policies (violates single responsibility)\n- Performing side effects on usage records (violates purity)\n\n---\n\n### 11. Minimal Usage Shape\n\n```\n(last_active_date, threshold_days, current_date) \u2192 CT_PURE_EVALUATE_INACTIVITY_V0 \u2192 (is_inactive, days_inactive)\n```\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_EVALUATE_INACTIVITY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Evaluate inactivity threshold\n  description: Compares a last active date against a threshold relative to current date to determine inactivity status.\n  \n  inputs:\n    last_active_date:\n      type: string\n      format: date-time\n      required: true\n      description: ISO 8601 timestamp of last activity\n    threshold_days:\n      type: integer\n      required: true\n      description: Number of days before considering a holder inactive\n    current_date:\n      type: string\n      format: date-time\n      required: true\n      description: ISO 8601 timestamp of current evaluation time\n\n  outputs:\n    is_inactive:\n      type: boolean\n      required: true\n      description: True if inactive beyond threshold\n    days_inactive:\n      type: integer\n      required: true\n      description: Total days since last activity\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: EVALUATE_INACTIVITY\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_evaluate_inactivity_v0\n    callable: execute\n```\n",
+  "content_hash": "931f6680cd3d3d303489e731a8c6018afcdca23281abbc3ad2eaacc471a489f4",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "current_date": "$.inputs.current_date",
+          "last_active_date": "$.inputs.last_active_date",
+          "threshold_days": "$.inputs.threshold_days"
+        },
+        "atom": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_evaluate_inactivity_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_EVALUATE_INACTIVITY_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+    "inputs": {
+      "current_date": {
+        "description": "ISO 8601 timestamp of current evaluation time",
+        "format": "date-time",
+        "required": true,
+        "type": "string"
+      },
+      "last_active_date": {
+        "description": "ISO 8601 timestamp of last activity",
+        "format": "date-time",
+        "required": true,
+        "type": "string"
+      },
+      "threshold_days": {
+        "description": "Number of days before considering a holder inactive",
+        "required": true,
+        "type": "integer"
+      }
+    },
+    "outputs": {
+      "days_inactive": {
+        "from": "__atom_result__"
+      },
+      "is_inactive": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Compares a last active date against a threshold relative to current date to determine inactivity status.",
+      "inputs": {
+        "current_date": {
+          "description": "ISO 8601 timestamp of current evaluation time",
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "last_active_date": {
+          "description": "ISO 8601 timestamp of last activity",
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "threshold_days": {
+          "description": "Number of days before considering a holder inactive",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "days_inactive": {
+          "description": "Total days since last activity",
+          "required": true,
+          "type": "integer"
+        },
+        "is_inactive": {
+          "description": "True if inactive beyond threshold",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "summary": "Evaluate inactivity threshold"
+    },
+    "ct_code": "CT_PURE_EVALUATE_INACTIVITY_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_evaluate_inactivity_v0"
+      },
+      "operation": "EVALUATE_INACTIVITY"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

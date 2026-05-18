@@ -1,0 +1,76 @@
+{
+  "artifact_code": "CT_PURE_PASSTHROUGH_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_PASSTHROUGH_V0\n\n## Header\n\n- **Artifact Code:** CT_PURE_PASSTHROUGH_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nPass through an input value unchanged. Used for 1:1 payload mapping where no transformation is needed.\n\n## 2. Purity\n\nPure. No side effects, no state mutation.\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_PASSTHROUGH_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Pass through value\n  description: Returns the input value unchanged. Useful for explicit payload mapping in molecules or workflows.\n  \n  inputs:\n    value:\n      type: any\n      required: true\n      description: Value to pass through\n\n  outputs:\n    value:\n      type: any\n      required: true\n      description: The identical input value\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: PASSTHROUGH\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_passthrough_v0\n    callable: execute\n```\n",
+  "content_hash": "97c125deb8d28a74e578cdec693e56b460effa9a6585f5ddc226ed7400719f5f",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "value": "$.inputs.value"
+        },
+        "atom": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_passthrough_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_PASSTHROUGH_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+    "inputs": {
+      "value": {
+        "description": "Value to pass through",
+        "required": true,
+        "type": "any"
+      }
+    },
+    "outputs": {
+      "value": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Returns the input value unchanged. Useful for explicit payload mapping in molecules or workflows.",
+      "inputs": {
+        "value": {
+          "description": "Value to pass through",
+          "required": true,
+          "type": "any"
+        }
+      },
+      "outputs": {
+        "value": {
+          "description": "The identical input value",
+          "required": true,
+          "type": "any"
+        }
+      },
+      "summary": "Pass through value"
+    },
+    "ct_code": "CT_PURE_PASSTHROUGH_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_passthrough_v0"
+      },
+      "operation": "PASSTHROUGH"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

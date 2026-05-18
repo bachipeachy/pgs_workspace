@@ -1,0 +1,168 @@
+{
+  "artifact_code": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "key": "in.tool_name"
+        },
+        "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+        "id": "CT_PURE_LOOKUP_V0",
+        "inputs": [
+          "key",
+          "map"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "result"
+        ]
+      },
+      {
+        "bindings": {
+          "parameters": "in.parameters",
+          "rules": "lookup_parameter_rules.rules"
+        },
+        "fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+        "id": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+        "inputs": [
+          "parameters",
+          "rules"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "valid",
+          "failed_rule"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_VALIDATE_TOOL_PARAMETERS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_VALIDATE_TOOL_PARAMETERS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_LOOKUP_V0, CT_PURE_VALIDATE_PARAMETER_RULES_V0\n\n---\n\n## 1. Intent\n\nEnforce declared parameter constraints for the authorized tool.\n\n---\n\n## 2. Rationale\n\nParameter validation is the fifth governance gate:\n- Each tool declares parameter constraints in governance\n- Constraints are evaluated by a generic CT \u2014 not embedded in tool code\n- Enforces Invariant I-A4 (Parameter-Bound Execution)\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_LOOKUP_V0 | CT | LOOKUP |\n| 2 | CT_PURE_VALIDATE_PARAMETER_RULES_V0 | CT | VALIDATE_PARAMETER_RULES |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tool_name | string | true | Authorized tool identifier |\n| parameters | object | true | Tool-specific parameter key-value map |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| rules | array | Parameter constraint rules for the tool |\n| validation_result | object | Validation outcome |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All parameter constraints satisfied |\n| VIOLATION | One or more parameter constraints failed |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_VALIDATE_TOOL_PARAMETERS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Enforce declared parameter constraints for authorized tool\n\n  inputs:\n    tool_name:\n      type: string\n      required: true\n    parameters:\n      type: object\n      required: true\n\n  outputs:\n    rules:\n      type: array\n    validation_result:\n      type: object\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: lookup_parameter_rules\n      transform: capability_transforms::CT_PURE_LOOKUP_V0\n      inputs:\n        key: $.inputs.tool_name\n        map:\n          READ_RECORD:\n            - field: record_type\n              op: in\n              allowed:\n                - license_pool\n                - user_profile\n            - field: id\n              op: not_null\n          PROVISION_STANDARD_LICENSE:\n            - field: tier\n              op: eq\n              value: standard\n            - field: quantity\n              op: lte\n              value: 100\n          PROVISION_PREMIUM_LICENSE:\n            - field: tier\n              op: eq\n              value: premium\n            - field: quantity\n              op: lte\n              value: 50\n      outputs:\n        rules: $.capability_result.result\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: validate_parameters\n      transform: capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0\n      inputs:\n        parameters: $.inputs.parameters\n        rules: $.results.lookup_parameter_rules.rules\n      outputs:\n        validation_result: $.capability_result.value\n        rules: $.results.lookup_parameter_rules.rules\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\nextensions:\n  description: Evaluates declarative parameter constraints \u2014 policy in governance, evaluation in generic CT\n```\n",
+  "content_hash": "c524bb8b35e6b0d3bab62cadcfa896e9e83f6294d27ea5a1213c2f6af16dbdd0",
+  "fqdn_id": "ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0",
+  "frontmatter": {
+    "cc_code": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+    "core": {
+      "inputs": {
+        "parameters": {
+          "required": true,
+          "type": "object"
+        },
+        "tool_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "rules": {
+          "type": "array"
+        },
+        "validation_result": {
+          "type": "object"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.tool_name",
+            "map": {
+              "PROVISION_PREMIUM_LICENSE": [
+                {
+                  "field": "tier",
+                  "op": "eq",
+                  "value": "premium"
+                },
+                {
+                  "field": "quantity",
+                  "op": "lte",
+                  "value": 50
+                }
+              ],
+              "PROVISION_STANDARD_LICENSE": [
+                {
+                  "field": "tier",
+                  "op": "eq",
+                  "value": "standard"
+                },
+                {
+                  "field": "quantity",
+                  "op": "lte",
+                  "value": 100
+                }
+              ],
+              "READ_RECORD": [
+                {
+                  "allowed": [
+                    "license_pool",
+                    "user_profile"
+                  ],
+                  "field": "record_type",
+                  "op": "in"
+                },
+                {
+                  "field": "id",
+                  "op": "not_null"
+                }
+              ]
+            }
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "rules": "$.capability_result.result"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "lookup_parameter_rules",
+          "transform": "capability_transforms::CT_PURE_LOOKUP_V0"
+        },
+        {
+          "inputs": {
+            "parameters": "$.inputs.parameters",
+            "rules": "$.results.lookup_parameter_rules.rules"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "rules": "$.results.lookup_parameter_rules.rules",
+            "validation_result": "$.capability_result.value"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "validate_parameters",
+          "transform": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Enforce declared parameter constraints for authorized tool"
+    },
+    "extensions": {
+      "description": "Evaluates declarative parameter constraints \u2014 policy in governance, evaluation in generic CT"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_transforms::CT_PURE_LOOKUP_V0",
+    "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

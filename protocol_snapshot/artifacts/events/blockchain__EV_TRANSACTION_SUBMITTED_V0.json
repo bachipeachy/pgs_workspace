@@ -1,0 +1,58 @@
+{
+  "artifact_code": "EV_TRANSACTION_SUBMITTED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_TRANSACTION_SUBMITTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_TRANSACTION_SUBMITTED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA transaction has been signed and persisted to the local mempool.\n\n---\n\n## 2. Rationale\n\nThis event records successful transaction submission:\n- Links transaction to wallet and actor\n- Provides transaction hash for tracking\n- Enables audit of transaction lifecycle\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_SUBMIT_TRANSACTION_V0 | CC_APPEND_TX_EVENT_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_id | string | true | Transaction identifier |\n| tx_hash | string | true | Transaction hash |\n| wallet_id | string | true | Source wallet |\n| from_address | string | true | Sender address |\n| to_address | string | true | Destination address |\n| value | string | true | Transfer value in wei |\n| status | string | true | Transaction status (PENDING) |\n| timestamp | string (date-time) | true | When transaction was submitted |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_TRANSACTION_SUBMITTED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Transaction signed and persisted to mempool\n  description: Emitted after a transaction is successfully signed, persisted to the mempool, and indexed\n\n  schema:\n    tx_id:\n      type: string\n      required: true\n    tx_hash:\n      type: string\n      required: true\n    wallet_id:\n      type: string\n      required: true\n    from_address:\n      type: string\n      required: true\n    to_address:\n      type: string\n      required: true\n    value:\n      type: string\n      required: true\n    status:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "d7dfd5b19658a6b659e927ba2b76d3cb7942cdca0c0b88ac82d9bc2b21c23d97",
+  "fqdn_id": "blockchain::EV_TRANSACTION_SUBMITTED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted after a transaction is successfully signed, persisted to the mempool, and indexed",
+      "schema": {
+        "from_address": {
+          "required": true,
+          "type": "string"
+        },
+        "status": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "to_address": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_id": {
+          "required": true,
+          "type": "string"
+        },
+        "value": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Transaction signed and persisted to mempool"
+    },
+    "ev_code": "EV_TRANSACTION_SUBMITTED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

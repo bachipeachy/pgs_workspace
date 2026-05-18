@@ -1,0 +1,53 @@
+{
+  "artifact_code": "INVARIANT_CC_INPUTS_SATISFIED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CC_INPUTS_SATISFIED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CC_INPUTS_SATISFIED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    For each CC node in WF execution graph:\n    - All $.payload.* references must exist in IN payload schema\n    - All $.results.CC_XXX.* references must satisfy:\n      - CC_XXX appears earlier in execution path (dependency ordering)\n      - Field exists in CC_XXX outputs\n      - CC_XXX is reachable (on same execution path, not different branch)\n\n    This validates AVAILABILITY only, not TYPE SAFETY.\n    Field existence \u2260 field type correctness.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - WORKFLOWS\n    - CAPABILITY_CONTRACTS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_CC_INPUTS_SATISFIED_V0\n\n  anti_patterns:\n    - undefined_payload_field: \"CC references $.payload.field that does not exist in IN schema\"\n    - undefined_cc_output: \"CC references $.results.CC_XXX.field where field does not exist in CC_XXX outputs\"\n    - forward_reference: \"CC references $.results.CC_XXX.* where CC_XXX appears later in execution path\"\n    - unreachable_reference: \"CC references $.results.CC_XXX.* where CC_XXX is on different branch (unreachable)\"\n\n  clarification:\n    availability_not_type_safety: >\n      This invariant validates that referenced fields EXIST.\n      It does NOT validate that field TYPES match.\n      Example: $.payload.user_id exists \u2713, but string vs int is NOT checked.\n    per_path_validation: >\n      Each execution path validated independently.\n      Dependency valid in path A may be invalid in path B.\n      No false positives from unreachable branches.\n    jsonpath_reference_model: >\n      CC inputs use JSONPath to reference data:\n      - $.payload.* \u2192 from IN node payload\n      - $.results.step_name.* \u2192 from prior pipeline step outputs\n      - $.inputs.* \u2192 from CC inputs (WF node bindings)\n```\n\n---\n\n## Purpose\n\nEnsure all CC input references resolve to available data sources.\n\n**Core Principle**: No undefined references at compile time.\n\n---\n\n## Validation Rules\n\n### Rule 1: Payload Field Availability\n\nCC inputs referencing `$.payload.*` must match IN payload schema.\n\n**Violation**:\n```yaml\n# WF node\nCC_EXAMPLE_V0:\n  type: CC\n  inputs:\n    user_name: $.payload.user_name  # \u274c Field not in IN schema\n\n# IN node payload_schema\nIN_START_V0:\n  payload_schema:\n    user_id: string    # \u2713 Has user_id\n    # \u274c Missing user_name\n```\n\n**Correct**:\n```yaml\n# WF node\nCC_EXAMPLE_V0:\n  inputs:\n    user_id: $.payload.user_id  # \u2713 Exists in IN schema\n\n# IN node\nIN_START_V0:\n  payload_schema:\n    user_id: string  # \u2713 Declared\n```\n\n**Detection**: For each `$.payload.X` reference, check X exists in IN node's payload_schema.\n\n---\n\n### Rule 2: CC Output Field Availability\n\nCC inputs referencing `$.results.step_name.field` must satisfy:\n1. `step_name` appears earlier in pipeline\n2. `field` exists in step's outputs\n\n**Violation - Forward Reference**:\n```yaml\npipeline:\n  - step: validate\n    transform: CT_VALIDATE_V0\n    inputs:\n      data: $.results.process.data  # \u274c process hasn't run yet\n\n  - step: process\n    transform: CT_PROCESS_V0\n    outputs:\n      data: $.capability_result.value\n```\n\n**Violation - Missing Output**:\n```yaml\npipeline:\n  - step: validate\n    transform: CT_VALIDATE_V0\n    outputs:\n      is_valid: $.capability_result.value\n      # \u274c No 'data' output\n\n  - step: process\n    transform: CT_PROCESS_V0\n    inputs:\n      data: $.results.validate.data  # \u274c Field doesn't exist\n```\n\n**Correct**:\n```yaml\npipeline:\n  - step: validate\n    transform: CT_VALIDATE_V0\n    outputs:\n      data: $.capability_result.value  # \u2713 Declared\n\n  - step: process\n    transform: CT_PROCESS_V0\n    inputs:\n      data: $.results.validate.data  # \u2713 Exists, earlier in pipeline\n```\n\n**Detection**:\n1. Walk pipeline in order, track available outputs\n2. For each `$.results.step_name.field`, check:\n   - `step_name` seen earlier (dependency ordering)\n   - `field` in step's outputs\n\n---\n\n### Rule 3: Branch Reachability (WF-Level)\n\nCC references must be reachable on same execution path.\n\n**Violation**:\n```yaml\n# WF nodes\nCC_A_V0:\n  next:\n    SUCCESS: CC_B_V0\n    VIOLATION: CC_C_V0\n\nCC_B_V0:\n  inputs:\n    data: $.results.CC_C_V0.data  # \u274c CC_C on different branch\n\nCC_C_V0:\n  outputs:\n    data: ...\n```\n\n**Detection**: For each execution path, validate references only point to nodes on SAME path.\n\n---\n\n## Scope\n\n**Applies to**:\n- All WF artifacts (workflow-level validation)\n- All CC artifacts (pipeline-level validation)\n- All JSONPath references in inputs\n\n**Does NOT validate**:\n- Field type matching (string vs object vs array)\n- Field schema conformance (nested structure)\n- Transformation correctness (mapping logic)\n- **This is DATAFLOW concern (explicitly out of scope)**\n\n---\n\n## Validation Algorithm\n\n**Per-Path Traversal**:\n\n```python\ndef validate_data_availability(wf_graph, in_node):\n    # Extract IN payload schema\n    available_fields = {\n        f\"$.payload.{field}\": field\n        for field in in_node.payload_schema.keys()\n    }\n\n    # Walk each execution path independently\n    for path in derive_all_paths(wf_graph):\n        path_fields = available_fields.copy()\n\n        for node in path.nodes:\n            if node.type == \"CC\":\n                # Validate all input references\n                for input_ref in node.inputs.values():\n                    if is_jsonpath(input_ref):\n                        assert input_ref in path_fields, \\\n                            f\"Undefined reference: {input_ref}\"\n\n                # Add this node's outputs to available set\n                cc_artifact = resolve_cc(node.code)\n                for step in cc_artifact.pipeline:\n                    for output_field in step.outputs.keys():\n                        path_fields[f\"$.results.{step.step}.{output_field}\"] = True\n```\n\n**Key principle**: Per-path validation (not global topological order).\n\n---\n\n## Rationale\n\n**Compile-time data flow safety**\n\n### Early Detection\n- Catch undefined references before runtime\n- No \"field not found\" during execution\n- Fast feedback for protocol authors\n\n### Execution Confidence\n- All data dependencies explicit\n- No runtime discovery of missing fields\n- Bounded, predictable behavior\n\n### Foundation for Tracing\n- Trace can show data lineage\n- Each field's source is known\n- Clear cause/effect chain\n\n### NOT Type Safety\n- Intentionally limited scope\n- Availability \u2260 correctness\n- Type system is separate concern (if needed)\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-12) - CC Inputs Satisfied Validation\n",
+  "content_hash": "bb05b5034c455ed65d7a6288ab3e8cda02c4c8cd46372717d0d54d6e704a7a13",
+  "fqdn_id": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "undefined_payload_field": "CC references $.payload.field that does not exist in IN schema"
+        },
+        {
+          "undefined_cc_output": "CC references $.results.CC_XXX.field where field does not exist in CC_XXX outputs"
+        },
+        {
+          "forward_reference": "CC references $.results.CC_XXX.* where CC_XXX appears later in execution path"
+        },
+        {
+          "unreachable_reference": "CC references $.results.CC_XXX.* where CC_XXX is on different branch (unreachable)"
+        }
+      ],
+      "clarification": {
+        "availability_not_type_safety": "This invariant validates that referenced fields EXIST. It does NOT validate that field TYPES match. Example: $.payload.user_id exists \u2713, but string vs int is NOT checked.\n",
+        "jsonpath_reference_model": "CC inputs use JSONPath to reference data: - $.payload.* \u2192 from IN node payload - $.results.step_name.* \u2192 from prior pipeline step outputs - $.inputs.* \u2192 from CC inputs (WF node bindings)",
+        "per_path_validation": "Each execution path validated independently. Dependency valid in path A may be invalid in path B. No false positives from unreachable branches.\n"
+      },
+      "description": "For each CC node in WF execution graph: - All $.payload.* references must exist in IN payload schema - All $.results.CC_XXX.* references must satisfy:\n  - CC_XXX appears earlier in execution path (dependency ordering)\n  - Field exists in CC_XXX outputs\n  - CC_XXX is reachable (on same execution path, not different branch)\n\nThis validates AVAILABILITY only, not TYPE SAFETY. Field existence \u2260 field type correctness.\n",
+      "enforced_by": [
+        "ASSERT_CC_INPUTS_SATISFIED_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "WORKFLOWS",
+        "CAPABILITY_CONTRACTS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_CC_INPUTS_SATISFIED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

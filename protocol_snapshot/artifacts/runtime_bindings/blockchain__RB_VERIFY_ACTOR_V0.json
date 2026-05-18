@@ -1,0 +1,37 @@
+{
+  "artifact_code": "RB_VERIFY_ACTOR_V0",
+  "artifact_type": "RB",
+  "content": "# RB_VERIFY_ACTOR_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_VERIFY_ACTOR_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_VERIFY_ACTOR_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for actor verification workflow\n  description: Binds capability side effects to concrete runtime implementations for actor verification.\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy:\n        path: \"{{module_data_root}}/events/identity_events.jsonl\"\n```",
+  "content_hash": "0cc68ee1215d6bf52dd30a6eb71209818ffe97af0d4c7c15e68b0f4f6f96654a",
+  "fqdn_id": "blockchain::RB_VERIFY_ACTOR_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
+          "policy": {
+            "path": "{{module_data_root}}/events/identity_events.jsonl"
+          }
+        },
+        "capability_side_effects::CS_REGISTRY_V0": {
+          "policy": {
+            "path": "{{module_data_root}}/registry/actors.json"
+          }
+        }
+      },
+      "description": "Binds capability side effects to concrete runtime implementations for actor verification.",
+      "summary": "Runtime binding for actor verification workflow"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "rb_code": "RB_VERIFY_ACTOR_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.runtime_bindings",
+  "namespace": "blockchain",
+  "references": [
+    "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+    "capability_side_effects::CS_REGISTRY_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

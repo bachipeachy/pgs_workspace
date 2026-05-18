@@ -1,0 +1,48 @@
+{
+  "artifact_code": "INVARIANT_RB_NO_LOGIC_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_RB_NO_LOGIC_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_RB_NO_LOGIC_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    RB artifacts must contain no execution logic. Binding configuration values\n    must be static declarations \u2014 strings, numbers, booleans, lists, or maps.\n    Template variable substitution ({{var}}) is permitted. Conditional expressions,\n    callable references, and dynamic evaluation are forbidden.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - RUNTIME_BINDINGS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_RB_NO_LOGIC_V0\n\n  anti_patterns:\n    - conditional_expression: \"Binding value contains if/else or ternary logic\"\n    - callable_reference: \"Binding value contains function call syntax\"\n    - dynamic_evaluation: \"Binding value uses eval-style expression beyond {{var}} substitution\"\n\n  clarification:\n    template_variables_ok: >\n      {{var}} style parameter substitution is permitted and expected. It is\n      static substitution, not logic evaluation.\n    logic_belongs_in_ct_cs: >\n      Any computation required to derive a configuration value must be performed\n      in a CT artifact, not inlined into an RB declaration.\n```\n\n---\n\n## Purpose\n\nKeep runtime bindings as pure mapping declarations with no embedded programs.\n\n---\n\n## Validation Rules\n\n### Rule: No Conditional Logic\n\nBinding config strings must not contain conditional expressions.\n\n**Violation**:\n```yaml\nconfig:\n  path: \"{{env == 'prod' ? '/prod' : '/dev'}}/data\"  # WRONG\n```\n\n**Correct**:\n```yaml\nconfig:\n  path: \"{{data_root}}/name_registry.json\"  # Template substitution OK\n```\n\n### Rule: No Callable References\n\nBinding config must not reference callables or function syntax.\n\n**Violation**:\n```yaml\nconfig:\n  resolver: \"module.get_path()\"  # WRONG\n```\n\n---\n\n## Scope\n\n**Applies to**: All RB artifacts\n\n**Does NOT restrict**: Template variable substitution ({{var}} patterns)\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-04)\n",
+  "content_hash": "2c79ccc19fa21969187dbc31ba9fe3eeae14492892dce24d45d6abf58fa1241b",
+  "fqdn_id": "fb.topology::INVARIANT_RB_NO_LOGIC_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "conditional_expression": "Binding value contains if/else or ternary logic"
+        },
+        {
+          "callable_reference": "Binding value contains function call syntax"
+        },
+        {
+          "dynamic_evaluation": "Binding value uses eval-style expression beyond {{var}} substitution"
+        }
+      ],
+      "clarification": {
+        "logic_belongs_in_ct_cs": "Any computation required to derive a configuration value must be performed in a CT artifact, not inlined into an RB declaration.",
+        "template_variables_ok": "{{var}} style parameter substitution is permitted and expected. It is static substitution, not logic evaluation.\n"
+      },
+      "description": "RB artifacts must contain no execution logic. Binding configuration values must be static declarations \u2014 strings, numbers, booleans, lists, or maps. Template variable substitution ({{var}}) is permitted. Conditional expressions, callable references, and dynamic evaluation are forbidden.\n",
+      "enforced_by": [
+        "ASSERT_RB_NO_LOGIC_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "RUNTIME_BINDINGS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_RB_NO_LOGIC_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

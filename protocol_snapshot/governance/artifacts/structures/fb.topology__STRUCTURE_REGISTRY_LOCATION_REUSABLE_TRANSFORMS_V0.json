@@ -1,0 +1,36 @@
+{
+  "artifact_code": "STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0\n\nRegistry location declaration for REUSABLE_TRANSFORMS layer.\n\n## Header\n\n- **Artifact Code:** STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0\n- **Artifact Kind:** structure\n- **Governed By:** fb.constitution::CONSTITUTION_STRUCTURE_V0\n- **Version:** V0\n- **Status:** canonical\n- **Authority:** foundational\n\n---\n\n## Purpose\n\nDeclares the physical registry module location for REUSABLE_TRANSFORMS layer artifacts. This artifact enables federated ownership of registry locations while maintaining deterministic resolution.\n\n**Constitutional Rule**: Each layer owns exactly one registry location artifact.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  layer_code: REUSABLE_TRANSFORMS\n  registry_module: pgs_transforms.registry\n  module_path_pattern: \"{registry_module}\"\n\n  description: >\n    Platform capability transforms (CT artifacts).\n    Pure, deterministic, side-effect-free functions.\n\n  notes: >\n    Pattern-based resolution: module_path_pattern defines how to compose registry path.\n    No domain composition for platform transforms layer.\n\noutput_configuration:\n  artifacts_path:\n    layer: REUSABLE_TRANSFORMS\n    subpath: compiled/artifacts\n\n  molecules_path:\n    layer: REUSABLE_TRANSFORMS\n    subpath: compiled/molecules\n```\n\n---\n\n## Usage\n\nLoaded by artifact discovery during build:\n\n1. Discovery reads `STRUCTURE_LAYER_AUTHORITY_V0` \u2192 enumerates layers\n2. For REUSABLE_TRANSFORMS layer \u2192 loads this artifact\n3. Extracts `registry_module: pgs_transforms.registry`\n4. Scans that module for protocol artifacts\n\n---\n\n## Version History\n\n- **V0**: Initial federated registry location (2026-03-25)\n  - Extracted from central STRUCTURE_LAYER_REGISTRY_LOCATIONS_V0\n  - REUSABLE_TRANSFORMS layer now owns its registry location\n  - Moved to central pgs_governance namespace (2026-03-26)\n",
+  "content_hash": "8396b6ae95426aeba4ed7713ce7fd2a4ca83d8a5ffaea342ed341eac7f2a7e09",
+  "fqdn_id": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Platform capability transforms (CT artifacts). Pure, deterministic, side-effect-free functions.\n",
+      "layer_code": "REUSABLE_TRANSFORMS",
+      "module_path_pattern": "{registry_module}",
+      "notes": "Pattern-based resolution: module_path_pattern defines how to compose registry path. No domain composition for platform transforms layer.\n",
+      "registry_module": "pgs_transforms.registry"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "artifacts_path": {
+        "layer": "REUSABLE_TRANSFORMS",
+        "subpath": "compiled/artifacts"
+      },
+      "molecules_path": {
+        "layer": "REUSABLE_TRANSFORMS",
+        "subpath": "compiled/molecules"
+      }
+    },
+    "structure_code": "STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.structures",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

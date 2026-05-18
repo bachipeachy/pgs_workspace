@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: the union of all codes that can exit a CC execution topology must exactly match result_status_contract.allowed; uncontracted exits and unreachable contract codes are compile-time violations\n  rule: For every CC, the set of status codes that can actually exit the topology (via step exit routes, last-step continue routes, and evaluation outcomes) must equal exactly the set declared in result_status_contract.allowed \u2014 no uncontracted exits, no unreachable contract codes\n  scope:\n    - CC\n\n  enforced_by:\n    - ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0\n```\n\n---\n\n## Summary\n\nThe CC-level result status contract is a promise to callers about what outcomes this CC can\nproduce. That promise is only valid if the execution topology can actually deliver every\ndeclared outcome, and cannot deliver any undeclared one.\n\nCONTRACT_CLOSED verifies that the topology fulfills the contract \u2014 not just that routing is\nlocally complete per step (ROUTING_COMPLETE), but that the full CC exit surface matches the\ndeclared contract exactly.\n\n## Rule\n\nFor every CC:\n\n1. **No uncontracted exits**: every status code that can exit the CC topology (via `exit`,\n   last-step `continue`, or evaluation `on_true`/`on_false`) MUST appear in\n   `result_status_contract.allowed`\n2. **No unreachable contract codes**: every code in `result_status_contract.allowed` MUST\n   be reachable as a CC exit \u2014 there MUST exist at least one execution path that exits\n   with that code\n3. The contract is closed when `reachable_exits == allowed` exactly\n\n## Exit Reachability\n\nA status code is reachable as a CC exit when ANY of the following hold:\n\n- A step routes that code as `exit` in `on_result` (and the code is in the step's `result_surface`)\n- The LAST step in the pipeline routes that code as `continue` (last-step `continue` exits the CC)\n- An `evaluation` block's `on_true` or `on_false` names that code as the evaluation outcome\n\nCodes routed as `continue` in non-last steps remain in-pipeline \u2014 they do not exit the CC.\nCodes routed to an evaluation target (e.g., `SUCCESS: evaluate_cap`) exit via evaluation\noutcome \u2014 the evaluation's `on_true`/`on_false` codes are the actual exits.\n\n## Enforcement Scope\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Enforced By**: ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0\n\n## Relationship to ROUTING_COMPLETE\n\nROUTING_COMPLETE and CONTRACT_CLOSED are complementary, not redundant:\n\n- **ROUTING_COMPLETE** (step-local): every code in a step's `result_surface` must have a\n  routing declaration in that step's `on_result`. Scope: individual step.\n- **CONTRACT_CLOSED** (CC-level): the union of all CC exits must equal `result_status_contract.allowed`.\n  Scope: full CC topology.\n\nROUTING_COMPLETE ensures no step has a declared surface code without a routing decision.\nCONTRACT_CLOSED ensures the full topology's exit surface matches the CC contract.\n\n## Rationale\n\nA CC's `result_status_contract.allowed` is a governance contract. Callers of the CC \u2014\nworkflow nodes, orchestration logic, integration tests \u2014 rely on it to declare what outcomes\nto handle. If a code can exit the topology but is not in the contract, callers cannot handle\nit. If a code is in the contract but no path exits with it, the contract is overclaiming\nand callers are writing dead routing branches.\n\nContract closure is the CC-level equivalent of exhaustive match. It cannot be inferred by\nreading individual steps \u2014 it requires aggregating all exit paths across the full topology.\n",
+  "content_hash": "590da6b54170acfda9e5dbd96f9b56671ba0ef90b46cee630901d74a8d133b00",
+  "fqdn_id": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0"
+      ],
+      "rule": "For every CC, the set of status codes that can actually exit the topology (via step exit routes, last-step continue routes, and evaluation outcomes) must equal exactly the set declared in result_status_contract.allowed \u2014 no uncontracted exits, no unreachable contract codes",
+      "scope": [
+        "CC"
+      ],
+      "summary": "the union of all codes that can exit a CC execution topology must exactly match result_status_contract.allowed; uncontracted exits and unreachable contract codes are compile-time violations"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

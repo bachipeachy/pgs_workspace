@@ -1,0 +1,48 @@
+{
+  "artifact_code": "INVARIANT_WF_ENTRY_INTENT_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_WF_ENTRY_INTENT_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_WF_ENTRY_INTENT_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Every workflow must declare exactly one IN node as its entry intent.\n    The start_node must reference that IN node. Zero or multiple IN nodes\n    are constitutional violations.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - WORKFLOWS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_WF_ENTRY_INTENT_V0\n\n  anti_patterns:\n    - missing_entry_intent: \"Workflow has no IN node \u2014 no admission gate\"\n    - multiple_entry_intents: \"Workflow has more than one IN node \u2014 ambiguous admission\"\n    - start_node_not_in: \"start_node does not reference the IN node\"\n\n  clarification:\n    single_entry: >\n      Exactly one IN node is required. This is the sole admission gate for the workflow.\n      Multiple INs would create ambiguous entry semantics; zero would bypass admission.\n    start_node_alignment: >\n      The start_node field must reference the single IN node. This invariant\n      complements INVARIANT_WF_EXECUTION_PATH_VALID_V0 which validates start_node\n      existence and type \u2014 this invariant adds the uniqueness constraint.\n```\n\n---\n\n## Purpose\n\nEnforce that every workflow has a single, unambiguous admission gate.\n\n---\n\n## Validation Rules\n\n### Rule: Exactly One IN Node\n\nCount all nodes with type IN. The count must be exactly 1.\n\n**Violation (zero)**:\n```yaml\nnodes:\n  CC_STEP_V0:\n    type: CC\n    # No IN node \u2014 admission bypassed\n```\n\n**Violation (multiple)**:\n```yaml\nnodes:\n  IN_GATE_A_V0:\n    type: IN\n  IN_GATE_B_V0:     # WRONG \u2014 two IN nodes\n    type: IN\n```\n\n---\n\n## Scope\n\n**Applies to**: All WF artifacts\n\n**Does NOT validate**: Schema of the IN artifact (see INVARIANT_IN_SCHEMA_REQUIRED_V0)\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-04)\n",
+  "content_hash": "1275b0bbba8f6e53c4c838b4d392864fc8a578b735b2bf06efbb6fe839b8eabe",
+  "fqdn_id": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "missing_entry_intent": "Workflow has no IN node \u2014 no admission gate"
+        },
+        {
+          "multiple_entry_intents": "Workflow has more than one IN node \u2014 ambiguous admission"
+        },
+        {
+          "start_node_not_in": "start_node does not reference the IN node"
+        }
+      ],
+      "clarification": {
+        "single_entry": "Exactly one IN node is required. This is the sole admission gate for the workflow. Multiple INs would create ambiguous entry semantics; zero would bypass admission.\n",
+        "start_node_alignment": "The start_node field must reference the single IN node. This invariant complements INVARIANT_WF_EXECUTION_PATH_VALID_V0 which validates start_node existence and type \u2014 this invariant adds the uniqueness constraint."
+      },
+      "description": "Every workflow must declare exactly one IN node as its entry intent. The start_node must reference that IN node. Zero or multiple IN nodes are constitutional violations.\n",
+      "enforced_by": [
+        "ASSERT_WF_ENTRY_INTENT_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "WORKFLOWS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_WF_ENTRY_INTENT_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

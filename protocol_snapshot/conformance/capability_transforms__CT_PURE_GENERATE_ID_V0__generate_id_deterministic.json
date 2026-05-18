@@ -1,0 +1,41 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "data": "$.inputs.data",
+          "prefix": "$.inputs.prefix"
+        },
+        "atom": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_id_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_GENERATE_ID_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "input_types": {
+      "data": "any",
+      "prefix": "string"
+    },
+    "inputs": {
+      "data": "consistent",
+      "prefix": "IN"
+    },
+    "outputs": {
+      "id": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "id": "IN_c918e775137f8254"
+  },
+  "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_deterministic",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_GENERATE_ID_V0"
+}

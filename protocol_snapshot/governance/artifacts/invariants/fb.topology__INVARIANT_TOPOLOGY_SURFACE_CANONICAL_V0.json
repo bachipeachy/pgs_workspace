@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: every step's result_surface must match the canonical surface declared by the governing SURFACE_CONTRACT for that step's capability and operation\n  rule: For every CC pipeline step whose capability (transform or side_effect) is governed by a SURFACE_CONTRACT artifact, the step's declared result_surface MUST exactly equal the canonical_surface declared in that contract; additions, omissions, aliases, and substitutions are constitutional violations\n  scope:\n    - CC\n\n  enforced_by:\n    - ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0\n```\n\n---\n\n## Summary\n\nA step's `result_surface` declares what result codes its capability can produce. The\nSURFACE_CONTRACT for that capability declares what result codes that capability MUST produce \u2014\nno more, no fewer. When a contract exists for a `{capability_id, op}` pair, the step's\n`result_surface` must be an exact match.\n\nThis invariant separates two distinct governance concerns:\n\n- **ROUTING_COMPLETE** \u2014 structural: does the step route every code it declares?\n- **SURFACE_CANONICAL** \u2014 semantic: does the step declare the correct codes for its capability?\n\nA step can be routing-complete and still be wrong: if it declares `[SUCCESS, VIOLATION]` for a\nregistry REGISTER operation, every code is routed but ALREADY_EXISTS and BACKEND_ERROR are\nmissing. SURFACE_CANONICAL catches this.\n\n## Rule\n\nFor every CC pipeline step where a SURFACE_CONTRACT governs the step's capability and op:\n1. The step MUST declare `result_surface`\n2. The declared `result_surface` MUST exactly equal the contract's `canonical_surface`\n3. Extra codes (additions) are violations \u2014 they claim the capability can produce codes it cannot\n4. Missing codes (omissions) are violations \u2014 they hide reachable outcomes from routing\n5. Aliased codes (e.g. `FAILED` instead of `BACKEND_ERROR`) are violations \u2014 they invent private semantics\n\n## Enforcement Scope\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Enforced By**: ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0\n\n## Doctrine\n\nWorkflow authors MAY route surfaces. Workflow authors MAY NOT define capability semantics.\n\nThe canonical surface of a capability is governed by protocol, not by the CC author. A CC\nauthor who changes a step's result_surface relative to its canonical contract is not routing\n\u2014 they are redefining what the capability produces. That authority belongs to the capability\nfamily's surface contract, not to the CC.\n\n## Rationale\n\nWithout canonical surface governance, result_surface becomes author-defined. Two CCs binding\nthe same registry capability could declare different surfaces. One says ALREADY_EXISTS is\nreachable; another omits it. Both can pass ROUTING_COMPLETE. Neither is provably correct.\nThe runtime cannot make guarantees about reachability.\n\nSURFACE_CANONICAL closes this gap. When the canonical surface is declared once in a\nSURFACE_CONTRACT and enforced across all CCs that bind that capability, the result_surface\nfield stops being a claim and becomes a verified fact.\n\nFull enforcement is implemented in Phase 3.\n",
+  "content_hash": "409155877bda0e4db9c979caa13b221690dac64d64c215a92391592c7577f48a",
+  "fqdn_id": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0"
+      ],
+      "rule": "For every CC pipeline step whose capability (transform or side_effect) is governed by a SURFACE_CONTRACT artifact, the step's declared result_surface MUST exactly equal the canonical_surface declared in that contract; additions, omissions, aliases, and substitutions are constitutional violations",
+      "scope": [
+        "CC"
+      ],
+      "summary": "every step's result_surface must match the canonical surface declared by the governing SURFACE_CONTRACT for that step's capability and operation"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

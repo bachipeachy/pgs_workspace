@@ -1,0 +1,76 @@
+{
+  "artifact_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_CHECK_TRAINING_STATUS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_CHECK_TRAINING_STATUS_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nCheck whether an employee has completed required training.\n\nThis transform evaluates a boolean flag and returns eligibility status.\n\n---\n\n### 2. Rationale\n\nTraining completion is a protocol gate for license provisioning.\n\nThis transform provides:\n- Deterministic eligibility check\n- Domain-agnostic boolean evaluation\n- Reusable across any training-gated workflow\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_CHECK_TRAINING_STATUS_V0 (full versioned identifier)\n- **Operation:** CHECK_TRAINING_STATUS (execution opcode)\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n- Evaluating training completion flag\n- Gating provisioning workflows\n- Composing with other eligibility checks\n\n#### 4.2 Invalid Use Cases\n- Querying external training systems\n- Determining training requirements\n- Modifying training status\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same input yields same output |\n| Purity Class | ct_pure | No side effects, no state |\n| Side Effects | NONE | Fully pure computation |\n| Replay Safe | YES | Identical inputs produce identical output |\n\n---\n\n### 6. Structural Checklist\n\nAuthor MUST confirm all items before writing YAML:\n\n- [x] Single responsibility\n- [x] No implicit state\n- [x] No domain semantics\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] No hidden control flow\n- [x] Composition rules respected\n\n---\n\n### 7. Composition Rules (Atom-Specific)\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs (atoms or molecules)\n- MUST perform exactly one atomic operation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Static validation MUST fail if:**\n- `ct_kind` is not `atom`\n- `ct_purity` is not `ct_pure`\n- Required input (`training_completed`) is not declared\n- Output `is_eligible` is not declared\n\n**Runtime validation MUST fail if:**\n- Input `training_completed` is not a boolean\n- Implementation raises an exception\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit traces.\n\n**Rationale:** Pure computation with no side effects or state changes.\n\n---\n\n### 10. Common Pitfalls\n\n- Encoding training-specific business rules (violates domain agnosticism)\n- Performing external lookups (violates purity)\n- Returning non-boolean values\n\n---\n\n### 11. Minimal Usage Shape\n\n```\ntraining_completed \u2192 CT_PURE_CHECK_TRAINING_STATUS_V0 \u2192 is_eligible\n```\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_CHECK_TRAINING_STATUS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Check training completion status\n  description: Evaluates a boolean flag to determine if training requirements have been met.\n  \n  inputs:\n    training_completed:\n      type: boolean\n      required: true\n      description: \"True if training is finished\"\n\n  outputs:\n    is_eligible:\n      type: boolean\n      required: true\n      description: \"True if training_completed is true\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: CHECK_TRAINING_STATUS\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0\n    callable: execute\n```\n",
+  "content_hash": "423ddbae526be81f407ab065e7c44060c44498c814332d34dde4045de9b0282a",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "training_completed": "$.inputs.training_completed"
+        },
+        "atom": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+    "inputs": {
+      "training_completed": {
+        "description": "True if training is finished",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    "outputs": {
+      "is_eligible": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Evaluates a boolean flag to determine if training requirements have been met.",
+      "inputs": {
+        "training_completed": {
+          "description": "True if training is finished",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "outputs": {
+        "is_eligible": {
+          "description": "True if training_completed is true",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "summary": "Check training completion status"
+    },
+    "ct_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0"
+      },
+      "operation": "CHECK_TRAINING_STATUS"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

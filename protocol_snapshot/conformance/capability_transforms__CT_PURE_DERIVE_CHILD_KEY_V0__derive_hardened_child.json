@@ -1,0 +1,48 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "index": "$.inputs.index",
+          "parent_chain_code_bytes": "$.inputs.parent_chain_code_bytes",
+          "parent_private_key_bytes": "$.inputs.parent_private_key_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_child_key_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_DERIVE_CHILD_KEY_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+    "input_types": {
+      "index": "integer",
+      "parent_chain_code_bytes": "hex_string",
+      "parent_private_key_bytes": "hex_string"
+    },
+    "inputs": {
+      "index": 2147483648,
+      "parent_chain_code_bytes": "0x463223aac10fb13f291a1bc76bc26003d98da661cb76df61e750c139826dea8b",
+      "parent_private_key_bytes": "0xf79bb0d317b310b261a55a8ab393b4c8a1aba6fa4d08aef379caba502d5d67f9"
+    },
+    "outputs": {
+      "child_chain_code_bytes": {
+        "from": "__atom_result__"
+      },
+      "child_private_key_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "child_chain_code_bytes": "0xcb3c17166cc30eb7fdd11993fb7307531372e565cd7c7136cbfa4655622bc2be",
+    "child_private_key_bytes": "0x7272904512add56fef94c7b4cfc62bedd0632afbad680f2eb404e95f2d84cbfa"
+  },
+  "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0::derive_hardened_child",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_DERIVE_CHILD_KEY_V0"
+}

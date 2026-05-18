@@ -1,0 +1,84 @@
+{
+  "artifact_code": "CT_PURE_DERIVE_MASTER_KEY_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_DERIVE_MASTER_KEY_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_DERIVE_MASTER_KEY_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** BIP-32 master key derivation rules\n\n---\n\n## Human\n\n### 1. Intent\n\nDerive a BIP-32 master private key and chain code from a seed.\n\nThis transform applies the standardized HMAC-SHA512 function to produce\na deterministic master key and chain code suitable for hierarchical key derivation.\n\nThis atom implements the Bitcoin BIP-32 master key derivation using HMAC-SHA512 with the standard \u201cBitcoin seed\u201d key. Curve application occurs in downstream atoms.\n\n---\n\n### 2. Rationale\n\nMaster key derivation must be deterministic, standardized, and cryptographically\nsound. This atom isolates seed-to-master-key derivation so that it may be reused\nindependently of wallet or ledger semantics.\n\nThis atom performs **only seed-to-master-key derivation**.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_DERIVE_MASTER_KEY_V0\n- **Operation:** DERIVE_MASTER_KEY\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n\n- Wallet master key initialization\n- Key hierarchy root derivation\n- Deterministic wallet recovery\n\n#### 4.2 Invalid Use Cases\n\n- Entropy generation\n- Mnemonic handling\n- Child key derivation\n- Domain-specific wallet/ledger policy\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same seed yields same master key |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure cryptographic transform |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n### 6. Structural Checklist\n\n- [x] Single responsibility\n- [x] Deterministic\n- [x] No implicit state\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] Fail-loud on invalid input\n\n---\n\n### 7. Composition Rules\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs\n- MUST perform exactly one transformation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Runtime validation MUST fail if:**\n- `seed_bytes` is not bytes\n- `seed_bytes` length < 128 bits\n- Derived key is invalid (0 or >= curve order)\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit domain events.\n\nKey bytes MUST NOT be logged in traces.\n\n---\n\n### 10. Security Considerations\n\n- Seeds and private keys are highly sensitive\n- Callers must ensure secure handling\n\n---\n\n### 11. Minimal Usage Shape\n\nseed_bytes \u2192 CT_PURE_DERIVE_MASTER_KEY_V0 \u2192 (master_private_key_bytes, master_chain_code_bytes)\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_DERIVE_MASTER_KEY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Derive BIP-32 master key from seed\n  description: Applies HMAC-SHA512 to a seed to derive a deterministic BIP-32 master private key and chain code.\n  \n  inputs:\n    seed_bytes:\n      type: hex_string\n      required: true\n      description: \"Seed bytes as hex string with '0x' prefix (e.g., from mnemonic) at least 128 bits long\"\n\n  outputs:\n    master_private_key_bytes:\n      type: hex_string\n      required: true\n      description: \"32-byte derived master private key as hex string\"\n    master_chain_code_bytes:\n      type: hex_string\n      required: true\n      description: \"32-byte derived master chain code as hex string\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: DERIVE_MASTER_KEY\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_derive_master_key_v0\n    callable: execute\n```\n",
+  "content_hash": "7d7d34d6d91c4ea08c598b0c0541cdaac626e37420f73f77a53485e34680fef5",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "seed_bytes": "$.inputs.seed_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_master_key_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_DERIVE_MASTER_KEY_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+    "inputs": {
+      "seed_bytes": {
+        "description": "Seed bytes as hex string with '0x' prefix (e.g., from mnemonic) at least 128 bits long",
+        "required": true,
+        "type": "hex_string"
+      }
+    },
+    "outputs": {
+      "master_chain_code_bytes": {
+        "from": "__atom_result__"
+      },
+      "master_private_key_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Applies HMAC-SHA512 to a seed to derive a deterministic BIP-32 master private key and chain code.",
+      "inputs": {
+        "seed_bytes": {
+          "description": "Seed bytes as hex string with '0x' prefix (e.g., from mnemonic) at least 128 bits long",
+          "required": true,
+          "type": "hex_string"
+        }
+      },
+      "outputs": {
+        "master_chain_code_bytes": {
+          "description": "32-byte derived master chain code as hex string",
+          "required": true,
+          "type": "hex_string"
+        },
+        "master_private_key_bytes": {
+          "description": "32-byte derived master private key as hex string",
+          "required": true,
+          "type": "hex_string"
+        }
+      },
+      "summary": "Derive BIP-32 master key from seed"
+    },
+    "ct_code": "CT_PURE_DERIVE_MASTER_KEY_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_master_key_v0"
+      },
+      "operation": "DERIVE_MASTER_KEY"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,91 @@
+{
+  "artifact_code": "CC_REGISTER_NAME_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+        "id": "CS_NAME_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_REGISTER_NAME_V0\n\n## Header\n\n- **Artifact Code:** CC_REGISTER_NAME_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** fb.constitution::CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nRegister or update name-to-resource-addresses mapping via name service.\n\n---\n\n## 2. Operation\n\nWRITE\n\n---\n\n## 3. Bindings\n\n- **Target:** pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| name | string | yes | Name to register (e.g., alice@example.com) |\n| resource_addresses | array | yes | List of resource addresses to map to this name |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| success | boolean | yes | True if registration succeeded |\n\n**Note:** Output MUST include `success` field.\n\n---\n\n## 6. Contract\n\n**Input Contract:**\n- `name` is required and must be string\n- `resource_addresses` is required and must be array of strings\n- Empty name is invalid (handled by CS)\n- Empty addresses array is allowed (clears mapping)\n\n**Output Contract:**\n- MUST return `success` field\n- Type MUST be boolean\n- `true` on SUCCESS status\n- `false` on non-SUCCESS status\n\n**Result Status:**\n- SUCCESS: Name registered/updated successfully\n- VIOLATION: Invalid input (empty name, wrong types)\n- BACKEND_ERROR: Storage failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_REGISTER_NAME_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: Register or update name-to-resource-addresses mapping\n\n  inputs:\n    name:\n      type: string\n      required: true\n      description: Name to register (e.g., alice@example.com)\n    resource_addresses:\n      type: array\n      items:\n        type: string\n      required: true\n      description: List of resource addresses to map to this name\n\n  outputs:\n    success:\n      type: boolean\n      required: true\n      description: True if registration succeeded\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n  pipeline:\n    - step: register\n      side_effect: pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n      op: WRITE\n      inputs:\n        name: $.inputs.name\n        resource_addresses: $.inputs.resource_addresses\n      outputs:\n        success: $.capability_result.value.success\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "a6ba077ad8331f48b0211648f62be1f946d17590688b7ecbe9f62cfc1061c35b",
+  "fqdn_id": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
+  "frontmatter": {
+    "cc_code": "CC_REGISTER_NAME_V0",
+    "core": {
+      "inputs": {
+        "name": {
+          "description": "Name to register (e.g., alice@example.com)",
+          "required": true,
+          "type": "string"
+        },
+        "resource_addresses": {
+          "description": "List of resource addresses to map to this name",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "success": {
+          "description": "True if registration succeeded",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "name": "$.inputs.name",
+            "resource_addresses": "$.inputs.resource_addresses"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {
+            "success": "$.capability_result.value.success"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+          "step": "register"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ]
+      },
+      "summary": "Register or update name-to-resource-addresses mapping"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.capability_contracts",
+  "namespace": "pgs_capabilities.registry.name_service.capability_contracts",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

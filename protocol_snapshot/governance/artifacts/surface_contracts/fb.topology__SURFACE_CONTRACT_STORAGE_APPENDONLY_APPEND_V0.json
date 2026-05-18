@@ -1,0 +1,30 @@
+{
+  "artifact_code": "SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
+  "artifact_type": "SURFACE",
+  "content": "# SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0\n\n## Header\n\n- **Artifact Code:** SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0\n- **Artifact Kind:** surface_contract\n- **Governed By:** fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n- **Version:** V0\n- **Status:** canonical\n\n---\n\n## Purpose\n\nCanonical result surface for append-only storage APPEND operations.\n\nAn append-only APPEND can succeed, encounter invalid input (malformed record), or fail\ndue to storage unavailability. APPEND does not produce NOT_FOUND or ALREADY_EXISTS \u2014\nappend-only storage grows monotonically. These three outcomes are exhaustive.\n\n---\n\n## Machine\n\n```yaml\nsurface_contract_code: SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0\nartifact_kind: SURFACE_CONTRACT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncapability_family: STORAGE_APPENDONLY\nop: APPEND\n\ncanonical_surface:\n  - SUCCESS\n  - VIOLATION\n  - BACKEND_ERROR\n\ngoverns:\n  - CS_APPENDONLY_JSONL_V0\n```\n",
+  "content_hash": "bc81262d20443bbb0d3d1a71114d56a22dc30fbda5140a75839a1efb38f61014",
+  "fqdn_id": "fb.topology::SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
+  "frontmatter": {
+    "artifact_kind": "SURFACE_CONTRACT",
+    "canonical_surface": [
+      "SUCCESS",
+      "VIOLATION",
+      "BACKEND_ERROR"
+    ],
+    "capability_family": "STORAGE_APPENDONLY",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "governs": [
+      "CS_APPENDONLY_JSONL_V0"
+    ],
+    "op": "APPEND",
+    "surface_contract_code": "SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.surface_contracts",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

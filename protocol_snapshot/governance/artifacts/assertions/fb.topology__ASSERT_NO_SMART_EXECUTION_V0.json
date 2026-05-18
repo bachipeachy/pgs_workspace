@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_NO_SMART_EXECUTION_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_NO_SMART_EXECUTION_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_NO_SMART_EXECUTION_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_NO_SMART_EXECUTION_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_no_smart_execution_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that execution layer code does not perform type-based conversions or interpretations.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: pgs_execution code (atom_registry, workflow_runner, etc.)\n\n## Handler Behavior\n\nScans execution layer Python files for:\n1. Type metadata loading calls (`load_contract`, `_load_atom_output_types`)\n2. Type-based conditionals (`if type == \"hex_string\"`)\n3. Type conversion calls (`.hex()`, `bytes.fromhex()`)\n4. Type caching (`_OUTPUT_TYPES_CACHE`)\n\nFails if any pattern detected.\n\n## Error Messages\n\n```\n\u274c ASSERT_NO_SMART_EXECUTION_V0: Smart executor detected\n   File: pgs_execution/execution/machine/transforms/atom_registry.py\n   Line 257: if step_input_types.get(key) == \"hex_string\":\n   Violation: Type-based conditional (smart execution)\n   Fix: Remove type interpretation, move canonicalization to atoms\n```\n",
+  "content_hash": "5f353f6299e7580d7d8be607a582fef50fe5c30d8644b18a4be9309e4a78cf46",
+  "fqdn_id": "fb.topology::ASSERT_NO_SMART_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_NO_SMART_EXECUTION_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_no_smart_execution_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

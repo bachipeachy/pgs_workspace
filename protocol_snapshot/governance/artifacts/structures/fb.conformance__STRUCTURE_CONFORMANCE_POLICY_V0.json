@@ -1,0 +1,38 @@
+{
+  "artifact_code": "STRUCTURE_CONFORMANCE_POLICY_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_CONFORMANCE_POLICY_V0\n\n## Machine\n\n```yaml\nfqdn: fb.conformance::STRUCTURE_CONFORMANCE_POLICY_V0\nstructure_code: STRUCTURE_CONFORMANCE_POLICY_V0\nartifact_kind: STRUCTURE\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  description: Defines CONFORMANCE_POLICY artifact rules\n\nconformance:\n  scope:\n    - CT\n\n  execution:\n    mode: runtime\n\n  expectations:\n    default: NOT_NONE\n\n  failure:\n    behavior: FAIL_BUILD\n```\n",
+  "content_hash": "0155c57c4da68493244136493ee0cd663769af857e1d81529e3a9d88ddcc832a",
+  "fqdn_id": "fb.conformance::STRUCTURE_CONFORMANCE_POLICY_V0",
+  "frontmatter": {
+    "artifact_kind": "STRUCTURE",
+    "conformance": {
+      "execution": {
+        "mode": "runtime"
+      },
+      "expectations": {
+        "default": "NOT_NONE"
+      },
+      "failure": {
+        "behavior": "FAIL_BUILD"
+      },
+      "scope": [
+        "CT"
+      ]
+    },
+    "core": {
+      "description": "Defines CONFORMANCE_POLICY artifact rules"
+    },
+    "fqdn": "fb.conformance::STRUCTURE_CONFORMANCE_POLICY_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "structure_code": "STRUCTURE_CONFORMANCE_POLICY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONFORMANCE.structures",
+  "namespace": "fb.conformance",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,145 @@
+{
+  "artifact_code": "CC_VALIDATE_TX_STRUCTURE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+        "id": "CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+        "inputs": [
+          "record",
+          "schema"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "violations"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_VALIDATE_TX_STRUCTURE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_VALIDATE_TX_STRUCTURE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_VALIDATE_RECORD_STRUCTURE_V0\n\n---\n\n## 1. Intent\n\nValidate transaction field types, formats, and completeness.\n\n---\n\n## 2. Rationale\n\nStructural validation ensures all transaction fields meet type and format\nrequirements before any downstream processing. The CC binds domain-specific\nvalidation rules; the infrastructure atom performs generic validation.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 | CT | VALIDATE_RECORD_STRUCTURE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| to_address | string | true | Destination address |\n| value | string | true | Transfer value in wei |\n| gas_limit | integer | false | Gas limit |\n| max_fee_per_gas | string | false | Max fee per gas |\n| max_priority_fee_per_gas | string | false | Max priority fee |\n| data | string | false | Transaction data |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | SUCCESS or VIOLATION |\n| violations | array | List of validation violations |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All fields valid |\n| VIOLATION | One or more fields invalid (TX_STRUCTURE_INVALID) |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_VALIDATE_TX_STRUCTURE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Validate transaction field structure\n\n  inputs:\n    to_address:\n      type: string\n      required: true\n    value:\n      type: string\n      required: true\n    gas_limit:\n      type: integer\n      required: false\n    max_fee_per_gas:\n      type: string\n      required: false\n    max_priority_fee_per_gas:\n      type: string\n      required: false\n    data:\n      type: string\n      required: false\n\n  outputs:\n    result_status:\n      type: string\n    violations:\n      type: array\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: validate_tx_structure\n      transform: capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0\n      op: VALIDATE_RECORD_STRUCTURE\n      inputs:\n        record:\n          to_address: $.inputs.to_address\n          value: $.inputs.value\n          gas_limit: $.inputs.gas_limit\n          max_fee_per_gas: $.inputs.max_fee_per_gas\n          max_priority_fee_per_gas: $.inputs.max_priority_fee_per_gas\n          data: $.inputs.data\n        schema:\n          to_address:\n            type: hex_string\n            required: true\n            pattern: \"^0x[0-9a-fA-F]{40}$\"\n          value:\n            type: integer_string\n            required: true\n            min_value: 0\n          gas_limit:\n            type: integer\n            min_value: 1\n          max_fee_per_gas:\n            type: integer_string\n            min_value: 0\n          max_priority_fee_per_gas:\n            type: integer_string\n            min_value: 0\n            lte_field: max_fee_per_gas\n          data:\n            type: hex_string\n      outputs:\n        result_status: $.capability_result.result_status\n        violations: $.capability_result.violations\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\n  error_codes:\n    VIOLATION: TX_STRUCTURE_INVALID\n```\n",
+  "content_hash": "f93d503ba263a5bbfe7fe3dd05ca82fc2d384298b5d0e2e2d4ed2070350ea8a0",
+  "fqdn_id": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
+  "frontmatter": {
+    "cc_code": "CC_VALIDATE_TX_STRUCTURE_V0",
+    "core": {
+      "error_codes": {
+        "VIOLATION": "TX_STRUCTURE_INVALID"
+      },
+      "inputs": {
+        "data": {
+          "required": false,
+          "type": "string"
+        },
+        "gas_limit": {
+          "required": false,
+          "type": "integer"
+        },
+        "max_fee_per_gas": {
+          "required": false,
+          "type": "string"
+        },
+        "max_priority_fee_per_gas": {
+          "required": false,
+          "type": "string"
+        },
+        "to_address": {
+          "required": true,
+          "type": "string"
+        },
+        "value": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        },
+        "violations": {
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "record": {
+              "data": "$.inputs.data",
+              "gas_limit": "$.inputs.gas_limit",
+              "max_fee_per_gas": "$.inputs.max_fee_per_gas",
+              "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
+              "to_address": "$.inputs.to_address",
+              "value": "$.inputs.value"
+            },
+            "schema": {
+              "data": {
+                "type": "hex_string"
+              },
+              "gas_limit": {
+                "min_value": 1,
+                "type": "integer"
+              },
+              "max_fee_per_gas": {
+                "min_value": 0,
+                "type": "integer_string"
+              },
+              "max_priority_fee_per_gas": {
+                "lte_field": "max_fee_per_gas",
+                "min_value": 0,
+                "type": "integer_string"
+              },
+              "to_address": {
+                "pattern": "^0x[0-9a-fA-F]{40}$",
+                "required": true,
+                "type": "hex_string"
+              },
+              "value": {
+                "min_value": 0,
+                "required": true,
+                "type": "integer_string"
+              }
+            }
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "VALIDATE_RECORD_STRUCTURE",
+          "outputs": {
+            "result_status": "$.capability_result.result_status",
+            "violations": "$.capability_result.violations"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "validate_tx_structure",
+          "transform": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Validate transaction field structure"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

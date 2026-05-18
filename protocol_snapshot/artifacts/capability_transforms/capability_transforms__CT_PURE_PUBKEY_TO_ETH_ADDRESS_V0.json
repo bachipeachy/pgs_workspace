@@ -1,0 +1,76 @@
+{
+  "artifact_code": "CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** Keccak-256 (SHA-3)\n\n---\n\n## Human\n\n### 1. Intent\n\nDerive an Ethereum address from an uncompressed public key.\n\nThis transform applies the standard Ethereum address derivation algorithm:\n1. Drop the first byte (0x04 prefix) from the uncompressed public key.\n2. Compute the Keccak-256 hash of the remaining 64 bytes.\n3. Take the last 20 bytes of the hash as the address.\n\n---\n\n### 2. Rationale\n\nAddress derivation is the final step in identity creation. This atom isolates the Ethereum-specific address format logic from key derivation. It is strictly a formatting and hashing operation, with no curve mathematics involved.\n\nThis atom performs **only public-key-to-address derivation**.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0\n- **Operation:** PUBKEY_TO_ETH_ADDRESS\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n\n- Generating an Ethereum address from a public key\n- Verifying address ownership (given a public key)\n\n#### 4.2 Invalid Use Cases\n\n- Key derivation (use CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0)\n- Checksum formatting (EIP-55 is a presentation concern, use a separate atom or molecule if needed)\n- Chain-specific logic (this atom is chain-agnostic)\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same public key yields same address |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure hashing transform |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n### 6. Structural Checklist\n\n- [x] Single responsibility\n- [x] Deterministic\n- [x] No implicit state\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] Fail-loud on invalid input\n\n---\n\n### 7. Composition Rules\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs\n- MUST perform exactly one transformation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Runtime validation MUST fail if:**\n- `public_key_uncompressed_bytes` is not 65 bytes\n- `public_key_uncompressed_bytes` does not start with 0x04\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit domain events.\n\nAddress bytes MAY be logged (they are public identifiers), but PII rules apply.\n\n---\n\n### 10. Security Considerations\n\n- Ensure the input is a valid uncompressed public key\n- This atom does not validate the mathematical validity of the point, only its format\n\n---\n\n### 11. Minimal Usage Shape\n\npublic_key_uncompressed_bytes \u2192 CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0 \u2192 eth_address_hex\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Derive ETH address from public key\n  description: Applies the Ethereum address derivation algorithm (Keccak-256 hash of public key, last 20 bytes).\n  \n  inputs:\n    public_key_uncompressed_bytes:\n      type: hex_string\n      required: true\n      description: \"Uncompressed public key (65 bytes, starting with 0x04) as hex string with '0x' prefix\"\n\n  outputs:\n    eth_address_hex:\n      type: string\n      required: true\n      description: \"Ethereum address as a 0x-prefixed hex string (42 characters)\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: PUBKEY_TO_ETH_ADDRESS\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_pubkey_to_eth_address_v0\n    callable: execute\n```\n",
+  "content_hash": "bdb1f693fd33e4b6149bf379ca7d4abf8893da93022ffa175f1c56f17a5fcafb",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "public_key_uncompressed_bytes": "$.inputs.public_key_uncompressed_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_pubkey_to_eth_address_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+    "inputs": {
+      "public_key_uncompressed_bytes": {
+        "description": "Uncompressed public key (65 bytes, starting with 0x04) as hex string with '0x' prefix",
+        "required": true,
+        "type": "hex_string"
+      }
+    },
+    "outputs": {
+      "eth_address_hex": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Applies the Ethereum address derivation algorithm (Keccak-256 hash of public key, last 20 bytes).",
+      "inputs": {
+        "public_key_uncompressed_bytes": {
+          "description": "Uncompressed public key (65 bytes, starting with 0x04) as hex string with '0x' prefix",
+          "required": true,
+          "type": "hex_string"
+        }
+      },
+      "outputs": {
+        "eth_address_hex": {
+          "description": "Ethereum address as a 0x-prefixed hex string (42 characters)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Derive ETH address from public key"
+    },
+    "ct_code": "CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_pubkey_to_eth_address_v0"
+      },
+      "operation": "PUBKEY_TO_ETH_ADDRESS"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,34 @@
+{
+  "artifact_code": "INVARIANT_FQDN_ONLY_REFERENCES_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_FQDN_ONLY_REFERENCES_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_FQDN_ONLY_REFERENCES_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  summary: All artifact references must use FQDN (layer::code), never short names\n  rule: All cross-artifact references must use fully qualified domain names in format layer::artifact_code\n  scope:\n    - CC\n    - CT\n    - CS\n    - WF\n    - IN\n    - RB\n    - STRUCTURE\n    - TEST_DATA\n```\n\n## Summary\n\nAll artifacts must reference other artifacts using fully qualified domain names (FQDN) in the format `layer::artifact_code`. Short names (bare artifact_code) are forbidden.\n\n## Rule\n\nFor all artifact types:\n1. References to CT must use: `transforms::CT_*_V0`\n2. References to CS must use: `side_effects::CS_*_V0`\n3. References to CC must use: `governance::CC_*_V0`\n4. References to WF must use: `governance::WF_*_V0`\n5. References to VOCAB must use: `governance::VOCAB_*_V0`\n6. References to STRUCTURE must use: `governance::STRUCTURE_*_V0`\n7. NO bare artifact codes (e.g., `CT_HASH_V0` without layer prefix)\n\n## Enforcement Scope\n\n- **Artifact Types**: ALL\n- **Validation Phase**: Phase 5 (ASSERT)\n- **Enforcement**: MANDATORY (build fails on violation)\n\n## Examples\n\n### \u2705 VALID\n\n**CC Pipeline:**\n```yaml\npipeline:\n  - step: hash_data\n    transform: transforms::CT_HASH_DATA_V0  # \u2705 FQDN\n```\n\n**WF Reference:**\n```yaml\nstructure: registry::STRUCTURE_BUILD_CONFIG_V0  # \u2705 FQDN\nruntime_binding: registry::RB_BUILD_PLATFORM_V0  # \u2705 FQDN\n```\n\n**CT governed_by:**\n```yaml\ngoverned_by:\n  - registry::CC_HASH_DATA_V0  # \u2705 FQDN\n```\n\n### \u274c INVALID\n\n**Short name:**\n```yaml\npipeline:\n  - step: hash_data\n    transform: CT_HASH_DATA_V0  # \u274c No layer prefix\n```\n\n**Partial FQDN:**\n```yaml\nstructure: STRUCTURE_BUILD_CONFIG_V0  # \u274c Missing layer\n```\n\n## Rationale\n\nFQDN-only references ensure:\n- Unambiguous artifact resolution\n- No namespace collisions\n- Explicit layer boundaries\n- Traceable dependencies\n- No implicit search paths\n\n## Detection Strategy\n\nScan all artifact Machine sections for:\n- `governed_by` field values without `::`\n- `transform` field values without `::`\n- `structure` field values without `::`\n- `runtime_binding` field values without `::`\n- Any artifact_code reference pattern without layer prefix\n\n## Related Artifacts\n\n- `governance::STRUCTURE_FQDN_TREE_V0` - Defines FQDN format\n- `fb.constitution::CONSTITUTION_ARTIFACT_SCHEMA_V0` - Defines reference fields\n",
+  "content_hash": "b8e61768b0e90233fa73ca9fee6c1687c6ec22aa192d00e21fef5d2315fbd4ef",
+  "fqdn_id": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "All cross-artifact references must use fully qualified domain names in format layer::artifact_code",
+      "scope": [
+        "CC",
+        "CT",
+        "CS",
+        "WF",
+        "IN",
+        "RB",
+        "STRUCTURE",
+        "TEST_DATA"
+      ],
+      "summary": "All artifact references must use FQDN (layer::code), never short names"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_FQDN_ONLY_REFERENCES_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.invariants",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

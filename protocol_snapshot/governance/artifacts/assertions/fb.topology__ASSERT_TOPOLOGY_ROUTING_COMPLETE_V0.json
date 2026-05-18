@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_topology_routing_complete_v0\n  callable: execute\n```\n\n## Summary\n\nThe `on_result` map of every execution topology step must cover all status codes declared\nin that step's `result_surface`. An unrouted surface code is an ungoverned execution path\n\u2014 the runtime has no declared action for a result that step's capability can actually produce.\n\nValidation is step-local: each step's `on_result` is validated against that step's own\n`result_surface`, not against the CC-level `result_status_contract.allowed`.\n\n## Rule\n\nFor every CC execution topology step:\n1. Every step MUST have a `result_surface` field \u2014 the set of codes that step's capability can produce\n2. `on_result` MUST contain an entry for every code in that step's `result_surface`\n3. Each routing value MUST be `continue`, `exit`, or an evaluation target name\n4. Unknown status codes in `on_result` (not in step's `result_surface`) are governance noise violations\n5. `on_result` is a finite map \u2014 no expressions or conditional logic\n\n## Enforcement\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_topology_routing_complete_v0`\n- **Paired Invariant**: INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0\n\n## Rationale\n\nRouting completeness guarantees that every possible execution outcome for a step has a\ndeclared path. This is the topology equivalent of exhaustive pattern matching at step scope.\nNo result falls through to an undefined state. The compiler can verify this statically.\n\nStep-local validation against `result_surface` is architecturally correct. Different\ncapabilities produce different result sets. ROUTING_COMPLETE governs step routing coverage.\nCC-level contract closure (ensuring the union of exits matches the CC contract) is\ngoverned by ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0.\n\nEnforced at compile time: validates that `on_result` covers all codes in `result_surface` and vice versa.\n",
+  "content_hash": "942b6258cd3f9f9ca63268d11825eeccd8245c52f4abccf9b63513a89a059531",
+  "fqdn_id": "fb.topology::ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_topology_routing_complete_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

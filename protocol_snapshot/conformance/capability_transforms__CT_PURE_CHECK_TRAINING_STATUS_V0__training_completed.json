@@ -1,0 +1,38 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "training_completed": "$.inputs.training_completed"
+        },
+        "atom": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+    "input_types": {
+      "training_completed": "boolean"
+    },
+    "inputs": {
+      "training_completed": true
+    },
+    "outputs": {
+      "is_eligible": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "is_eligible": true
+  },
+  "fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0::training_completed",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_CHECK_TRAINING_STATUS_V0"
+}

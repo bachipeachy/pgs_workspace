@@ -1,0 +1,30 @@
+{
+  "artifact_code": "SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
+  "artifact_type": "SURFACE",
+  "content": "# SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0\n\n## Header\n\n- **Artifact Code:** SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0\n- **Artifact Kind:** surface_contract\n- **Governed By:** fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n- **Version:** V0\n- **Status:** canonical\n\n---\n\n## Purpose\n\nCanonical result surface for registry DEREGISTER operations.\n\nA registry DEREGISTER operation can succeed, report that the key was not found, or fail\ndue to storage unavailability. Invalid input is caught upstream before reaching the DEREGISTER\noperation. These three outcomes are exhaustive.\n\n---\n\n## Machine\n\n```yaml\nsurface_contract_code: SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0\nartifact_kind: SURFACE_CONTRACT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncapability_family: REGISTRY\nop: DEREGISTER\n\ncanonical_surface:\n  - SUCCESS\n  - NOT_FOUND\n  - BACKEND_ERROR\n\ngoverns:\n  - CS_REGISTRY_V0\n```\n",
+  "content_hash": "95ba0fcad33119299ad1bb2a4b20efe11aa494ef421dac6d68d38c70b385e9d6",
+  "fqdn_id": "fb.topology::SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
+  "frontmatter": {
+    "artifact_kind": "SURFACE_CONTRACT",
+    "canonical_surface": [
+      "SUCCESS",
+      "NOT_FOUND",
+      "BACKEND_ERROR"
+    ],
+    "capability_family": "REGISTRY",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "governs": [
+      "CS_REGISTRY_V0"
+    ],
+    "op": "DEREGISTER",
+    "surface_contract_code": "SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.surface_contracts",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

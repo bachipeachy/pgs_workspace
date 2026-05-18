@@ -1,0 +1,57 @@
+{
+  "artifact_code": "TI_HTTP_VERIFY_ACTOR_V0",
+  "artifact_type": "TI",
+  "content": "# TI_HTTP_VERIFY_ACTOR_V0\n\n## Machine\n\n```yaml\nartifact_code: TI_HTTP_VERIFY_ACTOR_V0\nartifact_type: TI\nartifact_kind: intent\nversion: 0\n\ngoverned_by:\n  - fb.transport::CONSTITUTION_TRANSPORT_V0\n\ncore:\n  summary: HTTP ingress for actor verification\n  description: >\n    Declares the HTTP transport ingress point for actor verification.\n    Defines the route, admission schema, and explicit workflow binding.\n\n  route:\n    method: POST\n    path: /api/v0/verify_actor\n    content_type: application/json\n\n  admission_schema:\n    actor_record:\n      type: object\n      required: true\n    verifier_id:\n      type: string\n      required: true\n    decision:\n      type: string\n      required: true\n    notes:\n      type: string\n      required: false\n\n  workflow: blockchain::WF_VERIFY_ACTOR_V0\n\n  outcomes:\n    ACK:\n      description: Verification decision accepted and forwarded to workflow\n    NACK:\n      description: Verification request rejected at admission\n```\n\n---\n\n## Purpose\n\nDeclares the HTTP transport ingress point for actor verification.\n\nGoverns the boundary between the external HTTP client and\n`blockchain::WF_VERIFY_ACTOR_V0`. Transport ends at admission.\n\n## Route\n\n| Field | Value |\n|-------|-------|\n| Method | POST |\n| Path | /api/v0/verify_actor |\n| Content-Type | application/json |\n\n## Admission Schema\n\n| Field | Type | Required | Notes |\n|-------|------|----------|-------|\n| actor_record | object | yes | Actor identity data |\n| verifier_id | string | yes | ID of the authority performing verification |\n| decision | string | yes | VERIFIED or REJECTED |\n| notes | string | no | Optional verification notes |\n",
+  "content_hash": "568070eb0a3f7ecd68d2e5670dfc01d7b27e9349b1d6ed27e10d80b42f9261e4",
+  "fqdn_id": "blockchain::TI_HTTP_VERIFY_ACTOR_V0",
+  "frontmatter": {
+    "artifact_code": "TI_HTTP_VERIFY_ACTOR_V0",
+    "artifact_kind": "intent",
+    "artifact_type": "TI",
+    "core": {
+      "admission_schema": {
+        "actor_record": {
+          "required": true,
+          "type": "object"
+        },
+        "decision": {
+          "required": true,
+          "type": "string"
+        },
+        "notes": {
+          "required": false,
+          "type": "string"
+        },
+        "verifier_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Declares the HTTP transport ingress point for actor verification. Defines the route, admission schema, and explicit workflow binding.\n",
+      "outcomes": {
+        "ACK": {
+          "description": "Verification decision accepted and forwarded to workflow"
+        },
+        "NACK": {
+          "description": "Verification request rejected at admission"
+        }
+      },
+      "route": {
+        "content_type": "application/json",
+        "method": "POST",
+        "path": "/api/v0/verify_actor"
+      },
+      "summary": "HTTP ingress for actor verification",
+      "workflow": "blockchain::WF_VERIFY_ACTOR_V0"
+    },
+    "governed_by": [
+      "fb.transport::CONSTITUTION_TRANSPORT_V0"
+    ],
+    "version": 0
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.ingress",
+  "namespace": "blockchain",
+  "references": [],
+  "version": "0"
+}

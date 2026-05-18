@@ -1,0 +1,93 @@
+{
+  "artifact_code": "WF_DEMO_COLLATZ_CONJECTURE_V0",
+  "artifact_type": "WF",
+  "content": "# WF_DEMO_COLLATZ_CONJECTURE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_DEMO_COLLATZ_CONJECTURE_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_COLLATZ_INPUT_VALIDATED_V0, IN_CONJECTURE_HELD_V0, CC_COMPUTE_SEQUENCES_V0, CC_VERIFY_TERMINATION_V0, CC_STORE_RESULTS_V0\n\n---\n\n## 1. Intent\n\nDemonstrate that PGS executes a mathematically-grounded protocol workflow\nwith no domain knowledge in the runtime.\n\nThe Collatz Conjecture states: every positive integer eventually reaches 1\nunder the rule n \u2192 n/2 (even) or n \u2192 3n+1 (odd).\n\nThis workflow:\n1. Validates the input set (admission gate)\n2. Computes the complete sequence for each number\n3. Verifies that every sequence terminates at 1\n4. Stores the results\n\nThe runtime is domain-blind. It traverses this graph identically to any other\nPGS workflow. The only thing that changed is the protocol artifact.\n\n---\n\n## 2. Rationale\n\nThis workflow proves execution is semantic-agnostic:\n- The runtime does not know what \"Collatz\" means\n- The conjecture is a protocol invariant, not application logic\n- VIOLATION is a first-class terminal state (conjecture failed \u2014 not a bug)\n- The trace is a verifiable proof of what was computed\n\n---\n\n## 3. Execution Graph\n\n```\nIN_COLLATZ_INPUT_VALIDATED_V0\n    \u251c\u2500 ACK  \u2192 CC_COMPUTE_SEQUENCES_V0\n    \u2502            \u251c\u2500 SUCCESS   \u2192 CC_VERIFY_TERMINATION_V0\n    \u2502            \u2502                \u251c\u2500 SUCCESS   \u2192 CC_STORE_RESULTS_V0\n    \u2502            \u2502                \u2502                \u251c\u2500 SUCCESS      \u2192 EXIT:CONJECTURE_PROVEN\n    \u2502            \u2502                \u2502                \u251c\u2500 VIOLATION    \u2192 EXIT:ERROR\n    \u2502            \u2502                \u2502                \u2514\u2500 BACKEND_ERROR \u2192 EXIT:ERROR\n    \u2502            \u2502                \u2514\u2500 VIOLATION \u2192 EXIT:CONJECTURE_VIOLATED\n    \u2502            \u2514\u2500 VIOLATION \u2192 EXIT:ERROR\n    \u2514\u2500 NACK \u2192 EXIT:REJECTED\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_COLLATZ_INPUT_VALIDATED_V0 | IN | Admission gate \u2014 validates list of positive integers < 100 |\n| CC_COMPUTE_SEQUENCES_V0 | CC | Compute full Collatz sequence for each input number |\n| CC_VERIFY_TERMINATION_V0 | CC | Verify all sequences terminate at 1 |\n| CC_STORE_RESULTS_V0 | CC | Persist results to mutable JSON storage |\n| EXIT | EXIT | Terminal nodes |\n\n---\n\n## 5. Admission\n\nInput must be a non-empty list of positive integers, each in [1, 99].\nThe conjecture is well-studied for all n < 2^68; the bound of 99 keeps\nsequences tractable for demonstration purposes.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_DEMO_COLLATZ_CONJECTURE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: ai_governance::RB_COLLATZ_V0\nstructure: fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0\n\ncore:\n  summary: Compute and verify Collatz sequences \u2014 demonstrates domain-blind PGS execution\n\n  start_node: IN_COLLATZ_INPUT_VALIDATED_V0\n\n  nodes:\n    IN_COLLATZ_INPUT_VALIDATED_V0:\n      type: IN\n      code: IN_COLLATZ_INPUT_VALIDATED_V0\n      next:\n        ACK: CC_COMPUTE_SEQUENCES_V0\n        NACK: EXIT_REJECTED\n\n    CC_COMPUTE_SEQUENCES_V0:\n      type: CC\n      code: CC_COMPUTE_SEQUENCES_V0\n      inputs:\n        numbers: $.payload.numbers\n      next:\n        SUCCESS: CC_VERIFY_TERMINATION_V0\n        VIOLATION: EXIT_ERROR\n\n    CC_VERIFY_TERMINATION_V0:\n      type: CC\n      code: CC_VERIFY_TERMINATION_V0\n      inputs:\n        sequences: $.results.CC_COMPUTE_SEQUENCES_V0.sequences\n      next:\n        SUCCESS: CC_STORE_RESULTS_V0\n        VIOLATION: EXIT_CONJECTURE_VIOLATED\n\n    CC_STORE_RESULTS_V0:\n      type: CC\n      code: CC_STORE_RESULTS_V0\n      inputs:\n        sequences: $.results.CC_COMPUTE_SEQUENCES_V0.sequences\n        all_terminate: $.results.CC_VERIFY_TERMINATION_V0.all_terminate\n        non_terminating: $.results.CC_VERIFY_TERMINATION_V0.non_terminating\n      next:\n        SUCCESS: EXIT_CONJECTURE_PROVEN\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    EXIT_CONJECTURE_PROVEN:\n      type: EXIT\n      reason: COMPLETED\n\n    EXIT_CONJECTURE_VIOLATED:\n      type: EXIT\n      reason: COMPLETED\n\n    EXIT_REJECTED:\n      type: EXIT\n      reason: EXITED\n\n    EXIT_ERROR:\n      type: EXIT\n      reason: FAILED\n```\n",
+  "content_hash": "c9249db1b5a51feafe9dd0eea5ce8b9a9f1adb68d325e1b41307f0a15949ca18",
+  "fqdn_id": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_COMPUTE_SEQUENCES_V0": {
+          "code": "CC_COMPUTE_SEQUENCES_V0",
+          "fqdn_id": "ai_governance::CC_COMPUTE_SEQUENCES_V0",
+          "inputs": {
+            "numbers": "$.payload.numbers"
+          },
+          "next": {
+            "SUCCESS": "CC_VERIFY_TERMINATION_V0",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_STORE_RESULTS_V0": {
+          "code": "CC_STORE_RESULTS_V0",
+          "fqdn_id": "ai_governance::CC_STORE_RESULTS_V0",
+          "inputs": {
+            "all_terminate": "$.results.CC_VERIFY_TERMINATION_V0.all_terminate",
+            "non_terminating": "$.results.CC_VERIFY_TERMINATION_V0.non_terminating",
+            "sequences": "$.results.CC_COMPUTE_SEQUENCES_V0.sequences"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_CONJECTURE_PROVEN",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_VERIFY_TERMINATION_V0": {
+          "code": "CC_VERIFY_TERMINATION_V0",
+          "fqdn_id": "ai_governance::CC_VERIFY_TERMINATION_V0",
+          "inputs": {
+            "sequences": "$.results.CC_COMPUTE_SEQUENCES_V0.sequences"
+          },
+          "next": {
+            "SUCCESS": "CC_STORE_RESULTS_V0",
+            "VIOLATION": "EXIT_CONJECTURE_VIOLATED"
+          },
+          "type": "CC"
+        },
+        "EXIT_CONJECTURE_PROVEN": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_CONJECTURE_VIOLATED": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_ERROR": {
+          "reason": "FAILED",
+          "type": "EXIT"
+        },
+        "EXIT_REJECTED": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_COLLATZ_INPUT_VALIDATED_V0": {
+          "code": "IN_COLLATZ_INPUT_VALIDATED_V0",
+          "fqdn_id": "ai_governance::IN_COLLATZ_INPUT_VALIDATED_V0",
+          "next": {
+            "ACK": "CC_COMPUTE_SEQUENCES_V0",
+            "NACK": "EXIT_REJECTED"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_COLLATZ_INPUT_VALIDATED_V0",
+      "summary": "Compute and verify Collatz sequences \u2014 demonstrates domain-blind PGS execution"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "ai_governance::RB_COLLATZ_V0",
+    "structure": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
+    "version": "v0",
+    "wf_code": "WF_DEMO_COLLATZ_CONJECTURE_V0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.collatz_conjecture.workflows",
+  "namespace": "ai_governance",
+  "references": [
+    "ai_governance::RB_COLLATZ_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0"
+  ],
+  "version": "0"
+}

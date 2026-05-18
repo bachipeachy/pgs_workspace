@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_topology_transport_orthogonal_v0\n  callable: execute\n```\n\n## Summary\n\nExecution topology steps must not encode transport semantics. This assertion detects\ntransport-semantic field names inside CC pipeline steps \u2014 HTTP methods, endpoints, response\ncodes, headers, projection rules. Topology that encodes transport semantics couples\nexecution traversal to transport infrastructure, destroying transport orthogonality.\n\n## Rule\n\nFor every CC execution topology step:\n1. Steps MUST NOT declare transport-semantic fields:\n   - `http_method`, `endpoint`, `transport_target`, `url`, `route`\n   - `response_code`, `status_code`, `content_type`, `headers`\n   - `projection_rules`, `visibility`, `te_binding`\n2. Steps MUST NOT dispatch to HTTP endpoints or perform transport routing\n3. Steps MUST NOT declare TE boundary conditions or projection visibility rules\n\n## Enforcement\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_topology_transport_orthogonal_v0`\n- **Paired Invariant**: INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0\n\n## Rationale\n\nTransport orthogonality is a core PGS architectural property: the same workflow executes\nidentically regardless of transport mechanism. Topology steps that reference transport\nsemantics break this property \u2014 the execution graph becomes coupled to the transport\ncontext, and the runtime can no longer be transport-agnostic.\n\nTransport governance controls boundaries. Execution topology controls traversal.\nThese are orthogonal planes with separate lifecycles.\n\nEnforced at compile time: detects transport-semantic field names (`http_method`, `endpoint`, `response_code`, `headers`, etc.) inside CC pipeline steps.\n",
+  "content_hash": "ccc97583daadb391087d7cac709d299fb0c8fa91397f9ffa199e0e570ca27b3f",
+  "fqdn_id": "fb.topology::ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_topology_transport_orthogonal_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

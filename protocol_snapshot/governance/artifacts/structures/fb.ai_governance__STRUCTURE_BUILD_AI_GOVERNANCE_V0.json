@@ -1,0 +1,118 @@
+{
+  "artifact_code": "STRUCTURE_BUILD_AI_GOVERNANCE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_BUILD_AI_GOVERNANCE_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Governed By**: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n---\n\n## Purpose\n\nBuild configuration for AI governance domain layer. Defines artifact discovery scope, layer visibility, and output paths for independent AI governance domain build.\n\n**Scope**: AI governance domain build (sovereign)\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_BUILD_AI_GOVERNANCE_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ndepends_on:\n\ncore:\n  summary: AI governance domain build configuration\n  description: Independent build configuration for AI governance domain layer\n\n  build_mode: domain\n  current_domain: AI_GOVERNANCE\n\nartifact_discovery:\n  search_layers:\n    - GOVERNANCE\n    - REUSABLE_TRANSFORMS\n    - REUSABLE_SIDE_EFFECTS\n    - CAPABILITIES\n    - AI_GOVERNANCE\n\n  artifact_types:\n    - WF\n    - IN\n    - TI\n    - TE\n    - CC\n    - CT\n    - CS\n    - EV\n    - RB\n    - AC\n    - STRUCTURE\n    - CONSTITUTION\n    - VOCAB\n    - INVARIANT\n    - ASSERT\n    - TEST_DATA\n\noutput_configuration:\n  layer_outputs:\n    GOVERNANCE:\n      layer: GOVERNANCE\n      subpath: compiled/artifacts\n    REUSABLE_TRANSFORMS:\n      layer: REUSABLE_TRANSFORMS\n      subpath: compiled/artifacts\n    REUSABLE_SIDE_EFFECTS:\n      layer: REUSABLE_SIDE_EFFECTS\n      subpath: compiled/artifacts\n    CAPABILITIES:\n      layer: CAPABILITIES\n      subpath: compiled/artifacts\n    AI_GOVERNANCE:\n      layer: AI_GOVERNANCE\n      subpath: compiled/artifacts\n\n  conformance:\n    layer: AI_GOVERNANCE\n    subpath: compiled/conformance\n\nbuild_phases:\n  - phase: discover\n    description: Discover artifacts via STRUCTURE\n\n  - phase: parse\n    description: Parse artifacts into canonical machine form\n\n  - phase: normalize\n    description: Resolve references to FQDN with deterministic binding\n\n  - phase: validate\n    description: Validate artifacts using compiler schema rules\n\n  - phase: assert\n    description: Evaluate cross-artifact invariants\n\n  - phase: materialize\n    description: Emit deterministic compiled artifacts\n\n  - phase: conformance_generate\n    description: Generate CT conformance tests from TEST_DATA\n\nvalidation:\n  constitution_validation: true\n  vocabulary_validation: true\n  schema_validation: true\n  cross_layer_validation: true\n  runtime_semantic_validation: true\n```\n\n---\n\n## Version History\n\n- **V0**: Initial AI governance domain build configuration (2026-04-23)\n",
+  "content_hash": "105137e721745684a3ac495aa5c15a585c27513b3c5d092bf4ebbd37a72b3b57",
+  "fqdn_id": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_V0",
+  "frontmatter": {
+    "artifact_discovery": {
+      "artifact_types": [
+        "WF",
+        "IN",
+        "TI",
+        "TE",
+        "CC",
+        "CT",
+        "CS",
+        "EV",
+        "RB",
+        "AC",
+        "STRUCTURE",
+        "CONSTITUTION",
+        "VOCAB",
+        "INVARIANT",
+        "ASSERT",
+        "TEST_DATA"
+      ],
+      "search_layers": [
+        "GOVERNANCE",
+        "REUSABLE_TRANSFORMS",
+        "REUSABLE_SIDE_EFFECTS",
+        "CAPABILITIES",
+        "AI_GOVERNANCE"
+      ]
+    },
+    "build_phases": [
+      {
+        "description": "Discover artifacts via STRUCTURE",
+        "phase": "discover"
+      },
+      {
+        "description": "Parse artifacts into canonical machine form",
+        "phase": "parse"
+      },
+      {
+        "description": "Resolve references to FQDN with deterministic binding",
+        "phase": "normalize"
+      },
+      {
+        "description": "Validate artifacts using compiler schema rules",
+        "phase": "validate"
+      },
+      {
+        "description": "Evaluate cross-artifact invariants",
+        "phase": "assert"
+      },
+      {
+        "description": "Emit deterministic compiled artifacts",
+        "phase": "materialize"
+      },
+      {
+        "description": "Generate CT conformance tests from TEST_DATA",
+        "phase": "conformance_generate"
+      }
+    ],
+    "core": {
+      "build_mode": "domain",
+      "current_domain": "AI_GOVERNANCE",
+      "description": "Independent build configuration for AI governance domain layer",
+      "summary": "AI governance domain build configuration"
+    },
+    "depends_on": null,
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "conformance": {
+        "layer": "AI_GOVERNANCE",
+        "subpath": "compiled/conformance"
+      },
+      "layer_outputs": {
+        "AI_GOVERNANCE": {
+          "layer": "AI_GOVERNANCE",
+          "subpath": "compiled/artifacts"
+        },
+        "CAPABILITIES": {
+          "layer": "CAPABILITIES",
+          "subpath": "compiled/artifacts"
+        },
+        "GOVERNANCE": {
+          "layer": "GOVERNANCE",
+          "subpath": "compiled/artifacts"
+        },
+        "REUSABLE_SIDE_EFFECTS": {
+          "layer": "REUSABLE_SIDE_EFFECTS",
+          "subpath": "compiled/artifacts"
+        },
+        "REUSABLE_TRANSFORMS": {
+          "layer": "REUSABLE_TRANSFORMS",
+          "subpath": "compiled/artifacts"
+        }
+      }
+    },
+    "structure_code": "STRUCTURE_BUILD_AI_GOVERNANCE_V0",
+    "validation": {
+      "constitution_validation": true,
+      "cross_layer_validation": true,
+      "runtime_semantic_validation": true,
+      "schema_validation": true,
+      "vocabulary_validation": true
+    },
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AI_GOVERNANCE.structures",
+  "namespace": "fb.ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

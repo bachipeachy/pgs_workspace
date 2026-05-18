@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_EV_APPEND_ONLY_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_EV_APPEND_ONLY_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_EV_APPEND_ONLY_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.constitution::INVARIANT_EV_APPEND_ONLY_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_ev_append_only_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that EV artifacts do not declare mutation operations. Events are append-only;\nan EV artifact MUST NOT declare `update`, `delete`, `patch`, or `mutate` fields in its\nschema or extensions block.\n\nThe runtime enforcement (actual store append-only semantics) is handled by CS_APPENDONLY_JSONL_V0.\nThis ASSERT provides compile-time verification that the artifact declaration is conformant.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All EV artifacts\n\n## Handler Behavior\n\nFor every EV artifact:\n1. `core.schema` MUST NOT contain fields named `_update`, `_delete`, `_patch`, `_mutate`\n2. `extensions` MUST NOT declare mutation operation keys\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-08)\n",
+  "content_hash": "b8ff5aad48ba8f06f47084b83cbcb30bcdb6aac3fe40de4524344283f3d3f89a",
+  "fqdn_id": "fb.constitution::ASSERT_EV_APPEND_ONLY_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_EV_APPEND_ONLY_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_ev_append_only_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.assertions",
+  "namespace": "fb.constitution",
+  "references": [],
+  "version": "0"
+}

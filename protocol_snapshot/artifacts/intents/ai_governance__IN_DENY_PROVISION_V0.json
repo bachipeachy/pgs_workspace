@@ -1,0 +1,46 @@
+{
+  "artifact_code": "IN_DENY_PROVISION_V0",
+  "artifact_type": "IN",
+  "content": "# IN_DENY_PROVISION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_DENY_PROVISION_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_DENY_PROVISION_V0\n\n---\n\n## 1. Intent\n\nHandle provisioning denial by emitting denial event and recording to audit log.\n\n---\n\n## 2. Rationale\n\nDenial handling intent provides first-class terminal outcome:\n- Declares desired outcome (clean denial with audit)\n- Protocol emits denial event\n- Outcome is deterministic (DENIED or ERROR)\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_DENY_PROVISION_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| employee_id | string | true | Employee whose provision was denied |\n| reason_code | string | true | Reason for denial |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Denial request accepted for processing |\n| NACK | Denial request rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.ai_licensing\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_DENY_PROVISION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Handle provision denial\n  workflow: WF_DENY_PROVISION_V0\n\n  inputs:\n    employee_id:\n      type: string\n      required: true\n      description: Employee whose provision was denied\n    reason_code:\n      type: string\n      required: true\n      description: Reason for denial\n\n  outcomes:\n    ACK:\n      description: Denial request accepted for processing\n    NACK:\n      description: Denial request rejected\n\nextensions:\n  domain: pgs.ai_licensing\n```\n",
+  "content_hash": "87eff3b8ce72fd3dd82d457de3751701bdff16f23e64a9efe749e19f98dd619b",
+  "fqdn_id": "ai_governance::IN_DENY_PROVISION_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "employee_id": {
+          "description": "Employee whose provision was denied",
+          "required": true,
+          "type": "string"
+        },
+        "reason_code": {
+          "description": "Reason for denial",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Denial request accepted for processing"
+        },
+        "NACK": {
+          "description": "Denial request rejected"
+        }
+      },
+      "summary": "Handle provision denial",
+      "workflow": "WF_DENY_PROVISION_V0"
+    },
+    "extensions": {
+      "domain": "pgs.ai_licensing"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_DENY_PROVISION_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.intents",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

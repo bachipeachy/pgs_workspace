@@ -1,0 +1,86 @@
+{
+  "artifact_code": "CC_GENERATE_WALLET_ID_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "data": "in.seed_record"
+        },
+        "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "id": "CT_PURE_GENERATE_ID_V0",
+        "inputs": [
+          "prefix",
+          "data"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "id"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_GENERATE_WALLET_ID_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_GENERATE_WALLET_ID_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0\n\n---\n\n## 1. Intent\n\nGenerate a deterministic wallet ID from a seed record using content-addressable hashing.\n\n---\n\n## 2. Rationale\n\nWallet IDs must be:\n- Deterministic (same seed always produces same ID)\n- Collision-resistant\n- Derived from seed data for auditability\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| seed_record | object | true | Seed data to hash for ID generation |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| wallet_id | string | Deterministic wallet identifier (W-prefixed) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | ID generated successfully |\n| VIOLATION | Invalid input format |\n\n---\n\n## 7. Failure Semantics\n\n- Invalid seed_record format results in VIOLATION\n- CT failure propagates as VIOLATION\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_GENERATE_WALLET_ID_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Generate deterministic wallet ID\n\n  inputs:\n    seed_record:\n      type: object\n      required: true\n\n  outputs:\n    wallet_id:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_wallet_id\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: W\n        data: $.inputs.seed_record\n      outputs:\n        wallet_id: $.capability_result.id\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n```\n",
+  "content_hash": "e9f17addab8d4f745499af3575c61a907cfedff8a3a892c84e4d969cbf4a6987",
+  "fqdn_id": "blockchain::CC_GENERATE_WALLET_ID_V0",
+  "frontmatter": {
+    "cc_code": "CC_GENERATE_WALLET_ID_V0",
+    "core": {
+      "inputs": {
+        "seed_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "wallet_id": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "data": "$.inputs.seed_record",
+            "prefix": "W"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "GENERATE_ID",
+          "outputs": {
+            "wallet_id": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_wallet_id",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Generate deterministic wallet ID"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

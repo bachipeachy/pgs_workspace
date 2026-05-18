@@ -1,0 +1,52 @@
+{
+  "artifact_code": "CONSTITUTION_GOVERNANCE_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_GOVERNANCE_V0\n\n## Machine\n```yaml\nfqdn: fb.constitution::CONSTITUTION_GOVERNANCE_V0\nconstitution_code: CONSTITUTION_GOVERNANCE_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Root authority for the OmniBachi governance system \u2014 governs all constitutions and the governance hierarchy\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: GOVERNANCE_SUPREMACY\n    applies_to: system\n    constraint: this constitution takes precedence over all other constitutions in any conflict\n    enforced_by: PROCESS_ENFORCED\n\n  - rule_id: GOVERNANCE_VERSION_IMMUTABILITY\n    applies_to: system\n    constraint: ratified constitutions MUST NOT be mutated; any change requires a new version\n    enforced_by: PROCESS_ENFORCED\n\n  - rule_id: GOVERNANCE_EXPLICIT_AUTHORITY\n    applies_to: system\n    constraint: all governance authority MUST be explicitly declared; no implicit authority\n    enforced_by: ASSERT_PROTOCOL_SURFACE_CLOSED_V0\n\n  - rule_id: GOVERNANCE_NO_SILENT_EVOLUTION\n    applies_to: system\n    constraint: all changes MUST be versioned and visible; undocumented changes are constitutional violations\n    enforced_by: PROCESS_ENFORCED\n```\n\n---\n\n**Header Block (Documentation)**\n- **Constitution ID:** CONSTITUTION_GOVERNANCE_V0\n- **Tier:** Sovereign Authority\n- **Applies To:** All OmniBachi governance artifacts and constitutions\n- **Status:** Active \u2014 Foundational\n- **Supersedes:** NONE\n- **Ratified By:** [AUTHORITY]\n- **Ratification Date:** [ISO-8601]\n- **Audience:** All protocol authors, implementers, and reviewers\n- **Dependencies:** NONE (this is the root)\n\n---\n\n## 1. Scope & Authority\n\n### 1.1 What This Constitution Governs\n\nThis constitution is the root authority for the OmniBachi governance system. It governs:\n- The existence and hierarchy of all other constitutions\n- The rules for creating, amending, and deprecating governance artifacts\n- The authority model for protocol governance\n- The relationship between governance tiers\n\n### 1.2 Constitutional Supremacy\n\nThis constitution is supreme. All other constitutions derive authority from this document.\nIn the event of conflict between this constitution and any other, this constitution prevails.\n\n### 1.3 What This Constitution Does NOT Govern\n\nThis constitution does not govern:\n- Implementation details of any system component\n- Domain-specific business logic\n- Runtime behavior (delegated to fb.topology::CONSTITUTION_EXECUTION_V0)\n- Authoring-time behavior (governed by fb.constitution::CONSTITUTION_COMPILER_V0)\n\n---\n\n## 2. Canonical Definitions\n\n### 2.1 Governance Terminology\n\n- **MUST:** An absolute requirement. Violations are constitutional failures.\n- **MUST NOT:** An absolute prohibition. Violations are constitutional failures.\n- **SHOULD:** A strong recommendation. Deviations require documented justification.\n- **MAY:** An optional action. No justification required.\n- **Constitution:** A versioned governance document declaring authority, constraints, and semantics.\n- **Schema:** A versioned structural definition. Governs shape, not behavior.\n- **Artifact:** A versioned, declarative document conforming to a schema and governed by a constitution.\n- **Registry:** A declared collection of governance artifacts at a specific FQDN path.\n\n### 2.2 Authority Levels\n\n| Level | Description | Example |\n|-------|-------------|---------|\n| Sovereign | Root authority, defines protocol semantics | This constitution |\n| Delegated | Authority derived from sovereign, must comply | Domain constitutions |\n\n### 2.3 Governance Tiers\n\n| Tier | Scope | Documents |\n|------|-------|-----------|\n| Sovereign Authority | Protocol-wide rules | CONSTITUTION_GOVERNANCE_V0, GOVERNANCE_FQDN_TREE_V0, CONSTITUTION_VOCABULARY_V0 |\n| System Authority | Specific system concerns | CONSTITUTION_COMPILER_V0, CONSTITUTION_EXECUTION_V0, CONSTITUTION_EXECUTION_POLICY_V0, CONSTITUTION_TRACE_EXECUTION_V0 |\n| Artifact Authority | Artifact type rules | CONSTITUTION_WORKFLOW_V0, CONSTITUTION_INTENT_V0, CONSTITUTION_RUNTIME_BINDING_V0, CONSTITUTION_CAPABILITY_TRANSFORMS_V0, CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0, CONSTITUTION_EVENT_V0 |\n| Schema Definition | Structural specifications | TRACE_SCHEMA_V0 |\n| Domain Authority | Domain-specific rules | Per FQDN tree declaration |\n\n---\n\n## 3. Constitution Structure\n\n### 3.1 Required Elements\n\nEvery constitution MUST include:\n- **Header Block:** ID, Tier, Applies To, Status, Supersedes, Dependencies\n- **Scope & Authority:** What it governs and does not govern\n- **Canonical Definitions:** Terms used within the document\n- **Substantive Sections:** The actual governance rules\n- **Amendment Policy:** How the constitution may be changed\n\n### 3.2 Versioning\n\n- Constitutions MUST be versioned (V0, V1, V2, ...)\n- A new version MUST be created for any semantic change\n- Versions are immutable once ratified\n- Version numbers are monotonically increasing integers\n\n### 3.3 Immutability\n\nRatified constitutions are immutable.\nAny change, including corrections, MUST result in a new version.\nThe previous version remains valid until explicitly superseded.\n\n---\n\n## 4. Authority Hierarchy\n\n### 4.1 Hierarchy Rules\n\n- Parent constitutions take precedence over child constitutions\n- Sovereign tier takes precedence over all other tiers\n- Within a tier, explicit dependencies determine precedence\n- Circular dependencies are forbidden\n\n### 4.2 Conflict Resolution\n\nWhen constitutions conflict:\n1. Apply the higher-tier constitution\n2. If same tier, apply the constitution with explicit authority over the matter\n3. If ambiguous, apply fb.constitution::CONSTITUTION_GOVERNANCE_V0 (this document)\n\n### 4.3 Delegation\n\nA constitution MAY delegate authority to a child constitution.\nDelegation MUST be explicit.\nDelegated authority cannot exceed the delegating constitution's authority.\n\n---\n\n## 5. Amendment Policy\n\n### 5.1 Amendment Requirements\n\nAmendments to any constitution MUST:\n- Create a new version (V1, V2, ...)\n- Explicitly state what is superseded\n- Be ratified by the appropriate authority\n- Include a ratification date\n\n### 5.2 Silent Evolution Prohibition\n\nSilent evolution is prohibited.\nAll changes MUST be versioned and visible.\nUndocumented changes are constitutional violations.\n\n### 5.3 Deprecation\n\nDeprecated constitutions MUST:\n- Be marked with Status: Deprecated\n- Reference the superseding document\n- Remain available for historical reference\n\n---\n\n## 6. Registry Governance\n\n### 6.1 Registry Authority\n\nGOVERNANCE_FQDN_TREE_V0 is the sole authority for:\n- Which registries exist\n- What artifact types each registry contains\n- The build order of packages\n- Physical path mappings\n\n### 6.2 Registry Invariants\n\n- Only declared registries participate in governance\n- Undeclared registries are invisible to the protocol\n- Registry contents MUST conform to their governing constitution\n\n---\n\n## 7. Artifact Governance\n\n### 7.1 Artifact Identity\n\nEvery governance artifact MUST have:\n- A unique code (e.g., WF_CREATE_WALLET_V0)\n- A version\n- A governing constitution reference\n\n### 7.2 Artifact Immutability\n\nRatified artifacts are immutable.\nChanges require a new version.\nThis rule has no exceptions.\n\n### 7.3 Artifact Conformance\n\nArtifacts MUST conform to:\n- Their governing constitution's structural requirements\n- Their schema's type constraints\n- Vocabulary admissibility rules per fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\n---\n\n## 8. Enforcement\n\n### 8.1 Build-Time Enforcement\n\nfb.constitution::CONSTITUTION_COMPILER_V0 governs build-time enforcement.\nThe compiler MUST reject artifacts that violate their governing constitution.\n\n### 8.2 Runtime Enforcement\n\nfb.topology::CONSTITUTION_EXECUTION_V0 governs runtime enforcement.\nThe execution engine MUST halt on constitutional violations.\n\n### 8.3 Violation Reporting\n\nAll constitutional violations MUST be:\n- Explicit (no silent failures)\n- Traceable (reference the violated rule)\n- Actionable (clear remediation path)\n\n---\n\n## 9. Closing Principle\n\nProtocol governs behavior.\nConstitutions govern protocol.\nThis constitution governs constitutions.\n\nThe chain of authority is explicit, versioned, and immutable.\n\n---\n\n## End of Constitution\n",
+  "content_hash": "3c62f6b51a2e7d27dd6dd0484bc25a5aedfdfa55a2f2d3a37a2af8cd423edb32",
+  "fqdn_id": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_GOVERNANCE_V0",
+    "core": {
+      "description": "Root authority for the OmniBachi governance system \u2014 governs all constitutions and the governance hierarchy",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system"
+    },
+    "fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "system",
+        "constraint": "this constitution takes precedence over all other constitutions in any conflict",
+        "enforced_by": "PROCESS_ENFORCED",
+        "rule_id": "GOVERNANCE_SUPREMACY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "ratified constitutions MUST NOT be mutated; any change requires a new version",
+        "enforced_by": "PROCESS_ENFORCED",
+        "rule_id": "GOVERNANCE_VERSION_IMMUTABILITY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "all governance authority MUST be explicitly declared; no implicit authority",
+        "enforced_by": "ASSERT_PROTOCOL_SURFACE_CLOSED_V0",
+        "rule_id": "GOVERNANCE_EXPLICIT_AUTHORITY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "all changes MUST be versioned and visible; undocumented changes are constitutional violations",
+        "enforced_by": "PROCESS_ENFORCED",
+        "rule_id": "GOVERNANCE_NO_SILENT_EVOLUTION"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.constitutions",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

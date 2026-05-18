@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_RB_CS_ONLY_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_RB_CS_ONLY_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_RB_CS_ONLY_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: RB bindings must reference CS artifacts only\n  rule: All binding keys in RB core.bindings must resolve to CS artifact codes (CS_ prefix)\n  scope:\n    - RB\n```\n\n## Summary\n\nRuntime bindings supply concrete implementations for declared CS capabilities. They must\nnever bind CT, WF, CC, or IN artifacts \u2014 those artifact types are resolved through\ndifferent runtime mechanisms.\n\n## Rule\n\nFor every RB artifact, every key in `core.bindings`:\n1. MUST be a valid FQDN\n2. The artifact code component of the FQDN MUST start with `CS_`\n\n## Enforcement Scope\n\n- **Artifact Types**: RB\n- **Validation Phase**: ASSERT (Phase 5, compile-time, hard fail)\n- **Enforced By**: ASSERT_RB_CS_ONLY_V0\n\n## Rationale\n\nRB artifacts are the configuration bridge between declared CS capabilities and physical\nhost implementations. Binding a non-CS artifact confuses the execution model and indicates\nan architectural error. The compiler must catch this before the artifact reaches runtime.\n",
+  "content_hash": "c093e8dc26d349557ef6bbd582cb42544013776f1bb085471843d96ae005fb9e",
+  "fqdn_id": "fb.topology::INVARIANT_RB_CS_ONLY_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "All binding keys in RB core.bindings must resolve to CS artifact codes (CS_ prefix)",
+      "scope": [
+        "RB"
+      ],
+      "summary": "RB bindings must reference CS artifacts only"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "invariant_code": "INVARIANT_RB_CS_ONLY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

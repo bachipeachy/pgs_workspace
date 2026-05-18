@@ -1,0 +1,80 @@
+{
+  "artifact_code": "CC_HASH_TRANSACTION_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "input_bytes": "in.signed_tx_bytes"
+        },
+        "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+        "id": "CT_PURE_KECCAK256_HASH_V0",
+        "inputs": [
+          "input_bytes"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "hash_hex"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_HASH_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_HASH_TRANSACTION_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_KECCAK256_HASH_V0\n\n---\n\n## 1. Intent\n\nCompute the keccak-256 hash of the signed transaction bytes.\n\n---\n\n## 2. Rationale\n\nThe transaction hash is the canonical identifier for the signed transaction\non the Ethereum network. It is computed after signing and used for indexing,\nlookup, and event correlation.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_KECCAK256_HASH_V0 | CT | KECCAK256_HASH |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| signed_tx_bytes | string | true | Hex-encoded signed transaction |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| tx_hash | string | Keccak-256 hash as 0x-prefixed hex (32 bytes) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Hash computed |\n| VIOLATION | Invalid input or hash failure |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_HASH_TRANSACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Compute keccak-256 hash of signed transaction\n\n  inputs:\n    signed_tx_bytes:\n      type: string\n      required: true\n\n  outputs:\n    tx_hash:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: hash_transaction\n      transform: capability_transforms::CT_PURE_KECCAK256_HASH_V0\n      op: KECCAK256_HASH\n      inputs:\n        input_bytes: $.inputs.signed_tx_bytes\n      outputs:\n        tx_hash: $.capability_result.hash_hex\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n```\n",
+  "content_hash": "b6a965ae876bddd5025bf95b919820acc1b200c4d62e4bd4e217f679959b47d5",
+  "fqdn_id": "blockchain::CC_HASH_TRANSACTION_V0",
+  "frontmatter": {
+    "cc_code": "CC_HASH_TRANSACTION_V0",
+    "core": {
+      "inputs": {
+        "signed_tx_bytes": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "tx_hash": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "input_bytes": "$.inputs.signed_tx_bytes"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "KECCAK256_HASH",
+          "outputs": {
+            "tx_hash": "$.capability_result.hash_hex"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "hash_transaction",
+          "transform": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Compute keccak-256 hash of signed transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

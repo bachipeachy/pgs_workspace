@@ -1,0 +1,76 @@
+{
+  "artifact_code": "CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_ENTROPY_TO_MNEMONIC_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_ENTROPY_TO_MNEMONIC_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** BIP-39 mnemonic encoding rules\n\n---\n\n## Human\n\n### 1. Intent\n\nConvert cryptographic entropy bytes into a BIP-39 mnemonic phrase.\n\nThis transform maps raw entropy into a human-readable mnemonic using\nchecksum derivation and wordlist indexing as defined by the BIP-39 standard.\n\n---\n\n### 2. Rationale\n\nMnemonic phrases provide a standardized, portable representation of entropy\nthat can be written, spoken, and stored by humans.\n\nIn the existing crypto implementation, this logic is embedded in wallet\ngeneration. This atom isolates the transformation so that entropy generation\nand mnemonic encoding are independently governed and reusable.\n\nThis atom performs **only entropy-to-mnemonic conversion**.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_ENTROPY_TO_MNEMONIC_V0\n- **Operation:** ENTROPY_TO_MNEMONIC\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n\n- Converting entropy into a mnemonic phrase\n- Wallet initialization flows\n- Backup and recovery workflows\n\n#### 4.2 Invalid Use Cases\n\n- Generating entropy\n- Deriving seeds or keys\n- Validating mnemonic phrases\n- Applying wallet or ledger semantics\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same entropy yields same mnemonic |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure transformation |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n### 6. Structural Checklist\n\n- [x] Single responsibility\n- [x] Deterministic\n- [x] No implicit state\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] Fail-loud on invalid input\n\n---\n\n### 7. Composition Rules\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs\n- MUST perform exactly one transformation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Runtime validation MUST fail if:**\n- `entropy_bytes` is not bytes\n- Entropy length is invalid for BIP-39\n- Mnemonic generation fails\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit domain events.\n\nMnemonic contents MUST NOT be logged in traces.\n\n---\n\n### 10. Security Considerations\n\n- Entropy is assumed to be cryptographically secure\n- Mnemonics are sensitive and must be protected by callers\n\n---\n\n### 11. Minimal Usage Shape\n\nentropy_bytes \u2192 CT_PURE_ENTROPY_TO_MNEMONIC_V0 \u2192 mnemonic\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_ENTROPY_TO_MNEMONIC_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Convert entropy to mnemonic\n  description: Converts raw entropy bytes into a human-readable BIP-39 mnemonic phrase.\n  \n  inputs:\n    entropy_bytes:\n      type: hex_string\n      required: true\n      description: \"Cryptographically secure entropy as hex string with '0x' prefix\"\n\n  outputs:\n    mnemonic:\n      type: string\n      required: true\n      description: \"BIP-39 mnemonic phrase (12-24 words)\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: ENTROPY_TO_MNEMONIC\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_entropy_to_mnemonic_v0\n    callable: execute\n```\n",
+  "content_hash": "f1ebc7ed4f02307bc5de972e4d65a7701b85e6fdf6f0c262051a41fae21aa160",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "entropy_bytes": "$.inputs.entropy_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_entropy_to_mnemonic_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+    "inputs": {
+      "entropy_bytes": {
+        "description": "Cryptographically secure entropy as hex string with '0x' prefix",
+        "required": true,
+        "type": "hex_string"
+      }
+    },
+    "outputs": {
+      "mnemonic": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Converts raw entropy bytes into a human-readable BIP-39 mnemonic phrase.",
+      "inputs": {
+        "entropy_bytes": {
+          "description": "Cryptographically secure entropy as hex string with '0x' prefix",
+          "required": true,
+          "type": "hex_string"
+        }
+      },
+      "outputs": {
+        "mnemonic": {
+          "description": "BIP-39 mnemonic phrase (12-24 words)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Convert entropy to mnemonic"
+    },
+    "ct_code": "CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_entropy_to_mnemonic_v0"
+      },
+      "operation": "ENTROPY_TO_MNEMONIC"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

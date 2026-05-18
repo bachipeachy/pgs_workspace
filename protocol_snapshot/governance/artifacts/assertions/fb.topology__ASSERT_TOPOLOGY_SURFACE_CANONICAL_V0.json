@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_topology_surface_canonical_v0\n  callable: execute\n```\n\n## Summary\n\nEvery CC pipeline step whose capability is governed by a SURFACE_CONTRACT must declare\na `result_surface` that exactly matches the contract's `canonical_surface`. The step is\nmatched to a contract by `{capability_id, op}` (exact match first) or by\n`{capability_id_prefix, op}` (prefix match fallback). Steps whose capability has no\ngoverning contract are silently skipped.\n\nSteps with `on_ct_result` remapping are also skipped: such steps explicitly remap CT\nnative result codes to CC-level domain codes, so their `result_surface` represents\npost-remapping domain semantics, not the CT's canonical surface.\n\n## Rule\n\nFor every CC execution topology step where a SURFACE_CONTRACT governs the step's\n`{capability_id, op}`:\n1. The step MUST declare `result_surface`\n2. The declared `result_surface` MUST exactly equal `canonical_surface` from the contract\n3. Additional codes not in canonical_surface are violations\n4. Missing codes that are in canonical_surface are violations\n\n## Enforcement\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_topology_surface_canonical_v0`\n- **Paired Invariant**: INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0\n\n## Rationale\n\nSURFACE_CANONICAL is the semantic complement to ROUTING_COMPLETE. ROUTING_COMPLETE asks:\n\"is every declared surface code routed?\" SURFACE_CANONICAL asks: \"is the declared surface\nsemantically correct for this capability?\" Together they provide complete topology governance:\nstructural correctness (routing) + semantic legitimacy (canonical surface).\n\nEnforced at compile time: validates each step's `result_surface` against `canonical_surface` declared in SURFACE_CONTRACT artifacts.\n",
+  "content_hash": "3f89b81e3503d0cb3fb7eaf6e1e03081f19f298f5502e3836eda8d4f15db2e8a",
+  "fqdn_id": "fb.topology::ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_topology_surface_canonical_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

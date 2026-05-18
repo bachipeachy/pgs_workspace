@@ -1,0 +1,49 @@
+{
+  "artifact_code": "CONSTITUTION_VOCABULARY_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_VOCABULARY_V0\n\n## Machine\n```yaml\nfqdn: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\nconstitution_code: CONSTITUTION_VOCABULARY_V0\nartifact_kind: CONSTITUTION\nversion: V0\n\ncore:\n  description: Naming authority for OmniBachi \u2014 governs reserved words, symbol admissibility, and FQDN conformance\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: VOCAB_FQDN_CONFORMANCE\n    applies_to: system\n    constraint: all FQDNs MUST conform to vocabulary naming rules\n    enforced_by: ASSERT_FQDN_ONLY_REFERENCES_V0\n\n  - rule_id: VOCAB_UNKNOWN_SYMBOL_FORBIDDEN\n    applies_to: system\n    constraint: unknown symbols are constitutional violations; no implicit symbol creation\n    enforced_by: TBD\n\n  - rule_id: VOCAB_APPEND_ONLY\n    applies_to: system\n    constraint: vocabulary is append-only; symbols MUST NOT be removed or redefined\n    enforced_by: TBD\n\n  - rule_id: VOCAB_UPPER_SNAKE_CASE\n    applies_to: system\n    constraint: all artifact symbols MUST use UPPER_SNAKE_CASE with version suffix\n    enforced_by: TBD\n```\n\n---\n\n## 1. Scope & Authority\n\n### 1.1 What This Constitution Governs\n\nThis constitution governs:\n- Reserved word definitions and namespaces\n- Symbol admissibility rules\n- Vocabulary versioning and deprecation\n- Semantic stability guarantees\n\n### 1.2 What This Constitution Does NOT Govern\n\nThis constitution does not govern:\n- The mechanical enforcement of vocabulary rules (delegated to fb.constitution::CONSTITUTION_COMPILER_V0)\n- Domain-specific terminology (delegated to domain constitutions)\n- Runtime interpretation of symbols (delegated to CONSTITUTION_EXECUTION_V0)\n\n### 1.3 Constitutional Hierarchy\n\n- **Parent Constitution:** CONSTITUTION_GOVERNANCE_V0\n- **Enforcement Delegate:** fb.constitution::CONSTITUTION_COMPILER_V0\n\n---\n\n## 2. Canonical Definitions\n\n### 2.1 Vocabulary Terminology\n\n- **Symbol:** A named identifier used in protocol artifacts (e.g., `CT_PURE_PROJECT_V0`)\n- **Reserved Word:** A symbol with fixed, protocol-defined meaning\n- **Vocabulary:** A declared set of admissible symbols for a given context\n- **Namespace:** A logical grouping of symbols sharing a common prefix\n- **Admissibility:** Whether a symbol is valid in a given context\n\n### 2.2 Symbol Categories\n\n| Category | Prefix | Example | Authority |\n|----------|--------|---------|-----------|\n| Workflow | WF_ | WF_CREATE_WALLET_V0 | Domain constitution |\n| Intent | IN_ | IN_WALLET_CREATED_V0 | Domain constitution |\n| Capability Contract | CC_ | CC_WALLET_CREATE_V0 | Domain constitution |\n| Capability Transform | CT_ | CT_PURE_PROJECT_V0 | CONSTITUTION_CAPABILITY_TRANSFORMS_V0 |\n| Capability Side-Effect | CS_ | CS_MUTABLE_JSON_V0 | CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0 |\n| Event | EV_ | EV_WALLET_CREATED_V0 | Domain constitution |\n| Actor | AC_ | AC_WALLET_HOLDER_V0 | Domain constitution |\n| Runtime Binding | RB_ | RB_CAPABILITY_BINDINGS_V0 | Domain constitution |\n\n---\n\n## 3. Reserved Word Governance\n\n### 3.1 Reserved Word Authority\n\nReserved words are declared in:\n```\nomnibachi/governance/vocabulary/reserved/{namespace}.txt\n```\n\n### 3.2 Reserved Word Immutability\n\nOnce a reserved word is ratified:\n- Its meaning MUST NOT change\n- Its spelling MUST NOT change\n- It MAY be deprecated but MUST NOT be removed\n\n### 3.3 Reserved Word Registration\n\nNew reserved words MUST:\n- Be added to the appropriate namespace file\n- Follow the naming conventions of their category\n- Have a corresponding implementation or artifact\n- Be documented with a one-line definition\n\n---\n\n## 4. Symbol Admissibility\n\n### 4.1 Admissibility Rules\n\nA symbol is admissible if:\n1. It belongs to a declared namespace (prefix match)\n2. It follows the naming pattern for its category\n3. It is either reserved OR declared in a governing artifact\n4. It is not deprecated (unless in a deprecated context)\n\n### 4.2 Admissibility Enforcement\n\nThe builder MUST reject artifacts containing:\n- Symbols with unknown prefixes\n- Symbols violating naming patterns\n- References to deprecated symbols in new artifacts\n- Undeclared symbols in contexts requiring declaration\n\n### 4.3 Unknown Symbol Policy\n\nUnknown symbols are constitutional violations.\nThere is no implicit symbol creation.\nAll symbols MUST be explicitly declared or reserved.\n\n---\n\n## 5. Naming Conventions\n\n### 5.1 General Rules\n\n- Symbols MUST use UPPER_SNAKE_CASE\n- Symbols MUST include a version suffix (_V0, _V1, ...)\n- Symbols MUST start with their category prefix\n- Symbols MUST NOT contain ambiguous abbreviations\n\n### 5.2 Version Suffix\n\nThe version suffix (_V0, _V1, ...) is:\n- Required for all artifact symbols\n- Monotonically increasing\n- Immutable once assigned\n\n### 5.3 Naming Patterns by Category\n\n| Category | Pattern | Example |\n|----------|---------|---------|\n| Workflow | WF_{DOMAIN}_{ACTION}_V{N} | WF_CREATE_WALLET_V0 |\n| Intent | IN_{OUTCOME}_V{N} | IN_WALLET_CREATED_V0 |\n| Capability Contract | CC_{DOMAIN}_{ACTION}_V{N} | CC_WALLET_CREATE_V0 |\n| Capability Transform | CT_{PURITY}_{VERB}_V{N} | CT_PURE_PROJECT_V0 |\n| Capability Side-Effect | CS_{MUTABILITY}_{STORE}_V{N} | CS_MUTABLE_JSON_V0 |\n\n---\n\n## 6. Vocabulary Versioning\n\n### 6.1 Vocabulary Files\n\nVocabulary files are located at:\n```\nomnibachi/governance/vocabulary/reserved/{namespace}.txt\n```\n\n### 6.2 Vocabulary Changes\n\nAdding a new symbol: Permitted, no version bump required\nChanging a symbol's meaning: Forbidden (create new symbol)\nDeprecating a symbol: Permitted, requires deprecation annotation\nRemoving a symbol: Forbidden\n\n### 6.3 Vocabulary Stability\n\nVocabulary is append-only.\nBackward compatibility is guaranteed.\nOld symbols remain valid indefinitely.\n\n---\n\n## 7. Deprecation\n\n### 7.1 Deprecation Process\n\nTo deprecate a symbol:\n1. Add deprecation annotation to vocabulary file\n2. Reference the superseding symbol (if any)\n3. Document deprecation in changelog\n4. Builder MUST warn on deprecated symbol usage\n\n### 7.2 Deprecation Annotation\n\n```\n# DEPRECATED: CT_OLD_TRANSFORM_V0 -> CT_NEW_TRANSFORM_V0\nCT_OLD_TRANSFORM_V0\n```\n\n### 7.3 Deprecated Symbol Usage\n\n- Deprecated symbols MAY be used in existing artifacts\n- Deprecated symbols MUST NOT be used in new artifacts\n- Builder MUST emit warnings for deprecated symbol usage\n- Deprecated symbols are never removed from vocabulary\n\n---\n\n## 8. Semantic Index\n\n### 8.1 Index Location\n\nThe semantic index is located at:\n```\nomnibachi/governance/vocabulary/vocabulary_semantic_index.json\n```\n\n### 8.2 Index Purpose\n\nThe semantic index provides:\n- Human-readable definitions for all symbols\n- Category and namespace mappings\n- Deprecation status\n- Cross-references\n\n### 8.3 Index Maintenance\n\nThe semantic index MUST be kept in sync with vocabulary files.\nThe builder MAY validate index consistency.\n\n---\n\n## 9. Domain Vocabulary\n\n### 9.1 Domain Authority\n\nEach domain MAY define domain-specific symbols.\nDomain symbols MUST:\n- Use a category prefix from Section 2.2\n- Be declared in the domain's registry\n- Not conflict with reserved words\n\n### 9.2 Domain Isolation\n\nDomain vocabularies are scoped to their domain.\nA symbol declared in domain A is not automatically visible in domain B.\nCross-domain references MUST use fully-qualified names.\n\n---\n\n## 10. Amendment Policy\n\n### 10.1 Vocabulary Amendments\n\nNew vocabulary entries: No constitutional amendment required\nNew namespaces: Requires constitutional amendment\nChanged admissibility rules: Requires constitutional amendment\n\n### 10.2 Constitutional Amendments\n\nChanges to this constitution require a new version (V1, V2, ...).\nSilent evolution is prohibited.\n\n---\n\n## 11. Closing Principle\n\nSymbols are the atoms of protocol semantics.\nVocabulary governance ensures semantic stability.\nWhat is named is governed. What is unnamed does not exist.\n\n---\n\n## End of Constitution\n",
+  "content_hash": "fe1ff8e669234d7872825392721dfa80789ca60e5573c6dcdc9def149c688f4c",
+  "fqdn_id": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_VOCABULARY_V0",
+    "core": {
+      "description": "Naming authority for OmniBachi \u2014 governs reserved words, symbol admissibility, and FQDN conformance",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system"
+    },
+    "fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "system",
+        "constraint": "all FQDNs MUST conform to vocabulary naming rules",
+        "enforced_by": "ASSERT_FQDN_ONLY_REFERENCES_V0",
+        "rule_id": "VOCAB_FQDN_CONFORMANCE"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "unknown symbols are constitutional violations; no implicit symbol creation",
+        "enforced_by": "TBD",
+        "rule_id": "VOCAB_UNKNOWN_SYMBOL_FORBIDDEN"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "vocabulary is append-only; symbols MUST NOT be removed or redefined",
+        "enforced_by": "TBD",
+        "rule_id": "VOCAB_APPEND_ONLY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "all artifact symbols MUST use UPPER_SNAKE_CASE with version suffix",
+        "enforced_by": "TBD",
+        "rule_id": "VOCAB_UPPER_SNAKE_CASE"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_VOCABULARY.constitutions",
+  "namespace": "fb.vocabulary",
+  "references": [],
+  "version": "0"
+}

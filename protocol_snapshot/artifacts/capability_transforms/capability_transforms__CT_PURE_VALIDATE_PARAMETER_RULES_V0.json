@@ -1,0 +1,95 @@
+{
+  "artifact_code": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_VALIDATE_PARAMETER_RULES_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_VALIDATE_PARAMETER_RULES_V0\n- **Artifact Kind:** capability_transform\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nEvaluate declarative parameter constraint rules against a parameter map.\n\n---\n\n## 2. Rationale\n\nParameter rule validation is a generic governance primitive:\n- Rules are declared in governance artifacts, not in code\n- Supports operators: eq, neq, lte, gte, lt, gt, in, not_null\n- Domain-agnostic \u2014 any parameter map can be validated against any rule set\n\n---\n\n## 3. Purity\n\n| Property | Value |\n|----------|-------|\n| Purity | ct_pure |\n| Kind | atom |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| parameters | object | true | Parameter key-value map to validate |\n| rules | array | true | Array of rule objects with field, op, and value/allowed |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| valid | boolean | Whether all rules passed |\n| failed_rule | object | First failed rule object (null if all passed) |\n\n---\n\n## 6. Result Status\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All rules pass (valid=true) |\n| VIOLATION | First failed rule (valid=false, failed_rule populated) |\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_VALIDATE_PARAMETER_RULES_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Validate parameters against rules\n  description: Evaluates a set of declarative constraint rules (eq, gt, in, etc.) against a provided parameter map.\n  \n  inputs:\n    parameters:\n      type: object\n      required: true\n      description: Parameter key-value map to validate\n    rules:\n      type: array\n      required: true\n      description: List of constraint rule objects\n\n  outputs:\n    valid:\n      type: boolean\n      required: true\n      description: True if all rules passed\n    failed_rule:\n      type: object\n      required: false\n      nullable: true\n      description: The first rule that failed validation (null if all pass)\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_validate_parameter_rules_v0\n    callable: execute\n```\n",
+  "content_hash": "ff92637b19a7d7390f6d7f032e4b90b93a502cad2ebc39ee64caaf6469674c20",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "parameters": "$.inputs.parameters",
+          "rules": "$.inputs.rules"
+        },
+        "atom": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_parameter_rules_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+    "inputs": {
+      "parameters": {
+        "description": "Parameter key-value map to validate",
+        "required": true,
+        "type": "object"
+      },
+      "rules": {
+        "description": "List of constraint rule objects",
+        "required": true,
+        "type": "array"
+      }
+    },
+    "outputs": {
+      "failed_rule": {
+        "from": "__atom_result__"
+      },
+      "valid": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Evaluates a set of declarative constraint rules (eq, gt, in, etc.) against a provided parameter map.",
+      "inputs": {
+        "parameters": {
+          "description": "Parameter key-value map to validate",
+          "required": true,
+          "type": "object"
+        },
+        "rules": {
+          "description": "List of constraint rule objects",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "failed_rule": {
+          "description": "The first rule that failed validation (null if all pass)",
+          "nullable": true,
+          "required": false,
+          "type": "object"
+        },
+        "valid": {
+          "description": "True if all rules passed",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "summary": "Validate parameters against rules"
+    },
+    "ct_code": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_parameter_rules_v0"
+      }
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

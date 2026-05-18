@@ -1,0 +1,46 @@
+{
+  "artifact_code": "IN_COLLATZ_INPUT_VALIDATED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_COLLATZ_INPUT_VALIDATED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_COLLATZ_INPUT_VALIDATED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_DEMO_COLLATZ_CONJECTURE_V0\n\n---\n\n## 1. Intent\n\nAdmission gate for the Collatz demonstration workflow.\n\nAccepts a list of positive integers, each strictly less than 100.\nRejects payloads that contain non-positive values, non-integers, or numbers >= 100.\n\n---\n\n## 2. Rationale\n\nInput validation is a protocol gate:\n- Constrains the domain to integers the conjecture is well-understood for\n- Prevents unbounded sequences from entering the execution graph\n- Ensures the conjecture demonstration is reproducible and termination-finite\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_DEMO_COLLATZ_CONJECTURE_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| numbers | array | true | List of positive integers, each in range [1, 99] |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Input is valid \u2014 workflow execution proceeds |\n| NACK | Input is invalid \u2014 payload rejected before execution |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.collatz_conjecture\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_COLLATZ_INPUT_VALIDATED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Validate Collatz input \u2014 list of positive integers < 100\n  workflow: WF_DEMO_COLLATZ_CONJECTURE_V0\n\n  inputs:\n    numbers:\n      type: array\n      required: true\n      description: \"List of positive integers in [1, 1000000]\"\n\n  outcomes:\n    ACK:\n      description: Input valid \u2014 execution proceeds\n    NACK:\n      description: Input invalid \u2014 execution rejected\n\nextensions:\n  domain: pgs.collatz_conjecture\n  admission_rules:\n    - \"numbers must be a non-empty array\"\n    - \"each element must be a positive integer\"\n    - \"each element must be < 1000000\"\n```\n",
+  "content_hash": "7ead682e99ccf6cc544be45780e527e1e38ea5794eacb3b9e7e7bdf4e9baaf5e",
+  "fqdn_id": "ai_governance::IN_COLLATZ_INPUT_VALIDATED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "numbers": {
+          "description": "List of positive integers in [1, 1000000]",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Input valid \u2014 execution proceeds"
+        },
+        "NACK": {
+          "description": "Input invalid \u2014 execution rejected"
+        }
+      },
+      "summary": "Validate Collatz input \u2014 list of positive integers < 100",
+      "workflow": "WF_DEMO_COLLATZ_CONJECTURE_V0"
+    },
+    "extensions": {
+      "admission_rules": [
+        "numbers must be a non-empty array",
+        "each element must be a positive integer",
+        "each element must be < 1000000"
+      ],
+      "domain": "pgs.collatz_conjecture"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_COLLATZ_INPUT_VALIDATED_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.collatz_conjecture.intents",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,38 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "entropy_bytes": "$.inputs.entropy_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_entropy_to_mnemonic_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+    "input_types": {
+      "entropy_bytes": "hex_string"
+    },
+    "inputs": {
+      "entropy_bytes": "0x00000000000000000000000000000000"
+    },
+    "outputs": {
+      "mnemonic": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+  },
+  "fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0::entropy_128_bits",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_ENTROPY_TO_MNEMONIC_V0"
+}

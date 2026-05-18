@@ -1,0 +1,94 @@
+{
+  "artifact_code": "CC_PROVISION_LICENSE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+        "id": "CS_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "REGISTER",
+          "RESOLVE",
+          "EXISTS",
+          "DEREGISTER"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_PROVISION_LICENSE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_PROVISION_LICENSE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nRegister a license assignment for an employee.\n\n---\n\n## 2. Rationale\n\nLicense provisioning is a protocol-governed transition:\n- Registers employee in license registry\n- Generates unique license ID\n- Creates immutable assignment record\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_REGISTRY_V0 | CS | REGISTER |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| employee_id | string | true | Employee to provision |\n| license_id | string | true | Unique license identifier |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | License registered successfully |\n| ALREADY_EXISTS | Employee already has a license |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Registry unavailable |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_PROVISION_LICENSE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Register license assignment for employee\n\n  inputs:\n    employee_id:\n      type: string\n      required: true\n    license_id:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: register_license\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.inputs.employee_id\n        target_cs: CS_REGISTRY_V0\n        target_ref: $.inputs.license_id\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  description: Registers employee license assignment in registry\n```\n",
+  "content_hash": "46c5f58e2368ad5d5bfdaa8b24532be5188f2194706dcbc5dee7448824b85d2e",
+  "fqdn_id": "ai_governance::CC_PROVISION_LICENSE_V0",
+  "frontmatter": {
+    "cc_code": "CC_PROVISION_LICENSE_V0",
+    "core": {
+      "inputs": {
+        "employee_id": {
+          "required": true,
+          "type": "string"
+        },
+        "license_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.employee_id",
+            "target_cs": "CS_REGISTRY_V0",
+            "target_ref": "$.inputs.license_id"
+          },
+          "on_result": {
+            "ALREADY_EXISTS": "exit",
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "REGISTER",
+          "outputs": {
+            "result_status": "$.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "ALREADY_EXISTS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "step": "register_license"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "ALREADY_EXISTS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Register license assignment for employee"
+    },
+    "extensions": {
+      "description": "Registers employee license assignment in registry"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

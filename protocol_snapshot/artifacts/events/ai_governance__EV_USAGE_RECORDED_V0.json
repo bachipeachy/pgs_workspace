@@ -1,0 +1,34 @@
+{
+  "artifact_code": "EV_USAGE_RECORDED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_USAGE_RECORDED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_USAGE_RECORDED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nLicense usage activity has been recorded.\n\n---\n\n## 2. Rationale\n\nUsage tracking enables autonomous reclamation:\n- Injected from telemetry system\n- Tracks last active date per license\n- Triggers reclamation when inactivity threshold exceeded\n\n---\n\n## 3. Emitted By\n\n| Source | Description |\n|--------|-------------|\n| Fact Injection | Telemetry system declares usage activity |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| license_id | string | true | License being tracked |\n| last_active_date | string (date-time) | true | When license was last used |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_USAGE_RECORDED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Usage Recorded\n  description: Emitted when license usage activity is recorded\n\n  schema:\n    license_id:\n      type: string\n      required: true\n    last_active_date:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "5bc3a9547dd1cf2371581e93abaef277e2475510a510f02226540eaa4c2576ad",
+  "fqdn_id": "ai_governance::EV_USAGE_RECORDED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when license usage activity is recorded",
+      "schema": {
+        "last_active_date": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "license_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Usage Recorded"
+    },
+    "ev_code": "EV_USAGE_RECORDED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

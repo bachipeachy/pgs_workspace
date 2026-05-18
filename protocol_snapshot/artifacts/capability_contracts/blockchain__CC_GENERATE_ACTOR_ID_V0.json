@@ -1,0 +1,82 @@
+{
+  "artifact_code": "CC_GENERATE_ACTOR_ID_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "data": "in.actor_record"
+        },
+        "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "id": "CT_PURE_GENERATE_ID_V0",
+        "inputs": [
+          "prefix",
+          "data"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "id"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_GENERATE_ACTOR_ID_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_GENERATE_ACTOR_ID_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0\n\n---\n\n## 1. Intent\n\nGenerate a deterministic actor ID from an actor record using content-addressable hashing.\n\n---\n\n## 2. Rationale\n\nActor IDs must be:\n- Deterministic (same input always produces same ID)\n- Collision-resistant\n- Derived from actor data for auditability\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Actor data to hash for ID generation |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| actor_id | string | Deterministic actor identifier (AC-prefixed) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | ID generated successfully |\n| VIOLATION | Invalid input format |\n\n---\n\n## 7. Failure Semantics\n\n- Invalid actor_record format results in VIOLATION\n- CT failure propagates as VIOLATION\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_GENERATE_ACTOR_ID_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Generate deterministic actor ID\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n\n  outputs:\n    actor_id:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_actor_id\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: AC\n        data: $.inputs.actor_record\n      outputs:\n        actor_id: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n```\n",
+  "content_hash": "f567898ee4b90e6418fa4f417b67c3abc8bec1fc387eeea61003ff146d6d8312",
+  "fqdn_id": "blockchain::CC_GENERATE_ACTOR_ID_V0",
+  "frontmatter": {
+    "cc_code": "CC_GENERATE_ACTOR_ID_V0",
+    "core": {
+      "inputs": {
+        "actor_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "actor_id": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "data": "$.inputs.actor_record",
+            "prefix": "AC"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "GENERATE_ID",
+          "outputs": {
+            "actor_id": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_actor_id",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Generate deterministic actor ID"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

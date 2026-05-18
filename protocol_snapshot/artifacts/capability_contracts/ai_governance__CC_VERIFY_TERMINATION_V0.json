@@ -1,0 +1,94 @@
+{
+  "artifact_code": "CC_VERIFY_TERMINATION_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "sequences": "in.sequences"
+        },
+        "fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+        "id": "CT_PURE_TERMINATION_CHECK_V0",
+        "inputs": [
+          "sequences"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "all_terminate",
+          "non_terminating"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_VERIFY_TERMINATION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_VERIFY_TERMINATION_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_TERMINATION_CHECK_V0\n\n---\n\n## 1. Intent\n\nVerify that every computed Collatz sequence terminates at 1.\n\n---\n\n## 2. Rationale\n\nTermination verification is the conjecture gate:\n- Checks the final element of each sequence\n- Returns SUCCESS if all sequences end at 1 (conjecture holds)\n- Returns VIOLATION if any sequence does not end at 1 (conjecture violated)\n\nA VIOLATION here is a first-class protocol outcome, not an error.\nIt means the conjecture was tested and failed \u2014 a historic event.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_TERMINATION_CHECK_V0 | CT | TERMINATION_CHECK |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| sequences | object | true | Mapping from str(n) to Collatz sequence list |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| all_terminate | boolean | True if all sequences end at 1 |\n| non_terminating | array | Seeds that did not terminate |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Conjecture holds \u2014 all sequences terminated at 1 |\n| VIOLATION | Conjecture violated \u2014 at least one sequence did not reach 1 |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_VERIFY_TERMINATION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Verify all Collatz sequences terminate at 1\n\n  inputs:\n    sequences:\n      type: object\n      required: true\n\n  outputs:\n    all_terminate:\n      type: boolean\n    non_terminating:\n      type: array\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: check_termination\n      transform: ai_governance::CT_PURE_TERMINATION_CHECK_V0\n      inputs:\n        sequences: $.inputs.sequences\n      outputs:\n        all_terminate: $.capability_result.all_terminate\n        non_terminating: $.capability_result.non_terminating\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: evaluate_conjecture\n        VIOLATION: exit\n\n  evaluation:\n    evaluate_conjecture:\n      condition: $.capability_result.all_terminate == true\n      on_true: SUCCESS\n      on_false: VIOLATION\n\nextensions:\n  description: Protocol gate for Collatz Conjecture \u2014 SUCCESS means conjecture holds for this input set\n```\n",
+  "content_hash": "c1f9bfbc1476294ca6c7cae9904b406120cf63faa73e445981d03e81f2fc2e8b",
+  "fqdn_id": "ai_governance::CC_VERIFY_TERMINATION_V0",
+  "frontmatter": {
+    "cc_code": "CC_VERIFY_TERMINATION_V0",
+    "core": {
+      "evaluation": {
+        "evaluate_conjecture": {
+          "condition": "$.capability_result.all_terminate == true",
+          "on_false": "VIOLATION",
+          "on_true": "SUCCESS"
+        }
+      },
+      "inputs": {
+        "sequences": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "all_terminate": {
+          "type": "boolean"
+        },
+        "non_terminating": {
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "sequences": "$.inputs.sequences"
+          },
+          "on_result": {
+            "SUCCESS": "evaluate_conjecture",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "all_terminate": "$.capability_result.all_terminate",
+            "non_terminating": "$.capability_result.non_terminating"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "check_termination",
+          "transform": "ai_governance::CT_PURE_TERMINATION_CHECK_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Verify all Collatz sequences terminate at 1"
+    },
+    "extensions": {
+      "description": "Protocol gate for Collatz Conjecture \u2014 SUCCESS means conjecture holds for this input set"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.collatz_conjecture.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

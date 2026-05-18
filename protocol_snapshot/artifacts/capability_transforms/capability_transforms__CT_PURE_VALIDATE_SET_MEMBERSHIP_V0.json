@@ -1,0 +1,86 @@
+{
+  "artifact_code": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n- **Artifact Kind:** capability_transform\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nValidate that a value is a member of a declared set.\n\n---\n\n## 2. Rationale\n\nSet membership validation is a generic governance primitive:\n- Checks whether a value appears in a declared allowed set\n- Used for closed-registry enforcement, status validation, tool surface checks\n- Domain-agnostic \u2014 the set is provided as input, not hardcoded\n\n---\n\n## 3. Purity\n\n| Property | Value |\n|----------|-------|\n| Purity | ct_pure |\n| Kind | atom |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| value | string | true | Value to check for membership |\n| allowed_set | array | true | Set of allowed values |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| is_member | boolean | Whether value is in allowed_set |\n\n---\n\n## 6. Result Status\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Value is a member of allowed_set (is_member=true) |\n| VIOLATION | Value is not a member of allowed_set |\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Validate set membership\n  description: Checks whether a specific value exists within a provided array of allowed values.\n  \n  inputs:\n    value:\n      type: string\n      required: true\n      description: The value to check\n    allowed_set:\n      type: array\n      required: true\n      description: The list of permitted values\n\n  outputs:\n    is_member:\n      type: boolean\n      required: true\n      description: True if value is found in allowed_set\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_validate_set_membership_v0\n    callable: execute\n```\n",
+  "content_hash": "c003449da5cbb7f416f5efa12720714551fcec19ebda09b791da7322e51ec1a1",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "allowed_set": "$.inputs.allowed_set",
+          "value": "$.inputs.value"
+        },
+        "atom": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_set_membership_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "inputs": {
+      "allowed_set": {
+        "description": "The list of permitted values",
+        "required": true,
+        "type": "array"
+      },
+      "value": {
+        "description": "The value to check",
+        "required": true,
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "is_member": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Checks whether a specific value exists within a provided array of allowed values.",
+      "inputs": {
+        "allowed_set": {
+          "description": "The list of permitted values",
+          "required": true,
+          "type": "array"
+        },
+        "value": {
+          "description": "The value to check",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "is_member": {
+          "description": "True if value is found in allowed_set",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "summary": "Validate set membership"
+    },
+    "ct_code": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_set_membership_v0"
+      }
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

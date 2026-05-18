@@ -1,0 +1,126 @@
+{
+  "artifact_code": "STRUCTURE_MODULE_DATA_ROOTS_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_MODULE_DATA_ROOTS_V0\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_MODULE_DATA_ROOTS_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Module data roots and directory structure\n  description: >\n    Defines canonical directory names and module data roots aligned with\n    current platform repository structure.\n\nlayer_directories:\n  compiled_root: compiled\n  compiled_artifacts: compiled/artifacts\n  execution_machine_subdir: machine\n  execution_host_subdir: host\n  execution_conformance_subdir: conformance\n  vocabulary_reserved_subdir: FB_VOCABULARY/vocabulary\n  schemas_subdir: registry/FB_CONSTITUTION/schemas\n  tooling_experimental_subdir: experimental\n\nmodule_data_roots:\n  governance:\n    _type: path\n    value: pgs_governance/registry\n  compiler:\n    _type: path\n    value: pgs_compiler/compiler\n  transforms:\n    _type: path\n    value: pgs_transforms/implementation/transforms\n  side_effects:\n    _type: path\n    value: pgs_side_effects/implementation/side_effects\n  execution:\n    _type: path\n    value: pgs_execution/execution\n  structure:\n    _type: path\n    value: pgs_structure/structure\n  tooling:\n    _type: path\n    value: pgs_tooling\n  ingress:\n    _type: path\n    value: pgs_ingress/ingress\n  egress:\n    _type: path\n    value: pgs_egress/egress\n\nmodule_data_roots_lifecycle:\n  governance:\n    _type: lifecycle\n    value: human\n  compiler:\n    _type: lifecycle\n    value: compiler\n  transforms:\n    _type: lifecycle\n    value: compiler\n  side_effects:\n    _type: lifecycle\n    value: compiler\n  execution:\n    _type: lifecycle\n    value: runtime\n  structure:\n    _type: lifecycle\n    value: runtime\n  tooling:\n    _type: lifecycle\n    value: human\n  ingress:\n    _type: lifecycle\n    value: runtime\n  egress:\n    _type: lifecycle\n    value: runtime\n\ndirectory_lifecycle:\n  compiled:\n    _type: lifecycle\n    value: compiler\n  testbed:\n    _type: lifecycle\n    value: human\n  conformance:\n    _type: lifecycle\n    value: compiler\n\noutput_configuration:\n  _type: metadata\n```\n",
+  "content_hash": "6d7b2c306e1d291802f06f37f09c103409aa21819aa662a1bedef4c807f71461",
+  "fqdn_id": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Defines canonical directory names and module data roots aligned with current platform repository structure.\n",
+      "summary": "Module data roots and directory structure"
+    },
+    "directory_lifecycle": {
+      "compiled": {
+        "_type": "lifecycle",
+        "value": "compiler"
+      },
+      "conformance": {
+        "_type": "lifecycle",
+        "value": "compiler"
+      },
+      "testbed": {
+        "_type": "lifecycle",
+        "value": "human"
+      }
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "layer_directories": {
+      "compiled_artifacts": "compiled/artifacts",
+      "compiled_root": "compiled",
+      "execution_conformance_subdir": "conformance",
+      "execution_host_subdir": "host",
+      "execution_machine_subdir": "machine",
+      "schemas_subdir": "registry/FB_CONSTITUTION/schemas",
+      "tooling_experimental_subdir": "experimental",
+      "vocabulary_reserved_subdir": "FB_VOCABULARY/vocabulary"
+    },
+    "module_data_roots": {
+      "compiler": {
+        "_type": "path",
+        "value": "pgs_compiler/compiler"
+      },
+      "egress": {
+        "_type": "path",
+        "value": "pgs_egress/egress"
+      },
+      "execution": {
+        "_type": "path",
+        "value": "pgs_execution/execution"
+      },
+      "governance": {
+        "_type": "path",
+        "value": "pgs_governance/registry"
+      },
+      "ingress": {
+        "_type": "path",
+        "value": "pgs_ingress/ingress"
+      },
+      "side_effects": {
+        "_type": "path",
+        "value": "pgs_side_effects/implementation/side_effects"
+      },
+      "structure": {
+        "_type": "path",
+        "value": "pgs_structure/structure"
+      },
+      "tooling": {
+        "_type": "path",
+        "value": "pgs_tooling"
+      },
+      "transforms": {
+        "_type": "path",
+        "value": "pgs_transforms/implementation/transforms"
+      }
+    },
+    "module_data_roots_lifecycle": {
+      "compiler": {
+        "_type": "lifecycle",
+        "value": "compiler"
+      },
+      "egress": {
+        "_type": "lifecycle",
+        "value": "runtime"
+      },
+      "execution": {
+        "_type": "lifecycle",
+        "value": "runtime"
+      },
+      "governance": {
+        "_type": "lifecycle",
+        "value": "human"
+      },
+      "ingress": {
+        "_type": "lifecycle",
+        "value": "runtime"
+      },
+      "side_effects": {
+        "_type": "lifecycle",
+        "value": "compiler"
+      },
+      "structure": {
+        "_type": "lifecycle",
+        "value": "runtime"
+      },
+      "tooling": {
+        "_type": "lifecycle",
+        "value": "human"
+      },
+      "transforms": {
+        "_type": "lifecycle",
+        "value": "compiler"
+      }
+    },
+    "output_configuration": {
+      "_type": "metadata"
+    },
+    "structure_code": "STRUCTURE_MODULE_DATA_ROOTS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.structures",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

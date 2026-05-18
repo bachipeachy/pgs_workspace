@@ -1,0 +1,76 @@
+{
+  "artifact_code": "CT_PURE_MNEMONIC_TO_SEED_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_MNEMONIC_TO_SEED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_MNEMONIC_TO_SEED_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** BIP-39 PBKDF2 seed derivation rules\n\n---\n\n## Human\n\n### 1. Intent\n\nDerive a cryptographic seed from a BIP-39 mnemonic phrase.\n\nThis transform applies the standardized PBKDF2 function to produce\na deterministic seed suitable for hierarchical key derivation.\n\n---\n\n### 2. Rationale\n\nSeed derivation must be deterministic, standardized, and cryptographically\nsound. This atom isolates mnemonic-to-seed derivation so that it may be reused\nindependently of wallet or ledger semantics.\n\nThis atom performs **only mnemonic-to-seed derivation**.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_MNEMONIC_TO_SEED_V0\n- **Operation:** MNEMONIC_TO_SEED\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n\n- Wallet seed derivation\n- Key hierarchy initialization\n- Deterministic wallet recovery\n\n#### 4.2 Invalid Use Cases\n\n- Entropy generation\n- Key derivation beyond seed production\n- Domain-specific wallet/ledger policy\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same mnemonic yields same seed |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure cryptographic transform |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n### 6. Structural Checklist\n\n- [x] Single responsibility\n- [x] Deterministic\n- [x] No implicit state\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] Fail-loud on invalid input\n\n---\n\n### 7. Composition Rules\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs\n- MUST perform exactly one transformation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Runtime validation MUST fail if:**\n- `mnemonic` is not a string\n- Seed derivation fails\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit domain events.\n\nSeed bytes MUST NOT be logged in traces.\n\n---\n\n### 10. Security Considerations\n\n- Mnemonics and seeds are highly sensitive\n- Callers must ensure secure handling\n\n---\n\n### 11. Minimal Usage Shape\n\nmnemonic \u2192 CT_PURE_MNEMONIC_TO_SEED_V0 \u2192 seed_bytes\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_MNEMONIC_TO_SEED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Derive seed from BIP-39 mnemonic\n  description: Applies BIP-39 seed derivation (PBKDF2) to a mnemonic phrase.\n  \n  inputs:\n    mnemonic:\n      type: string\n      required: true\n      description: \"BIP-39 mnemonic phrase\"\n\n  outputs:\n    seed_bytes:\n      type: hex_string\n      required: true\n      description: \"Derived deterministic seed as hex string with '0x' prefix\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: MNEMONIC_TO_SEED\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_mnemonic_to_seed_v0\n    callable: execute\n```\n",
+  "content_hash": "3e3927b8257341c1a9203310234626b17a473b90196df5fc16e8903385b65334",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "mnemonic": "$.inputs.mnemonic"
+        },
+        "atom": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_mnemonic_to_seed_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_MNEMONIC_TO_SEED_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+    "inputs": {
+      "mnemonic": {
+        "description": "BIP-39 mnemonic phrase",
+        "required": true,
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "seed_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Applies BIP-39 seed derivation (PBKDF2) to a mnemonic phrase.",
+      "inputs": {
+        "mnemonic": {
+          "description": "BIP-39 mnemonic phrase",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "seed_bytes": {
+          "description": "Derived deterministic seed as hex string with '0x' prefix",
+          "required": true,
+          "type": "hex_string"
+        }
+      },
+      "summary": "Derive seed from BIP-39 mnemonic"
+    },
+    "ct_code": "CT_PURE_MNEMONIC_TO_SEED_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_mnemonic_to_seed_v0"
+      },
+      "operation": "MNEMONIC_TO_SEED"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

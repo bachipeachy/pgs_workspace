@@ -1,0 +1,39 @@
+{
+  "artifact_code": "INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0\n\nBlockchain Domain CT Surface Closure Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0\n\ncore:\n  description: >\n    All capability transforms used in the blockchain domain must be explicitly\n    declared in the closed CT registry for this domain.\n\n    No CT may be referenced in blockchain CC artifacts unless it appears in\n    the allowed_capability_transforms list of ASSERT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - BLOCKCHAIN\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - blockchain::ASSERT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0\n\n  allowed_capability_transforms:\n    - blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0\n    - blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\n    - blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0\n    - blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0\n```\n\n---\n\n## Purpose\n\nDeclare the closed set of capability transforms permitted in the blockchain domain.\nAny CT reference outside this set is a protocol violation and must stop the build.\n\n---\n\n## Version History\n\n- **V0**: Initial blockchain CT surface closure invariant (2026-04-29)\n",
+  "content_hash": "40878605d2692fabbb2e6d08aa24816767ca577c35277a7d0e6a53b923fed3bf",
+  "fqdn_id": "blockchain::INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "allowed_capability_transforms": [
+        "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+        "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+        "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+        "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0"
+      ],
+      "description": "All capability transforms used in the blockchain domain must be explicitly declared in the closed CT registry for this domain.\nNo CT may be referenced in blockchain CC artifacts unless it appears in the allowed_capability_transforms list of ASSERT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0.\n",
+      "enforced_by": [
+        "blockchain::ASSERT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "BLOCKCHAIN"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0",
+    "invariant_code": "INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0",
+    "version": "V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.invariants",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0"
+  ],
+  "version": "0"
+}

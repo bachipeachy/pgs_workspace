@@ -1,0 +1,36 @@
+{
+  "artifact_code": "AC_SYSTEM_V0",
+  "artifact_type": "AC",
+  "content": "# AC_SYSTEM_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_SYSTEM_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nA system authority actor represents a system process or administrator with elevated privileges.\n\n---\n\n## 2. Rationale\n\nSystem actors represent non-human authorities:\n- Perform administrative actions\n- Act as verifiers in verification workflows\n- Provide audit trail for system-initiated operations\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | system |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| role | string | true | System role identifier |\n| permissions | array of strings | false | Declared capabilities (descriptive only) |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_SYSTEM_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: System Authority Actor\n  description: Represents a layers process or administrator with elevated privileges\n  type: layers\n\n  attributes:\n    role:\n      type: string\n      required: true\n    permissions:\n      type: array\n      items:\n        type: string\n```\n",
+  "content_hash": "109e303cac959e31a9754700cc6ece22408d2db360a1a0b479ac06a6d0b1a026",
+  "fqdn_id": "blockchain::AC_SYSTEM_V0",
+  "frontmatter": {
+    "ac_code": "AC_SYSTEM_V0",
+    "core": {
+      "attributes": {
+        "permissions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "role": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Represents a layers process or administrator with elevated privileges",
+      "summary": "System Authority Actor",
+      "type": "layers"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.actors",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

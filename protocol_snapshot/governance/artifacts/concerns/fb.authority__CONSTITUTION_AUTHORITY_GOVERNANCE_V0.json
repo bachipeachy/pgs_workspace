@@ -1,0 +1,89 @@
+{
+  "artifact_code": "CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_AUTHORITY_GOVERNANCE_V0\n\n## One-Line Doctrine\n\nAuthority governance determines whether execution may exist; execution never determines its own authority.\n\n## Foundational Doctrine\n\n> Authority governance governs **execution eligibility**, not execution behavior.\n\nThis distinction is critical. Authority answers: *may this actor invoke this workflow?* It does not govern how the workflow behaves, what path it takes, or what it produces. Execution behavior is governed by execution semantics. Authority governs the threshold \u2014 the gate before execution begins.\n\n## Machine\n\n```yaml\nfqdn: fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0\nconstitution_code: CONSTITUTION_AUTHORITY_GOVERNANCE_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  description: Constitution governing execution authority as a sovereign architectural concern orthogonal to execution, transport, and workflow semantics\n  scope: cross_artifact\n  governs:\n    - WF\n    - CC\n    - CT\n    - CS\n    - AC\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: AUTHORITY_REQUIRED_FOR_EXECUTION\n    applies_to:\n      - WF\n    constraint: every workflow invocation MUST be preceded by a resolved authority boundary evaluation; execution without established authority is a constitutional violation\n    enforced_by: ASSERT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0\n\n  - rule_id: NO_WORKFLOW_AUTHORIZATION_LOGIC\n    applies_to:\n      - WF\n      - CC\n      - CT\n      - CS\n    constraint: no execution artifact may contain role checks, permission branching, authorization assertions, or embedded admissibility logic\n    enforced_by: ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0\n\n  - rule_id: AUTHORITY_STATE_WELL_FORMED\n    applies_to:\n      - WF\n    constraint: authority state envelope MUST be structurally well-formed per SCHEMA_AUTHENTICATED_AUTHORITY_STATE_V0 before execution traversal begins; partial, absent, or malformed authority state is a constitutional violation\n    enforced_by: ASSERT_AUTHORITY_STATE_WELL_FORMED_V0\n\n  - rule_id: NO_AMBIENT_AUTHORITY\n    applies_to:\n      - WF\n      - CC\n      - CT\n      - CS\n    constraint: all authority references must be explicit and fully declared; runtime authority discovery, role inference, and ambient authority are forbidden\n    enforced_by: ASSERT_NO_AMBIENT_AUTHORITY_V0\n\n  - rule_id: ACTOR_AUTHORITY_SEPARATION\n    applies_to:\n      - AC\n    constraint: actor artifacts must not declare authority semantics; identity and authority are orthogonal governance surfaces; permissions, workflow eligibility, and admissibility rules are forbidden inside AC_ artifacts\n    enforced_by: ASSERT_ACTOR_AUTHORITY_SEPARATION_V0\n\n  - rule_id: IDENTITY_AUTHORITY_ORTHOGONALITY\n    applies_to:\n      - AC\n    constraint: identity governance and authority governance are orthogonal surfaces; neither may import semantics from the other; actor type must not function as an implicit authority grant\n    enforced_by: ASSERT_ACTOR_AUTHORITY_SEPARATION_V0\n```\n\n---\n\n## Scope Boundary\n\nThis constitution governs:\n- authority as a sovereign architectural concern\n- admissibility evaluation before execution entry\n- the Authority Boundary sitting before IN (intent)\n- prohibition of authorization semantics inside execution artifacts\n- explicit authority declaration requirements\n\nThis constitution does NOT govern:\n- cryptographic mechanisms (PKI, TLS, OAuth, JWT)\n- actor identity declaration (governed by CONSTITUTION_ACTOR_IDENTITY_V0)\n- workflow execution semantics\n- transport admission semantics\n- runtime execution topology\n\n---\n\n## 1. Purpose\n\nThis constitution establishes authority governance as a sovereign architectural concern orthogonal to execution, transport, and workflow semantics.\n\nAuthority governance answers: *may this actor invoke this workflow at all?* This question is answered **before** the Intent (IN) is reached \u2014 before DAG traversal begins. Execution assumes admissibility has already succeeded.\n\nAuthority is not middleware. Authority is not a runtime policy engine. Authority is not embedded ACL logic. It is a governed admissibility plane that operates before execution and never modifies it.\n\n---\n\n## 2. Core Principles\n\n- **Execution Eligibility, Not Execution Behavior:** Authority governs whether execution may begin \u2014 not how execution proceeds. After admissibility succeeds, authority is settled. Execution topology is fixed. Authority does not reach into execution.\n- **Pre-Execution Evaluation:** Authority is evaluated before the Intent gate. Execution begins only after authority is resolved. The runtime consumes resolved authority state; it never evaluates authority.\n- **Execution Never Self-Authorizes:** Execution topology may not vary based on authority state. Workflows, CCs, CTs, and CSs may not authenticate actors, authorize themselves, or branch on authority semantics.\n- **Authority Immutability:** Authority state becomes immutable once execution begins. No elevation, negotiation, reinterpretation, or mutation of authority state is permitted during execution traversal.\n- **No Ambient Authority:** All authority is explicit. No implicit admin state. No role inference. No runtime authority discovery. If authority is not declared, it does not exist.\n- **Two Authority Planes:** Execution authority (what an actor may invoke) and observation authority (what an actor may observe) are distinct. Holding execution authority does not imply observation authority. Both must be explicitly granted.\n- **Orthogonality:** Authority governance, execution semantics, transport semantics, and trace semantics are orthogonal planes. They must not collapse into each other.\n- **Transport Neutrality:** Authority semantics function identically across CLI, HTTP, MQ, agents, and future transports without workflow changes.\n- **Identity-Authority Separation:** Actor identity governance (what an actor is) and authority governance (what an actor may do) are orthogonal. Neither may import semantics from the other.\n\n---\n\n## 3. Authority Boundary Position\n\n```\nTI\n\u2193\nAuthority Boundary   \u2190 governed by this constitution\n\u2193\nAC (Actor)\n\u2193\nIN                   \u2190 admission gate (governed by CONSTITUTION_ADMISSION_V0)\n\u2193\nWF \u2192 CC \u2192 CT/CS \u2192 EV \u2192 TE\n```\n\nThe Authority Boundary sits **before IN**. Admission governs preconditions within a workflow. Authority governance governs whether the actor may reach the workflow at all.\n\n---\n\n## 4. What Authority Governance Governs\n\n| Concern             | Authority Position                        |\n|---------------------|-------------------------------------------|\n| Identification      | actor + canonical admission               |\n| Authentication      | authority admissibility                   |\n| Authorization       | execution authority + observation authority |\n| Confidentiality     | TE + observation authority governance     |\n| Non-Repudiation     | EV + authority trace binding + provenance |\n| Integrity           | snapshots + assertions + invariants       |\n\n### Two Distinct Authority Planes\n\n**Execution Authority** \u2014 governs what an actor may invoke:\n- authorized_workflows: explicit list of workflow FQDNs the actor may execute\n- Evaluated at the Authority Boundary before IN\n- Enforced by the authority registry\n\n**Observation Authority** \u2014 governs what an actor may observe:\n- visibility_scope: what output projections and TE results the actor may receive\n- trace_scope: what execution trace data the actor may access\n- Evaluated at TE \u2014 not at the execution boundary\n- Distinct from execution authority; one may be granted without the other\n\n**Authority Provenance** \u2014 the accountability chain:\n- Records the source, timestamp, and chain of authority for every admissibility decision\n- Required in every execution trace as `authority_provenance`\n- Foundation of non-repudiation semantics across execution and post-execution\n\n---\n\n## 5. Forbidden Patterns\n\nThe following are constitutional violations:\n\n- `if actor == \"admin\":` inside any WF, CC, CT, or CS\n- Runtime role inference or permission lookup inside execution\n- Dynamic policy evaluation or policy scripting at runtime\n- Ambient authority (implicit admin state, default permissions)\n- Authority discovery at runtime (unresolved authority references)\n- Execution topology variation based on authority state after admissibility succeeds\n- Transport owning authority semantics\n\n---\n\n## 6. V0 Scope\n\nV0 intentionally permits:\n- static JSON authority database\n- plaintext identity material\n- local authority stores\n- governance-layer assertions as stubs (enforced fully in Phase 4)\n\nV0 intentionally excludes:\n- PKI, TLS, OAuth, JWT\n- distributed identity or federated trust\n- revocation infrastructure\n- remote authority negotiation\n\nFuture cryptographic evolution (signatures, hardware keys, federated trust) is compatible with this constitution's architecture without redesign.\n\n---\n\n## 7. Relationship to Actor Identity Governance\n\n`CONSTITUTION_ACTOR_IDENTITY_V0` governs what an actor **is** \u2014 its declared identity, type, and structural attributes.\n\n`CONSTITUTION_AUTHORITY_GOVERNANCE_V0` governs what an actor **may do** \u2014 its admissibility for execution, workflow authorization, and observation rights.\n\nThese are orthogonal constitutions governing orthogonal concerns. Neither may reference or depend on the governance semantics of the other.\n\n---\n\n## End of Constitution\n",
+  "content_hash": "dc75b34dd288c7eeeca3d395e46c17ef52c2fb3601324ad4c7867060a4e1cb28",
+  "fqdn_id": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "core": {
+      "description": "Constitution governing execution authority as a sovereign architectural concern orthogonal to execution, transport, and workflow semantics",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "WF",
+        "CC",
+        "CT",
+        "CS",
+        "AC"
+      ],
+      "scope": "cross_artifact"
+    },
+    "fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "rules": [
+      {
+        "applies_to": [
+          "WF"
+        ],
+        "constraint": "every workflow invocation MUST be preceded by a resolved authority boundary evaluation; execution without established authority is a constitutional violation",
+        "enforced_by": "ASSERT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+        "rule_id": "AUTHORITY_REQUIRED_FOR_EXECUTION"
+      },
+      {
+        "applies_to": [
+          "WF",
+          "CC",
+          "CT",
+          "CS"
+        ],
+        "constraint": "no execution artifact may contain role checks, permission branching, authorization assertions, or embedded admissibility logic",
+        "enforced_by": "ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+        "rule_id": "NO_WORKFLOW_AUTHORIZATION_LOGIC"
+      },
+      {
+        "applies_to": [
+          "WF"
+        ],
+        "constraint": "authority state envelope MUST be structurally well-formed per SCHEMA_AUTHENTICATED_AUTHORITY_STATE_V0 before execution traversal begins; partial, absent, or malformed authority state is a constitutional violation",
+        "enforced_by": "ASSERT_AUTHORITY_STATE_WELL_FORMED_V0",
+        "rule_id": "AUTHORITY_STATE_WELL_FORMED"
+      },
+      {
+        "applies_to": [
+          "WF",
+          "CC",
+          "CT",
+          "CS"
+        ],
+        "constraint": "all authority references must be explicit and fully declared; runtime authority discovery, role inference, and ambient authority are forbidden",
+        "enforced_by": "ASSERT_NO_AMBIENT_AUTHORITY_V0",
+        "rule_id": "NO_AMBIENT_AUTHORITY"
+      },
+      {
+        "applies_to": [
+          "AC"
+        ],
+        "constraint": "actor artifacts must not declare authority semantics; identity and authority are orthogonal governance surfaces; permissions, workflow eligibility, and admissibility rules are forbidden inside AC_ artifacts",
+        "enforced_by": "ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+        "rule_id": "ACTOR_AUTHORITY_SEPARATION"
+      },
+      {
+        "applies_to": [
+          "AC"
+        ],
+        "constraint": "identity governance and authority governance are orthogonal surfaces; neither may import semantics from the other; actor type must not function as an implicit authority grant",
+        "enforced_by": "ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+        "rule_id": "IDENTITY_AUTHORITY_ORTHOGONALITY"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.constitutions",
+  "namespace": "fb.authority",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

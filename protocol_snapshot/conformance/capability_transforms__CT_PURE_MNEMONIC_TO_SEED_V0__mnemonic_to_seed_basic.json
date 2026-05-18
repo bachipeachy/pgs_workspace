@@ -1,0 +1,38 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "mnemonic": "$.inputs.mnemonic"
+        },
+        "atom": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_mnemonic_to_seed_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_MNEMONIC_TO_SEED_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+    "input_types": {
+      "mnemonic": "string"
+    },
+    "inputs": {
+      "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+    },
+    "outputs": {
+      "seed_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "seed_bytes": "0x5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4"
+  },
+  "fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0::mnemonic_to_seed_basic",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_MNEMONIC_TO_SEED_V0"
+}

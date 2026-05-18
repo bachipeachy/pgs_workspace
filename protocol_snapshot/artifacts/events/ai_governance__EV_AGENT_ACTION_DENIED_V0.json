@@ -1,0 +1,50 @@
+{
+  "artifact_code": "EV_AGENT_ACTION_DENIED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_AGENT_ACTION_DENIED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_AGENT_ACTION_DENIED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nAn agent-proposed action has been denied by governance.\n\n---\n\n## 2. Rationale\n\nDenial events record structural governance rejections:\n- Agent action failed at a governance check\n- Denial reason is deterministic and classified\n- Symmetric with authorization \u2014 every decision is audited\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_GOVERN_AGENT_ACTION_V0 | CC_RECORD_DENIED_ACTION_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| action_id | string | true | Governance action identifier |\n| tool_name | string | true | Requested tool |\n| requesting_user_id | string | true | User the agent acts for |\n| denial_reason | string | true | Structural denial reason code |\n| decision | string | true | DENIED |\n| timestamp | string (date-time) | true | When denied |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_AGENT_ACTION_DENIED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Agent action denied by governance\n  description: Emitted when an agent-proposed action is structurally denied at any governance stage\n\n  schema:\n    action_id:\n      type: string\n      required: true\n    tool_name:\n      type: string\n      required: true\n    requesting_user_id:\n      type: string\n      required: true\n    denial_reason:\n      type: string\n      required: true\n    decision:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "9762357f5a946db25843f7a9c3716b2161c4770d1b09f9a5bd174208c2d43ce5",
+  "fqdn_id": "ai_governance::EV_AGENT_ACTION_DENIED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when an agent-proposed action is structurally denied at any governance stage",
+      "schema": {
+        "action_id": {
+          "required": true,
+          "type": "string"
+        },
+        "decision": {
+          "required": true,
+          "type": "string"
+        },
+        "denial_reason": {
+          "required": true,
+          "type": "string"
+        },
+        "requesting_user_id": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "tool_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Agent action denied by governance"
+    },
+    "ev_code": "EV_AGENT_ACTION_DENIED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

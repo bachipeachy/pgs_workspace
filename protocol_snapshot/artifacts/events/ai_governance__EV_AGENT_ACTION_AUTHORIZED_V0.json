@@ -1,0 +1,50 @@
+{
+  "artifact_code": "EV_AGENT_ACTION_AUTHORIZED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_AGENT_ACTION_AUTHORIZED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_AGENT_ACTION_AUTHORIZED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nAn agent-proposed action has been authorized by governance.\n\n---\n\n## 2. Rationale\n\nAuthorization events record successful governance mediation:\n- Agent action passed all governance checks\n- Tool declaration, license binding, and parameter validation all succeeded\n- Action is authorized for execution\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_GOVERN_AGENT_ACTION_V0 | CC_RECORD_GOVERNED_ACTION_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| action_id | string | true | Governance action identifier |\n| tool_name | string | true | Authorized tool |\n| requesting_user_id | string | true | User the agent acts for |\n| license_tier | string | true | License tier that authorized the action |\n| decision | string | true | AUTHORIZED |\n| timestamp | string (date-time) | true | When authorized |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_AGENT_ACTION_AUTHORIZED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Agent action authorized by governance\n  description: Emitted when an agent-proposed action passes all governance checks and is authorized for execution\n\n  schema:\n    action_id:\n      type: string\n      required: true\n    tool_name:\n      type: string\n      required: true\n    requesting_user_id:\n      type: string\n      required: true\n    license_tier:\n      type: string\n      required: true\n    decision:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "84a17893ea07ed16b5e2ae54e3798e8491070c90c0393933424a4d78b010c88e",
+  "fqdn_id": "ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when an agent-proposed action passes all governance checks and is authorized for execution",
+      "schema": {
+        "action_id": {
+          "required": true,
+          "type": "string"
+        },
+        "decision": {
+          "required": true,
+          "type": "string"
+        },
+        "license_tier": {
+          "required": true,
+          "type": "string"
+        },
+        "requesting_user_id": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "tool_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Agent action authorized by governance"
+    },
+    "ev_code": "EV_AGENT_ACTION_AUTHORIZED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

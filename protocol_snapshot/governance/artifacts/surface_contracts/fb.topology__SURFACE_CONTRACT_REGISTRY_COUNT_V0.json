@@ -1,0 +1,29 @@
+{
+  "artifact_code": "SURFACE_CONTRACT_REGISTRY_COUNT_V0",
+  "artifact_type": "SURFACE",
+  "content": "# SURFACE_CONTRACT_REGISTRY_COUNT_V0\n\n## Header\n\n- **Artifact Code:** SURFACE_CONTRACT_REGISTRY_COUNT_V0\n- **Artifact Kind:** surface_contract\n- **Governed By:** fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n- **Version:** V0\n- **Status:** canonical\n\n---\n\n## Purpose\n\nCanonical result surface for registry COUNT operations.\n\nA registry COUNT operation either succeeds with a count or fails due to storage unavailability.\nCOUNT does not produce NOT_FOUND (the count of a missing key is 0, not an error) and does not\nproduce VIOLATION (COUNT takes no input that can be invalid). These two outcomes are exhaustive.\n\n---\n\n## Machine\n\n```yaml\nsurface_contract_code: SURFACE_CONTRACT_REGISTRY_COUNT_V0\nartifact_kind: SURFACE_CONTRACT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncapability_family: REGISTRY\nop: COUNT\n\ncanonical_surface:\n  - SUCCESS\n  - BACKEND_ERROR\n\ngoverns:\n  - CS_REGISTRY_V0\n```\n",
+  "content_hash": "149c1d116e6d6fecbda8e2d02703fb0284f66c4d965fbe3963def81578b52c4d",
+  "fqdn_id": "fb.topology::SURFACE_CONTRACT_REGISTRY_COUNT_V0",
+  "frontmatter": {
+    "artifact_kind": "SURFACE_CONTRACT",
+    "canonical_surface": [
+      "SUCCESS",
+      "BACKEND_ERROR"
+    ],
+    "capability_family": "REGISTRY",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "governs": [
+      "CS_REGISTRY_V0"
+    ],
+    "op": "COUNT",
+    "surface_contract_code": "SURFACE_CONTRACT_REGISTRY_COUNT_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.surface_contracts",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

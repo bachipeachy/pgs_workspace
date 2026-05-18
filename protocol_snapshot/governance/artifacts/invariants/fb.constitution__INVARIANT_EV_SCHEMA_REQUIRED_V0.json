@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_EV_SCHEMA_REQUIRED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_EV_SCHEMA_REQUIRED_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_EV_SCHEMA_REQUIRED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Every EV artifact must declare a non-empty schema\n  rule: All EV artifacts must define core.schema with at least one field declaration\n  scope:\n    - EV\n```\n\n## Summary\n\nEvery Event (EV) artifact must declare a schema describing the data it carries.\nA schema-less event is a constitutional violation \u2014 it cannot be replayed, audited,\nor consumed by downstream systems without a declared data contract.\n\n## Rule\n\nFor every EV artifact:\n1. `core.schema` MUST be present\n2. `core.schema` MUST be a non-empty mapping containing at least one field\n\n## Enforcement Scope\n\n- **Artifact Types**: EV\n- **Validation Phase**: ASSERT (Phase 5, compile-time, hard fail)\n- **Enforced By**: ASSERT_EV_SCHEMA_REQUIRED_V0\n\n## Rationale\n\nEvents are the audit record of the system. Without a declared schema, event replay is\nimpossible and cross-domain consumers cannot interpret the payload. The schema declaration\nis the binding contract between the event emitter and all downstream consumers.\n",
+  "content_hash": "94f79824229270ff52dada0c86cb2c32994eddee48be670130be827ee3de5d6f",
+  "fqdn_id": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "All EV artifacts must define core.schema with at least one field declaration",
+      "scope": [
+        "EV"
+      ],
+      "summary": "Every EV artifact must declare a non-empty schema"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "invariant_code": "INVARIANT_EV_SCHEMA_REQUIRED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.invariants",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,149 @@
+{
+  "artifact_code": "CC_RECLAIM_UNUSED_LICENSE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "last_active_date": "in.last_active_date",
+          "threshold_days": "in.threshold_days"
+        },
+        "fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+        "id": "CT_PURE_EVALUATE_INACTIVITY_V0",
+        "inputs": [
+          "last_active_date",
+          "threshold_days",
+          "current_date"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "is_inactive",
+          "days_inactive"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+        "id": "CS_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "REGISTER",
+          "RESOLVE",
+          "EXISTS",
+          "DEREGISTER"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RECLAIM_UNUSED_LICENSE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RECLAIM_UNUSED_LICENSE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_EVALUATE_INACTIVITY_V0, CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nReclaim a license from an inactive user.\n\n---\n\n## 2. Rationale\n\nAutonomous reclamation enforces use-it-or-lose-it:\n- Evaluates inactivity against threshold\n- Deregisters license if inactive\n- Returns license to pool without human intervention\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_EVALUATE_INACTIVITY_V0 | CT | Evaluate |\n| 2 | CS_REGISTRY_V0 | CS | DEREGISTER |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| license_id | string | true | License to evaluate |\n| employee_id | string | true | Employee holding license |\n| last_active_date | string (date-time) | true | Last usage date |\n| threshold_days | integer | true | Inactivity threshold (default: 30) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n| is_inactive | boolean | Whether user is inactive |\n| days_inactive | integer | Number of days inactive |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | License reclaimed successfully |\n| ACTIVE | User is still active, no reclamation |\n| NOT_FOUND | License not in registry |\n| BACKEND_ERROR | Registry unavailable |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RECLAIM_UNUSED_LICENSE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Reclaim license from inactive user\n\n  inputs:\n    license_id:\n      type: string\n      required: true\n    employee_id:\n      type: string\n      required: true\n    last_active_date:\n      type: string\n      format: date-time\n      required: true\n    threshold_days:\n      type: integer\n      required: true\n      default: 30\n\n  outputs:\n    result_status:\n      type: string\n    is_inactive:\n      type: boolean\n    days_inactive:\n      type: integer\n\n  result_status_contract:\n    allowed: [SUCCESS, ACTIVE, NOT_FOUND, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: evaluate_inactivity\n      transform: capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0\n      inputs:\n        last_active_date: $.inputs.last_active_date\n        threshold_days: $.inputs.threshold_days\n      outputs:\n        is_inactive: $.capability_result.value.is_inactive\n        days_inactive: $.capability_result.value.days_inactive\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: ACTIVE\n      result_surface: [SUCCESS, ACTIVE]\n      on_result:\n        SUCCESS: continue\n        ACTIVE: exit\n\n    - step: deregister_license\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: DEREGISTER\n      inputs:\n        key_or_address: $.inputs.employee_id\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, NOT_FOUND, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  description: Evaluates inactivity and reclaims license if threshold exceeded\n```\n",
+  "content_hash": "5832434d29f94d9700e6ce5139b860116f28c6be277be98b5afa6225e4f801e9",
+  "fqdn_id": "ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0",
+  "frontmatter": {
+    "cc_code": "CC_RECLAIM_UNUSED_LICENSE_V0",
+    "core": {
+      "inputs": {
+        "employee_id": {
+          "required": true,
+          "type": "string"
+        },
+        "last_active_date": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "license_id": {
+          "required": true,
+          "type": "string"
+        },
+        "threshold_days": {
+          "default": 30,
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "days_inactive": {
+          "type": "integer"
+        },
+        "is_inactive": {
+          "type": "boolean"
+        },
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "last_active_date": "$.inputs.last_active_date",
+            "threshold_days": "$.inputs.threshold_days"
+          },
+          "on_ct_result": {
+            "on_failure": "ACTIVE",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "ACTIVE": "exit",
+            "SUCCESS": "continue"
+          },
+          "outputs": {
+            "days_inactive": "$.capability_result.value.days_inactive",
+            "is_inactive": "$.capability_result.value.is_inactive"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "ACTIVE"
+          ],
+          "step": "evaluate_inactivity",
+          "transform": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0"
+        },
+        {
+          "inputs": {
+            "key_or_address": "$.inputs.employee_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "exit"
+          },
+          "op": "DEREGISTER",
+          "outputs": {
+            "result_status": "$.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "step": "deregister_license"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "ACTIVE",
+          "NOT_FOUND",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Reclaim license from inactive user"
+    },
+    "extensions": {
+      "description": "Evaluates inactivity and reclaims license if threshold exceeded"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

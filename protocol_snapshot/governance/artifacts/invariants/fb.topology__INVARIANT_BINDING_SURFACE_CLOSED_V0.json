@@ -1,0 +1,55 @@
+{
+  "artifact_code": "INVARIANT_BINDING_SURFACE_CLOSED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_BINDING_SURFACE_CLOSED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_BINDING_SURFACE_CLOSED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    For each CC node in a WF execution graph, all input bindings must reference\n    only declared sources:\n\n    - $.payload.<field>        \u2192 field must exist in the WF's IN node payload_schema\n    - $.results.<NODE>.<field> \u2192 NODE must be a CC node in this WF,\n                                  field must exist in NODE's CC core.outputs\n    - <literal>                \u2192 any non-$ string or non-string value is valid\n\n    No binding may reference an undeclared field, an unknown WF node,\n    or an undeclared CC output. No unrecognized $ grammar is permitted.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - WORKFLOWS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_BINDING_SURFACE_CLOSED_V0\n\n  anti_patterns:\n    - unknown_payload_field: >\n        \"$.payload.field where field is not in IN node payload_schema\"\n    - unknown_wf_node: >\n        \"$.results.NODE.field where NODE is not a CC node in this WF\"\n    - unknown_cc_output: >\n        \"$.results.NODE.field where field is not declared in NODE's CC core.outputs\"\n    - malformed_results_ref: >\n        \"$.results without the expected <NODE>.<field> suffix\"\n    - unrecognized_grammar: >\n        \"Any $ prefix not matching $.payload.* or $.results.*\"\n\n  clarification:\n    wf_boundary_only: >\n      This invariant covers WF-level node input bindings only.\n      CC-internal pipeline step references ($.inputs.*, $.results.step.*)\n      are covered by INVARIANT_CC_INPUTS_SATISFIED_V0.\n    output_field_not_type: >\n      This invariant validates that output fields EXIST in core.outputs.\n      It does NOT validate type compatibility between binding source and target.\n    literals_always_valid: >\n      Non-string values (bool, int, null) and strings without a $ prefix\n      are treated as literal constants and are always valid.\n```\n\n---\n\n## Purpose\n\nGuarantee that every WF binding references a source that is declared and reachable.\nAny undeclared reference is a protocol violation and must stop the build.\n\n---\n\n## Validation Rules\n\n### Rule 1: Payload Field Must Be Declared\n\n```yaml\n# WF node\nCC_EXAMPLE_V0:\n  type: CC\n  inputs:\n    user_name: $.payload.user_name  # \u274c Not in IN schema\n\n# IN node\nIN_START_V0:\n  payload_schema:\n    user_id: string  # \u2713 Has user_id, NOT user_name\n```\n\n**Fix**: Add `user_name` to `IN_START_V0.payload_schema` or use `$.payload.user_id`.\n\n---\n\n### Rule 2: Source Node Must Exist in WF\n\n```yaml\nCC_TARGET_V0:\n  inputs:\n    tier: $.results.CC_GHOST_NODE.tier  # \u274c CC_GHOST_NODE not in this WF\n```\n\n**Fix**: Use an existing CC node ID or add `CC_GHOST_NODE` to the WF.\n\n---\n\n### Rule 3: Source Node Output Field Must Be Declared\n\n```yaml\nCC_TARGET_V0:\n  inputs:\n    tier: $.results.CC_RESOLVE_TIER_V0.bad_field  # \u274c bad_field not in outputs\n\n# CC_RESOLVE_TIER_V0 core.outputs:\noutputs:\n  license_tier: string  # \u2713 Only license_tier declared\n```\n\n**Fix**: Use `$.results.CC_RESOLVE_TIER_V0.license_tier` or add `bad_field` to CC outputs.\n\n---\n\n## Scope\n\n**Applies to**: All WF artifacts, all CC node input bindings\n\n**Does NOT validate**:\n- CC-internal pipeline step references (`$.inputs.*`, `$.results.step.*`)\n- Field type compatibility\n- Execution ordering (reachability handled by INVARIANT_WF_EXECUTION_PATH_VALID_V0)\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-29) - WF Binding Surface Closure\n",
+  "content_hash": "e3de6feada4948784e805cacaacea685e2dc7431bd95534e8ec2556c7c575253",
+  "fqdn_id": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "unknown_payload_field": "\"$.payload.field where field is not in IN node payload_schema\"\n"
+        },
+        {
+          "unknown_wf_node": "\"$.results.NODE.field where NODE is not a CC node in this WF\"\n"
+        },
+        {
+          "unknown_cc_output": "\"$.results.NODE.field where field is not declared in NODE's CC core.outputs\"\n"
+        },
+        {
+          "malformed_results_ref": "\"$.results without the expected <NODE>.<field> suffix\"\n"
+        },
+        {
+          "unrecognized_grammar": "\"Any $ prefix not matching $.payload.* or $.results.*\"\n"
+        }
+      ],
+      "clarification": {
+        "literals_always_valid": "Non-string values (bool, int, null) and strings without a $ prefix are treated as literal constants and are always valid.",
+        "output_field_not_type": "This invariant validates that output fields EXIST in core.outputs. It does NOT validate type compatibility between binding source and target.\n",
+        "wf_boundary_only": "This invariant covers WF-level node input bindings only. CC-internal pipeline step references ($.inputs.*, $.results.step.*) are covered by INVARIANT_CC_INPUTS_SATISFIED_V0.\n"
+      },
+      "description": "For each CC node in a WF execution graph, all input bindings must reference only declared sources:\n- $.payload.<field>        \u2192 field must exist in the WF's IN node payload_schema - $.results.<NODE>.<field> \u2192 NODE must be a CC node in this WF,\n                              field must exist in NODE's CC core.outputs\n- <literal>                \u2192 any non-$ string or non-string value is valid\nNo binding may reference an undeclared field, an unknown WF node, or an undeclared CC output. No unrecognized $ grammar is permitted.\n",
+      "enforced_by": [
+        "ASSERT_BINDING_SURFACE_CLOSED_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "WORKFLOWS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_BINDING_SURFACE_CLOSED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,87 @@
+{
+  "artifact_code": "CT_PURE_GENERATE_ID_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_GENERATE_ID_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_GENERATE_ID_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** Keccak-256 (SHA-3)\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_GENERATE_ID_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Generate deterministic ID\n  description: Generates a deterministic unique identifier based on input data using Keccak-256 hashing.\n  \n  inputs:\n    prefix:\n      type: string\n      required: true\n      description: \"Identifier prefix (e.g., AC, WF, IN)\"\n    data:\n      type: any\n      required: true\n      description: \"Input data to hash for ID generation\"\n\n  outputs:\n    id:\n      type: string\n      required: true\n      description: \"The generated deterministic ID\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: GENERATE_ID\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_generate_id_v0\n    callable: execute\n```\n",
+  "content_hash": "bf704fce44735e13c4faee8bd3cd8c74addeaf1286d1b1b8d33ce1219becc058",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "data": "$.inputs.data",
+          "prefix": "$.inputs.prefix"
+        },
+        "atom": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_id_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_GENERATE_ID_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "inputs": {
+      "data": {
+        "description": "Input data to hash for ID generation",
+        "required": true,
+        "type": "any"
+      },
+      "prefix": {
+        "description": "Identifier prefix (e.g., AC, WF, IN)",
+        "required": true,
+        "type": "string"
+      }
+    },
+    "outputs": {
+      "id": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Generates a deterministic unique identifier based on input data using Keccak-256 hashing.",
+      "inputs": {
+        "data": {
+          "description": "Input data to hash for ID generation",
+          "required": true,
+          "type": "any"
+        },
+        "prefix": {
+          "description": "Identifier prefix (e.g., AC, WF, IN)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "id": {
+          "description": "The generated deterministic ID",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Generate deterministic ID"
+    },
+    "ct_code": "CT_PURE_GENERATE_ID_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_id_v0"
+      },
+      "operation": "GENERATE_ID"
+    },
+    "version": "V0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

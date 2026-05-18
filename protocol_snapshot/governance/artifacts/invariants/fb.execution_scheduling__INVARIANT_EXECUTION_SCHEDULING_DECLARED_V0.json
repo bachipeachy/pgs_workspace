@@ -1,0 +1,32 @@
+{
+  "artifact_code": "INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0\n\n## Machine\n\n```yaml\nartifact_code: INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\nfqdn: fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0\n\ncore:\n  summary: Every compiled snapshot must declare exactly one active execution scheduling contract\n  rule: >\n    The compiler MUST locate exactly one active scheduling contract within\n    FB_EXECUTION_SCHEDULING. Zero contracts is a missing declaration violation.\n    More than one active contract is an ambiguity violation.\n  scope:\n    - compiled_snapshot\n  enforcement_stage:\n    - compiler_validation\n  violation_response: FAIL_COMPILE\n```\n\n---\n\n## Purpose\n\nThis invariant makes the V0 scheduling contract load-bearing. It forces the compiler\nto validate that execution scheduling legality is explicitly declared for every snapshot \u2014\nrather than assumed. In V0, `SERIAL_SINGLE_WORKER` is the declared and intentional\nscheduling mode, not a default that was never articulated.\n\n## Rule\n\nFor every compiled snapshot:\n1. The compiler MUST scan `FB_EXECUTION_SCHEDULING/scheduling_contracts/` for active contracts\n2. Exactly one MUST be present\n3. The active contract's scheduling mode MUST be materialized into `federation_profile.execution_scheduling`\n4. Compile MUST fail if no contract is found or more than one is found\n\n## Anti-Patterns\n\n- `no_scheduling_contract`: Snapshot compiled without any scheduling contract present\n- `multiple_active_contracts`: More than one scheduling contract marked active simultaneously\n- `implicit_serial_assumption`: Runtime assuming serial execution without a governing declaration\n\n## Enforcement\n\n- **Stage:** compiler_validation\n- **Failure Mode:** FAIL_COMPILE \u2014 no snapshot is produced if violated\n",
+  "content_hash": "50b57ae6e1fc12e6d3dda39c08d3990245b66bc686e2e601388511a5bd420348",
+  "fqdn_id": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+  "frontmatter": {
+    "artifact_code": "INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "rule": "The compiler MUST locate exactly one active scheduling contract within FB_EXECUTION_SCHEDULING. Zero contracts is a missing declaration violation. More than one active contract is an ambiguity violation.\n",
+      "scope": [
+        "compiled_snapshot"
+      ],
+      "summary": "Every compiled snapshot must declare exactly one active execution scheduling contract",
+      "violation_response": "FAIL_COMPILE"
+    },
+    "fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_EXECUTION_SCHEDULING.invariants",
+  "namespace": "fb.execution_scheduling",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

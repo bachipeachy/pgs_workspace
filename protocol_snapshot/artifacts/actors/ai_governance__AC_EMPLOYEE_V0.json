@@ -1,0 +1,34 @@
+{
+  "artifact_code": "AC_EMPLOYEE_V0",
+  "artifact_type": "AC",
+  "content": "# AC_EMPLOYEE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_EMPLOYEE_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nAn employee actor represents a person eligible for AI license provisioning.\n\n---\n\n## 2. Rationale\n\nEmployee actors are subjects of protocol governance:\n- Represent human identities in the licensing domain\n- Track training completion status\n- Provide natural key for license assignment\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | person |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| employee_id | string | true | Unique employee identifier |\n| training_completed | boolean | false | Whether required training is completed |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_EMPLOYEE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: Employee Actor\n  description: Represents a person eligible for AI license provisioning\n  type: person\n\n  attributes:\n    employee_id:\n      type: string\n      required: true\n    training_completed:\n      type: boolean\n      default: false\n```\n",
+  "content_hash": "903e5d1d33bdcd5a3736e1a1230f77f9266718269d610a3aeb3d4691537c27c7",
+  "fqdn_id": "ai_governance::AC_EMPLOYEE_V0",
+  "frontmatter": {
+    "ac_code": "AC_EMPLOYEE_V0",
+    "core": {
+      "attributes": {
+        "employee_id": {
+          "required": true,
+          "type": "string"
+        },
+        "training_completed": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "description": "Represents a person eligible for AI license provisioning",
+      "summary": "Employee Actor",
+      "type": "person"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.actors",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: each execution topology step MUST reference exactly one capability \u2014 exactly one of transform or side_effect, not both, not neither\n  rule: each step must contain exactly one capability reference field (transform XOR side_effect); a step with both is an ambiguous execution unit; a step with neither is an empty execution unit; both are constitutional violations\n  scope:\n    - CC\n\n  enforced_by:\n    - ASSERT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0\n```\n\n---\n\n## Summary\n\nA step is the unit of capability execution in PGS topology. Its contract is one-to-one:\none step, one capability. Allowing multiple capability references per step would create\ncompound execution units with indeterminate ordering. Allowing zero capability references\nwould create phantom steps \u2014 declared topology entries that do nothing.\n\nBoth deviations violate the principle that topology is a deterministic execution graph.\n\n## Rule\n\nFor every execution topology step:\n1. Exactly one of `transform` or `side_effect` MUST be present\n2. Both `transform` and `side_effect` MUST NOT be present in the same step\n3. Neither `transform` nor `side_effect` absent from a step is a constitutional violation\n4. The capability reference MUST be a valid FQDN to a registered CT or CS artifact\n\n## Enforcement Scope\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Enforced By**: ASSERT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0\n\n## Rationale\n\nThe step-to-capability one-to-one mapping is what makes topology statically analyzable.\nWith exactly one capability reference per step, the compiler knows precisely what executes,\nin what order, and with what contract. This uniqueness constraint protects the compile-time\nverifiability of the execution graph.\n\nFull enforcement is implemented in Phase 3.\n",
+  "content_hash": "519377ca0536aa9ad9b3f9e543dde9719c5fd6f856914f6580a3a2714e46ae85",
+  "fqdn_id": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0"
+      ],
+      "rule": "each step must contain exactly one capability reference field (transform XOR side_effect); a step with both is an ambiguous execution unit; a step with neither is an empty execution unit; both are constitutional violations",
+      "scope": [
+        "CC"
+      ],
+      "summary": "each execution topology step MUST reference exactly one capability \u2014 exactly one of transform or side_effect, not both, not neither"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

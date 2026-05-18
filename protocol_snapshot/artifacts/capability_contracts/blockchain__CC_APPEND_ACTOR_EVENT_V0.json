@@ -1,0 +1,101 @@
+{
+  "artifact_code": "CC_APPEND_ACTOR_EVENT_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL",
+          "GET_RANGE",
+          "GET_SINCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_APPEND_ACTOR_EVENT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_APPEND_ACTOR_EVENT_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nAppend an actor lifecycle event to the actor event journal.\n\n---\n\n## 2. Rationale\n\nActor events require:\n- Immutable event log\n- Event sourcing capability\n- Audit trail for actor lifecycle\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| event_type | string | true | Event type code |\n| actor_id | string | true | Actor identifier |\n| data | object | true | Event payload data |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Event appended successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- Invalid inputs result in VIOLATION\n- Storage failure results in BACKEND_ERROR\n- APPEND is not idempotent; retries create duplicates\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_APPEND_ACTOR_EVENT_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Append an actor lifecycle event\n\n  inputs:\n    event_type:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n    data:\n      type: object\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: append_actor_event\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: ACTOR_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.actor_id\n        actor_id: $.inputs.actor_id\n        record:\n          event_code: $.inputs.event_type\n          actor_id: $.inputs.actor_id\n          payload: $.inputs.data\n          timestamp: \"2025-01-01T00:00:00Z\"\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  description: Appends an event to the actor event journal\n```\n",
+  "content_hash": "71e187b36654ff240d9980d52ce51744dedeabebcffd9b575ee28c0eac56a7c7",
+  "fqdn_id": "blockchain::CC_APPEND_ACTOR_EVENT_V0",
+  "frontmatter": {
+    "cc_code": "CC_APPEND_ACTOR_EVENT_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "data": {
+          "required": true,
+          "type": "object"
+        },
+        "event_type": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "actor_id": "$.inputs.actor_id",
+            "record": {
+              "actor_id": "$.inputs.actor_id",
+              "event_code": "$.inputs.event_type",
+              "payload": "$.inputs.data",
+              "timestamp": "2025-01-01T00:00:00Z"
+            },
+            "stream_id": "$.inputs.actor_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_actor_event",
+          "store": "ACTOR_EVENTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Append an actor lifecycle event"
+    },
+    "extensions": {
+      "description": "Appends an event to the actor event journal"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

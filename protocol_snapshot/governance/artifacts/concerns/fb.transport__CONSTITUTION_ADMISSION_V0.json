@@ -1,0 +1,49 @@
+{
+  "artifact_code": "CONSTITUTION_ADMISSION_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_ADMISSION_V0\n\n## Machine\n```yaml\nfqdn: fb.transport::CONSTITUTION_ADMISSION_V0\nconstitution_code: CONSTITUTION_ADMISSION_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Governs the pre-DAG admission gate declared within workflow artifacts\n  scope: artifact\n  governs:\n    - WF\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: ADMISSION_READ_ONLY\n    applies_to: WF\n    constraint: admission phase MUST NOT mutate payload or emit side effects\n    enforced_by: TBD\n\n  - rule_id: ADMISSION_PRECONDITION_ONLY\n    applies_to: WF\n    constraint: admission determines workflow admissibility only; it MUST NOT influence execution behavior\n    enforced_by: TBD\n\n  - rule_id: ADMISSION_DENIAL_IS_GOVERNED\n    applies_to: WF\n    constraint: admission denial MUST emit trace with error_code ADMISSION_DENIED and exit_reason_code ADMISSION_DENIED\n    enforced_by: TBD\n```\n\n---\n\n## \u00a71. Purpose\n\nAdmission is the **pre-DAG enforcement gate** for workflow preconditions.\n\nAdmission determines whether a workflow MAY execute, not how it executes.\n\nAdmission is **read-only**. It SHALL NOT:\n- Mutate payload\n- Emit side effects\n- Dispatch capabilities\n- Invoke the node router\n\nAdmission scans existing event logs to verify that declared preconditions hold.\n\n---\n\n## \u00a72. Rule Types\n\nAdmission supports exactly two rule types:\n\n| Rule | Semantics |\n|------|-----------|\n| `requires` | Events that MUST exist in the event log before execution may proceed |\n| `forbids` | Events that MUST NOT exist in the event log before execution may proceed |\n\nBoth rule types evaluate against the module's event log (JSONL files in the module data root).\n\n---\n\n## \u00a73. Binding Semantics\n\nBindings map event fields to payload fields for filtered matching.\n\nDeclaration form:\n```json\n\"bindings\": {\n  \"EVENT_CODE\": {\n    \"event_field\": \"payload_field\"\n  }\n}\n```\n\nResolution rules:\n1. Each `payload_field` is looked up in the workflow payload\n2. If a referenced payload field is absent, derivation MAY be attempted using declared deterministic functions (e.g., `actor_id` from `actor_record`)\n3. Only successfully resolved bindings are applied as match filters\n4. When a `forbids` event has no explicit binding, it inherits the identity context from all resolved bindings \u2014 forbids are scoped to the same entity\n\n---\n\n## \u00a74. Execution Timing\n\nAdmission runs:\n- AFTER protocol loading (workflow spec, intents, contracts are loaded)\n- AFTER DAG construction and validation\n- BEFORE DAG node dispatch\n\nAdmission is the ADMIT phase in the execution lifecycle (see fb.topology::CONSTITUTION_EXECUTION_V0 \u00a72).\n\n---\n\n## \u00a75. Failure Semantics\n\nAdmission denial is a **Governed Denial**, not an execution failure.\n\n- Denial means preconditions are not met \u2014 the workflow is structurally valid but contextually inadmissible\n- Denial emits an error trace with `error_code: ADMISSION_DENIED`\n- Denial terminates execution with `exit_reason_code: ADMISSION_DENIED`\n- Denial does not indicate a bug, schema violation, or system error\n\n---\n\n## \u00a76. Declaration Site\n\nAdmission rules are declared in the workflow artifact under:\n\n```\ncore.admission\n```\n\nThe `admission` block contains:\n- `requires`: list of event codes\n- `forbids`: list of event codes\n- `bindings`: map of event code to field bindings\n\nWorkflows without an `admission` block are unconditionally admitted.\n\n---\n\n## \u00a77. Schema Authority (Documentation)\n\nThe admission block structure is governed by SCHEMA_WORKFLOW_V0.json, specifically the `admission` object within the `core` section.\n\n---\n\n## \u00a78. Versioning\n\nChanges to this constitution require:\n- New version (CONSTITUTION_ADMISSION_V1)\n- Migration path documented\n- All dependent schemas updated\n\nNo backward compatibility assumed.\n",
+  "content_hash": "da3b74896826257ff40382e936bbde90c7ebcfcccedf3a23672828840435f49a",
+  "fqdn_id": "fb.transport::CONSTITUTION_ADMISSION_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_ADMISSION_V0",
+    "core": {
+      "description": "Governs the pre-DAG admission gate declared within workflow artifacts",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "WF"
+      ],
+      "scope": "artifact"
+    },
+    "fqdn": "fb.transport::CONSTITUTION_ADMISSION_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "WF",
+        "constraint": "admission phase MUST NOT mutate payload or emit side effects",
+        "enforced_by": "TBD",
+        "rule_id": "ADMISSION_READ_ONLY"
+      },
+      {
+        "applies_to": "WF",
+        "constraint": "admission determines workflow admissibility only; it MUST NOT influence execution behavior",
+        "enforced_by": "TBD",
+        "rule_id": "ADMISSION_PRECONDITION_ONLY"
+      },
+      {
+        "applies_to": "WF",
+        "constraint": "admission denial MUST emit trace with error_code ADMISSION_DENIED and exit_reason_code ADMISSION_DENIED",
+        "enforced_by": "TBD",
+        "rule_id": "ADMISSION_DENIAL_IS_GOVERNED"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.constitutions",
+  "namespace": "fb.transport",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

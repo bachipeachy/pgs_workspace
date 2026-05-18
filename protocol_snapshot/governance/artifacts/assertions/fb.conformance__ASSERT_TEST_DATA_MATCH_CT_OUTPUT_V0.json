@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_test_data_match_ct_output_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that TEST_DATA expected outputs match target CT output contract.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All TEST_DATA artifacts\n\n## Handler Behavior\n\nFor each TEST_DATA artifact:\n1. Load TEST_DATA Machine section\n2. Extract test_target CT reference\n3. Load target CT artifact\n4. Extract CT's governed_by CC reference\n5. Load CC artifact\n6. Extract CC output declaration keys\n7. For each test case in TEST_DATA:\n   - Verify `expected` keys match CC output keys exactly\n   - Fail if: missing keys or extra keys\n\n## Error Messages\n\n```\n\u274c ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0: TEST_DATA expected mismatch\n   TEST_DATA: transforms::TEST_DATA_HASH_V0\n   CT: transforms::CT_HASH_DATA_V0\n   CC: governance::CC_HASH_DATA_V0\n   Expected keys: [\"hash_value\"]\n   Test case 1 has keys: [\"hash_value\", \"extra_field\"]\n   Extra keys: [\"extra_field\"]\n```\n",
+  "content_hash": "89b5c17d766d07833c48d32dbfc2bc47d84eb3f810cb53c2fc68b0f8502f1c38",
+  "fqdn_id": "fb.conformance::ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_test_data_match_ct_output_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONFORMANCE.assertions",
+  "namespace": "fb.conformance",
+  "references": [],
+  "version": "0"
+}

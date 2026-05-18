@@ -1,0 +1,86 @@
+{
+  "artifact_code": "STRUCTURE_ARTIFACT_IDENTITY_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_ARTIFACT_IDENTITY_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Governed By**: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n---\n\n## Purpose\n\nDefines the canonical artifact identity system for Protocol-Governed Systems (PGS). Establishes **FQDN-scoped identity** as the internal system identity while preserving clean, short names in human-authored artifacts.\n\n**Core Principle**: Human identity (local + readable) is separate from system identity (global + deterministic). Compilation is the resolution boundary.\n\n**Scope**: All artifact discovery, compilation, and runtime resolution.\n\n---\n\n## Identity Model\n\n### Human Identity (Authoring Layer)\nHuman-authored source artifacts (.md files) use **short artifact codes**:\n```yaml\nartifact_code: CT_VALIDATE_SCHEMA_V0\n```\n\nThis preserves:\n- Readability\n- Speed of authoring\n- Cognitive clarity\n\n### System Identity (Compilation + Runtime)\nCompiled artifacts (.json files) use **FQDN-scoped identity**:\n```json\n{\n  \"artifact_code\": \"CT_VALIDATE_SCHEMA_V0\",\n  \"fqdn_id\": \"blockchain.testbed.CT_VALIDATE_SCHEMA_V0\"\n}\n```\n\nThis ensures:\n- No namespace collisions\n- Deterministic resolution\n- Explicit debugging (traces show full FQDN)\n- True federation (same code in multiple scopes)\n\n---\n\n## FQDN Schema\n\n### Format\n\n```\nfqdn_id = <fqdn> + \".\" + <artifact_code>\n\nwhere:\n  fqdn = <scope>\n  scope = <package>[.<domain>][.<subscope>]\n```\n\n### Examples\n\n**Platform artifacts (single-level scope)**:\n- `governance.STRUCTURE_LAYER_AUTHORITY_V0`\n- `transforms.CT_PURE_HASH_V0`\n- `side_effects.CS_FILE_WRITE_V0`\n- `compiler.WF_BUILD_PLATFORM_V0`\n\n**Domain artifacts (multi-level scope)**:\n- `blockchain.identity.WF_CREATE_IDENTITY_V0`\n- `blockchain.wallet.CT_VALIDATE_SIGNATURE_V0`\n- `blockchain.transaction.IN_SUBMIT_TRANSACTION_V0`\n- `ai_licensing.CC_LICENSE_VALIDATION_V0`\n- `agent_governance.WF_REGISTER_AGENT_V0`\n\n**Reusable capabilities (platform)**:\n- `transforms.CT_NORMALIZE_ARTIFACT_V0`\n- `side_effects.CS_COMPILER_ARTIFACT_REGISTRY_V0`\n\n---\n\n## Scope Computation Rules\n\n### Platform Artifacts\n```python\n# For platform layers (GOVERNANCE, COMPILER, etc.)\nfqdn = package_name\n\n# Examples:\n# registry/registry/compiler/CT_SCAN_V0.md\n#   \u2192 fqdn = \"registry\"\n#   \u2192 fqdn_id = \"registry.CT_SCAN_V0\"\n\n# transforms/registry/CT_HASH_V0.md\n#   \u2192 fqdn = \"transforms\"\n#   \u2192 fqdn_id = \"transforms.CT_HASH_V0\"\n```\n\n### Domain Artifacts\n```python\n# For DOMAINS layer\nfqdn = f\"{domain_name}.{subscope}\"\n\n# Examples:\n# domains/blockchain/registry/wallet/CT_VALIDATE_V0.md\n#   \u2192 fqdn = \"blockchain.wallet\"\n#   \u2192 fqdn_id = \"blockchain.wallet.CT_VALIDATE_V0\"\n\n# domains/ai_licensing/registry/WF_LICENSE_V0.md\n#   \u2192 fqdn = \"ai_licensing\"\n#   \u2192 fqdn_id = \"ai_licensing.WF_LICENSE_V0\"\n```\n\n### Scope Extraction Algorithm\n```python\ndef compute_fqdn_scope(artifact_path: Path, layer_code: str) -> str:\n    \"\"\"\n    Compute FQDN scope from artifact path and layer.\n\n    This is the ONLY way scope is determined.\n    No filesystem heuristics. No guessing.\n    \"\"\"\n    if layer_code == \"DOMAINS\":\n        # Extract: domains/{domain}/registry/{subscope}/...\n        parts = artifact_path.parts\n        domain_idx = parts.index(\"domains\") + 1\n        domain = parts[domain_idx]\n\n        # Check for subscope (e.g., wallet, identity, transaction)\n        registry_idx = parts.index(\"registry\", domain_idx) + 1\n        if registry_idx < len(parts) - 1:  # Has subscope\n            subscope = parts[registry_idx]\n            return f\"{domain}.{subscope}\"\n        else:\n            return domain\n\n    elif layer_code in [\"GOVERNANCE\", \"COMPILER\", \"EXECUTION\",\n                        \"REUSABLE_TRANSFORMS\", \"REUSABLE_SIDE_EFFECTS\",\n                        \"AUTHORING\", \"TRANSPORT\", \"INGRESS\", \"EGRESS\"]:\n        # Platform artifacts: scope = package name\n        return layer_code_to_package_name(layer_code)\n\n    else:\n        raise RuntimeError(f\"Unknown layer for FQDN scope: {layer_code}\")\n\ndef layer_code_to_package_name(layer_code: str) -> str:\n    \"\"\"Map layer code to package name for platform artifacts.\"\"\"\n    mapping = {\n        \"GOVERNANCE\": \"registry\",\n        \"COMPILER\": \"compiler\",\n        \"EXECUTION\": \"execution\",\n        \"REUSABLE_TRANSFORMS\": \"transforms\",\n        \"REUSABLE_SIDE_EFFECTS\": \"side_effects\",\n        \"AUTHORING\": \"authoring\",\n        \"TRANSPORT\": \"transport\",\n        \"INGRESS\": \"ingress\",\n        \"EGRESS\": \"egress\",\n    }\n    return mapping.get(layer_code, layer_code.lower())\n```\n\n---\n\n## Reference Resolution\n\n### Compile-Time Resolution\n\nWhen compiling an artifact that references other artifacts:\n\n```yaml\n# Source .md file (human-authored)\npipeline:\n  - step: validate\n    transform: CT_VALIDATE_SCHEMA_V0  # Short name\n\n# Compiled .json file (machine-generated)\n{\n  \"pipeline\": [{\n    \"step\": \"validate\",\n    \"transform\": \"registry.CT_VALIDATE_SCHEMA_V0\"  // Resolved FQDN\n  }]\n}\n```\n\n**Resolution algorithm**:\n1. Extract short name from reference: `CT_VALIDATE_SCHEMA_V0`\n2. Determine search scope from STRUCTURE artifact\n3. Scan search roots for matching artifact_code\n4. Resolve to fqdn_id\n5. Write resolved FQDN to compiled artifact\n\n### Search Scope Rules\n\n**Same-scope references** (common case):\n```yaml\n# blockchain.wallet.WF_CREATE_WALLET_V0 references CT_VALIDATE_SIGNATURE_V0\n# Search order:\n1. blockchain.wallet.*  # Local scope first\n2. blockchain.*         # Parent domain scope\n3. transforms.*         # Platform capabilities\n4. registry.*         # Platform registry\n```\n\n**Cross-scope references** (explicit):\n```yaml\n# Domain artifact referencing platform registry\n# blockchain.wallet.CC_WALLET_CONTRACT_V0 references registry.SCHEMA_CONTRACT_V0\n# Must be resolved via STRUCTURE search_roots\n```\n\n**Search roots** are declared in STRUCTURE artifacts:\n- Platform build: `STRUCTURE_BUILD_PLATFORM_CONFIG_V0`\n- Domain build: `STRUCTURE_BUILD_DOMAINS_CONFIG_V0`\n- Runtime execution: `STRUCTURE_RUNTIME_EXECUTION_V0`\n\n---\n\n## Bootstrap Exception\n\n**STRUCTURE artifacts themselves** require special handling to avoid chicken-egg problem:\n\n```python\n# Bootstrap STRUCTURE artifacts use hardcoded path\ndef bootstrap_discover_structure_artifact(structure_code: str):\n    \"\"\"\n    Bootstrap exception: STRUCTURE artifacts resolved from canonical location.\n\n    This is the ONLY hardcoded path in the system.\n    All other artifacts use STRUCTURE-driven resolution.\n    \"\"\"\n    bootstrap_root = Path(\"pgs_governance/registry/structures\")\n    artifact_path = bootstrap_root / f\"{structure_code}.md\"\n\n    artifact = parse_artifact(artifact_path)\n\n    # Bootstrap artifacts get special FQDN\n    artifact[\"fqdn\"] = \"registry\"\n    artifact[\"fqdn_id\"] = f\"registry.{structure_code}\"\n\n    return artifact\n```\n\n**Bootstrap-eligible STRUCTURE codes**:\n- `STRUCTURE_RUNTIME_EXECUTION_V0`\n- `STRUCTURE_BUILD_PLATFORM_CONFIG_V0`\n- `STRUCTURE_BUILD_DOMAINS_CONFIG_V0`\n- `STRUCTURE_ARTIFACT_IDENTITY_V0` (this artifact)\n\n---\n\n## Uniqueness Enforcement\n\n### FQDN Uniqueness (STRICT)\n\n```python\nduplicate fqdn_id \u2192 HARD ERROR\n\n# Example violation:\nblockchain.wallet.CT_VALIDATE_V0  # First occurrence\nblockchain.wallet.CT_VALIDATE_V0  # Second occurrence\n# \u2192 ERROR: Duplicate fqdn_id detected\n```\n\n### Artifact Code Uniqueness (RELAXED)\n\n```python\nduplicate artifact_code across scopes \u2192 ALLOWED\n\n# Example allowed:\nblockchain.wallet.CT_VALIDATE_V0\nai_licensing.CT_VALIDATE_V0\n# \u2192 OK: Same code, different scopes\n```\n\nThis enables artifact reuse patterns across domains while maintaining global uniqueness.\n\n---\n\n## Runtime Resolution\n\n### Strict FQDN-Only Resolution\n\nRuntime MUST use fqdn_id for all artifact lookups:\n\n```python\n# \u2705 CORRECT - Runtime resolution\ndef resolve_artifact(fqdn_id: str) -> Artifact:\n    \"\"\"Resolve artifact by FQDN only.\"\"\"\n    return artifact_registry[fqdn_id]\n\n# \u274c FORBIDDEN - Short name resolution\ndef bad_resolve(artifact_code: str) -> Artifact:\n    \"\"\"This pattern is FORBIDDEN at runtime.\"\"\"\n    # No guessing, no fallback, no heuristics\n    raise RuntimeError(\"Runtime must use fqdn_id, not artifact_code\")\n```\n\n### No Fallback Logic\n\n```python\n# \u274c FORBIDDEN - Fallback resolution\nartifact = registry.get(fqdn_id) or registry.get(f\"*.{artifact_code}\")\n\n# \u2705 CORRECT - Hard failure\nartifact = registry.get(fqdn_id)\nif artifact is None:\n    raise ArtifactNotFoundError(\n        f\"Artifact not found: {fqdn_id}\\n\"\n        f\"No fallback resolution permitted.\"\n    )\n```\n\n---\n\n## Enforcement Rules\n\n### Rule 1: Source Artifacts Never Change\nHuman-authored .md files continue using short artifact_code. FQDN is internal system identity only.\n\n### Rule 2: Discovery Computes FQDN\nDuring discovery phase (`ct_scan_artifacts.py`), compute fqdn and fqdn_id for every artifact based on path + layer.\n\n### Rule 3: Compilation Resolves References\nDuring compilation phase (`ct_normalize_artifact.py`), resolve all short-name references to FQDN using STRUCTURE search scope.\n\n### Rule 4: Runtime Uses FQDN Only\nRuntime resolution APIs accept fqdn_id only. No short-name lookups permitted.\n\n### Rule 5: Uniqueness Validation\nBuild MUST validate fqdn_id uniqueness. Duplicate fqdn_id \u2192 hard build failure.\n\n### Rule 6: Bootstrap Exception\nSTRUCTURE artifacts (and only STRUCTURE artifacts) may use hardcoded bootstrap resolution.\n\n---\n\n## Migration Path\n\n### Phase 1: Add fqdn_id to Discovery\nModify `ct_scan_artifacts.py` to compute fqdn and fqdn_id.\n\n### Phase 2: Store in Compiled Artifacts\nUpdate compiled JSON schema to include fqdn_id field.\n\n### Phase 3: Resolve References at Compile Time\nUpdate `ct_normalize_artifact.py` to resolve short names \u2192 FQDN.\n\n### Phase 4: Switch Runtime to FQDN\nUpdate all runtime indexes and resolution APIs to use fqdn_id.\n\n### Phase 5: Remove Legacy Resolution\nDelete all fallback and short-name resolution code paths.\n\n### Phase 6: Enforce Uniqueness\nAdd validation to fail build on duplicate fqdn_id.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_ARTIFACT_IDENTITY_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Canonical artifact identity system (FQDN-scoped)\n  description: >\n    Defines FQDN-scoped identity as internal system identity while preserving\n    clean, short names in human-authored artifacts. Compilation is the\n    resolution boundary between human identity and system identity.\n\n  identity_model:\n    human_identity:\n      layer: authoring\n      format: artifact_code\n      example: \"CT_VALIDATE_SCHEMA_V0\"\n\n    system_identity:\n      layer: compilation_runtime\n      format: fqdn_id\n      example: \"blockchain.wallet.CT_VALIDATE_SCHEMA_V0\"\n\n  fqdn_schema:\n    format: \"<fqdn>.<artifact_code>\"\n\n    scope_format:\n      platform: \"<package>\"\n      domain: \"<domain>[.<subscope>]\"\n\n    examples:\n      platform:\n        - \"registry.STRUCTURE_LAYER_AUTHORITY_V0\"\n        - \"transforms.CT_PURE_HASH_V0\"\n        - \"compiler.WF_BUILD_PLATFORM_V0\"\n\n      domain:\n        - \"blockchain.wallet.CT_VALIDATE_SIGNATURE_V0\"\n        - \"blockchain.identity.WF_CREATE_IDENTITY_V0\"\n        - \"ai_licensing.CC_LICENSE_VALIDATION_V0\"\n\n  resolution:\n    bootstrap_exception:\n      - STRUCTURE_RUNTIME_EXECUTION_V0\n      - STRUCTURE_BUILD_PLATFORM_CONFIG_V0\n      - STRUCTURE_BUILD_DOMAINS_CONFIG_V0\n      - STRUCTURE_ARTIFACT_IDENTITY_V0\n\n    search_scope_source: STRUCTURE_*_CONFIG_V0\n\n    resolution_boundary: compilation\n\n    runtime_resolution: fqdn_id_only\n\n  uniqueness:\n    fqdn_id:\n      rule: strict\n      violation: hard_error\n\n    artifact_code:\n      rule: relaxed_across_scopes\n      violation: allowed\n\n  enforcement:\n    - source_artifacts_unchanged\n    - discovery_computes_fqdn\n    - compilation_resolves_references\n    - runtime_uses_fqdn_only\n    - no_fallback_resolution\n    - bootstrap_exception_only_for_structure\n\noutput_configuration:\n  _type: metadata  # This artifact defines identity schema, not output paths\n```\n\n---\n\n## Version History\n\n- **V0**: Initial canonical artifact identity definition (2026-03-27)\n",
+  "content_hash": "54fb659cdd9fbd3fde83a83af9bbaf573cedf548d044baaa43701e5ce930bd99",
+  "fqdn_id": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Defines FQDN-scoped identity as internal system identity while preserving clean, short names in human-authored artifacts. Compilation is the resolution boundary between human identity and system identity.\n",
+      "enforcement": [
+        "source_artifacts_unchanged",
+        "discovery_computes_fqdn",
+        "compilation_resolves_references",
+        "runtime_uses_fqdn_only",
+        "no_fallback_resolution",
+        "bootstrap_exception_only_for_structure"
+      ],
+      "fqdn_schema": {
+        "examples": {
+          "domain": [
+            "blockchain.wallet.CT_VALIDATE_SIGNATURE_V0",
+            "blockchain.identity.WF_CREATE_IDENTITY_V0",
+            "ai_licensing.CC_LICENSE_VALIDATION_V0"
+          ],
+          "platform": [
+            "registry.STRUCTURE_LAYER_AUTHORITY_V0",
+            "transforms.CT_PURE_HASH_V0",
+            "compiler.WF_BUILD_PLATFORM_V0"
+          ]
+        },
+        "format": "<fqdn>.<artifact_code>",
+        "scope_format": {
+          "domain": "<domain>[.<subscope>]",
+          "platform": "<package>"
+        }
+      },
+      "identity_model": {
+        "human_identity": {
+          "example": "CT_VALIDATE_SCHEMA_V0",
+          "format": "artifact_code",
+          "layer": "authoring"
+        },
+        "system_identity": {
+          "example": "blockchain.wallet.CT_VALIDATE_SCHEMA_V0",
+          "format": "fqdn_id",
+          "layer": "compilation_runtime"
+        }
+      },
+      "resolution": {
+        "bootstrap_exception": [
+          "STRUCTURE_RUNTIME_EXECUTION_V0",
+          "STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+          "STRUCTURE_BUILD_DOMAINS_CONFIG_V0",
+          "STRUCTURE_ARTIFACT_IDENTITY_V0"
+        ],
+        "resolution_boundary": "compilation",
+        "runtime_resolution": "fqdn_id_only",
+        "search_scope_source": "STRUCTURE_*_CONFIG_V0"
+      },
+      "summary": "Canonical artifact identity system (FQDN-scoped)",
+      "uniqueness": {
+        "artifact_code": {
+          "rule": "relaxed_across_scopes",
+          "violation": "allowed"
+        },
+        "fqdn_id": {
+          "rule": "strict",
+          "violation": "hard_error"
+        }
+      }
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "_type": "metadata"
+    },
+    "structure_code": "STRUCTURE_ARTIFACT_IDENTITY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.structures",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

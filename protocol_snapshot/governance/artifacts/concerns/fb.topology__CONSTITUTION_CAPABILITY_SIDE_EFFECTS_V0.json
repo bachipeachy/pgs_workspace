@@ -1,0 +1,55 @@
+{
+  "artifact_code": "CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\n## Machine\n```yaml\nfqdn: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\nconstitution_code: CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Governs Capability Side Effect (CS) artifacts \u2014 explicit declaration, traceability, and isolation\n  scope: artifact\n  governs:\n    - CS\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: CS_EXPLICIT_DECLARATION\n    applies_to: CS\n    constraint: all side effects MUST be explicitly declared in protocol; no implicit side effects\n    enforced_by: ASSERT_CS_SURFACE_CLOSED_V0\n\n  - rule_id: CS_IMPLEMENTATION_DECLARED\n    applies_to: CS\n    constraint: CS MUST declare implementation with non-empty module and callable\n    enforced_by: ASSERT_CS_SURFACE_CLOSED_V0\n\n  - rule_id: CS_TRACEABLE\n    applies_to: CS\n    constraint: every CS execution MUST be recorded in the execution trace\n    enforced_by: ASSERT_CS_TRACEABLE_V0\n\n  - rule_id: CS_ISOLATED_EXECUTION\n    applies_to: CS\n    constraint: CS MUST execute through dedicated executors only; not inline in CT or CC\n    enforced_by: ASSERT_CS_ISOLATED_EXECUTION_V0\n```\n\n---\n\n## 1. Purpose\n\nThis constitution defines the governance and enforcement rules for Capability Side Effects (CS).\n\nCapability Side Effects are the mechanism for interacting with the outside world, such as databases, external APIs, and filesystem.\n\n---\n\n## 2. Core Principles\n\n- **Explicit Declaration:** All side effects must be explicitly declared in the protocol.\n- **Isolated Execution:** Side effects must be executed through dedicated executors.\n- **Traceability:** Every execution of a side effect must be recorded in the trace.\n- **Limited Mutability:** Side effects should be restricted to the necessary scope of mutability.\n\n---\n\n## 3. Required Fields\n\n- `cs_code`: Unique identifier for the side effect.\n- `version`: Version of the side effect.\n- `governed_by`: The constitution governing this side effect.\n- `core`: Metadata and description.\n- `inputs`: Definition of input parameters.\n- `outputs`: Definition of output parameters (e.g., success status, return data).\n- `logic`: Reference to the implementation executor.\n\n---\n\n## 4. Validation Rules\n\n- Side effect implementations must be discoverable.\n- Input and output types must match the capability contract.\n- Side effects must be restricted to authorized layers.\n",
+  "content_hash": "4a038fc3281bc18bea13a31d236dee61ef5ffbca079e848706808ba2cfacb5ae",
+  "fqdn_id": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "core": {
+      "description": "Governs Capability Side Effect (CS) artifacts \u2014 explicit declaration, traceability, and isolation",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "CS"
+      ],
+      "scope": "artifact"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "CS",
+        "constraint": "all side effects MUST be explicitly declared in protocol; no implicit side effects",
+        "enforced_by": "ASSERT_CS_SURFACE_CLOSED_V0",
+        "rule_id": "CS_EXPLICIT_DECLARATION"
+      },
+      {
+        "applies_to": "CS",
+        "constraint": "CS MUST declare implementation with non-empty module and callable",
+        "enforced_by": "ASSERT_CS_SURFACE_CLOSED_V0",
+        "rule_id": "CS_IMPLEMENTATION_DECLARED"
+      },
+      {
+        "applies_to": "CS",
+        "constraint": "every CS execution MUST be recorded in the execution trace",
+        "enforced_by": "ASSERT_CS_TRACEABLE_V0",
+        "rule_id": "CS_TRACEABLE"
+      },
+      {
+        "applies_to": "CS",
+        "constraint": "CS MUST execute through dedicated executors only; not inline in CT or CC",
+        "enforced_by": "ASSERT_CS_ISOLATED_EXECUTION_V0",
+        "rule_id": "CS_ISOLATED_EXECUTION"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

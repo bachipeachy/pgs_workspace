@@ -1,0 +1,30 @@
+{
+  "artifact_code": "ASSERT_SECURITY_DOMAIN_DECLARED_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_SECURITY_DOMAIN_DECLARED_V0\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_SECURITY_DOMAIN_DECLARED_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_security_domain_declared_v0\n  callable: execute\n\nenforcement:\n  phase: assert\n  failure_mode: HARD_FAIL\n  scope: ALL_ARTIFACTS\n```\n\n---\n\n## Summary\n\nValidates that exactly one active security domain contract exists in `FB_SECURITY_DOMAIN`.\n\nEnforces `INVARIANT_SECURITY_DOMAIN_DECLARED_V0`: every compiled snapshot must\ndeclare active security domain semantics. Zero contracts is a missing declaration.\nMore than one active contract is an ambiguity violation.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL\n- **Scope**: All artifacts (scans `fb.security_domain` namespace)\n",
+  "content_hash": "701d99af9a0399784ce920eafb5e5b306a699dbd0921b44c7a421fb0a85033f0",
+  "fqdn_id": "fb.security_domain::ASSERT_SECURITY_DOMAIN_DECLARED_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_SECURITY_DOMAIN_DECLARED_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "enforcement": {
+      "failure_mode": "HARD_FAIL",
+      "phase": "assert",
+      "scope": "ALL_ARTIFACTS"
+    },
+    "governed_by": [
+      "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_security_domain_declared_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_SECURITY_DOMAIN.assertions",
+  "namespace": "fb.security_domain",
+  "references": [],
+  "version": "0"
+}

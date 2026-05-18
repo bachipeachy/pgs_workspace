@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: Step IDs must be unique within a CC execution topology; duplicate step IDs create ambiguous dataflow identity and are constitutional violations\n  rule: Within a single CC pipeline, no two steps may share the same step identifier; the step identifier is the canonical dataflow address for downstream input bindings and must be unambiguous\n  scope:\n    - CC\n\n  enforced_by:\n    - ASSERT_TOPOLOGY_STEP_ID_UNIQUE_V0\n```\n\n---\n\n## Summary\n\nThe step identifier (`step:`) is the canonical dataflow address. When a downstream step\nbinds `$.results.derive_master_key.*`, it is addressing the output surface of a specific\nstep by its declared identity. Duplicate step IDs make this address ambiguous \u2014 two steps\nshare the same identity, and the compiler and runtime cannot determine which one produced\nthe referenced output.\n\nStep IDs are topology-addressable execution identity. Uniqueness is non-negotiable.\n\n## Rule\n\nFor every CC execution topology:\n1. Every step identifier MUST be unique within the pipeline (case-sensitive string comparison)\n2. A pipeline with two or more steps sharing the same `step` value is a compile-time violation\n3. Step identifiers MUST be stable strings \u2014 they are dataflow addresses, not display labels\n4. Step identifiers SHOULD use snake_case for human readability, but the constraint is uniqueness, not naming style\n\n## Enforcement Scope\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Enforced By**: ASSERT_TOPOLOGY_STEP_ID_UNIQUE_V0\n\n## Rationale\n\nAs graph analysis matures (topology fingerprints, execution provenance graphs, graph diffing),\nstep identity becomes increasingly load-bearing. A duplicate step ID is not just a naming\ncollision \u2014 it is an ambiguous execution graph that cannot be canonically addressed, traced,\nor compared across builds.\n\nEnforcing uniqueness at V0 ensures that future topology features can rely on step IDs as\nstable, unambiguous canonical identifiers.\n\nFull enforcement is implemented in Phase 3.\n",
+  "content_hash": "3ae51405a7efe3d69037cddfe4f85c7410c8c0410e77e6a2a636fd5c3cb74c12",
+  "fqdn_id": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_TOPOLOGY_STEP_ID_UNIQUE_V0"
+      ],
+      "rule": "Within a single CC pipeline, no two steps may share the same step identifier; the step identifier is the canonical dataflow address for downstream input bindings and must be unambiguous",
+      "scope": [
+        "CC"
+      ],
+      "summary": "Step IDs must be unique within a CC execution topology; duplicate step IDs create ambiguous dataflow identity and are constitutional violations"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

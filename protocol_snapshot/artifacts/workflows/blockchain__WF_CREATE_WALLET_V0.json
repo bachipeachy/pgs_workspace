@@ -1,0 +1,173 @@
+{
+  "artifact_code": "WF_CREATE_WALLET_V0",
+  "artifact_type": "WF",
+  "content": "# WF_CREATE_WALLET_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_CREATE_WALLET_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_WALLET_CREATED_V0, CC_RESOLVE_ACTOR_ID_V0, CC_GENERATE_WALLET_ID_V0, CC_CHECK_WALLET_EXISTS_V0, CC_DERIVE_WALLET_KEYS_V0, CC_CREATE_WALLET_RECORD_V0, CC_APPEND_WALLET_EVENT_V0, CC_NOTIFY_WALLET_CREATED_V0\n\n---\n\n## 1. Intent\n\nCreate a wallet for a verified actor, establishing their financial account with HD-derived cryptographic addresses.\n\n---\n\n## 2. Rationale\n\nWallet creation requires:\n- Actor must be verified (admission control)\n- Wallet ID is deterministically generated\n- Existence check gates crypto derivation (no wasted entropy for duplicates)\n- HD key derivation produces EOA and UTXO addresses from a single seed\n- Wallet record is persisted with event trail\n- Email notification is best-effort (failure does not cascade)\n\n---\n\n## 3. Execution Graph\n\n```\nIN_WALLET_CREATED_V0\n    \u251c\u2500 ACK \u2192 CC_RESOLVE_ACTOR_ID_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 CC_GENERATE_WALLET_ID_V0\n    \u2502           \u2502           \u251c\u2500 SUCCESS \u2192 CC_CHECK_WALLET_EXISTS_V0\n    \u2502           \u2502               \u251c\u2500 NOT_FOUND \u2192 CC_DERIVE_WALLET_KEYS_V0\n    \u2502           \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_CREATE_WALLET_RECORD_V0\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_APPEND_WALLET_EVENT_V0\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_NOTIFY_WALLET_CREATED_V0\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u2502               \u2514\u2500 VIOLATION/BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u2502               \u2514\u2500 VIOLATION/BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u2514\u2500 VIOLATION/BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2514\u2500 ALREADY_EXISTS/VIOLATION/BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2514\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2502               \u251c\u2500 SUCCESS \u2192 EXIT (wallet already exists)\n    \u2502           \u2502               \u2514\u2500 VIOLATION/BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502           \u2514\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2514\u2500 NOT_FOUND/VIOLATION \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n**Ordering invariant:** CC_DERIVE_WALLET_KEYS_V0 executes only after CC_CHECK_WALLET_EXISTS_V0 confirms NOT_FOUND (wallet is new). No crypto work is performed for duplicate wallet requests.\n\n**Notification semantics:** CC_NOTIFY_WALLET_CREATED_V0 failure routes to EXIT, terminating the workflow. Email is required.\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_WALLET_CREATED_V0 | IN | Entry intent for wallet creation |\n| CC_RESOLVE_ACTOR_ID_V0 | CC | Resolve actor_record to actor_id |\n| CC_GENERATE_WALLET_ID_V0 | CC | Generate deterministic wallet ID |\n| CC_CHECK_WALLET_EXISTS_V0 | CC | Gate: check wallet does not already exist |\n| CC_DERIVE_WALLET_KEYS_V0 | CC | Derive EOA + UTXO keypairs via HD path |\n| CC_CREATE_WALLET_RECORD_V0 | CC | Assemble and persist wallet record |\n| CC_APPEND_WALLET_EVENT_V0 | CC | Emit wallet created event |\n| CC_NOTIFY_WALLET_CREATED_V0 | CC | Send wallet creation notification email |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## 5. Admission\n\n| Requirement | Description |\n|-------------|-------------|\n| requires | EV_ACTOR_VERIFIED_V0 |\n\nActor must be verified before wallet creation.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_CREATE_WALLET_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\nruntime_binding: blockchain::RB_CREATE_WALLET_V0\n\ncore:\n  runtime_binding: blockchain::RB_CREATE_WALLET_V0\n  summary: Create wallet with HD-derived addresses for verified actor\n\n  admission:\n    requires:\n      - EV_ACTOR_VERIFIED_V0\n    forbids: []\n    bindings:\n      EV_ACTOR_VERIFIED_V0:\n        actor_id: actor_id\n\n  start_node: IN_WALLET_CREATED_V0\n\n  nodes:\n    IN_WALLET_CREATED_V0:\n      type: IN\n      code: IN_WALLET_CREATED_V0\n      next:\n        ACK: CC_RESOLVE_ACTOR_ID_V0\n        NACK: EXIT\n\n    CC_RESOLVE_ACTOR_ID_V0:\n      type: CC\n      code: CC_RESOLVE_ACTOR_ID_V0\n      inputs:\n        actor_record: $.payload.actor_record\n      next:\n        SUCCESS: CC_GENERATE_WALLET_ID_V0\n        NOT_FOUND: EXIT\n        VIOLATION: EXIT\n\n    CC_GENERATE_WALLET_ID_V0:\n      type: CC\n      code: CC_GENERATE_WALLET_ID_V0\n      inputs:\n        seed_record:\n          actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n          type: wallet\n      next:\n        SUCCESS: CC_CHECK_WALLET_EXISTS_V0\n        VIOLATION: EXIT\n\n    CC_CHECK_WALLET_EXISTS_V0:\n      type: CC\n      code: CC_CHECK_WALLET_EXISTS_V0\n      inputs:\n        wallet_id: $.results.CC_GENERATE_WALLET_ID_V0.wallet_id\n      next:\n        NOT_FOUND: CC_DERIVE_WALLET_KEYS_V0\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_DERIVE_WALLET_KEYS_V0:\n      type: CC\n      code: CC_DERIVE_WALLET_KEYS_V0\n      inputs:\n        coin_type: 66\n      next:\n        SUCCESS: CC_CREATE_WALLET_RECORD_V0\n        VIOLATION: EXIT\n\n    CC_CREATE_WALLET_RECORD_V0:\n      type: CC\n      code: CC_CREATE_WALLET_RECORD_V0\n      inputs:\n        wallet_id: $.results.CC_GENERATE_WALLET_ID_V0.wallet_id\n        actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n        wallet_type: $.payload.wallet_type\n        currency: $.payload.wallet_config.currency\n        network: $.payload.wallet_config.metadata.network\n        security_type: $.payload.wallet_config.metadata.security_type\n        eoa_public_key_hex: $.results.CC_DERIVE_WALLET_KEYS_V0.eoa_public_key_hex\n        eoa_address: $.results.CC_DERIVE_WALLET_KEYS_V0.eoa_address\n        eoa_derivation_path: $.results.CC_DERIVE_WALLET_KEYS_V0.eoa_derivation_path\n        utxo_public_key_hex: $.results.CC_DERIVE_WALLET_KEYS_V0.utxo_public_key_hex\n        utxo_address: $.results.CC_DERIVE_WALLET_KEYS_V0.utxo_address\n        utxo_derivation_path: $.results.CC_DERIVE_WALLET_KEYS_V0.utxo_derivation_path\n        master_fingerprint: $.results.CC_DERIVE_WALLET_KEYS_V0.master_fingerprint\n        email_registration: $.payload.actor_record.email_registration\n      next:\n        SUCCESS: CC_APPEND_WALLET_EVENT_V0\n        ALREADY_EXISTS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_APPEND_WALLET_EVENT_V0:\n      type: CC\n      code: CC_APPEND_WALLET_EVENT_V0\n      inputs:\n        wallet_id: $.results.CC_GENERATE_WALLET_ID_V0.wallet_id\n        actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n        record:\n          event_type: EV_WALLET_CREATED_V0\n          wallet_id: $.results.CC_GENERATE_WALLET_ID_V0.wallet_id\n          owner_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n          wallet_type: $.payload.wallet_type\n          wallet_config: $.payload.wallet_config\n      next:\n        SUCCESS: CC_NOTIFY_WALLET_CREATED_V0\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_NOTIFY_WALLET_CREATED_V0:\n      type: CC\n      code: CC_NOTIFY_WALLET_CREATED_V0\n      inputs:\n        recipient_email: $.payload.actor_record.email_registration\n        wallet_id: $.results.CC_GENERATE_WALLET_ID_V0.wallet_id\n        wallet_type: $.payload.wallet_type\n      next:\n        SUCCESS: EXIT_SUCCESS\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT_SUCCESS:\n      type: EXIT\n      reason: COMPLETED\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n```\n",
+  "content_hash": "b96f8582735d1eacbaf929b660030e48ee86c0225105cacefbd36f1510415ae4",
+  "fqdn_id": "blockchain::WF_CREATE_WALLET_V0",
+  "frontmatter": {
+    "core": {
+      "admission": {
+        "bindings": {
+          "EV_ACTOR_VERIFIED_V0": {
+            "actor_id": "actor_id"
+          }
+        },
+        "forbids": [],
+        "requires": [
+          "EV_ACTOR_VERIFIED_V0"
+        ]
+      },
+      "nodes": {
+        "CC_APPEND_WALLET_EVENT_V0": {
+          "code": "CC_APPEND_WALLET_EVENT_V0",
+          "fqdn_id": "blockchain::CC_APPEND_WALLET_EVENT_V0",
+          "inputs": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "record": {
+              "event_type": "EV_WALLET_CREATED_V0",
+              "owner_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+              "wallet_config": "$.payload.wallet_config",
+              "wallet_id": "$.results.CC_GENERATE_WALLET_ID_V0.wallet_id",
+              "wallet_type": "$.payload.wallet_type"
+            },
+            "wallet_id": "$.results.CC_GENERATE_WALLET_ID_V0.wallet_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_NOTIFY_WALLET_CREATED_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_CHECK_WALLET_EXISTS_V0": {
+          "code": "CC_CHECK_WALLET_EXISTS_V0",
+          "fqdn_id": "blockchain::CC_CHECK_WALLET_EXISTS_V0",
+          "inputs": {
+            "wallet_id": "$.results.CC_GENERATE_WALLET_ID_V0.wallet_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "NOT_FOUND": "CC_DERIVE_WALLET_KEYS_V0",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_CREATE_WALLET_RECORD_V0": {
+          "code": "CC_CREATE_WALLET_RECORD_V0",
+          "fqdn_id": "blockchain::CC_CREATE_WALLET_RECORD_V0",
+          "inputs": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "currency": "$.payload.wallet_config.currency",
+            "email_registration": "$.payload.actor_record.email_registration",
+            "eoa_address": "$.results.CC_DERIVE_WALLET_KEYS_V0.eoa_address",
+            "eoa_derivation_path": "$.results.CC_DERIVE_WALLET_KEYS_V0.eoa_derivation_path",
+            "eoa_public_key_hex": "$.results.CC_DERIVE_WALLET_KEYS_V0.eoa_public_key_hex",
+            "master_fingerprint": "$.results.CC_DERIVE_WALLET_KEYS_V0.master_fingerprint",
+            "network": "$.payload.wallet_config.metadata.network",
+            "security_type": "$.payload.wallet_config.metadata.security_type",
+            "utxo_address": "$.results.CC_DERIVE_WALLET_KEYS_V0.utxo_address",
+            "utxo_derivation_path": "$.results.CC_DERIVE_WALLET_KEYS_V0.utxo_derivation_path",
+            "utxo_public_key_hex": "$.results.CC_DERIVE_WALLET_KEYS_V0.utxo_public_key_hex",
+            "wallet_id": "$.results.CC_GENERATE_WALLET_ID_V0.wallet_id",
+            "wallet_type": "$.payload.wallet_type"
+          },
+          "next": {
+            "ALREADY_EXISTS": "EXIT",
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_APPEND_WALLET_EVENT_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_DERIVE_WALLET_KEYS_V0": {
+          "code": "CC_DERIVE_WALLET_KEYS_V0",
+          "fqdn_id": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+          "inputs": {
+            "coin_type": 66
+          },
+          "next": {
+            "SUCCESS": "CC_CREATE_WALLET_RECORD_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_GENERATE_WALLET_ID_V0": {
+          "code": "CC_GENERATE_WALLET_ID_V0",
+          "fqdn_id": "blockchain::CC_GENERATE_WALLET_ID_V0",
+          "inputs": {
+            "seed_record": {
+              "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+              "type": "wallet"
+            }
+          },
+          "next": {
+            "SUCCESS": "CC_CHECK_WALLET_EXISTS_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_NOTIFY_WALLET_CREATED_V0": {
+          "code": "CC_NOTIFY_WALLET_CREATED_V0",
+          "fqdn_id": "blockchain::CC_NOTIFY_WALLET_CREATED_V0",
+          "inputs": {
+            "recipient_email": "$.payload.actor_record.email_registration",
+            "wallet_id": "$.results.CC_GENERATE_WALLET_ID_V0.wallet_id",
+            "wallet_type": "$.payload.wallet_type"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT_SUCCESS",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_RESOLVE_ACTOR_ID_V0": {
+          "code": "CC_RESOLVE_ACTOR_ID_V0",
+          "fqdn_id": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+          "inputs": {
+            "actor_record": "$.payload.actor_record"
+          },
+          "next": {
+            "NOT_FOUND": "EXIT",
+            "SUCCESS": "CC_GENERATE_WALLET_ID_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "EXIT_SUCCESS": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "IN_WALLET_CREATED_V0": {
+          "code": "IN_WALLET_CREATED_V0",
+          "fqdn_id": "blockchain::IN_WALLET_CREATED_V0",
+          "next": {
+            "ACK": "CC_RESOLVE_ACTOR_ID_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "runtime_binding": "blockchain::RB_CREATE_WALLET_V0",
+      "start_node": "IN_WALLET_CREATED_V0",
+      "summary": "Create wallet with HD-derived addresses for verified actor"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_CREATE_WALLET_V0",
+    "version": "v0",
+    "wf_code": "WF_CREATE_WALLET_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_CREATE_WALLET_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

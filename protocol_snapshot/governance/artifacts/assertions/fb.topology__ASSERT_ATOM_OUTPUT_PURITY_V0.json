@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_ATOM_OUTPUT_PURITY_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_ATOM_OUTPUT_PURITY_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_ATOM_OUTPUT_PURITY_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_atom_output_purity_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that CT atom implementations return explicit outputs in all code paths, never raise exceptions for business logic.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All CT atom implementation files\n\n## Handler Behavior\n\nFor each CT atom Python file:\n1. Parse AST\n2. Find `execute()` function definition\n3. Scan function body for:\n   - `raise` statements after input validation block\n   - Conditional branches without return statements\n   - Business logic exceptions (not ValueError/TypeError for inputs)\n4. Verify all code paths return dict\n\n## Error Messages\n\n```\n\u274c ASSERT_ATOM_OUTPUT_PURITY_V0: Business logic exception detected\n   File: pgs_transforms/implementation/transforms/atoms/ct_pure_check_quota_v0.py\n   Function: execute\n   Line 42: raise ValueError(\"Quota exhausted\")\n   Violation: Exception raised for business logic (not input validation)\n   Fix: Return explicit output dict {\"quota_available\": False} instead\n```\n",
+  "content_hash": "fe2afe4587f0fc6cc4b3b2739a85a8abdcfd7c963f1e940309aac6e676413e4d",
+  "fqdn_id": "fb.topology::ASSERT_ATOM_OUTPUT_PURITY_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_ATOM_OUTPUT_PURITY_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_atom_output_purity_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

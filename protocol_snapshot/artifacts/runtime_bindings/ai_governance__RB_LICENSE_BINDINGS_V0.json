@@ -1,0 +1,56 @@
+{
+  "artifact_code": "RB_LICENSE_BINDINGS_V0",
+  "artifact_type": "RB",
+  "content": "# RB_LICENSE_BINDINGS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_LICENSE_BINDINGS_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_REGISTRY_V0, CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Purpose\n\nBind capability side effects to concrete host implementations for license management execution.\n\n---\n\n## 2. Rationale\n\nRuntime bindings provide environment-specific execution wiring:\n- Maps CS artifacts to host classes\n- Configures storage paths via parameters\n- Keeps protocol artifacts environment-agnostic\n\n---\n\n## 3. Bindings\n\n| CS Artifact | Host | Purpose |\n|-------------|---------|---------|\n| CS_REGISTRY_V0 | RegistryRuntime | License assignment registry |\n| CS_APPENDONLY_JSONL_V0 | AppendOnlyJsonlRuntime | Immutable audit trail |\n\n---\n\n## 4. Parameters\n\n| Parameter | Description |\n|-----------|-------------|\n| module_data_root | Base path for module runtime data (resolved from env_facts) |\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_LICENSE_BINDINGS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\nparameters:\n  - module_data_root\n\ncore:\n  summary: Runtime binding of license management capability side effects\n  description: Declares which concrete host implementations are used to satisfy capability pipelines during license management execution.\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      type: CS\n      host: RegistryRuntime\n      operation: READ_WRITE\n      policy:\n        path: \"{{module_data_root}}/license_registry.json\"\n        strict: true\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      type: CS\n      host: AppendOnlyJsonlRuntime\n      operation: APPEND\n      policy:\n        path: \"{{module_data_root}}/audit_log.jsonl\"\n        strict: true\n\nextensions:\n  notes:\n    - This artifact performs no discovery and no inference.\n    - All capability runtimes must be explicitly bound.\n    - Storage paths are resolved via template parameters.\n    - Changing bindings does not require regenerating workflows or capability contracts.\n```\n",
+  "content_hash": "b26609e9ce56c7bc7e81b62a72066e69fde6c21cfb02d0a94d2f0d6bd4591004",
+  "fqdn_id": "ai_governance::RB_LICENSE_BINDINGS_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
+          "host": "AppendOnlyJsonlRuntime",
+          "operation": "APPEND",
+          "policy": {
+            "path": "{{module_data_root}}/audit_log.jsonl",
+            "strict": true
+          },
+          "type": "CS"
+        },
+        "capability_side_effects::CS_REGISTRY_V0": {
+          "host": "RegistryRuntime",
+          "operation": "READ_WRITE",
+          "policy": {
+            "path": "{{module_data_root}}/license_registry.json",
+            "strict": true
+          },
+          "type": "CS"
+        }
+      },
+      "description": "Declares which concrete host implementations are used to satisfy capability pipelines during license management execution.",
+      "summary": "Runtime binding of license management capability side effects"
+    },
+    "extensions": {
+      "notes": [
+        "This artifact performs no discovery and no inference.",
+        "All capability runtimes must be explicitly bound.",
+        "Storage paths are resolved via template parameters.",
+        "Changing bindings does not require regenerating workflows or capability contracts."
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "parameters": [
+      "module_data_root"
+    ],
+    "rb_code": "RB_LICENSE_BINDINGS_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.runtime_bindings",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+    "capability_side_effects::CS_REGISTRY_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

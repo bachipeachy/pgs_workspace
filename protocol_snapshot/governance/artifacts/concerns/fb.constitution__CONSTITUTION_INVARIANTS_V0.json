@@ -1,0 +1,49 @@
+{
+  "artifact_code": "CONSTITUTION_INVARIANTS_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_INVARIANTS_V0\n\n## Machine\n```yaml\nfqdn: fb.constitution::CONSTITUTION_INVARIANTS_V0\nconstitution_code: CONSTITUTION_INVARIANTS_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Governs INVARIANT artifacts \u2014 declarative constraints that must never be violated\n  scope: artifact\n  governs:\n    - INVARIANT\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: INVARIANT_DECLARATIVE_ONLY\n    applies_to: INVARIANT\n    constraint: INVARIANT MUST declare constraints only; MUST NOT contain executable logic\n    enforced_by: TBD\n\n  - rule_id: INVARIANT_MANDATORY_ENFORCEMENT\n    applies_to: INVARIANT\n    constraint: every INVARIANT MUST be enforced by at least one ASSERT\n    enforced_by: TBD\n\n  - rule_id: INVARIANT_FAIL_FAST\n    applies_to: INVARIANT\n    constraint: violation_response MUST be FAIL_IMMEDIATELY; no warnings, no partial success\n    enforced_by: TBD\n```\n\n---\n\n## 1. Purpose\n\nDefines the canonical structure and semantics of **INVARIANT artifacts**.\n\nAn INVARIANT declares a **cross-cutting constraint that MUST always hold true**.\n\nINVARIANTS are declarative and are enforced via ASSERT artifacts during compilation.\n\n---\n\n## 2. Core Model\n\n```text\nINVARIANT \u2192 declares constraint\nASSERT    \u2192 evaluates constraint\nCOMPILER  \u2192 enforces constraint\n```\n\n## 3. Core Principles\n\n### 3.1 Declarative Only\n\nINVARIANTS MUST declare constraints only.\nThey MUST NOT contain executable logic.\n\n### 3.2 Mandatory Enforcement\n\nEvery INVARIANT MUST be enforced by at least one ASSERT.\n\n### 3.3 Fail-Fast\n\nViolations MUST result in immediate compilation failure.\n\n### 3.4 Negative Enforcement\n\nINVARIANTS define forbidden states:\n- System MUST NOT do X\n\n### 3.5 No Conditional Enforcement\n\nINVARIANTS are always enforced.\nNo debug modes, no environment toggles.\n\n## 4. Required Fields (Documentation)\n\n```yaml\ninvariant_code: INVARIANT_<NAME>_V<N>\nartifact_kind: INVARIANT\nversion: V<N>\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: <constraint description>\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - <artifact_types>\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_<NAME>_V<N>\n\n  anti_patterns:\n    - <pattern>: \"<description>\"\n\n  clarification:\n    <case>: \"<boundary explanation>\"\n```\n\n## 5. Binding Contract\n\n### 5.1 Required\n\nEvery INVARIANT MUST:\n- declare enforced_by ASSERT(s)\n\n### 5.2 Consistency Rule\n\nINVARIANT.enforced_by MUST match ASSERT.enforces\n\n### 5.3 Illegal States\n\nSystem MUST fail if:\n- INVARIANT has no ASSERT\n- ASSERT does not reference INVARIANT\n- mismatch exists\n\n## 6. Enforcement Semantics\n\n- INVARIANT does NOT execute\n- ASSERT evaluates INVARIANT\n- COMPILER enforces result\n\n## 7. Naming\n\n`INVARIANT_<CONSTRAINT>_V<N>`\n\n## 8. System Guarantees\n\nNo constraint exists without enforcement\n\n## 9. Constitutional Violations\n\n- Missing enforced_by\n- violation_response not FAIL_IMMEDIATELY\n- missing enforcement_stage\n- missing anti_patterns\n\n## 10. One-Line Truth\n\nINVARIANT defines what must never be violated.\n",
+  "content_hash": "3711530564854003f4dcf94031195365fe324b4a345ccea064343481211635fc",
+  "fqdn_id": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_INVARIANTS_V0",
+    "core": {
+      "description": "Governs INVARIANT artifacts \u2014 declarative constraints that must never be violated",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "INVARIANT"
+      ],
+      "scope": "artifact"
+    },
+    "fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "INVARIANT",
+        "constraint": "INVARIANT MUST declare constraints only; MUST NOT contain executable logic",
+        "enforced_by": "TBD",
+        "rule_id": "INVARIANT_DECLARATIVE_ONLY"
+      },
+      {
+        "applies_to": "INVARIANT",
+        "constraint": "every INVARIANT MUST be enforced by at least one ASSERT",
+        "enforced_by": "TBD",
+        "rule_id": "INVARIANT_MANDATORY_ENFORCEMENT"
+      },
+      {
+        "applies_to": "INVARIANT",
+        "constraint": "violation_response MUST be FAIL_IMMEDIATELY; no warnings, no partial success",
+        "enforced_by": "TBD",
+        "rule_id": "INVARIANT_FAIL_FAST"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.constitutions",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,51 @@
+{
+  "artifact_code": "INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    TI_ and TE_ artifacts MUST NOT participate in execution orchestration semantics.\n\n    This invariant covers three related sub-constraints:\n\n    (1) No execution logic: TI_ and TE_ artifacts must not contain execution steps,\n    capability references (CC_, CT_, CS_), or side-effect declarations.\n\n    (2) Execution orthogonality: Transport must not alter execution state.\n    Transport is a membrane \u2014 it delivers payloads and projects results without\n    modifying the execution graph or its intermediate state.\n\n    (3) No execution retry semantics: Transport may retry delivery (network-level),\n    but must not declare retry or re-admission logic that targets execution.\n    Re-execution is an execution concern, not a transport concern.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - TRANSPORT_INGRESS\n    - TRANSPORT_EGRESS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0\n\n  anti_patterns:\n    - execution_step_in_ti: >\n        TI artifact declares a pipeline or step sequence\n    - cc_reference_in_transport: >\n        TI or TE artifact references a CC_, CT_, or CS_ artifact directly\n    - side_effect_in_te: >\n        TE artifact declares storage writes or external calls\n    - execution_retry_in_transport: >\n        TI or TE artifact declares retry, re-admission, or backoff targeting execution\n    - transport_alters_execution_state: >\n        Transport artifact writes to or reads from execution intermediate state\n```\n\n---\n\n## Purpose\n\nTransport artifacts are membranes \u2014 they declare boundaries, not behavior.\nAny execution logic, execution state access, or execution retry semantics inside\na transport artifact collapses the transport/execution firewall and must be\nstopped at compile time.\n\n---\n\n## Scope\n\n**Applies to:** All TI_ and TE_ artifacts\n\n**Does NOT apply to:**\n- CC_ artifacts within transport workflows (those are execution, not transport)\n- RB_ artifacts binding transport workflows (runtime binding is a separate concern)\n- Network-level retry (e.g., HTTP retries at the gateway) \u2014 transport-layer delivery\n",
+  "content_hash": "7a068d8add184fc48343cbe7b80019fc9771c4add27ca0a319668694d939d38b",
+  "fqdn_id": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "execution_step_in_ti": "TI artifact declares a pipeline or step sequence\n"
+        },
+        {
+          "cc_reference_in_transport": "TI or TE artifact references a CC_, CT_, or CS_ artifact directly\n"
+        },
+        {
+          "side_effect_in_te": "TE artifact declares storage writes or external calls\n"
+        },
+        {
+          "execution_retry_in_transport": "TI or TE artifact declares retry, re-admission, or backoff targeting execution\n"
+        },
+        {
+          "transport_alters_execution_state": "Transport artifact writes to or reads from execution intermediate state"
+        }
+      ],
+      "description": "TI_ and TE_ artifacts MUST NOT participate in execution orchestration semantics.\nThis invariant covers three related sub-constraints:\n(1) No execution logic: TI_ and TE_ artifacts must not contain execution steps, capability references (CC_, CT_, CS_), or side-effect declarations.\n(2) Execution orthogonality: Transport must not alter execution state. Transport is a membrane \u2014 it delivers payloads and projects results without modifying the execution graph or its intermediate state.\n(3) No execution retry semantics: Transport may retry delivery (network-level), but must not declare retry or re-admission logic that targets execution. Re-execution is an execution concern, not a transport concern.\n",
+      "enforced_by": [
+        "ASSERT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "TRANSPORT_INGRESS",
+        "TRANSPORT_EGRESS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.invariants",
+  "namespace": "fb.transport",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

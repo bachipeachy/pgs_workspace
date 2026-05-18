@@ -1,0 +1,88 @@
+{
+  "artifact_code": "CC_LOOKUP_NAME_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+        "id": "CS_NAME_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_LOOKUP_NAME_V0\n\n## Header\n\n- **Artifact Code:** CC_LOOKUP_NAME_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** fb.constitution::CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nLook up resource addresses for a given name via name service.\n\n---\n\n## 2. Operation\n\nREAD\n\n---\n\n## 3. Bindings\n\n- **Target:** pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| name | string | yes | Name to look up (e.g., alice@example.com) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| resource_addresses | array | yes | List of resource addresses for this name |\n\n**Note:** Output MUST include `resource_addresses` field even if empty array.\n\n---\n\n## 6. Contract\n\n**Input Contract:**\n- `name` is required and must be string\n- Empty name is invalid (handled by CS)\n\n**Output Contract:**\n- MUST return `resource_addresses` field\n- Type MUST be array of strings\n- Empty array if name not found\n\n**Result Status:**\n- SUCCESS: Name found, addresses returned\n- NOT_FOUND: Name not registered\n- VIOLATION: Invalid input\n- BACKEND_ERROR: Storage failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_LOOKUP_NAME_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: Look up resource addresses for a given name\n\n  inputs:\n    name:\n      type: string\n      required: true\n      description: Name to look up (e.g., alice@example.com)\n\n  outputs:\n    resource_addresses:\n      type: array\n      items:\n        type: string\n      required: true\n      description: List of resource addresses for this name\n\n  result_status_contract:\n    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n  pipeline:\n    - step: lookup\n      side_effect: pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n      op: READ\n      inputs:\n        name: $.inputs.name\n      outputs:\n        resource_addresses: $.capability_result.value.resource_addresses\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "6554a0c128562142739d917cd68dda87ace9a035ee7ca0247c95db8737ff1e51",
+  "fqdn_id": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
+  "frontmatter": {
+    "cc_code": "CC_LOOKUP_NAME_V0",
+    "core": {
+      "inputs": {
+        "name": {
+          "description": "Name to look up (e.g., alice@example.com)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "resource_addresses": {
+          "description": "List of resource addresses for this name",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "name": "$.inputs.name"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "resource_addresses": "$.capability_result.value.resource_addresses"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+          "step": "lookup"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ]
+      },
+      "summary": "Look up resource addresses for a given name"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.capability_contracts",
+  "namespace": "pgs_capabilities.registry.name_service.capability_contracts",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

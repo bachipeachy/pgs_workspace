@@ -1,0 +1,46 @@
+{
+  "artifact_code": "CONSTITUTION_EXECUTION_POLICY_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_EXECUTION_POLICY_V0\n\n## Machine\n```yaml\nfqdn: fb.topology::CONSTITUTION_EXECUTION_POLICY_V0\nconstitution_code: CONSTITUTION_EXECUTION_POLICY_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_V0\n\ncore:\n  description: Governs execution policy profiles \u2014 the licensing seam between BASIC and ADVANCED machine\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: POLICY_LOAD_BEFORE_EXECUTION\n    applies_to: system\n    constraint: policy profile MUST be resolved before execution starts\n    enforced_by: TBD\n\n  - rule_id: POLICY_IMMUTABLE_DURING_EXECUTION\n    applies_to: system\n    constraint: policy profile MUST NOT change after execution begins\n    enforced_by: TBD\n\n  - rule_id: POLICY_EXPLICIT_PROFILE\n    applies_to: system\n    constraint: policy profile MUST be one of BASIC or ADVANCED; no implicit default\n    enforced_by: TBD\n```\n\n---\n\n## \u00a71. Purpose\n\nDefine execution policy profiles that govern machine behavior.\n\nPolicy is the **licensing seam** between Basic and Advanced Machine.\n\nPolicy determines capabilities, not code.\n\n---\n\n## \u00a72. Policy Dimensions\n\n| Dimension | Description | Schema |\n|-----------|-------------|--------|\n| trace_depth | Minimal or Full event emission | SCHEMA_TRACE_EVENT_V0 |\n| replay_guarantee | Whether execution is replay-safe | boolean |\n| audit_trail | Whether audit events are emitted | boolean |\n| encrypted_execution | Whether execution context is encrypted | boolean |\n| aot_compilation | Whether ahead-of-time compilation is enabled | boolean |\n\n---\n\n## \u00a73. Policy Profiles\n\n### \u00a73.1 BASIC (OSS)\n\n| Dimension | Value | Notes |\n|-----------|-------|-------|\n| trace_depth | minimal | Required events only |\n| replay_guarantee | false | No replay support |\n| audit_trail | false | No audit events |\n| encrypted_execution | false | Plaintext context |\n| aot_compilation | false | Interpreted only |\n\n### \u00a73.2 ADVANCED (Licensed)\n\n| Dimension | Value | Notes |\n|-----------|-------|-------|\n| trace_depth | full | All events emitted |\n| replay_guarantee | true | Guaranteed identical replay |\n| audit_trail | true | Full audit chain |\n| encrypted_execution | optional | Context encryption available |\n| aot_compilation | optional | Compilation hooks available |\n\n---\n\n## \u00a74. Policy Loading\n\nPolicy profile MUST be resolved before execution starts.\n\nResolution order:\n1. Explicit runtime binding (`rb_code.policy_profile`)\n2. Workflow declaration (`wf_code.default_policy`)\n3. System default (`BASIC`)\n\nPolicy is immutable once execution begins.\n\n---\n\n## \u00a75. Policy Enforcement\n\n| Violation | Action |\n|-----------|--------|\n| Feature used without policy authorization | ABORT |\n| Policy dimension missing from profile | ABORT |\n| Policy changed mid-execution | ABORT |\n| Unknown policy profile requested | ABORT |\n\n---\n\n## \u00a76. Licensing Boundary\n\nBASIC profile is unrestricted (OSS).\n\nADVANCED profile requires valid license.\n\nLicense validation occurs at policy load time, not execution time.\n\n| Check | When | Failure Mode |\n|-------|------|--------------|\n| License presence | Policy load | Fall back to BASIC |\n| License validity | Policy load | Fall back to BASIC |\n| License expiry | Policy load | Fall back to BASIC |\n\nNo execution-time license checks. No runtime license enforcement.\n\n---\n\n## \u00a77. Extension Rules\n\nNew policy dimensions require:\n- Schema update (SCHEMA_EXECUTION_POLICY_V0)\n- Constitution update (this document)\n- Default value for BASIC profile\n- Explicit value for ADVANCED profile\n\nNo implicit dimensions. No undeclared behavior switches.\n\n---\n\n## \u00a78. Forbidden Patterns\n\n- Policy logic in Python code\n- Conditional imports based on policy\n- Feature flags outside policy profiles\n- Runtime policy mutation\n- Policy inheritance or composition\n\n---\n\n## \u00a79. Versioning\n\nChanges to policy profiles require:\n- New constitution version\n- Schema migration\n- All existing profiles validated against new schema\n",
+  "content_hash": "8e4f8c3d5551132fa6e3735874e8a677557ac9e2ecd3bcf3820deab30f445b37",
+  "fqdn_id": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_EXECUTION_POLICY_V0",
+    "core": {
+      "description": "Governs execution policy profiles \u2014 the licensing seam between BASIC and ADVANCED machine",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_V0",
+    "rules": [
+      {
+        "applies_to": "system",
+        "constraint": "policy profile MUST be resolved before execution starts",
+        "enforced_by": "TBD",
+        "rule_id": "POLICY_LOAD_BEFORE_EXECUTION"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "policy profile MUST NOT change after execution begins",
+        "enforced_by": "TBD",
+        "rule_id": "POLICY_IMMUTABLE_DURING_EXECUTION"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "policy profile MUST be one of BASIC or ADVANCED; no implicit default",
+        "enforced_by": "TBD",
+        "rule_id": "POLICY_EXPLICIT_PROFILE"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_V0"
+  ],
+  "version": "0"
+}

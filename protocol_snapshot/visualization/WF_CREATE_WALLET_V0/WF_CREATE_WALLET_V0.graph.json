@@ -1,0 +1,543 @@
+{
+  "wf_id": "WF_CREATE_WALLET_V0",
+  "entry": "IN_WALLET_CREATED_V0",
+  "nodes": [
+    {
+      "id": "IN_WALLET_CREATED_V0",
+      "type": "IN"
+    },
+    {
+      "id": "CC_RESOLVE_ACTOR_ID_V0",
+      "type": "CC",
+      "cc_code": "CC_RESOLVE_ACTOR_ID_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "kind": "CT",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "outputs": [
+              "id"
+            ],
+            "bindings": {}
+          },
+          {
+            "id": "CS_REGISTRY_V0",
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_record": "IN.actor_record"
+        }
+      }
+    },
+    {
+      "id": "CC_GENERATE_WALLET_ID_V0",
+      "type": "CC",
+      "cc_code": "CC_GENERATE_WALLET_ID_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "kind": "CT",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "outputs": [
+              "id"
+            ],
+            "bindings": {
+              "data": "in.seed_record"
+            }
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "seed_record": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "type": "wallet"
+          }
+        }
+      }
+    },
+    {
+      "id": "CC_CHECK_WALLET_EXISTS_V0",
+      "type": "CC",
+      "cc_code": "CC_CHECK_WALLET_EXISTS_V0",
+      "capability": "capability_side_effects::CS_REGISTRY_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_REGISTRY_V0",
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "wallet_id": "CC_GENERATE_WALLET_ID_V0.wallet_id"
+        }
+      }
+    },
+    {
+      "id": "CC_DERIVE_WALLET_KEYS_V0",
+      "type": "CC",
+      "cc_code": "CC_DERIVE_WALLET_KEYS_V0",
+      "capability": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "id": "CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+            "fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+            "kind": "CT",
+            "inputs": [
+              "entropy_bits",
+              "entropy_bytes",
+              "passphrase",
+              "root_path_indices",
+              "eoa_child_indices"
+            ],
+            "outputs": [
+              "eoa_public_key_hex",
+              "eoa_address",
+              "eoa_derivation_path",
+              "utxo_public_key_hex",
+              "utxo_address"
+            ],
+            "bindings": {},
+            "inputs_truncated": true,
+            "outputs_truncated": true
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "coin_type": 66
+        }
+      }
+    },
+    {
+      "id": "CC_CREATE_WALLET_RECORD_V0",
+      "type": "CC",
+      "cc_code": "CC_CREATE_WALLET_RECORD_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_MUTABLE_JSON_V0",
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "GET",
+              "PUT",
+              "DELETE",
+              "EXISTS",
+              "LIST"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "id": "CS_REGISTRY_V0",
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "wallet_id": "CC_GENERATE_WALLET_ID_V0.wallet_id",
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "wallet_type": "IN.wallet_type",
+          "currency": "IN.wallet_config.currency",
+          "network": "IN.wallet_config.metadata.network",
+          "security_type": "IN.wallet_config.metadata.security_type",
+          "eoa_public_key_hex": "CC_DERIVE_WALLET_KEYS_V0.eoa_public_key_hex",
+          "eoa_address": "CC_DERIVE_WALLET_KEYS_V0.eoa_address",
+          "eoa_derivation_path": "CC_DERIVE_WALLET_KEYS_V0.eoa_derivation_path",
+          "utxo_public_key_hex": "CC_DERIVE_WALLET_KEYS_V0.utxo_public_key_hex",
+          "utxo_address": "CC_DERIVE_WALLET_KEYS_V0.utxo_address",
+          "utxo_derivation_path": "CC_DERIVE_WALLET_KEYS_V0.utxo_derivation_path",
+          "master_fingerprint": "CC_DERIVE_WALLET_KEYS_V0.master_fingerprint",
+          "email_registration": "IN.actor_record.email_registration"
+        }
+      }
+    },
+    {
+      "id": "CC_APPEND_WALLET_EVENT_V0",
+      "type": "CC",
+      "cc_code": "CC_APPEND_WALLET_EVENT_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "wallet_id": "CC_GENERATE_WALLET_ID_V0.wallet_id",
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "record": {
+            "event_type": "EV_WALLET_CREATED_V0",
+            "wallet_id": "$.results.CC_GENERATE_WALLET_ID_V0.wallet_id",
+            "owner_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "wallet_type": "$.payload.wallet_type",
+            "wallet_config": "$.payload.wallet_config"
+          }
+        }
+      }
+    },
+    {
+      "id": "CC_NOTIFY_WALLET_CREATED_V0",
+      "type": "CC",
+      "cc_code": "CC_NOTIFY_WALLET_CREATED_V0",
+      "capability": "capability_side_effects::CS_SEND_EMAIL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_SEND_EMAIL_V0",
+            "fqdn": "capability_side_effects::CS_SEND_EMAIL_V0",
+            "kind": "CS",
+            "ops": [
+              "SEND"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "recipient_email": "IN.actor_record.email_registration",
+          "wallet_id": "CC_GENERATE_WALLET_ID_V0.wallet_id",
+          "wallet_type": "IN.wallet_type"
+        }
+      }
+    },
+    {
+      "id": "EXIT_SUCCESS",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    }
+  ],
+  "edges": [
+    {
+      "from": "IN_WALLET_CREATED_V0",
+      "to": "CC_RESOLVE_ACTOR_ID_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_WALLET_CREATED_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "CC_GENERATE_WALLET_ID_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_GENERATE_WALLET_ID_V0",
+      "to": "CC_CHECK_WALLET_EXISTS_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_GENERATE_WALLET_ID_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_CHECK_WALLET_EXISTS_V0",
+      "to": "CC_DERIVE_WALLET_KEYS_V0",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_CHECK_WALLET_EXISTS_V0",
+      "to": "EXIT",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_CHECK_WALLET_EXISTS_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_CHECK_WALLET_EXISTS_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_DERIVE_WALLET_KEYS_V0",
+      "to": "CC_CREATE_WALLET_RECORD_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_DERIVE_WALLET_KEYS_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_CREATE_WALLET_RECORD_V0",
+      "to": "CC_APPEND_WALLET_EVENT_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_CREATE_WALLET_RECORD_V0",
+      "to": "EXIT",
+      "condition": "ALREADY_EXISTS"
+    },
+    {
+      "from": "CC_CREATE_WALLET_RECORD_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_CREATE_WALLET_RECORD_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_APPEND_WALLET_EVENT_V0",
+      "to": "CC_NOTIFY_WALLET_CREATED_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_APPEND_WALLET_EVENT_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_APPEND_WALLET_EVENT_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_NOTIFY_WALLET_CREATED_V0",
+      "to": "EXIT_SUCCESS",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_NOTIFY_WALLET_CREATED_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_NOTIFY_WALLET_CREATED_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "CC_APPEND_WALLET_EVENT_V0",
+      "CC_NOTIFY_WALLET_CREATED_V0",
+      "EXIT_SUCCESS"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "CC_APPEND_WALLET_EVENT_V0",
+      "CC_NOTIFY_WALLET_CREATED_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "CC_APPEND_WALLET_EVENT_V0",
+      "CC_NOTIFY_WALLET_CREATED_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "CC_APPEND_WALLET_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "CC_APPEND_WALLET_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "CC_CREATE_WALLET_RECORD_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "CC_DERIVE_WALLET_KEYS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "CC_CHECK_WALLET_EXISTS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_GENERATE_WALLET_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_WALLET_CREATED_V0",
+      "EXIT"
+    ]
+  ]
+}

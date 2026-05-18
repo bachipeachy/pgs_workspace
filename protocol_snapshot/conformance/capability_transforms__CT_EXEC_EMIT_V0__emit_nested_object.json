@@ -1,0 +1,82 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "value": "$.inputs.value"
+        },
+        "atom": "capability_transforms::CT_EXEC_EMIT_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_exec_emit_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_EXEC_EMIT_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+    "input_types": {
+      "value": "any"
+    },
+    "inputs": {
+      "value": {
+        "transaction": {
+          "amount": 100,
+          "from": {
+            "address": "0x1234...",
+            "balance": 500
+          },
+          "id": "tx_abc123",
+          "metadata": {
+            "confirmations": 12,
+            "gas": {
+              "price": 20,
+              "used": 21000
+            },
+            "timestamp": "2026-04-02T10:00:00Z"
+          },
+          "to": {
+            "address": "0x5678...",
+            "balance": 200
+          },
+          "type": "transfer"
+        }
+      }
+    },
+    "outputs": {
+      "result": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "result": {
+      "transaction": {
+        "amount": 100,
+        "from": {
+          "address": "0x1234...",
+          "balance": 500
+        },
+        "id": "tx_abc123",
+        "metadata": {
+          "confirmations": 12,
+          "gas": {
+            "price": 20,
+            "used": 21000
+          },
+          "timestamp": "2026-04-02T10:00:00Z"
+        },
+        "to": {
+          "address": "0x5678...",
+          "balance": 200
+        },
+        "type": "transfer"
+      }
+    }
+  },
+  "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_nested_object",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_EXEC_EMIT_V0"
+}

@@ -1,0 +1,34 @@
+{
+  "artifact_code": "RB_NAME_SERVICE_V0",
+  "artifact_type": "RB",
+  "content": "# RB_NAME_SERVICE_V0\n\n## Header\n\n- **Artifact Code:** RB_NAME_SERVICE_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:**\n  - pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0\n\n---\n\n## 1. Purpose\n\nBind name service capability to its runtime implementation. Provides configuration for persistent storage of name-to-resource-address mappings.\n\n---\n\n## 2. Bindings\n\n| CS Code | Type | Configuration |\n|---------|------|---------------|\n| CS_NAME_REGISTRY_V0 | CS | path: {{module_data_root}}/name_registry.json |\n\n**Note:** Runtime resolves CS implementation. Protocol only declares type and config.\n\n---\n\n## 3. Parameters\n\n- `module_data_root` \u2014 base path for module data storage\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_NAME_SERVICE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\nparameters:\n  - module_data_root\n\ncore:\n  summary: Bind name service capability to runtime implementation\n\n  bindings:\n    pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0:\n      type: CS\n      config:\n        path: \"{{module_data_root}}/name_registry.json\"\n```\n",
+  "content_hash": "48d54c6ed88ea62d3be325535739e9394bed55b89f4d5af6453a9d1af3d3fb6c",
+  "fqdn_id": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0": {
+          "config": {
+            "path": "{{module_data_root}}/name_registry.json"
+          },
+          "type": "CS"
+        }
+      },
+      "summary": "Bind name service capability to runtime implementation"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "parameters": [
+      "module_data_root"
+    ],
+    "rb_code": "RB_NAME_SERVICE_V0",
+    "version": "v0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.runtime_bindings",
+  "namespace": "pgs_capabilities.registry.name_service.runtime_bindings",
+  "references": [
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
+  ],
+  "version": "0"
+}

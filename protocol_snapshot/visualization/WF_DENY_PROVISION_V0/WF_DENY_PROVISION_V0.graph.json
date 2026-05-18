@@ -1,0 +1,100 @@
+{
+  "wf_id": "WF_DENY_PROVISION_V0",
+  "entry": "IN_DENY_PROVISION_V0",
+  "nodes": [
+    {
+      "id": "IN_DENY_PROVISION_V0",
+      "type": "IN"
+    },
+    {
+      "id": "CC_APPEND_AUDIT_EVENT_V0",
+      "type": "CC",
+      "cc_code": "CC_APPEND_AUDIT_EVENT_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "event_type": "EV_PROVISION_DENIED_V0",
+          "employee_id": "IN.employee_id",
+          "decision": "DENIED",
+          "reason_code": "IN.reason_code"
+        }
+      }
+    },
+    {
+      "id": "EXIT_DENIED",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_ERROR",
+      "type": "EXIT"
+    }
+  ],
+  "edges": [
+    {
+      "from": "IN_DENY_PROVISION_V0",
+      "to": "CC_APPEND_AUDIT_EVENT_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_DENY_PROVISION_V0",
+      "to": "EXIT_ERROR",
+      "condition": "NACK"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_V0",
+      "to": "EXIT_DENIED",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_V0",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_V0",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_DENY_PROVISION_V0",
+      "CC_APPEND_AUDIT_EVENT_V0",
+      "EXIT_DENIED"
+    ],
+    [
+      "IN_DENY_PROVISION_V0",
+      "CC_APPEND_AUDIT_EVENT_V0",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_DENY_PROVISION_V0",
+      "CC_APPEND_AUDIT_EVENT_V0",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_DENY_PROVISION_V0",
+      "EXIT_ERROR"
+    ]
+  ]
+}

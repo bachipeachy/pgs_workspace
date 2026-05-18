@@ -1,0 +1,30 @@
+{
+  "artifact_code": "AC_SYSTEM_V0",
+  "artifact_type": "AC",
+  "content": "# AC_SYSTEM_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_SYSTEM_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nA system actor represents a protocol authority for fact injection and automated operations.\n\n---\n\n## 2. Rationale\n\nSystem actors enable protocol automation:\n- Inject facts from external systems (HR, LMS, telemetry)\n- Perform autonomous reclamation\n- Provide audit trail for system-initiated operations\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | system |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| role | string | true | System role identifier |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_SYSTEM_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: System Authority Actor\n  description: Represents a protocol authority for fact injection and automation\n  type: system\n\n  attributes:\n    role:\n      type: string\n      required: true\n```\n",
+  "content_hash": "6f278e04aa0d3826ebe9db6fe2a1ea66d13a9bb2e6eb7a15b7d9c2d3f1da7b3f",
+  "fqdn_id": "ai_governance::AC_SYSTEM_V0",
+  "frontmatter": {
+    "ac_code": "AC_SYSTEM_V0",
+    "core": {
+      "attributes": {
+        "role": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Represents a protocol authority for fact injection and automation",
+      "summary": "System Authority Actor",
+      "type": "system"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.actors",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

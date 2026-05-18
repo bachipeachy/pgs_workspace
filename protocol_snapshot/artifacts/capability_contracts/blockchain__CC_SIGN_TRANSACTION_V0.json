@@ -1,0 +1,387 @@
+{
+  "artifact_code": "CC_SIGN_TRANSACTION_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "mnemonic": "in.mnemonic"
+        },
+        "fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+        "id": "CT_PURE_MNEMONIC_TO_SEED_V0",
+        "inputs": [
+          "mnemonic"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "seed_bytes"
+        ]
+      },
+      {
+        "bindings": {
+          "seed_bytes": "mnemonic_to_seed.seed_bytes"
+        },
+        "fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+        "id": "CT_PURE_DERIVE_MASTER_KEY_V0",
+        "inputs": [
+          "seed_bytes"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "master_private_key_bytes",
+          "master_chain_code_bytes"
+        ]
+      },
+      {
+        "bindings": {
+          "parent_chain_code_bytes": "derive_master_key.master_chain_code_bytes",
+          "parent_private_key_bytes": "derive_master_key.master_private_key_bytes"
+        },
+        "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+        "id": "CT_PURE_DERIVE_CHILD_KEY_V0",
+        "inputs": [
+          "parent_private_key_bytes",
+          "parent_chain_code_bytes",
+          "index"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "child_private_key_bytes",
+          "child_chain_code_bytes"
+        ]
+      },
+      {
+        "bindings": {
+          "input_bytes": "in.unsigned_tx_bytes"
+        },
+        "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+        "id": "CT_PURE_KECCAK256_HASH_V0",
+        "inputs": [
+          "input_bytes"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "hash_hex"
+        ]
+      },
+      {
+        "bindings": {
+          "message_hash": "hash_unsigned_tx.message_hash",
+          "private_key_bytes": "derive_0_address.eoa_private_key_bytes"
+        },
+        "fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+        "id": "CT_PURE_ECDSA_SIGN_V0",
+        "inputs": [
+          "private_key_bytes",
+          "message_hash",
+          "curve"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "v",
+          "r",
+          "s",
+          "signed_bytes"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_SIGN_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_SIGN_TRANSACTION_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_MNEMONIC_TO_SEED_V0, CT_PURE_DERIVE_MASTER_KEY_V0, CT_PURE_DERIVE_CHILD_KEY_V0, CT_PURE_KECCAK256_HASH_V0, CT_PURE_ECDSA_SIGN_V0\n\n---\n\n## 1. Intent\n\nRe-derive the private key from a user-supplied mnemonic and sign the unsigned transaction.\n\n---\n\n## 2. Rationale\n\nBring-your-own-mnemonic signing model: the user supplies the mnemonic in the payload.\nThe system re-derives the private key at the exact BIP32 path stored in the wallet\nrecord, signs, and discards all secret material. The mnemonic is never persisted.\n\n**Security invariant:** No field containing private_key, seed, mnemonic, or entropy\nmay be bound to any CS output.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_MNEMONIC_TO_SEED_V0 | CT | MNEMONIC_TO_SEED |\n| 2 | CT_PURE_DERIVE_MASTER_KEY_V0 | CT | DERIVE_MASTER_KEY |\n| 3 | CT_PURE_DERIVE_CHILD_KEY_V0 | CT | DERIVE_CHILD_KEY (44') |\n| 4 | CT_PURE_DERIVE_CHILD_KEY_V0 | CT | DERIVE_CHILD_KEY (66') |\n| 5 | CT_PURE_DERIVE_CHILD_KEY_V0 | CT | DERIVE_CHILD_KEY (0') |\n| 6 | CT_PURE_DERIVE_CHILD_KEY_V0 | CT | DERIVE_CHILD_KEY (0) |\n| 7 | CT_PURE_DERIVE_CHILD_KEY_V0 | CT | DERIVE_CHILD_KEY (0) |\n| 8 | CT_PURE_KECCAK256_HASH_V0 | CT | KECCAK256_HASH |\n| 9 | CT_PURE_ECDSA_SIGN_V0 | CT | ECDSA_SIGN |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| mnemonic | string | true | BIP-39 mnemonic (transient secret) |\n| unsigned_tx_bytes | string | true | Hex-encoded unsigned transaction |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| signature | object | {v, r, s} signature components |\n| signed_tx_bytes | string | Full signed transaction bytes (hex) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Transaction signed successfully |\n| VIOLATION | Key derivation or signing failure (TX_SIGNING_FAILED) |\n\n---\n\n## 7. Trace Suppression\n\n```yaml\nsuppress_trace_fields:\n  - mnemonic\n  - seed\n  - private_key\n  - entropy\n```\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_SIGN_TRANSACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Re-derive key from mnemonic and sign transaction\n\n  suppress_trace_fields:\n    - mnemonic\n    - seed\n    - private_key\n    - entropy\n    - seed_bytes\n    - private_key_bytes\n    - key_and_address\n    - master_private_key_bytes\n    - master_chain_code_bytes\n    - child_private_key_bytes\n    - child_chain_code_bytes\n    - eoa_private_key_bytes\n\n  inputs:\n    mnemonic:\n      type: string\n      required: true\n      description: \"BIP-39 mnemonic for key derivation\"\n    unsigned_tx_bytes:\n      type: string\n      required: true\n      description: \"Unsigned transaction bytes (hex-encoded)\"\n\n  outputs:\n    signature:\n      type: object\n    signed_tx_bytes:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: mnemonic_to_seed\n      transform: capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0\n      op: MNEMONIC_TO_SEED\n      inputs:\n        mnemonic: $.inputs.mnemonic\n      outputs:\n        seed_bytes: $.capability_result.seed_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: derive_master_key\n      transform: capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0\n      op: DERIVE_MASTER_KEY\n      inputs:\n        seed_bytes: $.results.mnemonic_to_seed.seed_bytes\n      outputs:\n        master_private_key_bytes: $.capability_result.master_private_key_bytes\n        master_chain_code_bytes: $.capability_result.master_chain_code_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: derive_44h\n      transform: capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0\n      op: DERIVE_CHILD_KEY\n      inputs:\n        parent_private_key_bytes: $.results.derive_master_key.master_private_key_bytes\n        parent_chain_code_bytes: $.results.derive_master_key.master_chain_code_bytes\n        index: 2147483692\n      outputs:\n        child_private_key_bytes: $.capability_result.child_private_key_bytes\n        child_chain_code_bytes: $.capability_result.child_chain_code_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: derive_66h\n      transform: capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0\n      op: DERIVE_CHILD_KEY\n      inputs:\n        parent_private_key_bytes: $.results.derive_44h.child_private_key_bytes\n        parent_chain_code_bytes: $.results.derive_44h.child_chain_code_bytes\n        index: 2147483714\n      outputs:\n        child_private_key_bytes: $.capability_result.child_private_key_bytes\n        child_chain_code_bytes: $.capability_result.child_chain_code_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: derive_0h\n      transform: capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0\n      op: DERIVE_CHILD_KEY\n      inputs:\n        parent_private_key_bytes: $.results.derive_66h.child_private_key_bytes\n        parent_chain_code_bytes: $.results.derive_66h.child_chain_code_bytes\n        index: 2147483648\n      outputs:\n        child_private_key_bytes: $.capability_result.child_private_key_bytes\n        child_chain_code_bytes: $.capability_result.child_chain_code_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: derive_0_change\n      transform: capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0\n      op: DERIVE_CHILD_KEY\n      inputs:\n        parent_private_key_bytes: $.results.derive_0h.child_private_key_bytes\n        parent_chain_code_bytes: $.results.derive_0h.child_chain_code_bytes\n        index: 0\n      outputs:\n        child_private_key_bytes: $.capability_result.child_private_key_bytes\n        child_chain_code_bytes: $.capability_result.child_chain_code_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: derive_0_address\n      transform: capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0\n      op: DERIVE_CHILD_KEY\n      inputs:\n        parent_private_key_bytes: $.results.derive_0_change.child_private_key_bytes\n        parent_chain_code_bytes: $.results.derive_0_change.child_chain_code_bytes\n        index: 0\n      outputs:\n        eoa_private_key_bytes: $.capability_result.child_private_key_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: hash_unsigned_tx\n      transform: capability_transforms::CT_PURE_KECCAK256_HASH_V0\n      op: KECCAK256_HASH\n      inputs:\n        input_bytes: $.inputs.unsigned_tx_bytes\n      outputs:\n        message_hash: $.capability_result.hash_hex\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: sign_tx_hash\n      transform: capability_transforms::CT_PURE_ECDSA_SIGN_V0\n      op: ECDSA_SIGN\n      inputs:\n        private_key_bytes: $.results.derive_0_address.eoa_private_key_bytes\n        message_hash: $.results.hash_unsigned_tx.message_hash\n        curve: secp256k1\n      outputs:\n        signature:\n          v: $.capability_result.v\n          r: $.capability_result.r\n          s: $.capability_result.s\n        signed_tx_bytes: $.capability_result.signed_bytes\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\n  error_codes:\n    VIOLATION: TX_SIGNING_FAILED\n```\n",
+  "content_hash": "d031cd53684b9f51e447d7ba525f496ecbb0748ab218d9c0b69293a0308c12ff",
+  "fqdn_id": "blockchain::CC_SIGN_TRANSACTION_V0",
+  "frontmatter": {
+    "cc_code": "CC_SIGN_TRANSACTION_V0",
+    "core": {
+      "error_codes": {
+        "VIOLATION": "TX_SIGNING_FAILED"
+      },
+      "inputs": {
+        "mnemonic": {
+          "description": "BIP-39 mnemonic for key derivation",
+          "required": true,
+          "type": "string"
+        },
+        "unsigned_tx_bytes": {
+          "description": "Unsigned transaction bytes (hex-encoded)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "signature": {
+          "type": "object"
+        },
+        "signed_tx_bytes": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "mnemonic": "$.inputs.mnemonic"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "MNEMONIC_TO_SEED",
+          "outputs": {
+            "seed_bytes": "$.capability_result.seed_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "mnemonic_to_seed",
+          "transform": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0"
+        },
+        {
+          "inputs": {
+            "seed_bytes": "$.results.mnemonic_to_seed.seed_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_MASTER_KEY",
+          "outputs": {
+            "master_chain_code_bytes": "$.capability_result.master_chain_code_bytes",
+            "master_private_key_bytes": "$.capability_result.master_private_key_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_master_key",
+          "transform": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0"
+        },
+        {
+          "inputs": {
+            "index": 2147483692,
+            "parent_chain_code_bytes": "$.results.derive_master_key.master_chain_code_bytes",
+            "parent_private_key_bytes": "$.results.derive_master_key.master_private_key_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_CHILD_KEY",
+          "outputs": {
+            "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+            "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_44h",
+          "transform": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+        },
+        {
+          "inputs": {
+            "index": 2147483714,
+            "parent_chain_code_bytes": "$.results.derive_44h.child_chain_code_bytes",
+            "parent_private_key_bytes": "$.results.derive_44h.child_private_key_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_CHILD_KEY",
+          "outputs": {
+            "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+            "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_66h",
+          "transform": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+        },
+        {
+          "inputs": {
+            "index": 2147483648,
+            "parent_chain_code_bytes": "$.results.derive_66h.child_chain_code_bytes",
+            "parent_private_key_bytes": "$.results.derive_66h.child_private_key_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_CHILD_KEY",
+          "outputs": {
+            "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+            "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_0h",
+          "transform": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+        },
+        {
+          "inputs": {
+            "index": 0,
+            "parent_chain_code_bytes": "$.results.derive_0h.child_chain_code_bytes",
+            "parent_private_key_bytes": "$.results.derive_0h.child_private_key_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_CHILD_KEY",
+          "outputs": {
+            "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+            "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_0_change",
+          "transform": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+        },
+        {
+          "inputs": {
+            "index": 0,
+            "parent_chain_code_bytes": "$.results.derive_0_change.child_chain_code_bytes",
+            "parent_private_key_bytes": "$.results.derive_0_change.child_private_key_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_CHILD_KEY",
+          "outputs": {
+            "eoa_private_key_bytes": "$.capability_result.child_private_key_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_0_address",
+          "transform": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+        },
+        {
+          "inputs": {
+            "input_bytes": "$.inputs.unsigned_tx_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "KECCAK256_HASH",
+          "outputs": {
+            "message_hash": "$.capability_result.hash_hex"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "hash_unsigned_tx",
+          "transform": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
+        },
+        {
+          "inputs": {
+            "curve": "secp256k1",
+            "message_hash": "$.results.hash_unsigned_tx.message_hash",
+            "private_key_bytes": "$.results.derive_0_address.eoa_private_key_bytes"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "ECDSA_SIGN",
+          "outputs": {
+            "signature": {
+              "r": "$.capability_result.r",
+              "s": "$.capability_result.s",
+              "v": "$.capability_result.v"
+            },
+            "signed_tx_bytes": "$.capability_result.signed_bytes"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "sign_tx_hash",
+          "transform": "capability_transforms::CT_PURE_ECDSA_SIGN_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Re-derive key from mnemonic and sign transaction",
+      "suppress_trace_fields": [
+        "mnemonic",
+        "seed",
+        "private_key",
+        "entropy",
+        "seed_bytes",
+        "private_key_bytes",
+        "key_and_address",
+        "master_private_key_bytes",
+        "master_chain_code_bytes",
+        "child_private_key_bytes",
+        "child_chain_code_bytes",
+        "eoa_private_key_bytes"
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+    "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+    "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+    "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+    "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

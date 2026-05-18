@@ -1,0 +1,44 @@
+{
+  "artifact_code": "STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Governed By**: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n---\n\n## Purpose\n\nDefines registry module location and discovery pattern for the AI_GOVERNANCE layer. Establishes flat structure combining ai_licensing and agent_governance domains.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  layer_code: AI_GOVERNANCE\n  registry_module: pgs_ai_governance\n  module_path_pattern: \"{registry_module}.{domain}.registry\"\n\n  description: >\n    AI Governance domain artifacts (subdomain structure).\n    Combines ai_licensing and agent_governance.\n\n  domains:\n    - ai_licensing\n    - agent_governance\n\ninvariants:\n  - no_cross_domain_imports: true\n\noutput_configuration:\n  artifacts_path:\n    layer: AI_GOVERNANCE\n    subpath: compiled/artifacts\n\n  conformance_path:\n    layer: AI_GOVERNANCE\n    subpath: compiled/conformance\n```\n\n---\n\n## Domain Structure\n\n### AI Licensing Subdomain\n- **FQDN Pattern**: `ai_governance::ARTIFACT_CODE`\n- **Registry Module**: `pgs_ai_governance.ai_licensing.registry`\n- **Responsibilities**: AI licensing and provisioning workflows\n\n### Agent Governance Subdomain\n- **FQDN Pattern**: `ai_governance::ARTIFACT_CODE`\n- **Registry Module**: `pgs_ai_governance.agent_governance.registry`\n- **Responsibilities**: Agent action governance workflows\n\n### Combined Layer\nThis layer combines two previously separate domains under a single FQDN namespace:\n- **ai_licensing**: AI licensing and provisioning workflows\n- **agent_governance**: Agent action governance workflows\n\nBoth use the same `ai_governance::` FQDN prefix despite being in separate subdirectories.\n\n---\n\n## Version History\n\n- **V0**: Initial AI governance layer registry location definition (2026-04-23)\n",
+  "content_hash": "83345a40d2182736df3186a2aa2d8dcc1162a3bebbc71cb1d3a1cfc36a3aaf8e",
+  "fqdn_id": "fb.ai_governance::STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0",
+  "frontmatter": {
+    "core": {
+      "description": "AI Governance domain artifacts (subdomain structure). Combines ai_licensing and agent_governance.\n",
+      "domains": [
+        "ai_licensing",
+        "agent_governance"
+      ],
+      "layer_code": "AI_GOVERNANCE",
+      "module_path_pattern": "{registry_module}.{domain}.registry",
+      "registry_module": "pgs_ai_governance"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "invariants": [
+      {
+        "no_cross_domain_imports": true
+      }
+    ],
+    "output_configuration": {
+      "artifacts_path": {
+        "layer": "AI_GOVERNANCE",
+        "subpath": "compiled/artifacts"
+      },
+      "conformance_path": {
+        "layer": "AI_GOVERNANCE",
+        "subpath": "compiled/conformance"
+      }
+    },
+    "structure_code": "STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AI_GOVERNANCE.structures",
+  "namespace": "fb.ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

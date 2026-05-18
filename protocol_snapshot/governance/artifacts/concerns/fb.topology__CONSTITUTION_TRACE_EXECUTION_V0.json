@@ -1,0 +1,52 @@
+{
+  "artifact_code": "CONSTITUTION_TRACE_EXECUTION_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_TRACE_EXECUTION_V0\n\n## Machine\n\n```yaml\nfqdn: fb.topology::CONSTITUTION_TRACE_EXECUTION_V0\nconstitution_code: CONSTITUTION_TRACE_EXECUTION_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_V0\n\ncore:\n  description: Governs trace emission and materialization \u2014 declares trace as a mandated protocol artifact\n  scope: system\n  enforcement_model: runtime_enforced\n\nrules:\n  - rule_id: TRACE_OBLIGATED\n    applies_to: system\n    constraint: trace emission is obligated; not optional\n    enforced_by: TBD\n\n  - rule_id: TRACE_EXECUTION_PURITY\n    applies_to: system\n    constraint: execution MUST NOT write trace to disk during execution loop; collection is in-memory only\n    enforced_by: TBD\n\n  - rule_id: TRACE_EGRESS_SOLE_IO\n    applies_to: system\n    constraint: TraceEgressAdapter is the sole authority for trace I/O\n    enforced_by: TBD\n\n  - rule_id: TRACE_PATH_FROM_STRUCTURE\n    applies_to: system\n    constraint: trace output path MUST be resolved from STRUCTURE; never derived from file traversal or hardcoded literals\n    enforced_by: TBD\n```\n\n---\n\n## \u00a71. Purpose\n\nDefine the contract for trace emission and materialization.\n\nTrace is **obligated**, not optional. But trace I/O is **not** the responsibility of execution.\n\nThe TE layer separates two concerns:\n\n| Concern | Owner |\n|---------|-------|\n| Trace event collection | Execution (TraceEmitter) |\n| Trace materialization (I/O) | Egress (TraceEgressAdapter) |\n\n---\n\n## \u00a72. Execution Purity Invariant\n\nExecution MUST be a pure function with respect to trace:\n\n```\nexecute(snapshot, payload, structure) \u2192 (result, trace_events)\n```\n\n**Execution SHALL NOT:**\n- Open files during execution\n- Write trace events to disk during execution\n- Accept a file sink as part of the execution call\n\n**Execution SHALL:**\n- Collect trace events in memory (TraceEmitter internal buffer)\n- Return all events as a value upon completion\n\n**Egress SHALL:**\n- Receive the trace event list as a value\n- Write events to the STRUCTURE-declared path\n- Be the sole authority for trace I/O\n\n---\n\n## \u00a73. Trace Event Contract\n\nAll trace events MUST conform to `SCHEMA_TRACE_EVENT_V0`.\n\nRequired fields per event:\n- `event_type` \u2014 enumerated, schema-declared\n- `timestamp` \u2014 ISO-8601 UTC\n- `execution_id` \u2014 unique per execution\n- `sequence` \u2014 monotonically increasing from 1\n\nOptional (ADVANCED policy only):\n- `prev_hash` \u2014 SHA-256[:16] of previous event JSON\n\nEvent types are declared exhaustively in `SCHEMA_TRACE_EVENT_V0`.\nNo undeclared event types permitted.\n\n---\n\n## \u00a74. Egress Output Contract\n\nThe egress adapter MUST:\n- Receive `list[TraceEvent]` as its only input (besides the resolved output path)\n- Write one JSON line per event (JSONL format)\n- Validate output path is absolute and STRUCTURE-resolved\n- Fail hard on any I/O error \u2014 no silent failures\n\nOutput path MUST be resolved from STRUCTURE, not derived from:\n- `__file__` traversal\n- Hardcoded literals\n- Filesystem scanning\n\n---\n\n## \u00a75. Data Root Sovereignty\n\n`data_root` (the base path for all module data) MUST be:\n- Passed explicitly by the caller\n- Resolved from environment (`PGS_DATA_ROOT`) or CLI argument (`--data-root`)\n- Never derived implicitly inside execution or gateway\n\nMissing `data_root` at execution call time MUST cause:\n- Immediate failure\n- Error code: `DATA_ROOT_REQUIRED`\n- No fallback, no default traversal\n\n---\n\n## \u00a76. CS Runtime Path Contract\n\nCS runtimes receive their storage paths via RB binding policy:\n```json\n{ \"path\": \"{{data_root}}/events/identity_events.jsonl\" }\n```\n\nThe `{{data_root}}` parameter MUST be substituted from the explicitly-provided `data_root`.\n\nCS runtimes:\n- MAY perform inline reads and writes (required for read-after-write correctness)\n- MUST NOT resolve their own paths (paths come from RB policy only)\n- MUST NOT traverse `__file__` or use relative paths\n\n---\n\n## \u00a77. Trace Sink Lifecycle\n\n```\n[execution_start]\n    TraceEmitter collects events to memory buffer\n\n[execution_end]\n    execution returns (result, list[TraceEvent])\n\n[egress]\n    TraceEgressAdapter.flush(events, path) writes JSONL\n    Path is STRUCTURE-declared (from data_root)\n```\n\nNo file handle is open during execution.\nNo sink is injected into execution.\n\n---\n\n## \u00a78. Forbidden Patterns\n\n- Injecting `JsonlTraceSink` or any file sink into `TraceEmitter` during execution\n- Resolving `data_root` via `Path(__file__).parent` chains\n- Writing trace events inside the execution loop\n- Defaulting `data_root` to `None` with implicit fallback\n- CS runtimes calling `os.path` or `Path` outside of their declared policy config\n\n---\n\n## \u00a79. Enforcement Locations\n\n| Component | Rule |\n|-----------|------|\n| `workflow_gateway.py::execute_workflow()` | `data_root` required, no traversal |\n| `TraceEmitter.__init__()` | No sink parameter during execution |\n| `TraceEgressAdapter.flush()` | Path must be absolute |\n| `RuntimeLoader._load_rb_json()` | `data_root` substituted from explicit param |\n\n---\n\n## Version History\n\n- **V0**: Initial TE layer constitution (2026-04-26)\n",
+  "content_hash": "69053eed5aba7bae3c7d6085b14d694f1496a7a908e5318e91c4dfc153f115aa",
+  "fqdn_id": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_TRACE_EXECUTION_V0",
+    "core": {
+      "description": "Governs trace emission and materialization \u2014 declares trace as a mandated protocol artifact",
+      "enforcement_model": "runtime_enforced",
+      "scope": "system"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_V0",
+    "rules": [
+      {
+        "applies_to": "system",
+        "constraint": "trace emission is obligated; not optional",
+        "enforced_by": "TBD",
+        "rule_id": "TRACE_OBLIGATED"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "execution MUST NOT write trace to disk during execution loop; collection is in-memory only",
+        "enforced_by": "TBD",
+        "rule_id": "TRACE_EXECUTION_PURITY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "TraceEgressAdapter is the sole authority for trace I/O",
+        "enforced_by": "TBD",
+        "rule_id": "TRACE_EGRESS_SOLE_IO"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "trace output path MUST be resolved from STRUCTURE; never derived from file traversal or hardcoded literals",
+        "enforced_by": "TBD",
+        "rule_id": "TRACE_PATH_FROM_STRUCTURE"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_V0"
+  ],
+  "version": "0"
+}

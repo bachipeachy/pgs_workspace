@@ -1,0 +1,82 @@
+{
+  "artifact_code": "CONSTITUTION_COMPILER_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_COMPILER_V0\n\n## Machine\n```yaml\nfqdn: fb.constitution::CONSTITUTION_COMPILER_V0\nconstitution_code: CONSTITUTION_COMPILER_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Governs the OmniBachi compiler pipeline \u2014 phases, surface closure, determinism, and validation obligations\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: COMPILER_DETERMINISM\n    applies_to: system\n    constraint: identical inputs MUST produce identical outputs\n    enforced_by: ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0\n\n  - rule_id: COMPILER_SURFACE_CLOSURE\n    applies_to: system\n    constraint: all references MUST be resolved at compile time; no partial resolution permitted\n    enforced_by: ASSERT_HANDLER_REGISTRY_CLOSED_V0\n\n  - rule_id: COMPILER_NO_HEURISTICS\n    applies_to: system\n    constraint: compiler MUST NOT use heuristic resolution or implicit defaults\n    enforced_by: TBD\n\n  - rule_id: COMPILER_FQDN_ONLY\n    applies_to: system\n    constraint: all artifact references MUST use FQDN after NORMALIZE phase\n    enforced_by: ASSERT_FQDN_ONLY_REFERENCES_V0\n\n  - rule_id: COMPILER_FQDN_TREE_AUTHORITY\n    applies_to: system\n    constraint: FQDN tree is the sole discovery authority; compiler MUST NOT perform filesystem heuristics\n    enforced_by: TBD\n\n  - rule_id: COMPILER_RULE_DRIVEN_VALIDATION\n    applies_to: system\n    constraint: validation MUST be rule-driven; MUST NOT depend on execution order or side effects\n    enforced_by: TBD\n\n  - rule_id: COMPILER_NO_PARTIAL_RESOLUTION\n    applies_to: system\n    constraint: symbol resolution is all-or-nothing; partial resolution is forbidden\n    enforced_by: ASSERT_HANDLER_REGISTRY_CLOSED_V0\n\n  - rule_id: COMPILER_LOSSLESS_EMISSION\n    applies_to: system\n    constraint: materialized artifacts MUST preserve all declared semantics; no new semantics may be introduced\n    enforced_by: ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0\n\n  - rule_id: COMPILER_SELF_APPLICABLE\n    applies_to: system\n    constraint: compiler MUST be capable of validating its own governance artifacts\n    enforced_by: ASSERT_COMPILER_GOVERNANCE_DECLARED_V0\n```\n\n---\n\n## Header (Documentation)\n\n| Field         | Value                      |\n| ------------- | -------------------------- |\n| Artifact Code | CONSTITUTION_COMPILER_V0   |\n| Artifact Kind | constitution               |\n| Tier          | Concern Authority          |\n| Governed By   | fb.constitution::CONSTITUTION_GOVERNANCE_V0 |\n| Applies To    | Builder, Compiler          |\n| Version       | v0                         |\n| Status        | active                     |\n\n---\n\n## \u00a71. Purpose\n\nThis constitution defines the authoritative behavior of the OmniBachi compiler layer.\n\nThe compiler is responsible for:\n\n* Discovering protocol artifacts\n* Validating structural and semantic correctness\n* Enforcing protocol surface closure\n* Producing deterministic, canonical build outputs\n\n**The compiler is a deterministic builder that enforces protocol declarations.**\n\n---\n\n## \u00a72. Role of the Compiler\n\nThe compiler SHALL:\n\n1. Discover protocol artifacts via STRUCTURE\n2. Parse artifacts into canonical machine form\n3. Normalize all references to fully-qualified identifiers (FQDN)\n4. Validate artifacts against schemas and governance rules\n5. Enforce surface closure across all artifacts\n6. Emit deterministic, materialized artifacts\n\nThe compiler SHALL NOT:\n\n1. Invent behavior\n2. Apply heuristics or fallback logic\n3. Encode business logic\n4. Depend on runtime, policy, or execution context\n5. Execute workflows, capabilities, or side effects\n\n---\n\n## \u00a73. Compiler Pipeline\n\nThe compiler SHALL implement the following deterministic pipeline:\n\n```\nDISCOVER\n\u2192 PARSE\n\u2192 NORMALIZE\n\u2192 VALIDATE\n\u2192 ASSERT\n\u2192 ENFORCE\n\u2192 MATERIALIZE\n```\n\n### Phase Definitions\n\n* **DISCOVER**: Locate artifacts using STRUCTURE declarations only\n* **PARSE**: Extract canonical machine sections from artifacts\n* **NORMALIZE**: Resolves all references to FQDN and guarantees unambiguous binding while preserving short-name authoring\n* **VALIDATE**: Enforce schema correctness using compiler validation rules\n* **ASSERT**: Evaluate system-level invariants and cross-artifact constraints\n* **ENFORCE**: Fail build if any violation exists\n* **MATERIALIZE**: Emit deterministic output artifacts\n\nEach phase SHALL be:\n\n* Stateless\n* Deterministic\n* Independent of runtime context\n\n---\n\n## \u00a74. Surface Closure\n\nThe compiler SHALL enforce protocol surface closure.\n\nSurface closure requires:\n\n1. All references MUST be resolved at compile time\n2. All references MUST be unambiguous (FQDN)\n3. All referenced artifacts MUST exist\n4. No implicit dependencies SHALL be permitted\n\nViolation of surface closure SHALL result in build failure.\n\nSurface closure SHALL be enforced prior to materialization.\n\n---\n\n## \u00a75. Validation Obligations\n\nThe compiler SHALL reject any artifact that:\n\n1. Violates schema definitions\n2. References undefined artifacts\n3. Contains implicit bindings or defaults\n4. Introduces cycles in dependency graphs\n5. Depends on runtime data\n6. Violates vocabulary constraints\n\nValidation SHALL occur before ASSERT evaluation.\n\n---\n\n## \u00a76. ASSERT Evaluation\n\nThe compiler SHALL evaluate system-level invariants through ASSERT mechanisms.\n\nASSERT evaluation:\n\n1. Occurs after schema validation\n2. Evaluates cross-artifact relationships\n3. Produces deterministic results\n4. Does not modify artifacts\n\nASSERT SHALL NOT:\n\n1. Perform schema validation\n2. Introduce new data\n3. Depend on runtime state\n\nAll ASSERT results SHALL be aggregated prior to enforcement.\n\n---\n\n## \u00a77. Determinism Guarantees\n\nGiven identical:\n\n* Input artifacts\n* STRUCTURE declarations\n* Compiler version\n\nThe compiler SHALL:\n\n* Produce identical outputs\n* Preserve ordering deterministically\n* Resolve all references consistently\n\nNon-determinism is forbidden.\n\n---\n\n## \u00a78. STRUCTURE Authority\n\nAll artifact discovery and resolution SHALL be governed by STRUCTURE.\n\nThe compiler SHALL:\n\n* Use STRUCTURE as the sole source of truth\n* Not perform filesystem heuristics\n* Not infer missing paths\n\nAny missing STRUCTURE declaration SHALL result in failure.\n\n---\n\n## \u00a79. Forbidden Patterns\n\nThe following are constitutional violations:\n\n1. Heuristic resolution\n2. Implicit defaults or fallback behavior\n3. Runtime-dependent compilation\n4. Partial resolution of references\n5. Use of global mutable state\n6. Execution of protocol behavior during compilation\n\n---\n\n## \u00a710. Relationship to Other Constitutions\n\n| Constitution               | Relationship                      |\n| -------------------------- | --------------------------------- |\n| fb.topology::CONSTITUTION_EXECUTION_V0  | Execution is compiler-independent |\n| fb.vocabulary::CONSTITUTION_VOCABULARY_V0 | Naming and symbols enforced       |\n| fb.constitution::CONSTITUTION_GOVERNANCE_V0 | Amendment authority               |\n\nThis constitution does not override other constitutions.\n\n---\n\n## \u00a711. Versioning\n\nAny change to:\n\n* Compiler pipeline phases\n* Surface closure semantics\n* Determinism guarantees\n\nREQUIRES:\n\n* New version\n* Updated schemas or ASSERT definitions\n* Explicit migration guidance\n\nBackward compatibility is not assumed.\n\n---\n\n## \u00a712. Design Principle (Non-Normative)\n\n> **Artifacts declare intent.**\n> **Compiler enforces correctness.**\n> **Execution consumes validated output.**\n\n---\n\n*End of CONSTITUTION_COMPILER_V0*\n",
+  "content_hash": "e3837eb3f83d58187e3a997142d610a5fce985173bad820fdb606314d5e0bd03",
+  "fqdn_id": "fb.constitution::CONSTITUTION_COMPILER_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_COMPILER_V0",
+    "core": {
+      "description": "Governs the OmniBachi compiler pipeline \u2014 phases, surface closure, determinism, and validation obligations",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system"
+    },
+    "fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "system",
+        "constraint": "identical inputs MUST produce identical outputs",
+        "enforced_by": "ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+        "rule_id": "COMPILER_DETERMINISM"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "all references MUST be resolved at compile time; no partial resolution permitted",
+        "enforced_by": "ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+        "rule_id": "COMPILER_SURFACE_CLOSURE"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "compiler MUST NOT use heuristic resolution or implicit defaults",
+        "enforced_by": "TBD",
+        "rule_id": "COMPILER_NO_HEURISTICS"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "all artifact references MUST use FQDN after NORMALIZE phase",
+        "enforced_by": "ASSERT_FQDN_ONLY_REFERENCES_V0",
+        "rule_id": "COMPILER_FQDN_ONLY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "FQDN tree is the sole discovery authority; compiler MUST NOT perform filesystem heuristics",
+        "enforced_by": "TBD",
+        "rule_id": "COMPILER_FQDN_TREE_AUTHORITY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "validation MUST be rule-driven; MUST NOT depend on execution order or side effects",
+        "enforced_by": "TBD",
+        "rule_id": "COMPILER_RULE_DRIVEN_VALIDATION"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "symbol resolution is all-or-nothing; partial resolution is forbidden",
+        "enforced_by": "ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+        "rule_id": "COMPILER_NO_PARTIAL_RESOLUTION"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "materialized artifacts MUST preserve all declared semantics; no new semantics may be introduced",
+        "enforced_by": "ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+        "rule_id": "COMPILER_LOSSLESS_EMISSION"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "compiler MUST be capable of validating its own governance artifacts",
+        "enforced_by": "ASSERT_COMPILER_GOVERNANCE_DECLARED_V0",
+        "rule_id": "COMPILER_SELF_APPLICABLE"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.constitutions",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

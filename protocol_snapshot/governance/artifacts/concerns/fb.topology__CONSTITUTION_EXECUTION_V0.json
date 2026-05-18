@@ -1,0 +1,58 @@
+{
+  "artifact_code": "CONSTITUTION_EXECUTION_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_EXECUTION_V0\n\n## Machine\n```yaml\nfqdn: fb.topology::CONSTITUTION_EXECUTION_V0\nconstitution_code: CONSTITUTION_EXECUTION_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\ncore:\n  description: Governs workflow execution semantics \u2014 phases, dispatch, determinism, and error propagation\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: EXECUTION_PHASE_ORDER\n    applies_to: system\n    constraint: execution MUST proceed through phases INTERPRET\u2192ADMIT\u2192DISPATCH\u2192EVALUATE\u2192EXIT in order; no phase may be skipped\n    enforced_by: TBD\n\n  - rule_id: EXECUTION_NO_BUSINESS_LOGIC\n    applies_to: system\n    constraint: execution MUST NOT encode business rules or domain logic\n    enforced_by: TBD\n\n  - rule_id: EXECUTION_NO_SILENT_FAILURE\n    applies_to: system\n    constraint: all violations MUST emit explicit trace; no silent failures or swallowed exceptions\n    enforced_by: TBD\n\n  - rule_id: EXECUTION_DECLARED_SIDE_EFFECTS_ONLY\n    applies_to: system\n    constraint: side effects MUST only occur through declared CS artifacts\n    enforced_by: TBD\n\n  - rule_id: EXECUTION_DETERMINISM\n    applies_to: system\n    constraint: given identical inputs and policy, execution MUST produce identical trace\n    enforced_by: TBD\n```\n\n---\n\n## \u00a71. Purpose\n\nDefine the execution semantics for OmniBachi protocol interpretation.\n\nExecution is a **protocol interpreter**, not a behavior author.\n\nExecution code SHALL:\n- Interpret constitutions\n- Enforce schemas\n- Dispatch capabilities\n- Emit mandated trace\n\nExecution code SHALL NOT:\n- Encode business rules\n- Make policy decisions\n- Implement domain logic\n- Define trace structure\n\n---\n\n## \u00a72. Execution Phases\n\nAll workflow execution proceeds through exactly five phases:\n\n| Phase | Responsibility | Governance |\n|-------|---------------|------------|\n| INTERPRET | Parse DAG from workflow artifact | SCHEMA_EXECUTION_DAG_V0 |\n| ADMIT | Enforce pre-DAG preconditions | fb.transport::CONSTITUTION_ADMISSION_V0 |\n| DISPATCH | Route nodes to capability executors | fb.topology::CONSTITUTION_EXECUTION_V0 |\n| EVALUATE | Execute capability and collect result | Capability Contract |\n| EXIT | Terminate with success/failure + trace | CONSTITUTION_TRACE_EXECUTION_V0 |\n\nNo phase may be skipped. No phase may execute out of order.\n\n---\n\n## \u00a73. Determinism Guarantees\n\n| Property | Requirement |\n|----------|-------------|\n| Replay | Given identical inputs and policy, execution produces identical trace |\n| Ordering | DAG dependencies determine execution order; no implicit parallelism |\n| Side Effects | Only through declared Capability Side Effects (CS_*) |\n| Randomness | Forbidden unless capability explicitly declares non-determinism |\n\n---\n\n## \u00a74. Policy Enforcement Boundary\n\nExecution behavior varies only by loaded policy profile.\n\nPolicy profiles are defined in CONSTITUTION_EXECUTION_POLICY_V0.\n\nPolicy is loaded at execution start. Policy cannot change mid-execution.\n\n---\n\n## \u00a75. Machine Classes\n\n### \u00a75.1 Basic Machine (OSS)\n\n- Deterministic execution\n- DAG enforcement\n- Capability dispatch\n- Minimal trace\n- No replay guarantees\n\n### \u00a75.2 Advanced Machine (Licensed)\n\n- All Basic Machine capabilities\n- Full trace with hash chain\n- Guaranteed replay\n- Audit trail\n- Encrypted execution option\n- AOT compilation hooks\n\nSame codebase. Different policy profile.\n\n---\n\n## \u00a76. Capability Dispatch Rules\n\n1. Node type determines dispatcher (Intent vs Capability Contract)\n2. Capability Contract specifies transforms (CT_*) and side effects (CS_*)\n3. Transforms execute in declared order\n4. Side effects execute after all transforms complete\n5. Results propagate via execution context\n\n---\n\n## \u00a77. Error and Violation Propagation\n\n| Condition | Action |\n|-----------|--------|\n| Schema violation | ABORT execution, emit violation trace |\n| Capability failure | Mark node FAILED, propagate to dependents |\n| Policy violation | ABORT execution, emit violation trace |\n| Unhandled exception | ABORT execution, emit error trace |\n\nNo silent failures. No swallowed exceptions.\n\n---\n\n## \u00a78. Exit Conditions\n\nExecution terminates when:\n- All terminal nodes complete (SUCCESS)\n- Any node fails with no recovery path (FAILURE)\n- Policy violation detected (ABORT)\n- Timeout exceeded (TIMEOUT)\n\nExit MUST emit terminal trace event with:\n- Exit condition\n- Final execution context hash\n- Duration\n\n---\n\n## \u00a79. Trace Obligations\n\nTrace is not optional. Trace is **obligated**.\n\nMinimum required events (BASIC):\n- `execution_start`\n- `node_start` (each node)\n- `node_end` (each node)\n- `workflow_complete`\n\nFull events (ADVANCED): See CONSTITUTION_TRACE_EXECUTION_V0.\n\n---\n\n## \u00a710. Forbidden Patterns\n\nThe following are constitutional violations:\n\n- Hardcoded policy in Python\n- Implicit feature flags\n- Trace events defined in code (not schema)\n- Business logic in executor\n- Dynamic capability discovery\n- Undeclared side effects\n- Silent error handling\n\n---\n\n## \u00a711. Implementation Constraints\n\n| Metric | Target |\n|--------|--------|\n| Total SLOC | \u22641,000 |\n| Files | \u226410 |\n| Circular imports | 0 |\n| Policy in Python | 0 lines |\n\nExecution is a thin interpreter. Governance is the authority.\n\n---\n\n## \u00a712. Versioning\n\nChanges to this constitution require:\n- New version (CONSTITUTION_EXECUTION_V1)\n- Migration path documented\n- All dependent schemas updated\n\nNo backward compatibility assumed.\n",
+  "content_hash": "020281bcba22094964f99d59395a5f0de7c68e7acf21a010e00df67bfdac8c9e",
+  "fqdn_id": "fb.topology::CONSTITUTION_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_EXECUTION_V0",
+    "core": {
+      "description": "Governs workflow execution semantics \u2014 phases, dispatch, determinism, and error propagation",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0",
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "rules": [
+      {
+        "applies_to": "system",
+        "constraint": "execution MUST proceed through phases INTERPRET\u2192ADMIT\u2192DISPATCH\u2192EVALUATE\u2192EXIT in order; no phase may be skipped",
+        "enforced_by": "TBD",
+        "rule_id": "EXECUTION_PHASE_ORDER"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "execution MUST NOT encode business rules or domain logic",
+        "enforced_by": "TBD",
+        "rule_id": "EXECUTION_NO_BUSINESS_LOGIC"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "all violations MUST emit explicit trace; no silent failures or swallowed exceptions",
+        "enforced_by": "TBD",
+        "rule_id": "EXECUTION_NO_SILENT_FAILURE"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "side effects MUST only occur through declared CS artifacts",
+        "enforced_by": "TBD",
+        "rule_id": "EXECUTION_DECLARED_SIDE_EFFECTS_ONLY"
+      },
+      {
+        "applies_to": "system",
+        "constraint": "given identical inputs and policy, execution MUST produce identical trace",
+        "enforced_by": "TBD",
+        "rule_id": "EXECUTION_DETERMINISM"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

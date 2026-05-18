@@ -1,0 +1,91 @@
+{
+  "artifact_code": "CC_ENFORCE_LICENSE_CAP_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+        "id": "CS_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "REGISTER",
+          "RESOLVE",
+          "EXISTS",
+          "DEREGISTER"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_ENFORCE_LICENSE_CAP_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_ENFORCE_LICENSE_CAP_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nEnforce hard license cap before provisioning.\n\n---\n\n## 2. Rationale\n\nCap enforcement is a hard limit:\n- Counts current assignments in registry\n- Compares against declared cap\n- Oversubscription impossible by construction\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_REGISTRY_V0 | CS | COUNT |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| cap | integer | true | Maximum license cap |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n| assigned_count | integer | Current assignment count |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Cap not reached, provisioning may proceed |\n| CAP_REACHED | No capacity available |\n| BACKEND_ERROR | Registry unavailable |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_ENFORCE_LICENSE_CAP_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Enforce hard license cap before provisioning\n\n  inputs:\n    cap:\n      type: integer\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n    assigned_count:\n      type: integer\n\n  result_status_contract:\n    allowed: [SUCCESS, CAP_REACHED, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: count_licenses\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: COUNT\n      inputs: {}\n      outputs:\n        count: $.assigned_count\n      result_surface: [SUCCESS, BACKEND_ERROR]\n      on_result:\n        SUCCESS: evaluate_cap\n        BACKEND_ERROR: exit\n\n  evaluation:\n    evaluate_cap:\n      condition: $.assigned_count < $.inputs.cap\n      on_true: SUCCESS\n      on_false: CAP_REACHED\n\nextensions:\n  description: Counts registry entries and enforces cap limit\n```\n",
+  "content_hash": "81b55f4976161f6cba5f5d524d372c2baa331321aca6fb46df06346e1db0b3c1",
+  "fqdn_id": "ai_governance::CC_ENFORCE_LICENSE_CAP_V0",
+  "frontmatter": {
+    "cc_code": "CC_ENFORCE_LICENSE_CAP_V0",
+    "core": {
+      "evaluation": {
+        "evaluate_cap": {
+          "condition": "$.assigned_count < $.inputs.cap",
+          "on_false": "CAP_REACHED",
+          "on_true": "SUCCESS"
+        }
+      },
+      "inputs": {
+        "cap": {
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "assigned_count": {
+          "type": "integer"
+        },
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {},
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "evaluate_cap"
+          },
+          "op": "COUNT",
+          "outputs": {
+            "count": "$.assigned_count"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "step": "count_licenses"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "CAP_REACHED",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Enforce hard license cap before provisioning"
+    },
+    "extensions": {
+      "description": "Counts registry entries and enforces cap limit"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

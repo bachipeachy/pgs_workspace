@@ -1,0 +1,130 @@
+{
+  "artifact_code": "STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0\n\nBuild configuration for blockchain domain artifacts.\n\n## Header\n\n- **Artifact Code:** STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0\n- **Artifact Kind:** structure\n- **Governed By:** fb.constitution::CONSTITUTION_STRUCTURE_V0\n- **Version:** V0\n- **Status:** canonical\n- **Authority:** foundational\n\n---\n\n## Purpose\n\nDefines layer composition and build parameters for building blockchain domain artifacts (workflows, intents, capability contracts, transforms, side effects).\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Blockchain domain build configuration\n  description: Blockchain artifact build (STRUCTURE-governed)\n\n  target_workflow: WF_BUILD_BLOCKCHAIN_V0\n  target_layer_node: BUILD_BLOCKCHAIN\n\n  build_mode: blockchain\n\nscope:\n  target_node: BUILD_BLOCKCHAIN\n  included_layers:\n    - STRUCTURE\n    - GOVERNANCE\n    - EXECUTION\n    - BLOCKCHAIN\n\nartifact_discovery:\n  search_layers:\n    - GOVERNANCE\n    - REUSABLE_TRANSFORMS\n    - REUSABLE_SIDE_EFFECTS\n    - CAPABILITIES\n    - BLOCKCHAIN\n\n  artifact_types:\n    - WF\n    - IN\n    - TI\n    - TE\n    - CC\n    - CT\n    - CS\n    - EV\n    - RB\n    - AC\n    - STRUCTURE\n    - CONSTITUTION\n    - VOCAB\n    - INVARIANT\n    - ASSERT\n    - TEST_DATA\n    - SURFACE\n\noutput_configuration:\n  layer_outputs:\n    GOVERNANCE:\n      layer: GOVERNANCE\n      subpath: compiled/artifacts\n    REUSABLE_TRANSFORMS:\n      layer: REUSABLE_TRANSFORMS\n      subpath: compiled/artifacts\n    REUSABLE_SIDE_EFFECTS:\n      layer: REUSABLE_SIDE_EFFECTS\n      subpath: compiled/artifacts\n    CAPABILITIES:\n      layer: CAPABILITIES\n      subpath: compiled/artifacts\n    BLOCKCHAIN:\n      layer: BLOCKCHAIN\n      subpath: compiled/artifacts\n\n  trace_logs_path:\n    layer: EXECUTION\n    subpath: outputs/traces\n\n  conformance:\n    layer: REUSABLE_TRANSFORMS\n    subpath: compiled/conformance/ct\n\nbuild_phases:\n  - phase: discover\n  - phase: validate\n  - phase: materialize\n  - phase: verify_materialization\n  - phase: compile_molecules\n  - phase: generate_vocabulary_snapshot\n  - phase: generate_conformance\n\nvalidation:\n  constitution_validation: true\n  vocabulary_validation: true\n  schema_validation: true\n  cross_layer_validation: true\n  runtime_semantic_validation: true\n\nexecution_context:\n  runtime_execution: false\n  build_time_only: true\n  execution_layer_loaded: true\n```\n\n---\n\n## Version History\n\n- **V0**: Initial blockchain domain build configuration (2026-04-23)\n  - Federated domain build support\n  - Independent blockchain layer compilation\n",
+  "content_hash": "258a5c9a206e2c593d0cb7411b05d34c871ce118f38837a2e86d436d545a4da9",
+  "fqdn_id": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0",
+  "frontmatter": {
+    "artifact_discovery": {
+      "artifact_types": [
+        "WF",
+        "IN",
+        "TI",
+        "TE",
+        "CC",
+        "CT",
+        "CS",
+        "EV",
+        "RB",
+        "AC",
+        "STRUCTURE",
+        "CONSTITUTION",
+        "VOCAB",
+        "INVARIANT",
+        "ASSERT",
+        "TEST_DATA",
+        "SURFACE"
+      ],
+      "search_layers": [
+        "GOVERNANCE",
+        "REUSABLE_TRANSFORMS",
+        "REUSABLE_SIDE_EFFECTS",
+        "CAPABILITIES",
+        "BLOCKCHAIN"
+      ]
+    },
+    "build_phases": [
+      {
+        "phase": "discover"
+      },
+      {
+        "phase": "validate"
+      },
+      {
+        "phase": "materialize"
+      },
+      {
+        "phase": "verify_materialization"
+      },
+      {
+        "phase": "compile_molecules"
+      },
+      {
+        "phase": "generate_vocabulary_snapshot"
+      },
+      {
+        "phase": "generate_conformance"
+      }
+    ],
+    "core": {
+      "build_mode": "blockchain",
+      "description": "Blockchain artifact build (STRUCTURE-governed)",
+      "summary": "Blockchain domain build configuration",
+      "target_layer_node": "BUILD_BLOCKCHAIN",
+      "target_workflow": "WF_BUILD_BLOCKCHAIN_V0"
+    },
+    "execution_context": {
+      "build_time_only": true,
+      "execution_layer_loaded": true,
+      "runtime_execution": false
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "conformance": {
+        "layer": "REUSABLE_TRANSFORMS",
+        "subpath": "compiled/conformance/ct"
+      },
+      "layer_outputs": {
+        "BLOCKCHAIN": {
+          "layer": "BLOCKCHAIN",
+          "subpath": "compiled/artifacts"
+        },
+        "CAPABILITIES": {
+          "layer": "CAPABILITIES",
+          "subpath": "compiled/artifacts"
+        },
+        "GOVERNANCE": {
+          "layer": "GOVERNANCE",
+          "subpath": "compiled/artifacts"
+        },
+        "REUSABLE_SIDE_EFFECTS": {
+          "layer": "REUSABLE_SIDE_EFFECTS",
+          "subpath": "compiled/artifacts"
+        },
+        "REUSABLE_TRANSFORMS": {
+          "layer": "REUSABLE_TRANSFORMS",
+          "subpath": "compiled/artifacts"
+        }
+      },
+      "trace_logs_path": {
+        "layer": "EXECUTION",
+        "subpath": "outputs/traces"
+      }
+    },
+    "scope": {
+      "included_layers": [
+        "STRUCTURE",
+        "GOVERNANCE",
+        "EXECUTION",
+        "BLOCKCHAIN"
+      ],
+      "target_node": "BUILD_BLOCKCHAIN"
+    },
+    "structure_code": "STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0",
+    "validation": {
+      "constitution_validation": true,
+      "cross_layer_validation": true,
+      "runtime_semantic_validation": true,
+      "schema_validation": true,
+      "vocabulary_validation": true
+    },
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_BLOCKCHAIN.structures",
+  "namespace": "fb.blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

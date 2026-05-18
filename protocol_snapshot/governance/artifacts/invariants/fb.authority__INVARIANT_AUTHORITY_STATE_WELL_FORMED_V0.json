@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0\n\ncore:\n  summary: Authority state crossing the execution boundary must be structurally well-formed; malformed authority state is inadmissible\n  rule: Authority state must satisfy SCHEMA_AUTHENTICATED_AUTHORITY_STATE_V0; absent, partial, or structurally invalid authority state may not cross the execution boundary\n  scope:\n    - WF\n```\n\n## Summary\n\nThis invariant governs the **structural validity** of authority state at the execution boundary \u2014 a distinct concern from runtime authorization behavior (`INVARIANT_NO_RUNTIME_AUTHORIZATION_V0`). An authority state that is structurally valid satisfies the schema: all required fields present, execution authority declared, observation authority declared, provenance recorded. Structural validity is a pre-condition for admissibility evaluation.\n\nMalformed authority state is distinct from absent authority state, but both are inadmissible. Partial state that satisfies some schema fields but not others forces the runtime to infer defaults \u2014 which is ambient authority by another name.\n\n## Rule\n\nFor every authority state presented at the execution boundary:\n1. MUST satisfy `SCHEMA_AUTHENTICATED_AUTHORITY_STATE_V0` \u2014 all required fields present and typed\n2. `execution_authority.authorized_workflows` MUST be a non-empty explicit list\n3. `observation_authority` MUST be structurally present \u2014 observation scope is not inferred\n4. `authority_provenance` MUST be structurally present \u2014 ungoverned authority has no provenance\n5. Structural validity is a necessary but not sufficient condition for admissibility\n\n## Enforcement Scope\n\n- **Artifact Types**: WF (authority boundary declarations)\n- **Validation Phase**: ASSERT (compile-time)\n- **Enforced By**: ASSERT_AUTHORITY_STATE_WELL_FORMED_V0\n\n## Rationale\n\nStructural validity is the most concrete and checkable form of authority governance. Schema conformance can be verified at compile time without executing any authorization logic. This invariant makes structural conformance mandatory at the boundary: authority state that does not satisfy the schema cannot compile, and therefore cannot be presented to the runtime.\n\nThis is distinct from `INVARIANT_NO_RUNTIME_AUTHORIZATION_V0`, which governs runtime behavior. This invariant governs shape. Both are required.\n",
+  "content_hash": "9ed551c0b05a1b45e123eb968b79670975b6f862e406676d3131c602c376438a",
+  "fqdn_id": "fb.authority::INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "Authority state must satisfy SCHEMA_AUTHENTICATED_AUTHORITY_STATE_V0; absent, partial, or structurally invalid authority state may not cross the execution boundary",
+      "scope": [
+        "WF"
+      ],
+      "summary": "Authority state crossing the execution boundary must be structurally well-formed; malformed authority state is inadmissible"
+    },
+    "governed_by": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "invariant_code": "INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.invariants",
+  "namespace": "fb.authority",
+  "references": [
+    "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

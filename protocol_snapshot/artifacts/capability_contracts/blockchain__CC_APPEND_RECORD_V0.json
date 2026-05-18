@@ -1,0 +1,127 @@
+{
+  "artifact_code": "CC_APPEND_RECORD_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL",
+          "GET_RANGE",
+          "GET_SINCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_APPEND_RECORD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_APPEND_RECORD_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nAppend a record to an append-only log with actor attribution and optional stream partitioning.\n\n---\n\n## 2. Rationale\n\nGeneric append capability enables:\n- Immutable audit/event logs\n- Preserved write order\n- Actor attribution for audit\n- Logical partitioning via stream_id\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| record | object | true | Record to append (will be timestamped automatically) |\n| stream_id | string | false | Optional stream identifier for logical partitioning |\n| actor_id | string | true | Actor performing the append (enables audit trail) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| record_id | string | Unique ID of appended record |\n| sequence_number | integer | Sequential position in the log |\n| result_status | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Record appended successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- Invalid inputs result in VIOLATION\n- Storage failure results in BACKEND_ERROR\n- APPEND is not idempotent; retries create duplicate records\n\n---\n\n## 8. Guarantees\n\n- Immutable append-only semantics\n- Preserved write order\n- Server-side timestamp attribution\n- Actor attribution audit\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_APPEND_RECORD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Append a record to an append-only log\n  description: Immutably append a record to the audit/event log with timestamp and actor attribution\n\n  inputs:\n    record:\n      type: object\n      required: true\n      description: Record to append to log (will be timestamped automatically)\n    stream_id:\n      type: string\n      required: false\n      description: Optional stream identifier for logical partitioning\n    actor_id:\n      type: string\n      required: true\n      description: Actor performing the append (enables audit trail)\n\n  outputs:\n    record_id:\n      type: string\n      required: true\n      description: Unique ID of appended record\n    sequence_number:\n      type: integer\n      required: false\n      description: Sequential position in the log\n    result_status:\n      type: string\n      required: true\n      description: Normalized result of append operation\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: append_record\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      op: APPEND\n      inputs:\n        record: $.inputs.record\n        stream_id: $.inputs.stream_id\n        actor_id: $.inputs.actor_id\n      outputs:\n        record_id: $.capability_result.record_id\n        sequence_number: $.capability_result.sequence_number\n        result_status: $.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  idempotency:\n    safe_to_retry: false\n    note: APPEND is not idempotent; retries will create duplicate records\n\n  guarantees:\n    - Immutable append-only semantics\n    - Preserved write order\n    - Server-side timestamp attribution\n    - Actor attribution audit\n\n  notes:\n    - Append-only log provides auditability and event sourcing\n    - No deduplication is performed\n    - stream_id allows logical partitioning without separate files\n```\n",
+  "content_hash": "8d287e8ebdea30c846a3bb91df248c0f4318f9d031ff662554cce827434ad28d",
+  "fqdn_id": "blockchain::CC_APPEND_RECORD_V0",
+  "frontmatter": {
+    "cc_code": "CC_APPEND_RECORD_V0",
+    "core": {
+      "description": "Immutably append a record to the audit/event log with timestamp and actor attribution",
+      "inputs": {
+        "actor_id": {
+          "description": "Actor performing the append (enables audit trail)",
+          "required": true,
+          "type": "string"
+        },
+        "record": {
+          "description": "Record to append to log (will be timestamped automatically)",
+          "required": true,
+          "type": "object"
+        },
+        "stream_id": {
+          "description": "Optional stream identifier for logical partitioning",
+          "required": false,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "record_id": {
+          "description": "Unique ID of appended record",
+          "required": true,
+          "type": "string"
+        },
+        "result_status": {
+          "description": "Normalized result of append operation",
+          "required": true,
+          "type": "string"
+        },
+        "sequence_number": {
+          "description": "Sequential position in the log",
+          "required": false,
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "actor_id": "$.inputs.actor_id",
+            "record": "$.inputs.record",
+            "stream_id": "$.inputs.stream_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "record_id": "$.capability_result.record_id",
+            "result_status": "$.result_status",
+            "sequence_number": "$.capability_result.sequence_number"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_record"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Append a record to an append-only log"
+    },
+    "extensions": {
+      "guarantees": [
+        "Immutable append-only semantics",
+        "Preserved write order",
+        "Server-side timestamp attribution",
+        "Actor attribution audit"
+      ],
+      "idempotency": {
+        "note": "APPEND is not idempotent; retries will create duplicate records",
+        "safe_to_retry": false
+      },
+      "notes": [
+        "Append-only log provides auditability and event sourcing",
+        "No deduplication is performed",
+        "stream_id allows logical partitioning without separate files"
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

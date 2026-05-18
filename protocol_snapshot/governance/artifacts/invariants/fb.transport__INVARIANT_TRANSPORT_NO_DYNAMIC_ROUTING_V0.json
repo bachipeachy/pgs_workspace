@@ -1,0 +1,51 @@
+{
+  "artifact_code": "INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Transport routing MUST be static and explicit. No conditional routing logic,\n    dynamic target resolution, or runtime dispatch declarations are permitted\n    in TI_ or TE_ artifacts.\n\n    Transport is a static binding layer. Routing decisions are made at compile time,\n    not at runtime. Any routing that requires inspection of runtime context,\n    payload values, or dynamic references collapses the transport/execution\n    separation and is forbidden.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - TRANSPORT_INGRESS\n    - TRANSPORT_EGRESS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_TRANSPORT_NO_DYNAMIC_ROUTING_V0\n\n  anti_patterns:\n    - conditional_workflow_selection: >\n        TI declares if/else or match routing to select between workflows\n    - dynamic_workflow_reference: >\n        TI core.workflow uses a $ prefix (runtime-computed reference)\n    - wildcard_routing: >\n        Transport artifact uses * or ? in routing declarations\n    - runtime_dispatch_key: >\n        Transport artifact declares route_by, dispatch, switch, or when keys\n    - payload_dependent_routing: >\n        Routing target is determined by inspecting payload field values at runtime\n```\n\n---\n\n## Purpose\n\nTransport artifacts are compile-time declarations. The routing from transport\ningress to execution workflow is fully resolved at compile time and stored in\nthe snapshot. Runtime has no routing decisions to make \u2014 it reads the static\nbinding and executes it.\n\nThis invariant ensures that transport remains a pure static membrane, not a\nrouting engine.\n\n---\n\n## Scope\n\n**Applies to:** All TI_ and TE_ artifacts\n\n**Does NOT apply to:**\n- Outcome routing within a CC node (that is execution semantics)\n- Workflow-internal DAG branching (governed by WF assertions)\n",
+  "content_hash": "c5662ae892d00f1f0d0bb4fb7cc839159d0d8158e89cd205e4533decf669f308",
+  "fqdn_id": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "conditional_workflow_selection": "TI declares if/else or match routing to select between workflows\n"
+        },
+        {
+          "dynamic_workflow_reference": "TI core.workflow uses a $ prefix (runtime-computed reference)\n"
+        },
+        {
+          "wildcard_routing": "Transport artifact uses * or ? in routing declarations\n"
+        },
+        {
+          "runtime_dispatch_key": "Transport artifact declares route_by, dispatch, switch, or when keys\n"
+        },
+        {
+          "payload_dependent_routing": "Routing target is determined by inspecting payload field values at runtime"
+        }
+      ],
+      "description": "Transport routing MUST be static and explicit. No conditional routing logic, dynamic target resolution, or runtime dispatch declarations are permitted in TI_ or TE_ artifacts.\nTransport is a static binding layer. Routing decisions are made at compile time, not at runtime. Any routing that requires inspection of runtime context, payload values, or dynamic references collapses the transport/execution separation and is forbidden.\n",
+      "enforced_by": [
+        "ASSERT_TRANSPORT_NO_DYNAMIC_ROUTING_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "TRANSPORT_INGRESS",
+        "TRANSPORT_EGRESS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.invariants",
+  "namespace": "fb.transport",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

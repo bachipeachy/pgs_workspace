@@ -1,0 +1,165 @@
+{
+  "artifact_code": "STRUCTURE_RUNTIME_EXECUTION_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_RUNTIME_EXECUTION_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Governed By**: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n---\n\n## Purpose\n\nDefines runtime execution configuration for workflow invocation via transport ingress. This is the bootstrap-eligible STRUCTURE that governs artifact discovery and trace output for runtime execution.\n\n**Scope**: Runtime execution only (not build/compile)\n\n---\n\n## Core\n\nRuntime execution STRUCTURE. Defines WHERE the runtime searches for workflow artifacts and WHERE it writes execution traces.\n\n**Critical Constraint**: This artifact MUST be bootstrap-eligible (no dependency on compiler outputs or build artifacts).\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_RUNTIME_EXECUTION_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Runtime execution STRUCTURE configuration\n  description: >\n    Defines artifact discovery and trace output paths for runtime workflow execution.\n\nartifact_discovery:\n  search_roots:\n    # Platform layers - source artifacts (.md)\n    - layer: GOVERNANCE\n      subpath: structures\n    - layer: GOVERNANCE\n      subpath: registry\n    - layer: GOVERNANCE\n      subpath: concerns\n\n    - layer: COMPILER\n      subpath: registry/registry/compiler\n\n    - layer: EXECUTION\n      subpath: registry/registry\n\n    - layer: REUSABLE_TRANSFORMS\n      subpath: registry/capability_transforms\n\n    - layer: REUSABLE_SIDE_EFFECTS\n      subpath: registry/capability_side_effects\n\n    # Platform layers - compiled artifacts (.json)\n    # Resolver contract: layer_root / artifact_type / subpath\n    - layer: GOVERNANCE\n      artifact_type: compiled\n      subpath: artifacts\n\n    - layer: COMPILER\n      artifact_type: compiled\n      subpath: artifacts\n\n    - layer: EXECUTION\n      artifact_type: compiled\n      subpath: artifacts\n\n    - layer: REUSABLE_TRANSFORMS\n      artifact_type: compiled\n      subpath: artifacts/capability_transforms\n\n    - layer: REUSABLE_SIDE_EFFECTS\n      artifact_type: compiled\n      subpath: artifacts/capability_side_effects\n\n    # Transport layers - source artifacts (.md)\n    - layer: INGRESS\n      subpath: registry/ingress_gateway\n\n    - layer: EGRESS\n      subpath: registry/registry\n\n    # Transport layers - compiled artifacts (.json)\n    - layer: INGRESS\n      artifact_type: compiled\n      subpath: artifacts/workflows\n\n    - layer: INGRESS\n      artifact_type: compiled\n      subpath: artifacts/capability_contracts\n\n    - layer: INGRESS\n      artifact_type: compiled\n      subpath: artifacts/runtime_bindings\n\n    - layer: EGRESS\n      artifact_type: compiled\n      subpath: artifacts\n\n  # Domain discovery configuration (dynamic path expansion)\n  # PROTOCOL: Replaces 70+ hardcoded domain paths with declarative discovery\n  domain_discovery:\n    enabled: true\n    mode: workspace_relative\n    layer: DOMAINS\n    search_pattern: domains/*/\n\n    # Allowed domains (explicit whitelist)\n    allowed_domains:\n      - blockchain\n      - ai_licensing\n      - agent_governance\n\n    # Registry subdirectories to search (source artifacts .md)\n    # Expands to: domains/{domain}/registry/{subdir}\n    # Also searches subregistries: domains/{domain}/registry/{subreg}/{subdir}\n    registry_subdirs:\n      - workflows\n      - intents\n      - capability_contracts\n      - capability_transforms\n      - runtime_bindings\n      - events\n\n    # Compiled artifact subdirectories to search (.json)\n    # Expands to: domains/{domain}/compiled/artifacts/{subdir}\n    compiled_subdirs:\n      - workflows\n      - intents\n      - capability_contracts\n      - capability_transforms\n      - runtime_bindings\n      - events\n      - structures  # For domain-specific STRUCTURE artifacts (e.g., STRUCTURE_BLOCKCHAIN_STORAGE_V0)\n\n    # Subregistry discovery (e.g., blockchain has identity/, wallet/, transaction/)\n    discover_subregistries: true\n    subregistry_pattern: domains/{domain}/registry/*/\n\n  artifact_types:\n    - WF\n    - IN\n    - CC\n    - CT\n    - CS\n    - RB\n    - EV\n\noutput_configuration:\n  # Data root for workflow execution (manifest, registry files, state, etc.)\n  build_manifest_path:\n    layer: DOMAINS\n    subpath: domains/{domain}/testbed/outputs/manifest.json\n\n  # Trace output for execution observability\n  trace_output_path:\n    layer: DOMAINS\n    subpath: domains/{domain}/testbed/outputs/traces\n\n  # Event output for workflow events\n  event_output_path:\n    layer: EGRESS\n    subpath: outputs/events\n\n  # Log output for execution logs\n  log_output_path:\n    layer: EXECUTION\n    subpath: outputs/logs\n```\n\n---\n\n## Version History\n\n- **V0**: Initial runtime execution STRUCTURE (2026-03-21)\n- **V1**: Flattened domain structure (2026-03-26)\n  - Removed 'governance' from domain search_roots\n",
+  "content_hash": "dfeda6e081c9e2ba87763aed7ee2e35dffa126f25322531d2bfc4ebeae87e5f3",
+  "fqdn_id": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_discovery": {
+      "artifact_types": [
+        "WF",
+        "IN",
+        "CC",
+        "CT",
+        "CS",
+        "RB",
+        "EV"
+      ],
+      "domain_discovery": {
+        "allowed_domains": [
+          "blockchain",
+          "ai_licensing",
+          "agent_governance"
+        ],
+        "compiled_subdirs": [
+          "workflows",
+          "intents",
+          "capability_contracts",
+          "capability_transforms",
+          "runtime_bindings",
+          "events",
+          "structures"
+        ],
+        "discover_subregistries": true,
+        "enabled": true,
+        "layer": "DOMAINS",
+        "mode": "workspace_relative",
+        "registry_subdirs": [
+          "workflows",
+          "intents",
+          "capability_contracts",
+          "capability_transforms",
+          "runtime_bindings",
+          "events"
+        ],
+        "search_pattern": "domains/*/",
+        "subregistry_pattern": "domains/{domain}/registry/*/"
+      },
+      "search_roots": [
+        {
+          "layer": "GOVERNANCE",
+          "subpath": "structures"
+        },
+        {
+          "layer": "GOVERNANCE",
+          "subpath": "registry"
+        },
+        {
+          "layer": "GOVERNANCE",
+          "subpath": "concerns"
+        },
+        {
+          "layer": "COMPILER",
+          "subpath": "registry/registry/compiler"
+        },
+        {
+          "layer": "EXECUTION",
+          "subpath": "registry/registry"
+        },
+        {
+          "layer": "REUSABLE_TRANSFORMS",
+          "subpath": "registry/capability_transforms"
+        },
+        {
+          "layer": "REUSABLE_SIDE_EFFECTS",
+          "subpath": "registry/capability_side_effects"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "GOVERNANCE",
+          "subpath": "artifacts"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "COMPILER",
+          "subpath": "artifacts"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "EXECUTION",
+          "subpath": "artifacts"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "REUSABLE_TRANSFORMS",
+          "subpath": "artifacts/capability_transforms"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "REUSABLE_SIDE_EFFECTS",
+          "subpath": "artifacts/capability_side_effects"
+        },
+        {
+          "layer": "INGRESS",
+          "subpath": "registry/ingress_gateway"
+        },
+        {
+          "layer": "EGRESS",
+          "subpath": "registry/registry"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "INGRESS",
+          "subpath": "artifacts/workflows"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "INGRESS",
+          "subpath": "artifacts/capability_contracts"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "INGRESS",
+          "subpath": "artifacts/runtime_bindings"
+        },
+        {
+          "artifact_type": "compiled",
+          "layer": "EGRESS",
+          "subpath": "artifacts"
+        }
+      ]
+    },
+    "core": {
+      "description": "Defines artifact discovery and trace output paths for runtime workflow execution.\n",
+      "summary": "Runtime execution STRUCTURE configuration"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "build_manifest_path": {
+        "layer": "DOMAINS",
+        "subpath": "domains/{domain}/testbed/outputs/manifest.json"
+      },
+      "event_output_path": {
+        "layer": "EGRESS",
+        "subpath": "outputs/events"
+      },
+      "log_output_path": {
+        "layer": "EXECUTION",
+        "subpath": "outputs/logs"
+      },
+      "trace_output_path": {
+        "layer": "DOMAINS",
+        "subpath": "domains/{domain}/testbed/outputs/traces"
+      }
+    },
+    "structure_code": "STRUCTURE_RUNTIME_EXECUTION_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.structures",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

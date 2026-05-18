@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TOPOLOGY_STEP_DECLARED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TOPOLOGY_STEP_DECLARED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: every execution topology step MUST be fully and explicitly declared; implicit steps, wildcard bindings, and ambient dataflow are constitutional violations\n  rule: each step in a CC pipeline MUST appear as an explicit named entry in the pipeline array; no step may be implied by position, naming convention, field co-location, or runtime inference\n  scope:\n    - CC\n\n  enforced_by:\n    - ASSERT_TOPOLOGY_STEP_DECLARED_V0\n```\n\n---\n\n## Summary\n\nAn undeclared step is an ungoverned execution unit. If a CC's execution topology contains\nsteps that are implied rather than declared \u2014 by field naming patterns, positional convention,\nor ambient coupling \u2014 the compiler cannot validate them, and the runtime cannot traverse them\ndeterministically.\n\nEvery step that executes must exist by name in the topology before compilation completes.\n\n## Rule\n\nFor every CC execution topology:\n1. Every step MUST be an explicit named entry in the pipeline array\n2. Step identity is the `step` field \u2014 not position, not key name, not inference\n3. No step may be implied by proximity to another step\n4. Wildcard bindings (`$.results.*` without a step ID) are constitutional violations\n5. Ambient dataflow (state shared across steps without explicit binding) is a constitutional violation\n\n## Enforcement Scope\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Enforced By**: ASSERT_TOPOLOGY_STEP_DECLARED_V0\n\n## Rationale\n\nExplicit declaration is the foundation of compile-time governance. If steps can be implied,\nthe compiler cannot enumerate the execution graph, cannot validate dataflow closure, and\ncannot verify routing completeness. Declared steps are the compiler's unit of analysis.\n\nFull enforcement is implemented in Phase 3.\n",
+  "content_hash": "96fd9624b8dd143dd63444141c93e4ea7bf364ef94c099ec5331161bc8425f3c",
+  "fqdn_id": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_TOPOLOGY_STEP_DECLARED_V0"
+      ],
+      "rule": "each step in a CC pipeline MUST appear as an explicit named entry in the pipeline array; no step may be implied by position, naming convention, field co-location, or runtime inference",
+      "scope": [
+        "CC"
+      ],
+      "summary": "every execution topology step MUST be fully and explicitly declared; implicit steps, wildcard bindings, and ambient dataflow are constitutional violations"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

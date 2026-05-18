@@ -1,0 +1,27 @@
+{
+  "artifact_code": "STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0\n\n## Machine\n\n```yaml\nartifact_code: STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0\nartifact_kind: STRUCTURE\nversion: V0\ngoverned_by: fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0\nfqdn: fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0\nstatus: active\n\ntrust_mode: LOCAL_DEV_UNSIGNED\nartifact_signing_required: false\npayload_signing_required: false\ntrace_signing_required: false\ntrust_anchor: none\n```\n\n---\n\n## Purpose\n\nDeclares that this compiled snapshot operates under LOCAL_DEV_UNSIGNED trust posture.\nNo cryptographic signing is required for artifacts, payloads, or traces. Trust is\nimplicit \u2014 appropriate for local development and single-operator environments.\n\nThis is the correct and complete description of V0 cryptographic trust posture.\n\n## Active Declaration\n\nThis structure is the single active trust declaration for V0. The compiler validates\nits presence via `INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0` and materializes:\n\n```yaml\nfederation_profile:\n  cryptographic_trust: LOCAL_DEV_UNSIGNED\n```\n\ninto every compiled snapshot.\n",
+  "content_hash": "c221a941bf15942b6caf615d632c4b4341ef8797ac65a1c3f25b4ac9ec1a2c23",
+  "fqdn_id": "fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
+  "frontmatter": {
+    "artifact_code": "STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
+    "artifact_kind": "STRUCTURE",
+    "artifact_signing_required": false,
+    "fqdn": "fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
+    "governed_by": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+    "payload_signing_required": false,
+    "status": "active",
+    "trace_signing_required": false,
+    "trust_anchor": "none",
+    "trust_mode": "LOCAL_DEV_UNSIGNED",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CRYPTOGRAPHIC_TRUST.trust_contracts",
+  "namespace": "fb.cryptographic_trust",
+  "references": [
+    "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0"
+  ],
+  "version": "0"
+}

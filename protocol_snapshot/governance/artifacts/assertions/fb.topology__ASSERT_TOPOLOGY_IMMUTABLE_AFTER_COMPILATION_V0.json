@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_topology_immutable_after_compilation_v0\n  callable: execute\n```\n\n## Summary\n\nExecution topology is fixed at compile time and MUST NOT be modified, extended, or\noverridden at runtime. The compiled step sequence and routing declarations are immutable\nfor the lifetime of the compiled artifact. Any mechanism that allows runtime topology\nmodification invalidates the compiler's governance guarantees.\n\n## Rule\n\nCompiled execution topology MUST NOT be:\n1. Modified by any runtime component (workflow engine, executor, host environment)\n2. Extended with runtime-injected steps not present in the compiled artifact\n3. Patched via configuration, environment variable, or feature flag\n4. Overridden by caller-supplied topology modifications at any execution boundary\n\n## Enforcement\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_topology_immutable_after_compilation_v0`\n- **Paired Invariant**: INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0\n\n## Rationale\n\nTopology immutability after compilation is what makes compile-time governance load-bearing.\nIf the topology can be changed at runtime, compilation becomes advisory rather than\nauthoritative \u2014 all invariant checks, routing completeness validation, and dataflow closure\nanalysis are rendered meaningless by changes the compiler never saw.\n\nThis is a Phase 1 stub. Full enforcement is implemented in Phase 3.\n",
+  "content_hash": "7289bdde0e0fef9b007c850a3c1b63c52251d1d9351b1485ff8dc97a7771f8cf",
+  "fqdn_id": "fb.topology::ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_topology_immutable_after_compilation_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

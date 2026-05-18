@@ -1,0 +1,56 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "curve": "$.inputs.curve",
+          "message_hash": "$.inputs.message_hash",
+          "private_key_bytes": "$.inputs.private_key_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_ecdsa_sign_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_ECDSA_SIGN_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+    "input_types": {
+      "curve": "string",
+      "message_hash": "hex_string",
+      "private_key_bytes": "hex_string"
+    },
+    "inputs": {
+      "curve": "secp256k1",
+      "message_hash": "0xb94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+      "private_key_bytes": "0xf79bb0d317b310b261a55a8ab393b4c8a1aba6fa4d08aef379caba502d5d67f9"
+    },
+    "outputs": {
+      "r": {
+        "from": "__atom_result__"
+      },
+      "s": {
+        "from": "__atom_result__"
+      },
+      "signed_bytes": {
+        "from": "__atom_result__"
+      },
+      "v": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "r": "0x2376b8cb03c29e7df673eb0ef4713e0f767aa016564a404339da276ab42e78cf",
+    "s": "0x7f5c4d7cd2c32ab8ca1a5f411857ed7d52a1edd3003bc334272bb3f4fdbaac37",
+    "signed_bytes": "0x2376b8cb03c29e7df673eb0ef4713e0f767aa016564a404339da276ab42e78cf7f5c4d7cd2c32ab8ca1a5f411857ed7d52a1edd3003bc334272bb3f4fdbaac3700",
+    "v": 0
+  },
+  "fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0::sign_message_secp256k1",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_ECDSA_SIGN_V0"
+}

@@ -1,0 +1,67 @@
+{
+  "artifact_code": "WF_DENY_PROVISION_V0",
+  "artifact_type": "WF",
+  "content": "# WF_DENY_PROVISION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_DENY_PROVISION_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_DENY_PROVISION_V0, CC_APPEND_AUDIT_EVENT_V0\n\n---\n\n## 1. Intent\n\nHandle provisioning denial by emitting denial event and recording to audit log.\n\n---\n\n## 2. Rationale\n\nDenial handling ensures first-class terminal outcomes:\n- Emits EV_PROVISION_DENIED_V0\n- Appends to audit log\n- Terminates cleanly (no retries, no loops)\n\n---\n\n## 3. Execution Graph\n\n```\nIN_DENY_PROVISION_V0\n    \u251c\u2500 ACK \u2192 CC_APPEND_AUDIT_EVENT_V0\n    \u2514\u2500 NACK \u2192 EXIT:ERROR\n\nCC_APPEND_AUDIT_EVENT_V0\n    \u251c\u2500 SUCCESS \u2192 EXIT:DENIED\n    \u2514\u2500 VIOLATION/BACKEND_ERROR \u2192 EXIT:ERROR\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_DENY_PROVISION_V0 | IN | Entry point for provision denial |\n| CC_APPEND_AUDIT_EVENT_V0 | CC | Record denial to audit log |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_DENY_PROVISION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: ai_governance::RB_LICENSE_BINDINGS_V0\nstructure: fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0\n\ncore:\n  summary: Handle provisioning denial\n\n  start_node: IN_DENY_PROVISION_V0\n\n  nodes:\n    IN_DENY_PROVISION_V0:\n      type: IN\n      code: IN_DENY_PROVISION_V0\n      payload_schema:\n        employee_id: string\n        reason_code: string\n      next:\n        ACK: CC_APPEND_AUDIT_EVENT_V0\n        NACK: EXIT_ERROR\n\n    CC_APPEND_AUDIT_EVENT_V0:\n      type: CC\n      code: CC_APPEND_AUDIT_EVENT_V0\n      inputs:\n        event_type: EV_PROVISION_DENIED_V0\n        employee_id: $.payload.employee_id\n        decision: DENIED\n        reason_code: $.payload.reason_code\n      next:\n        SUCCESS: EXIT_DENIED\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    EXIT_DENIED:\n      type: EXIT\n      reason: COMPLETED\n      emit: EV_PROVISION_DENIED_V0\n\n    EXIT_ERROR:\n      type: EXIT\n      reason: FAILED\n```\n",
+  "content_hash": "2e4318fcfbbd68cc70ed2dec09d341cc00bccc01d36ef4bdfaeab5944546f058",
+  "fqdn_id": "ai_governance::WF_DENY_PROVISION_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_APPEND_AUDIT_EVENT_V0": {
+          "code": "CC_APPEND_AUDIT_EVENT_V0",
+          "fqdn_id": "ai_governance::CC_APPEND_AUDIT_EVENT_V0",
+          "inputs": {
+            "decision": "DENIED",
+            "employee_id": "$.payload.employee_id",
+            "event_type": "EV_PROVISION_DENIED_V0",
+            "reason_code": "$.payload.reason_code"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_DENIED",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "EXIT_DENIED": {
+          "emit": "EV_PROVISION_DENIED_V0",
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_ERROR": {
+          "reason": "FAILED",
+          "type": "EXIT"
+        },
+        "IN_DENY_PROVISION_V0": {
+          "code": "IN_DENY_PROVISION_V0",
+          "fqdn_id": "ai_governance::IN_DENY_PROVISION_V0",
+          "next": {
+            "ACK": "CC_APPEND_AUDIT_EVENT_V0",
+            "NACK": "EXIT_ERROR"
+          },
+          "payload_schema": {
+            "employee_id": "string",
+            "reason_code": "string"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_DENY_PROVISION_V0",
+      "summary": "Handle provisioning denial"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "ai_governance::RB_LICENSE_BINDINGS_V0",
+    "structure": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
+    "version": "v0",
+    "wf_code": "WF_DENY_PROVISION_V0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.workflows",
+  "namespace": "ai_governance",
+  "references": [
+    "ai_governance::RB_LICENSE_BINDINGS_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0"
+  ],
+  "version": "0"
+}

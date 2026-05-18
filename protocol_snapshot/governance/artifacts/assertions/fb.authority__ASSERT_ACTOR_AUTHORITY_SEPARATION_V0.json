@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_ACTOR_AUTHORITY_SEPARATION_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_ACTOR_AUTHORITY_SEPARATION_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.authority::INVARIANT_ACTOR_AUTHORITY_SEPARATION_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_actor_authority_separation_v0\n  callable: execute\n```\n\n## Summary\n\nActor identity artifacts declare what an entity is. Authority governance declares what an entity may do. These are orthogonal governance surfaces with different lifecycles, different answer surfaces, and different downstream consumers. An actor artifact that imports authority semantics \u2014 by declaring permissions, workflow eligibility, or admissibility rules \u2014 collapses two sovereign governance dimensions into one.\n\nThis assertion enforces the separation from the authority governance side: the authority plane must never allow identity artifacts to carry authority payload.\n\n## Rule\n\nFor every AC_ artifact:\n1. `core.attributes` MUST NOT contain fields named to signal permissions, roles, capabilities, or execution rights (e.g., `allowed_workflows`, `permissions`, `roles`, `authorization`, `execution_rights`)\n2. The artifact MUST NOT declare admissibility rules, projection visibility constraints, or workflow authorization grants\n3. The artifact MUST NOT reference the authority registry, authorization databases, or runtime permission tables\n4. Identity attributes (type, email, agent_id, etc.) MUST carry no implicit authority semantics\n5. Actor type MUST NOT function as an implicit authority grant (e.g., `type: admin` granting permissions)\n\n## Enforcement\n\n- **Artifact Types**: AC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_actor_authority_separation_v0`\n- **Paired Invariant**: INVARIANT_ACTOR_AUTHORITY_SEPARATION_V0\n\n## Rationale\n\nThis is a high-value assertion because identity/authority conflation is the most seductive architectural mistake. When identity and authority are separate, future authority systems (cryptographic, federated, distributed) may evolve independently of actor identity governance. When they collapse, all authority evolution requires identity changes \u2014 and all identity changes potentially alter authority semantics.\n\nThe assertion pair (ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0 from actor identity governance + this assertion from authority governance) ensures the separation is enforced from both sides: identity artifacts cannot carry authority, and authority governance rejects identity artifacts that do.\n",
+  "content_hash": "fea342cb96e67060755035c820320de3506a6ac50776ef899dadbb476850bf43",
+  "fqdn_id": "fb.authority::ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.authority::INVARIANT_ACTOR_AUTHORITY_SEPARATION_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_actor_authority_separation_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.assertions",
+  "namespace": "fb.authority",
+  "references": [],
+  "version": "0"
+}

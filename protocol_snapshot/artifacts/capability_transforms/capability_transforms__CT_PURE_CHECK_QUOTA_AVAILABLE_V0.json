@@ -1,0 +1,87 @@
+{
+  "artifact_code": "CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_CHECK_QUOTA_AVAILABLE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_CHECK_QUOTA_AVAILABLE_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nCheck whether quota capacity is available (assigned count is less than quota limit).\n\nThis transform compares two integers and returns availability status.\n\n---\n\n### 2. Rationale\n\nQuota enforcement is a hard limit in bounded-capacity workflows.\n\nThis transform provides:\n- Deterministic capacity check\n- Domain-agnostic integer comparison\n- Count-based enforcement (not currency)\n- Reusable across licenses, seats, wallets, entitlements, limits\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_CHECK_QUOTA_AVAILABLE_V0 (full versioned identifier)\n- **Operation:** CHECK_QUOTA_AVAILABLE (execution opcode)\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n- Evaluating license quota before provisioning\n- Evaluating seat capacity before assignment\n- Evaluating entitlement limits\n- Gating workflows when quota is exhausted\n- Composing with other eligibility checks\n\n#### 4.2 Invalid Use Cases\n- Modifying quota or count values\n- Querying external systems\n- Implementing complex allocation logic\n- Domain-specific quota policies\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same inputs yield same output |\n| Purity Class | ct_pure | No side effects, no state |\n| Side Effects | NONE | Fully pure computation |\n| Replay Safe | YES | Identical inputs produce identical output |\n\n---\n\n### 6. Structural Checklist\n\nAuthor MUST confirm all items before writing YAML:\n\n- [x] Single responsibility\n- [x] No implicit state\n- [x] No domain semantics\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] No hidden control flow\n- [x] Composition rules respected\n\n---\n\n### 7. Composition Rules (Atom-Specific)\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs (atoms or molecules)\n- MUST perform exactly one atomic operation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Static validation MUST fail if:**\n- `ct_kind` is not `atom`\n- `ct_purity` is not `ct_pure`\n- Required inputs (`assigned_count`, `quota`) are not declared\n- Output `quota_available` is not declared\n\n**Runtime validation MUST fail if:**\n- Inputs are not integers\n- Quota is negative\n- Implementation raises an exception\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit traces.\n\n**Rationale:** Pure computation with no side effects or state changes.\n\n---\n\n### 10. Common Pitfalls\n\n- Encoding allocation strategies (violates single responsibility)\n- Performing side effects on count (violates purity)\n- Returning non-boolean values\n- Embedding domain semantics (use domain binding instead)\n\n---\n\n### 11. Minimal Usage Shape\n\n```\n(assigned_count, quota) \u2192 CT_PURE_CHECK_QUOTA_AVAILABLE_V0 \u2192 quota_available\n```\n\n**Domain binding example:**\n```\nIn ai_licensing: quota = license_cap\nIn seats_mgmt:   quota = seat_limit\nIn entitlements: quota = max_entitlements\n```\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_CHECK_QUOTA_AVAILABLE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Check quota capacity availability\n  description: Compares current assigned count against a quota limit to determine if capacity remains.\n  \n  inputs:\n    assigned_count:\n      type: integer\n      required: true\n      description: Current count of assigned items\n    quota:\n      type: integer\n      required: true\n      description: Maximum allowed count (quota)\n\n  outputs:\n    quota_available:\n      type: boolean\n      required: true\n      description: True if assigned_count is less than quota\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: CHECK_QUOTA_AVAILABLE\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_check_quota_available_v0\n    callable: execute\n```\n",
+  "content_hash": "1a9954c150fed9e880d3b0ca1e4b73ae3db586c42c8f71e8ecee08a81ca03915",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "assigned_count": "$.inputs.assigned_count",
+          "quota": "$.inputs.quota"
+        },
+        "atom": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_quota_available_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+    "inputs": {
+      "assigned_count": {
+        "description": "Current count of assigned items",
+        "required": true,
+        "type": "integer"
+      },
+      "quota": {
+        "description": "Maximum allowed count (quota)",
+        "required": true,
+        "type": "integer"
+      }
+    },
+    "outputs": {
+      "quota_available": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Compares current assigned count against a quota limit to determine if capacity remains.",
+      "inputs": {
+        "assigned_count": {
+          "description": "Current count of assigned items",
+          "required": true,
+          "type": "integer"
+        },
+        "quota": {
+          "description": "Maximum allowed count (quota)",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "quota_available": {
+          "description": "True if assigned_count is less than quota",
+          "required": true,
+          "type": "boolean"
+        }
+      },
+      "summary": "Check quota capacity availability"
+    },
+    "ct_code": "CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_quota_available_v0"
+      },
+      "operation": "CHECK_QUOTA_AVAILABLE"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

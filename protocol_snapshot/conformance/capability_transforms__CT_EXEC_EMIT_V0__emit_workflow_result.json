@@ -1,0 +1,98 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "value": "$.inputs.value"
+        },
+        "atom": "capability_transforms::CT_EXEC_EMIT_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_exec_emit_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_EXEC_EMIT_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+    "input_types": {
+      "value": "any"
+    },
+    "inputs": {
+      "value": {
+        "duration_ms": 137,
+        "execution_id": "exec_20260402_100000",
+        "outputs": {
+          "artifacts_path": "/path/to/compiled/artifacts",
+          "summary": {
+            "by_type": {
+              "CC": 3,
+              "CS": 7,
+              "CT": 25
+            },
+            "total": 66
+          }
+        },
+        "phases": {
+          "discover": {
+            "artifacts": 66,
+            "status": "COMPLETED"
+          },
+          "materialize": {
+            "status": "COMPLETED",
+            "written": 66
+          },
+          "validate": {
+            "errors": 0,
+            "status": "COMPLETED"
+          }
+        },
+        "status": "SUCCESS",
+        "workflow_id": "wf_build_platform_v0"
+      }
+    },
+    "outputs": {
+      "result": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "result": {
+      "duration_ms": 137,
+      "execution_id": "exec_20260402_100000",
+      "outputs": {
+        "artifacts_path": "/path/to/compiled/artifacts",
+        "summary": {
+          "by_type": {
+            "CC": 3,
+            "CS": 7,
+            "CT": 25
+          },
+          "total": 66
+        }
+      },
+      "phases": {
+        "discover": {
+          "artifacts": 66,
+          "status": "COMPLETED"
+        },
+        "materialize": {
+          "status": "COMPLETED",
+          "written": 66
+        },
+        "validate": {
+          "errors": 0,
+          "status": "COMPLETED"
+        }
+      },
+      "status": "SUCCESS",
+      "workflow_id": "wf_build_platform_v0"
+    }
+  },
+  "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_workflow_result",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_EXEC_EMIT_V0"
+}

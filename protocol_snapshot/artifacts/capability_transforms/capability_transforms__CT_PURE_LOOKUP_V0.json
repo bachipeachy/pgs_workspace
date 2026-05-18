@@ -1,0 +1,86 @@
+{
+  "artifact_code": "CT_PURE_LOOKUP_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_LOOKUP_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_LOOKUP_V0\n- **Artifact Kind:** capability_transform\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_LOOKUP_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Look up key in map\n  description: Returns the value associated with a key from a provided key-value mapping object.\n  \n  inputs:\n    key:\n      type: string\n      required: true\n      description: The key to look for\n    map:\n      type: object\n      required: true\n      description: The mapping object to search in\n\n  outputs:\n    result:\n      type: any\n      required: true\n      description: The value found for the given key\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_lookup_v0\n    callable: execute\n```\n",
+  "content_hash": "5263934a02432ad05faf56a63e40bf35793ff01cd7e793eef6cddb0ea58bc0ae",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "key": "$.inputs.key",
+          "map": "$.inputs.map"
+        },
+        "atom": "capability_transforms::CT_PURE_LOOKUP_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_lookup_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_LOOKUP_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+    "inputs": {
+      "key": {
+        "description": "The key to look for",
+        "required": true,
+        "type": "string"
+      },
+      "map": {
+        "description": "The mapping object to search in",
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "result": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_LOOKUP_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Returns the value associated with a key from a provided key-value mapping object.",
+      "inputs": {
+        "key": {
+          "description": "The key to look for",
+          "required": true,
+          "type": "string"
+        },
+        "map": {
+          "description": "The mapping object to search in",
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "result": {
+          "description": "The value found for the given key",
+          "required": true,
+          "type": "any"
+        }
+      },
+      "summary": "Look up key in map"
+    },
+    "ct_code": "CT_PURE_LOOKUP_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_lookup_v0"
+      }
+    },
+    "version": "V0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

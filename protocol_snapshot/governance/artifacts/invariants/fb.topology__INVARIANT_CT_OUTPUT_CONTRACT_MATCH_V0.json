@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  summary: CT output structure must match declared capability contract\n  rule: All CT artifacts must produce outputs matching their CC declaration keys and types\n  scope:\n    - CT\n```\n\n## Summary\n\nEvery Capability Transform (CT) must produce outputs that exactly match the keys declared in its governing Capability Contract (CC).\n\n## Rule\n\nFor every CT artifact:\n1. CT must declare `governed_by` binding to a CC artifact\n2. CC must declare `output` section with explicit keys\n3. CT implementation must return dict with EXACTLY those keys\n4. Extra keys, missing keys, or mismatched types are violations\n\n## Enforcement Scope\n\n- **Artifact Types**: CT\n- **Validation Phase**: Phase 5 (ASSERT)\n- **Enforcement**: MANDATORY (build fails on violation)\n\n## Examples\n\n### \u2705 VALID\n\n**CC Declaration:**\n```yaml\noutput:\n  seed_bytes: hex_string\n```\n\n**CT Implementation:**\n```python\ndef execute(inputs, context=None):\n    return {\n        \"seed_bytes\": \"0x123abc...\"\n    }\n```\n\n### \u274c INVALID\n\n**Missing key:**\n```python\nreturn {}  # \u274c Missing \"seed_bytes\"\n```\n\n**Extra key:**\n```python\nreturn {\n    \"seed_bytes\": \"0x123abc...\",\n    \"extra_field\": \"value\"  # \u274c Not in contract\n}\n```\n\n## Rationale\n\nOutput contract matching ensures:\n- Predictable transform behavior\n- Type safety at compilation\n- Explicit interface contracts\n- No hidden outputs\n- Traceable data flow\n\n## Related Artifacts\n\n- `fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0` - Governs CT behavior\n- `fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0` - Defines CC schema\n",
+  "content_hash": "ddfee39054ba49099ca195a9e5a0b11e01cdca540947b4b01a92ea5201665470",
+  "fqdn_id": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "All CT artifacts must produce outputs matching their CC declaration keys and types",
+      "scope": [
+        "CT"
+      ],
+      "summary": "CT output structure must match declared capability contract"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

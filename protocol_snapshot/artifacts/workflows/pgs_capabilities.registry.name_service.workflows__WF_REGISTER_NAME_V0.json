@@ -1,0 +1,48 @@
+{
+  "artifact_code": "WF_REGISTER_NAME_V0",
+  "artifact_type": "WF",
+  "content": "# WF_REGISTER_NAME_V0\n\n## Header\n\n- **Artifact Code:** WF_REGISTER_NAME_V0\n- **Artifact Kind:** workflow\n- **Governed By:** fb.topology::CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0\n\n---\n\n## 1. Intent\n\nRegister or update name-to-resource-addresses mapping via protocol path.\n\n---\n\n## 2. Flow\n\n```\nentry \u2192 register \u2192 exit\n```\n\nSingle-step workflow that invokes name registration capability contract.\n\n---\n\n## 3. Steps\n\n### Step: register\n\n- **Uses:** pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0\n- **Operation:** WRITE\n- **Role:** Register or update name mapping\n\n---\n\n## 4. Entry and Exit\n\n- **Entry Point:** register\n- **Exit Point:** register\n\n---\n\n## 5. Inputs\n\nWorkflow accepts input payload matching CC_REGISTER_NAME_V0 input contract:\n\n| Field | Type | Required |\n|-------|------|----------|\n| name | string | yes |\n| resource_addresses | array | yes |\n\n---\n\n## 6. Outputs\n\nWorkflow returns output matching CC_REGISTER_NAME_V0 output contract:\n\n| Field | Type | Required |\n|-------|------|----------|\n| success | boolean | yes |\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_REGISTER_NAME_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0\n\ncore:\n  summary: Register or update name-to-resource-addresses mapping\n\n  start_node: entry\n\n  nodes:\n    entry:\n      type: IN\n      next:\n        default: register\n\n    register:\n      type: CC\n      code: pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0\n      next:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    exit:\n      type: EXIT\n\n  entry: entry\n  exit: exit\n```\n",
+  "content_hash": "1d913f6a1db1f170518fd9abc7e9dd0533a0c461faa3c51e8e5a3f9837dd8427",
+  "fqdn_id": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
+  "frontmatter": {
+    "core": {
+      "entry": "entry",
+      "exit": "exit",
+      "nodes": {
+        "entry": {
+          "next": {
+            "default": "register"
+          },
+          "type": "IN"
+        },
+        "exit": {
+          "type": "EXIT"
+        },
+        "register": {
+          "code": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
+          "fqdn_id": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
+          "next": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "type": "CC"
+        }
+      },
+      "start_node": "entry",
+      "summary": "Register or update name-to-resource-addresses mapping"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+    "version": "v0",
+    "wf_code": "WF_REGISTER_NAME_V0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.workflows",
+  "namespace": "pgs_capabilities.registry.name_service.workflows",
+  "references": [
+    "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,46 @@
+{
+  "artifact_code": "EV_NAME_REGISTERED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_NAME_REGISTERED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_NAME_REGISTERED_V0\n- **Artifact Kind:** event\n- **Governed By:** fb.constitution::CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA name-to-resource-addresses mapping has been successfully registered or updated in the name registry.\n\n---\n\n## 2. Rationale\n\nName registration is a protocol-governed state transition:\n- Records human-readable name to resource address mapping\n- Enables name-based resource discovery\n- Provides audit trail for name ownership\n- Supports name updates and conflict resolution\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_REGISTER_NAME_V0 | CC_REGISTER_NAME_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| name | string | true | Human-readable name that was registered |\n| resource_addresses | array | true | Resource addresses associated with the name |\n| success | boolean | true | Whether registration succeeded |\n| timestamp | string (date-time) | true | When registration occurred |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_NAME_REGISTERED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Name Registered\n  description: Emitted when a name-to-resource-addresses mapping is registered or updated\n\n  schema:\n    name:\n      type: string\n      required: true\n      description: Human-readable name that was registered\n    resource_addresses:\n      type: array\n      required: true\n      description: Resource addresses associated with the name\n    success:\n      type: boolean\n      required: true\n      description: Whether registration succeeded\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n      description: When registration occurred\n```\n",
+  "content_hash": "f7e0aa597b166a142f87f9fa15e8ac5aafea920fa0402b7dc55aa62e7c733270",
+  "fqdn_id": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a name-to-resource-addresses mapping is registered or updated",
+      "schema": {
+        "name": {
+          "description": "Human-readable name that was registered",
+          "required": true,
+          "type": "string"
+        },
+        "resource_addresses": {
+          "description": "Resource addresses associated with the name",
+          "required": true,
+          "type": "array"
+        },
+        "success": {
+          "description": "Whether registration succeeded",
+          "required": true,
+          "type": "boolean"
+        },
+        "timestamp": {
+          "description": "When registration occurred",
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Name Registered"
+    },
+    "ev_code": "EV_NAME_REGISTERED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "CAPABILITIES",
+  "module_path": "pgs_capabilities.registry.name_service.events",
+  "namespace": "pgs_capabilities.registry.name_service.events",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

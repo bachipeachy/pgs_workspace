@@ -1,0 +1,153 @@
+{
+  "artifact_code": "STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_BUILD_PLATFORM_CONFIG_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Governed By**: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n---\n\n## Purpose\n\nDefines artifact discovery and output paths for platform compilation.\n\nThis STRUCTURE governs:\n\n* Where the compiler discovers artifacts\n* Which artifact types are in scope\n* Where compiled artifacts are written\n\n**Scope**: Platform build only (domains excluded)\n\n---\n\n## Core\n\nBuild-time STRUCTURE configuration.\n\nThis artifact is the **single source of truth** for:\n\n* discovery scope\n* artifact inclusion\n* output location\n\nNo fallback or implicit behavior is permitted.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_BUILD_PLATFORM_CONFIG_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Build-time STRUCTURE configuration (platform scope)\n  description: >\n    Defines artifact discovery and output paths for platform compilation.\n\nartifact_discovery:\n\n  # STRICT STRUCTURE-DRIVEN DISCOVERY (SCOPED)\n  # Platform build excludes domain layers (BLOCKCHAIN, AI_GOVERNANCE)\n  # Domain artifacts are built separately via STRUCTURE_BUILD_DOMAINS_CONFIG_V0\n  search_layers:\n    - GOVERNANCE\n    - REUSABLE_TRANSFORMS\n    - REUSABLE_SIDE_EFFECTS\n    - CAPABILITIES\n    - TEST_DATA\n\n  # MINIMAL COMPILER SCOPE (NO DOGFOOD / NO RUNTIME)\n  artifact_types:\n    - VOCAB\n    - CONSTITUTION\n    - INVARIANT\n    - ASSERT\n    - SCHEMA\n    - STRUCTURE\n    - EXECUTION_POLICY\n    - WF\n    - IN\n    - TI\n    - TE\n    - CC\n    - CT\n    - CS\n    - EV\n    - RB\n    - TEST_DATA\n    - SURFACE\n\noutput_configuration:\n\n  # Compiled artifacts (federated via layer_outputs below)\n  # Note: This is a fallback only; layer_outputs takes precedence\n  artifacts:\n    layer: PROTOCOL_BUILD_ROOT\n    subpath: compiled/artifacts\n\n  # Conformance tests (federated to transforms layer where TEST_DATA lives)\n  conformance:\n    layer: REUSABLE_TRANSFORMS\n    subpath: compiled/conformance/ct\n\n  # Vocabulary projection files (global system state)\n  vocabulary_artifacts_path:\n    layer: GOVERNANCE\n    subpath: vocabulary\n\n  # Federated layer outputs (each layer writes to its own repository)\n  # PGS is 100% federated - artifacts are distributed to their source repositories\n  layer_outputs:\n    GOVERNANCE:\n      layer: GOVERNANCE\n      subpath: compiled/artifacts\n    COMPILER:\n      layer: PROTOCOL_BUILD_ROOT\n      subpath: compiled/artifacts\n    REUSABLE_TRANSFORMS:\n      layer: REUSABLE_TRANSFORMS\n      subpath: compiled/artifacts\n    REUSABLE_SIDE_EFFECTS:\n      layer: REUSABLE_SIDE_EFFECTS\n      subpath: compiled/artifacts\n    CAPABILITIES:\n      layer: CAPABILITIES\n      subpath: compiled/artifacts\n    TEST_DATA:\n      layer: REUSABLE_TRANSFORMS\n      subpath: compiled/artifacts\n    EXECUTION:\n      layer: PROTOCOL_BUILD_ROOT\n      subpath: compiled/artifacts\n    AUTHORING:\n      layer: PROTOCOL_BUILD_ROOT\n      subpath: compiled/artifacts\n    TRANSPORT:\n      layer: PROTOCOL_BUILD_ROOT\n      subpath: compiled/artifacts\n    INGRESS:\n      layer: PROTOCOL_BUILD_ROOT\n      subpath: compiled/artifacts\n    EGRESS:\n      layer: PROTOCOL_BUILD_ROOT\n      subpath: compiled/artifacts\n\n  # Bootstrap artifact discovery (minimal hardcoded paths)\n  bootstrap_search_roots:\n    - layer: GOVERNANCE\n      subpath: FB_CONSTITUTION/structures\n\nbuild_phases:\n\n  - phase: discover\n    description: Discover artifacts via STRUCTURE\n\n  - phase: parse\n    description: Parse artifacts into canonical machine form\n\n  - phase: normalize\n    description: Resolve references to FQDN with deterministic binding\n\n  - phase: validate\n    description: Validate artifacts using compiler schema rules\n\n  - phase: assert\n    description: Evaluate cross-artifact invariants (surface closure)\n\n  - phase: materialize\n    description: Emit deterministic compiled artifacts\n    target: \"compiled/artifacts/\"\n\n  - phase: conformance_generate\n    description: Generate CT conformance tests from TEST_DATA\n\n  - phase: conformance_execute\n    description: Blindly execute CT-IR conformance tests\n\n```\n\n## Version History\n\n- **V0**: Added conformance phases and TEST_DATA artifact type\n",
+  "content_hash": "73aa1ddfc640cbc9129d2b634cabc0ff8a7eaaeb246de7bff606b2c767616924",
+  "fqdn_id": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+  "frontmatter": {
+    "artifact_discovery": {
+      "artifact_types": [
+        "VOCAB",
+        "CONSTITUTION",
+        "INVARIANT",
+        "ASSERT",
+        "SCHEMA",
+        "STRUCTURE",
+        "EXECUTION_POLICY",
+        "WF",
+        "IN",
+        "TI",
+        "TE",
+        "CC",
+        "CT",
+        "CS",
+        "EV",
+        "RB",
+        "TEST_DATA",
+        "SURFACE"
+      ],
+      "search_layers": [
+        "GOVERNANCE",
+        "REUSABLE_TRANSFORMS",
+        "REUSABLE_SIDE_EFFECTS",
+        "CAPABILITIES",
+        "TEST_DATA"
+      ]
+    },
+    "build_phases": [
+      {
+        "description": "Discover artifacts via STRUCTURE",
+        "phase": "discover"
+      },
+      {
+        "description": "Parse artifacts into canonical machine form",
+        "phase": "parse"
+      },
+      {
+        "description": "Resolve references to FQDN with deterministic binding",
+        "phase": "normalize"
+      },
+      {
+        "description": "Validate artifacts using compiler schema rules",
+        "phase": "validate"
+      },
+      {
+        "description": "Evaluate cross-artifact invariants (surface closure)",
+        "phase": "assert"
+      },
+      {
+        "description": "Emit deterministic compiled artifacts",
+        "phase": "materialize",
+        "target": "compiled/artifacts/"
+      },
+      {
+        "description": "Generate CT conformance tests from TEST_DATA",
+        "phase": "conformance_generate"
+      },
+      {
+        "description": "Blindly execute CT-IR conformance tests",
+        "phase": "conformance_execute"
+      }
+    ],
+    "core": {
+      "description": "Defines artifact discovery and output paths for platform compilation.\n",
+      "summary": "Build-time STRUCTURE configuration (platform scope)"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "output_configuration": {
+      "artifacts": {
+        "layer": "PROTOCOL_BUILD_ROOT",
+        "subpath": "compiled/artifacts"
+      },
+      "bootstrap_search_roots": [
+        {
+          "layer": "GOVERNANCE",
+          "subpath": "FB_CONSTITUTION/structures"
+        }
+      ],
+      "conformance": {
+        "layer": "REUSABLE_TRANSFORMS",
+        "subpath": "compiled/conformance/ct"
+      },
+      "layer_outputs": {
+        "AUTHORING": {
+          "layer": "PROTOCOL_BUILD_ROOT",
+          "subpath": "compiled/artifacts"
+        },
+        "CAPABILITIES": {
+          "layer": "CAPABILITIES",
+          "subpath": "compiled/artifacts"
+        },
+        "COMPILER": {
+          "layer": "PROTOCOL_BUILD_ROOT",
+          "subpath": "compiled/artifacts"
+        },
+        "EGRESS": {
+          "layer": "PROTOCOL_BUILD_ROOT",
+          "subpath": "compiled/artifacts"
+        },
+        "EXECUTION": {
+          "layer": "PROTOCOL_BUILD_ROOT",
+          "subpath": "compiled/artifacts"
+        },
+        "GOVERNANCE": {
+          "layer": "GOVERNANCE",
+          "subpath": "compiled/artifacts"
+        },
+        "INGRESS": {
+          "layer": "PROTOCOL_BUILD_ROOT",
+          "subpath": "compiled/artifacts"
+        },
+        "REUSABLE_SIDE_EFFECTS": {
+          "layer": "REUSABLE_SIDE_EFFECTS",
+          "subpath": "compiled/artifacts"
+        },
+        "REUSABLE_TRANSFORMS": {
+          "layer": "REUSABLE_TRANSFORMS",
+          "subpath": "compiled/artifacts"
+        },
+        "TEST_DATA": {
+          "layer": "REUSABLE_TRANSFORMS",
+          "subpath": "compiled/artifacts"
+        },
+        "TRANSPORT": {
+          "layer": "PROTOCOL_BUILD_ROOT",
+          "subpath": "compiled/artifacts"
+        }
+      },
+      "vocabulary_artifacts_path": {
+        "layer": "GOVERNANCE",
+        "subpath": "vocabulary"
+      }
+    },
+    "structure_code": "STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.structures",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

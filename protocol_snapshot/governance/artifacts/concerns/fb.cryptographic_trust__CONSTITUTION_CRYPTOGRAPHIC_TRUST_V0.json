@@ -1,0 +1,59 @@
+{
+  "artifact_code": "CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0\n\n## Machine\n\n```yaml\nconstitution_code: CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\nfqdn: fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0\n\ncore:\n  summary: Governs snapshot signing, payload sealing, runtime attestation, encrypted transport, and trust admissibility\n  description: |\n    Declares the cryptographic trust regime active for a compiled snapshot.\n    Governs whether snapshots must be signed, payloads sealed, runtimes attested,\n    and transport encrypted. Trust mode is a compile-time declaration \u2014 runtimes\n    execute under the declared trust posture rather than negotiating it.\n\n    In V0, the trust mode is LOCAL_DEV_UNSIGNED: no cryptographic verification\n    is required. This seeds the governance axis for future signed, sealed, and\n    attested execution without any protocol redesign.\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: TRUST_MODE_MUST_BE_DECLARED\n    applies_to: compiled_snapshot\n    constraint: >\n      Every compiled snapshot MUST declare exactly one active trust contract.\n      A snapshot with no trust declaration is a compiler validation failure.\n    enforced_by: compiler_validation\n\n  - rule_id: TRUST_MODES_ARE_ADDITIVE\n    applies_to: compiled_snapshot\n    constraint: >\n      Trust modes are cumulative. SIGNED_SNAPSHOT requires signing but not\n      payload encryption. SEALED_PAYLOAD requires both signing and payload\n      encryption. ATTESTED_RUNTIME additionally requires runtime attestation.\n      Each mode is a superset of the previous.\n    enforced_by: process_enforced\n\n  - rule_id: UNSIGNED_SNAPSHOTS_LOCAL_ONLY\n    applies_to: compiled_snapshot\n    constraint: >\n      Snapshots compiled with LOCAL_DEV_UNSIGNED trust mode MUST NOT be deployed\n      to non-local execution substrates. This is enforced by governance process\n      at V0; future compiler validation will assert this mechanically.\n    enforced_by: process_enforced\n\n  - rule_id: TRUST_IS_NOT_TRANSPORT\n    applies_to: federation_boundary\n    constraint: >\n      FB_CRYPTOGRAPHIC_TRUST governs cryptographic trust posture only.\n      It MUST NOT govern transport protocols, network routing, or TLS configuration.\n      Transport security is an infrastructure concern; trust posture is a\n      governance concern.\n    enforced_by: process_enforced\n\n  - rule_id: RUNTIME_READS_TRUST_PASSIVELY\n    applies_to: runtime\n    constraint: >\n      Runtime MAY read the active trust contract for trace metadata emission.\n      Runtime MUST NOT branch on trust mode or perform signature verification,\n      payload decryption, or attestation checks. In V0, all such checks are absent.\n      Future trust enforcement is a runtime evolution concern (V3+).\n    enforced_by: process_enforced\n```\n\n---\n\n## Purpose\n\nThis constitution governs the cryptographic trust posture under which PGS execution is\nauthorized. It answers: *what cryptographic guarantees are required for this snapshot to\nbe considered trustworthy and legally executable?*\n\nTrust posture is a governance declaration, not a runtime configuration. The compiler\nvalidates the declared trust mode; runtimes execute under it passively. This ensures\nthat moving from unsigned local development to signed, attested, or encrypted deployment\nis a governance change, not a code change.\n\n## \u00a71. V0 Trust Mode\n\nThe only authorized trust mode in V0 is `LOCAL_DEV_UNSIGNED`.\n\nThis means:\n- Snapshots are not required to carry cryptographic signatures\n- Payloads are not encrypted or sealed\n- Runtime processes are not attested\n- Transport channels are not required to be encrypted\n\nThis is the correct posture for local development and single-node execution.\nIt is explicitly declared \u2014 not assumed \u2014 which is the important distinction.\n\n## \u00a72. What \"Trust\" Means in PGS\n\nCryptographic trust governs confidence in the integrity and provenance of execution\nartifacts: the snapshot, the payload, the runtime process, and the transport channel.\nIt does not govern identity trust (FB_IDENTITY) or authority delegation (FB_AUTHORITY).\n\n| Concern | Governed By |\n|---------|-------------|\n| Snapshot integrity | FB_CRYPTOGRAPHIC_TRUST |\n| Payload confidentiality | FB_CRYPTOGRAPHIC_TRUST |\n| Runtime process attestation | FB_CRYPTOGRAPHIC_TRUST |\n| Transport channel security | FB_CRYPTOGRAPHIC_TRUST |\n| Identity legality | FB_IDENTITY |\n| Authority delegation | FB_AUTHORITY |\n\n## \u00a73. Compiler Behavior\n\nThe compiler MUST:\n- Discover the active trust contract in this boundary\n- Validate that exactly one contract is active\n- Materialize trust mode into the snapshot federation profile under:\n\n```yaml\nfederation_profile:\n  cryptographic_trust: LOCAL_DEV_UNSIGNED\n```\n\n## \u00a74. Runtime Behavior\n\nThe runtime MUST:\n- Record `federation_profile.cryptographic_trust` in trace metadata\n- NOT perform signature verification, decryption, or attestation in V0\n- NOT branch on trust mode values\n\n## \u00a75. Future Expansion Path\n\n```\nLOCAL_DEV_UNSIGNED\n  \u2192 SIGNED_SNAPSHOT        (snapshot carries verifiable signature)\n  \u2192 SEALED_PAYLOAD         (payload encrypted; signing required)\n  \u2192 ATTESTED_RUNTIME       (runtime process attested; sealing required)\n  \u2192 ENCRYPTED_TUNNEL       (transport encrypted; attestation required)\n```\n\nEach step requires a new trust contract. Runtime enforcement capability arrives\nwith Runtime V3+.\n\n## \u00a76. Versioning\n\nChanges to trust semantics require a new constitution version and migration rationale.\n",
+  "content_hash": "28926856c32c0c6b03df813435613aff49678b06da3bdc018865d468604f8f1d",
+  "fqdn_id": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+    "core": {
+      "description": "Declares the cryptographic trust regime active for a compiled snapshot.\nGoverns whether snapshots must be signed, payloads sealed, runtimes attested,\nand transport encrypted. Trust mode is a compile-time declaration \u2014 runtimes\nexecute under the declared trust posture rather than negotiating it.\n\nIn V0, the trust mode is LOCAL_DEV_UNSIGNED: no cryptographic verification\nis required. This seeds the governance axis for future signed, sealed, and\nattested execution without any protocol redesign.\n",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system",
+      "summary": "Governs snapshot signing, payload sealing, runtime attestation, encrypted transport, and trust admissibility"
+    },
+    "fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "rules": [
+      {
+        "applies_to": "compiled_snapshot",
+        "constraint": "Every compiled snapshot MUST declare exactly one active trust contract. A snapshot with no trust declaration is a compiler validation failure.\n",
+        "enforced_by": "compiler_validation",
+        "rule_id": "TRUST_MODE_MUST_BE_DECLARED"
+      },
+      {
+        "applies_to": "compiled_snapshot",
+        "constraint": "Trust modes are cumulative. SIGNED_SNAPSHOT requires signing but not payload encryption. SEALED_PAYLOAD requires both signing and payload encryption. ATTESTED_RUNTIME additionally requires runtime attestation. Each mode is a superset of the previous.\n",
+        "enforced_by": "process_enforced",
+        "rule_id": "TRUST_MODES_ARE_ADDITIVE"
+      },
+      {
+        "applies_to": "compiled_snapshot",
+        "constraint": "Snapshots compiled with LOCAL_DEV_UNSIGNED trust mode MUST NOT be deployed to non-local execution substrates. This is enforced by governance process at V0; future compiler validation will assert this mechanically.\n",
+        "enforced_by": "process_enforced",
+        "rule_id": "UNSIGNED_SNAPSHOTS_LOCAL_ONLY"
+      },
+      {
+        "applies_to": "federation_boundary",
+        "constraint": "FB_CRYPTOGRAPHIC_TRUST governs cryptographic trust posture only. It MUST NOT govern transport protocols, network routing, or TLS configuration. Transport security is an infrastructure concern; trust posture is a governance concern.\n",
+        "enforced_by": "process_enforced",
+        "rule_id": "TRUST_IS_NOT_TRANSPORT"
+      },
+      {
+        "applies_to": "runtime",
+        "constraint": "Runtime MAY read the active trust contract for trace metadata emission. Runtime MUST NOT branch on trust mode or perform signature verification, payload decryption, or attestation checks. In V0, all such checks are absent. Future trust enforcement is a runtime evolution concern (V3+).\n",
+        "enforced_by": "process_enforced",
+        "rule_id": "RUNTIME_READS_TRUST_PASSIVELY"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CRYPTOGRAPHIC_TRUST.constitutions",
+  "namespace": "fb.cryptographic_trust",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

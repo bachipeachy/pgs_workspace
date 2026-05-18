@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.authority::INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_trace_authority_binding_required_v0\n  callable: execute\n```\n\n## Summary\n\nAll execution traces must bind authority provenance. This assertion enforces the accountability complement of authority governance: not only must authority be evaluated before execution, but its exercise must be recorded in the trace. Authority without a trace binding is ungoverned authority \u2014 it happened, but there is no audit record.\n\n## Rule\n\nFor every execution trace declaration:\n1. MUST declare a binding for `actor_id` \u2014 the identity of the actor whose authority was evaluated\n2. MUST declare a binding for `workflow_fqdn` \u2014 the fully qualified workflow that was authorized\n3. MUST declare a binding for `authority_provenance` \u2014 the source, chain, and evaluation timestamp of authority\n4. MUST declare a binding for `admissibility_outcome` \u2014 the resolved admissibility result\n5. These bindings are required, not optional \u2014 absent authority trace bindings constitute ungoverned execution\n\n## Enforcement\n\n- **Artifact Types**: WF (trace output declarations)\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_trace_authority_binding_required_v0`\n- **Paired Invariant**: INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0\n\n## Rationale\n\nTrace authority binding is a governance surface distinct from no-ambient-authority. Ambient authority governs what is declared before execution. Trace binding governs what is recorded after execution. You can have explicit authority declarations with incomplete trace records (provenance surface violation), or complete trace records that masked ambient authority (admissibility surface violation). Both must be independently enforced.\n\nFull trace binding enforcement is implemented in Phase 5.\n",
+  "content_hash": "e15690f481b98da14be1d3842dcf4f4090de0d06e30dce76f2f4d1728b5e010c",
+  "fqdn_id": "fb.authority::ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.authority::INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_trace_authority_binding_required_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.assertions",
+  "namespace": "fb.authority",
+  "references": [],
+  "version": "0"
+}

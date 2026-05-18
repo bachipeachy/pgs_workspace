@@ -1,0 +1,218 @@
+{
+  "artifact_code": "WF_GOVERN_AGENT_ACTION_V0",
+  "artifact_type": "WF",
+  "content": "# WF_GOVERN_AGENT_ACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_GOVERN_AGENT_ACTION_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_AGENT_ACTION_REQUESTED_V0, CC_NORMALIZE_AGENT_REQUEST_V0, CC_CHECK_TOOL_DECLARED_V0, CC_RESOLVE_LICENSE_TIER_V0, CC_BIND_LICENSE_TO_TOOL_SURFACE_V0, CC_VALIDATE_TOOL_PARAMETERS_V0, CC_RECORD_GOVERNED_ACTION_V0, CC_RECORD_DENIED_ACTION_V0\n\n---\n\n## 1. Intent\n\nConstitutional mediation of agent-proposed actions with license-tier authority binding.\n\n---\n\n## 2. Rationale\n\nAgent governance is protocol-governed:\n- All agent actions normalize to a single intent\n- Five governance gates: normalize, tool check, license resolve, tool bind, parameter validate\n- All decisions (authorization and denial) produce symmetric audit trails\n- Four denial paths route through CC_RECORD_DENIED_ACTION_V0 before EXIT\n\n---\n\n## 3. Execution Graph\n\n```\nIN_AGENT_ACTION_REQUESTED_V0\n    \u251c\u2500 ACK \u2192 CC_NORMALIZE_AGENT_REQUEST_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 CC_CHECK_TOOL_DECLARED_V0\n    \u2502           \u2502               \u251c\u2500 SUCCESS \u2192 CC_RESOLVE_LICENSE_TIER_V0\n    \u2502           \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_BIND_LICENSE_TO_TOOL_SURFACE_V0\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_VALIDATE_TOOL_PARAMETERS_V0\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_RECORD_GOVERNED_ACTION_V0 \u2192 EXIT_SUCCESS\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u2514\u2500 VIOLATION \u2192 CC_AUDIT_PARAMETER_VIOLATION \u2192 EXIT_PARAMETER_VIOLATION\n    \u2502           \u2502               \u2502               \u2502               \u2514\u2500 VIOLATION \u2192 CC_AUDIT_UNAUTHORIZED_TOOL \u2192 EXIT_UNAUTHORIZED_TOOL\n    \u2502           \u2502               \u2502               \u251c\u2500 NOT_FOUND \u2192 CC_AUDIT_UNAUTHORIZED_ACTOR \u2192 EXIT_UNAUTHORIZED_ACTOR\n    \u2502           \u2502               \u2502               \u2514\u2500 VIOLATION \u2192 CC_AUDIT_UNAUTHORIZED_ACTOR \u2192 EXIT_UNAUTHORIZED_ACTOR\n    \u2502           \u2502               \u2514\u2500 VIOLATION \u2192 CC_AUDIT_UNDECLARED_TOOL \u2192 EXIT_UNDECLARED_TOOL\n    \u2502           \u2514\u2500 VIOLATION \u2192 EXIT_ERROR\n    \u2514\u2500 NACK \u2192 EXIT_REJECTED\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_AGENT_ACTION_REQUESTED_V0 | IN | Entry intent for governance mediation |\n| CC_NORMALIZE_AGENT_REQUEST_V0 | CC | Generate deterministic intent hash |\n| CC_CHECK_TOOL_DECLARED_V0 | CC | Verify tool in closed registry |\n| CC_RESOLVE_LICENSE_TIER_V0 | CC | Read license facts, validate active status |\n| CC_BIND_LICENSE_TO_TOOL_SURFACE_V0 | CC | Map tier to tool surface, verify authorization |\n| CC_VALIDATE_TOOL_PARAMETERS_V0 | CC | Enforce parameter constraints |\n| CC_RECORD_GOVERNED_ACTION_V0 | CC | Record authorized action + audit |\n| CC_AUDIT_UNDECLARED_TOOL | CC | Record denial: undeclared tool |\n| CC_AUDIT_UNAUTHORIZED_ACTOR | CC | Record denial: unauthorized actor |\n| CC_AUDIT_UNAUTHORIZED_TOOL | CC | Record denial: unauthorized tool |\n| CC_AUDIT_PARAMETER_VIOLATION | CC | Record denial: parameter violation |\n| EXIT_SUCCESS | EXIT | Action authorized |\n| EXIT_UNDECLARED_TOOL | EXIT | Tool not in closed registry |\n| EXIT_UNAUTHORIZED_ACTOR | EXIT | No license or inactive license |\n| EXIT_UNAUTHORIZED_TOOL | EXIT | Tool not authorized for tier |\n| EXIT_PARAMETER_VIOLATION | EXIT | Parameter constraints failed |\n| EXIT_ERROR | EXIT | Internal error |\n| EXIT_REJECTED | EXIT | Intent admission rejected |\n\n---\n\n## 5. Admission\n\n| Requirement | Description |\n|-------------|-------------|\n| requires | \u2014 |\n| forbids | \u2014 |\n\nNo admission constraints in v0.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_GOVERN_AGENT_ACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\nruntime_binding: ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0\n\ncore:\n  summary: Constitutional mediation of agent-proposed actions with license-tier authority binding\n\n  start_node: IN_AGENT_ACTION_REQUESTED_V0\n\n  nodes:\n    IN_AGENT_ACTION_REQUESTED_V0:\n      type: IN\n      code: IN_AGENT_ACTION_REQUESTED_V0\n      next:\n        ACK: CC_NORMALIZE_AGENT_REQUEST_V0\n        NACK: EXIT_REJECTED\n\n    CC_NORMALIZE_AGENT_REQUEST_V0:\n      type: CC\n      code: CC_NORMALIZE_AGENT_REQUEST_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        requesting_user_id: $.payload.requesting_user_id\n        domain_context: $.payload.domain_context\n      next:\n        SUCCESS: CC_CHECK_TOOL_DECLARED_V0\n        VIOLATION: EXIT_ERROR\n\n    CC_CHECK_TOOL_DECLARED_V0:\n      type: CC\n      code: CC_CHECK_TOOL_DECLARED_V0\n      inputs:\n        tool_name: $.payload.tool_name\n      next:\n        SUCCESS: CC_RESOLVE_LICENSE_TIER_V0\n        VIOLATION: CC_AUDIT_UNDECLARED_TOOL\n\n    CC_RESOLVE_LICENSE_TIER_V0:\n      type: CC\n      code: CC_RESOLVE_LICENSE_TIER_V0\n      inputs:\n        requesting_user_id: $.payload.requesting_user_id\n      next:\n        SUCCESS: CC_BIND_LICENSE_TO_TOOL_SURFACE_V0\n        NOT_FOUND: CC_AUDIT_UNAUTHORIZED_ACTOR\n        VIOLATION: CC_AUDIT_UNAUTHORIZED_ACTOR\n        BACKEND_ERROR: EXIT_ERROR\n\n    CC_BIND_LICENSE_TO_TOOL_SURFACE_V0:\n      type: CC\n      code: CC_BIND_LICENSE_TO_TOOL_SURFACE_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        license_tier: $.results.CC_RESOLVE_LICENSE_TIER_V0.license_tier\n      next:\n        SUCCESS: CC_VALIDATE_TOOL_PARAMETERS_V0\n        VIOLATION: CC_AUDIT_UNAUTHORIZED_TOOL\n\n    CC_VALIDATE_TOOL_PARAMETERS_V0:\n      type: CC\n      code: CC_VALIDATE_TOOL_PARAMETERS_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        parameters: $.payload.parameters\n      next:\n        SUCCESS: CC_RECORD_GOVERNED_ACTION_V0\n        VIOLATION: CC_AUDIT_PARAMETER_VIOLATION\n\n    CC_RECORD_GOVERNED_ACTION_V0:\n      type: CC\n      code: CC_RECORD_GOVERNED_ACTION_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        parameters: $.payload.parameters\n        requesting_user_id: $.payload.requesting_user_id\n        license_tier: $.results.CC_RESOLVE_LICENSE_TIER_V0.license_tier\n        domain_context: $.payload.domain_context\n        intent_hash: $.results.CC_NORMALIZE_AGENT_REQUEST_V0.intent_hash\n      next:\n        SUCCESS: EXIT_SUCCESS\n        ALREADY_EXISTS: EXIT_SUCCESS\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    CC_AUDIT_UNDECLARED_TOOL:\n      type: CC\n      code: CC_RECORD_DENIED_ACTION_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        requesting_user_id: $.payload.requesting_user_id\n        domain_context: $.payload.domain_context\n        denial_reason: UNDECLARED_TOOL\n      next:\n        SUCCESS: EXIT_UNDECLARED_TOOL\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    CC_AUDIT_UNAUTHORIZED_ACTOR:\n      type: CC\n      code: CC_RECORD_DENIED_ACTION_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        requesting_user_id: $.payload.requesting_user_id\n        domain_context: $.payload.domain_context\n        denial_reason: UNAUTHORIZED_ACTOR\n      next:\n        SUCCESS: EXIT_UNAUTHORIZED_ACTOR\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    CC_AUDIT_UNAUTHORIZED_TOOL:\n      type: CC\n      code: CC_RECORD_DENIED_ACTION_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        requesting_user_id: $.payload.requesting_user_id\n        domain_context: $.payload.domain_context\n        denial_reason: UNAUTHORIZED_TOOL\n      next:\n        SUCCESS: EXIT_UNAUTHORIZED_TOOL\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    CC_AUDIT_PARAMETER_VIOLATION:\n      type: CC\n      code: CC_RECORD_DENIED_ACTION_V0\n      inputs:\n        tool_name: $.payload.tool_name\n        requesting_user_id: $.payload.requesting_user_id\n        domain_context: $.payload.domain_context\n        denial_reason: PARAMETER_VIOLATION\n      next:\n        SUCCESS: EXIT_PARAMETER_VIOLATION\n        VIOLATION: EXIT_ERROR\n        BACKEND_ERROR: EXIT_ERROR\n\n    EXIT_SUCCESS:\n      type: EXIT\n      reason: COMPLETED\n      emit: EV_AGENT_ACTION_AUTHORIZED_V0\n\n    EXIT_UNDECLARED_TOOL:\n      type: EXIT\n      reason: COMPLETED\n      emit: EV_AGENT_ACTION_DENIED_V0\n\n    EXIT_UNAUTHORIZED_ACTOR:\n      type: EXIT\n      reason: COMPLETED\n      emit: EV_AGENT_ACTION_DENIED_V0\n\n    EXIT_UNAUTHORIZED_TOOL:\n      type: EXIT\n      reason: COMPLETED\n      emit: EV_AGENT_ACTION_DENIED_V0\n\n    EXIT_PARAMETER_VIOLATION:\n      type: EXIT\n      reason: COMPLETED\n      emit: EV_AGENT_ACTION_DENIED_V0\n\n    EXIT_ERROR:\n      type: EXIT\n      reason: FAILED\n\n    EXIT_REJECTED:\n      type: EXIT\n      reason: EXITED\n```\n",
+  "content_hash": "51260bcc62df13b823a8977f0bd6e6ef9671dd645f1dbb1e25ef3a1d4d8e6ac2",
+  "fqdn_id": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_AUDIT_PARAMETER_VIOLATION": {
+          "code": "CC_RECORD_DENIED_ACTION_V0",
+          "fqdn_id": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
+          "inputs": {
+            "denial_reason": "PARAMETER_VIOLATION",
+            "domain_context": "$.payload.domain_context",
+            "requesting_user_id": "$.payload.requesting_user_id",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_PARAMETER_VIOLATION",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_AUDIT_UNAUTHORIZED_ACTOR": {
+          "code": "CC_RECORD_DENIED_ACTION_V0",
+          "fqdn_id": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
+          "inputs": {
+            "denial_reason": "UNAUTHORIZED_ACTOR",
+            "domain_context": "$.payload.domain_context",
+            "requesting_user_id": "$.payload.requesting_user_id",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_UNAUTHORIZED_ACTOR",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_AUDIT_UNAUTHORIZED_TOOL": {
+          "code": "CC_RECORD_DENIED_ACTION_V0",
+          "fqdn_id": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
+          "inputs": {
+            "denial_reason": "UNAUTHORIZED_TOOL",
+            "domain_context": "$.payload.domain_context",
+            "requesting_user_id": "$.payload.requesting_user_id",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_UNAUTHORIZED_TOOL",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_AUDIT_UNDECLARED_TOOL": {
+          "code": "CC_RECORD_DENIED_ACTION_V0",
+          "fqdn_id": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
+          "inputs": {
+            "denial_reason": "UNDECLARED_TOOL",
+            "domain_context": "$.payload.domain_context",
+            "requesting_user_id": "$.payload.requesting_user_id",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_UNDECLARED_TOOL",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0": {
+          "code": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+          "fqdn_id": "ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+          "inputs": {
+            "license_tier": "$.results.CC_RESOLVE_LICENSE_TIER_V0.license_tier",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "SUCCESS": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+            "VIOLATION": "CC_AUDIT_UNAUTHORIZED_TOOL"
+          },
+          "type": "CC"
+        },
+        "CC_CHECK_TOOL_DECLARED_V0": {
+          "code": "CC_CHECK_TOOL_DECLARED_V0",
+          "fqdn_id": "ai_governance::CC_CHECK_TOOL_DECLARED_V0",
+          "inputs": {
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "SUCCESS": "CC_RESOLVE_LICENSE_TIER_V0",
+            "VIOLATION": "CC_AUDIT_UNDECLARED_TOOL"
+          },
+          "type": "CC"
+        },
+        "CC_NORMALIZE_AGENT_REQUEST_V0": {
+          "code": "CC_NORMALIZE_AGENT_REQUEST_V0",
+          "fqdn_id": "ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0",
+          "inputs": {
+            "domain_context": "$.payload.domain_context",
+            "requesting_user_id": "$.payload.requesting_user_id",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "SUCCESS": "CC_CHECK_TOOL_DECLARED_V0",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_RECORD_GOVERNED_ACTION_V0": {
+          "code": "CC_RECORD_GOVERNED_ACTION_V0",
+          "fqdn_id": "ai_governance::CC_RECORD_GOVERNED_ACTION_V0",
+          "inputs": {
+            "domain_context": "$.payload.domain_context",
+            "intent_hash": "$.results.CC_NORMALIZE_AGENT_REQUEST_V0.intent_hash",
+            "license_tier": "$.results.CC_RESOLVE_LICENSE_TIER_V0.license_tier",
+            "parameters": "$.payload.parameters",
+            "requesting_user_id": "$.payload.requesting_user_id",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "ALREADY_EXISTS": "EXIT_SUCCESS",
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "SUCCESS": "EXIT_SUCCESS",
+            "VIOLATION": "EXIT_ERROR"
+          },
+          "type": "CC"
+        },
+        "CC_RESOLVE_LICENSE_TIER_V0": {
+          "code": "CC_RESOLVE_LICENSE_TIER_V0",
+          "fqdn_id": "ai_governance::CC_RESOLVE_LICENSE_TIER_V0",
+          "inputs": {
+            "requesting_user_id": "$.payload.requesting_user_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT_ERROR",
+            "NOT_FOUND": "CC_AUDIT_UNAUTHORIZED_ACTOR",
+            "SUCCESS": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+            "VIOLATION": "CC_AUDIT_UNAUTHORIZED_ACTOR"
+          },
+          "type": "CC"
+        },
+        "CC_VALIDATE_TOOL_PARAMETERS_V0": {
+          "code": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+          "fqdn_id": "ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0",
+          "inputs": {
+            "parameters": "$.payload.parameters",
+            "tool_name": "$.payload.tool_name"
+          },
+          "next": {
+            "SUCCESS": "CC_RECORD_GOVERNED_ACTION_V0",
+            "VIOLATION": "CC_AUDIT_PARAMETER_VIOLATION"
+          },
+          "type": "CC"
+        },
+        "EXIT_ERROR": {
+          "reason": "FAILED",
+          "type": "EXIT"
+        },
+        "EXIT_PARAMETER_VIOLATION": {
+          "emit": "EV_AGENT_ACTION_DENIED_V0",
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_REJECTED": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "EXIT_SUCCESS": {
+          "emit": "EV_AGENT_ACTION_AUTHORIZED_V0",
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_UNAUTHORIZED_ACTOR": {
+          "emit": "EV_AGENT_ACTION_DENIED_V0",
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_UNAUTHORIZED_TOOL": {
+          "emit": "EV_AGENT_ACTION_DENIED_V0",
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "EXIT_UNDECLARED_TOOL": {
+          "emit": "EV_AGENT_ACTION_DENIED_V0",
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "IN_AGENT_ACTION_REQUESTED_V0": {
+          "code": "IN_AGENT_ACTION_REQUESTED_V0",
+          "fqdn_id": "ai_governance::IN_AGENT_ACTION_REQUESTED_V0",
+          "next": {
+            "ACK": "CC_NORMALIZE_AGENT_REQUEST_V0",
+            "NACK": "EXIT_REJECTED"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_AGENT_ACTION_REQUESTED_V0",
+      "summary": "Constitutional mediation of agent-proposed actions with license-tier authority binding"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
+    "version": "v0",
+    "wf_code": "WF_GOVERN_AGENT_ACTION_V0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.workflows",
+  "namespace": "ai_governance",
+  "references": [
+    "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

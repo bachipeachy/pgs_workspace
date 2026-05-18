@@ -1,0 +1,48 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "value": "$.inputs.value"
+        },
+        "atom": "capability_transforms::CT_EXEC_EMIT_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_exec_emit_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_EXEC_EMIT_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+    "input_types": {
+      "value": "any"
+    },
+    "inputs": {
+      "value": {
+        "currency": "\u20ac100 \u2260 $100",
+        "emoji": "\ud83d\udd25 \ud83d\ude80 \u2705",
+        "greeting": "\u4f60\u597d\u4e16\u754c",
+        "math": "\u03c0 \u2248 3.14159"
+      }
+    },
+    "outputs": {
+      "result": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "result": {
+      "currency": "\u20ac100 \u2260 $100",
+      "emoji": "\ud83d\udd25 \ud83d\ude80 \u2705",
+      "greeting": "\u4f60\u597d\u4e16\u754c",
+      "math": "\u03c0 \u2248 3.14159"
+    }
+  },
+  "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_unicode_strings",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_EXEC_EMIT_V0"
+}

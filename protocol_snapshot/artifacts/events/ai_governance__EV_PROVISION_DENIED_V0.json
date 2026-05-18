@@ -1,0 +1,42 @@
+{
+  "artifact_code": "EV_PROVISION_DENIED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_PROVISION_DENIED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_PROVISION_DENIED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA license provisioning request has been denied.\n\n---\n\n## 2. Rationale\n\nDenial is a first-class terminal outcome:\n- Not an error, but a recorded system fact\n- Provides audit trail for compliance\n- Proves \"nothing happened\" is provable\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_PROVISION_AI_LICENSING_V0 | CC_APPEND_AUDIT_EVENT_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| employee_id | string | true | Employee whose provision was denied |\n| reason_code | string | true | Denial reason: TRAINING_INCOMPLETE, CAP_REACHED |\n| timestamp | string (date-time) | true | When denial occurred |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_PROVISION_DENIED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Provision Denied\n  description: Emitted when license provisioning is denied (first-class terminal outcome)\n\n  schema:\n    employee_id:\n      type: string\n      required: true\n    reason_code:\n      type: string\n      enum:\n        - TRAINING_INCOMPLETE\n        - CAP_REACHED\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "cc4b2d22228b7c02e676df18f8278871e892edfad09bf834370129e1ba5016f5",
+  "fqdn_id": "ai_governance::EV_PROVISION_DENIED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when license provisioning is denied (first-class terminal outcome)",
+      "schema": {
+        "employee_id": {
+          "required": true,
+          "type": "string"
+        },
+        "reason_code": {
+          "enum": [
+            "TRAINING_INCOMPLETE",
+            "CAP_REACHED"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Provision Denied"
+    },
+    "ev_code": "EV_PROVISION_DENIED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

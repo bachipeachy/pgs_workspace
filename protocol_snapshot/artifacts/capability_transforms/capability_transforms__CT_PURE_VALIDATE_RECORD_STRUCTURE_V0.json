@@ -1,0 +1,87 @@
+{
+  "artifact_code": "CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_VALIDATE_RECORD_STRUCTURE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_VALIDATE_RECORD_STRUCTURE_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nValidate a record against a provided schema of field validation rules.\n\nThis transform accepts an arbitrary record (object) and a schema describing\nexpected field types, patterns, and constraints. It returns a result status\nand a list of violations.\n\n---\n\n### 2. Rationale\n\nRecord validation is a generic infrastructure concern. The schema is\nsupplied by the caller (typically a capability contract), keeping\nthis atom domain-neutral. No domain words appear in this atom.\n\nThis atom performs **only structural record validation**.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_VALIDATE_RECORD_STRUCTURE_V0\n- **Operation:** VALIDATE_RECORD_STRUCTURE\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n\n- Validating field types and formats\n- Checking required field presence\n- Pattern matching on string fields\n- Range and length constraints\n\n#### 4.2 Invalid Use Cases\n\n- Domain-specific business rules (use a domain CC)\n- Cross-record validation (use a domain CC)\n- Schema inference or discovery\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same record + schema yields same result |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure validation transform |\n| Replay Safe | YES | Deterministic mapping |\n\n---\n\n### 6. Structural Checklist\n\n- [x] Single responsibility\n- [x] Deterministic\n- [x] No implicit state\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] Fail-loud on invalid input\n\n---\n\n### 7. Composition Rules\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs\n- MUST perform exactly one transformation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Runtime validation MUST fail if:**\n- `record` is not an object\n- `schema` is not an object\n\n---\n\n### 9. Observability\n\n This atom does NOT emit domain events.\n\nValidation results MAY be logged for diagnostics.\n\n---\n\n### 10. Security Considerations\n\n- Schema patterns use regex \u2014 callers must not pass untrusted patterns\n- No secret material is involved in validation\n\n---\n\n### 11. Minimal Usage Shape\n\n{record, schema} \u2192 CT_PURE_VALIDATE_RECORD_STRUCTURE_V0 \u2192 {violations}\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_VALIDATE_RECORD_STRUCTURE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Validate record structure\n  description: Validates an arbitrary record object against a provided schema of field rules (type, pattern, required, etc.).\n  \n  inputs:\n    record:\n      type: object\n      required: true\n      description: \"The record to validate\"\n    schema:\n      type: object\n      required: true\n      description: \"Validation rules keyed by field name\"\n\n  outputs:\n    violations:\n      type: array\n      required: true\n      description: \"List of violation objects with field, rule, and message\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: VALIDATE_RECORD_STRUCTURE\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_validate_record_structure_v0\n    callable: execute\n```\n",
+  "content_hash": "d156fc53f0b6b1a454955a5fbd391e8398bcf117ad94b63ad93d93d33aef5698",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "record": "$.inputs.record",
+          "schema": "$.inputs.schema"
+        },
+        "atom": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_record_structure_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+    "inputs": {
+      "record": {
+        "description": "The record to validate",
+        "required": true,
+        "type": "object"
+      },
+      "schema": {
+        "description": "Validation rules keyed by field name",
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "violations": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Validates an arbitrary record object against a provided schema of field rules (type, pattern, required, etc.).",
+      "inputs": {
+        "record": {
+          "description": "The record to validate",
+          "required": true,
+          "type": "object"
+        },
+        "schema": {
+          "description": "Validation rules keyed by field name",
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "violations": {
+          "description": "List of violation objects with field, rule, and message",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "summary": "Validate record structure"
+    },
+    "ct_code": "CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_record_structure_v0"
+      },
+      "operation": "VALIDATE_RECORD_STRUCTURE"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

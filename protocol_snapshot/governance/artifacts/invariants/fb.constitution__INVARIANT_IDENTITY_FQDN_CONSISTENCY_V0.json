@@ -1,0 +1,48 @@
+{
+  "artifact_code": "INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Artifact FQDN must match namespace and artifact_code consistently.\n\n    FQDN format: {namespace}::{artifact_code}\n\n    This ensures identity resolution is deterministic and unambiguous.\n\n  enforcement_stage:\n    - compiler_discovery\n    - compiler_validation\n\n  scope:\n    - ALL_ARTIFACTS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_IDENTITY_FQDN_CONSISTENCY_V0\n\n  anti_patterns:\n    - fqdn_namespace_mismatch: \"FQDN namespace doesn't match artifact's actual namespace\"\n    - fqdn_code_mismatch: \"FQDN artifact_code doesn't match artifact's declared code\"\n    - malformed_fqdn: \"FQDN doesn't follow {namespace}::{code} pattern\"\n\n  clarification:\n    deterministic_identity: >\n      Every artifact has exactly one FQDN.\n      FQDN is derived from namespace + artifact_code (never manually set).\n      Resolution must be unambiguous and reproducible.\n```\n\n---\n\n## Purpose\n\nEnsure artifact identity (FQDN) is consistent with namespace and artifact_code.\n\n**Core Principle**: Identity derives from structure, never invented.\n\n---\n\n## Validation Rules\n\n### Rule 1: FQDN Structure\n\nFQDN must follow pattern: `{namespace}::{artifact_code}`\n\n**Violation**:\n```yaml\n# \u274c WRONG\nnamespace: capability_transforms\nartifact_code: CT_PURE_VALIDATE_V0\nfqdn_id: transforms::CT_PURE_VALIDATE_V0  # Namespace mismatch!\n```\n\n**Correct**:\n```yaml\n# \u2705 CORRECT\nnamespace: capability_transforms\nartifact_code: CT_PURE_VALIDATE_V0\nfqdn_id: capability_transforms::CT_PURE_VALIDATE_V0\n```\n\n### Rule 2: Namespace Consistency\n\nFQDN namespace part must match artifact's actual namespace.\n\n**Detection**:\n```python\nnamespace, code = fqdn_id.split(\"::\")\nassert namespace == artifact[\"namespace\"]\n```\n\n### Rule 3: Code Consistency\n\nFQDN code part must match artifact's declared artifact_code.\n\n**Detection**:\n```python\nnamespace, code = fqdn_id.split(\"::\")\nassert code == artifact[\"artifact_code\"]\n```\n\n---\n\n## Scope\n\n**Applies to**: All artifacts (CT, CS, WF, IN, CC, EV, RB, STRUCTURE, etc.)\n\n**Does NOT validate**:\n- Namespace validity (different concern)\n- Artifact code naming conventions (different concern)\n- FQDN uniqueness (different concern)\n\n---\n\n## Rationale\n\n### Identity Integrity\n\n**Problem without consistency**:\n- Artifact declares `CT_FOO_V0` but FQDN says `CT_BAR_V0`\n- Resolution fails or resolves wrong artifact\n- Debugging becomes impossible\n\n**Solution with consistency**:\n- FQDN deterministically derived from namespace + code\n- Resolution always unambiguous\n- Identity matches reality\n\n### Build-Time Detection\n\nFQDN inconsistency is structural defect, must be caught during discovery/parsing.\n\n**Validation order**:\n1. Discovery: Parse artifact, extract namespace, artifact_code\n2. Validation: Verify FQDN matches namespace::artifact_code\n3. Materialization: Write artifact with validated FQDN\n\n---\n\n## Implementation Note\n\n**FQDN is derived, not authored**:\n\n```python\n# Compiler/discovery phase\nartifact_code = frontmatter[\"artifact_code\"]\nnamespace = derive_namespace(source_path, layer)\n\n# FQDN is constructed (not read from file)\nfqdn_id = f\"{namespace}::{artifact_code}\"\n\n# Validation: If FQDN was manually set in file, verify it matches\nif \"fqdn_id\" in frontmatter:\n    assert frontmatter[\"fqdn_id\"] == fqdn_id, \"FQDN inconsistency\"\n```\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-04-12) - Identity Consistency Enforcement\n",
+  "content_hash": "278e084361e84aafa9af4c366d27e068b8a1a111764a588de2cc1a325581c89c",
+  "fqdn_id": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "fqdn_namespace_mismatch": "FQDN namespace doesn't match artifact's actual namespace"
+        },
+        {
+          "fqdn_code_mismatch": "FQDN artifact_code doesn't match artifact's declared code"
+        },
+        {
+          "malformed_fqdn": "FQDN doesn't follow {namespace}::{code} pattern"
+        }
+      ],
+      "clarification": {
+        "deterministic_identity": "Every artifact has exactly one FQDN. FQDN is derived from namespace + artifact_code (never manually set). Resolution must be unambiguous and reproducible."
+      },
+      "description": "Artifact FQDN must match namespace and artifact_code consistently.\nFQDN format: {namespace}::{artifact_code}\nThis ensures identity resolution is deterministic and unambiguous.\n",
+      "enforced_by": [
+        "ASSERT_IDENTITY_FQDN_CONSISTENCY_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_discovery",
+        "compiler_validation"
+      ],
+      "scope": [
+        "ALL_ARTIFACTS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.invariants",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

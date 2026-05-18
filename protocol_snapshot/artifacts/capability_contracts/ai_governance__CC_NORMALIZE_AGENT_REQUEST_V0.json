@@ -1,0 +1,94 @@
+{
+  "artifact_code": "CC_NORMALIZE_AGENT_REQUEST_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "id": "CT_PURE_GENERATE_ID_V0",
+        "inputs": [
+          "prefix",
+          "data"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "id"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_NORMALIZE_AGENT_REQUEST_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_NORMALIZE_AGENT_REQUEST_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0\n\n---\n\n## 1. Intent\n\nValidate request schema and generate a deterministic intent hash.\n\n---\n\n## 2. Rationale\n\nNormalization is the first governance gate:\n- Generates a deterministic identifier from request content\n- Ensures all downstream processing operates on a canonical representation\n- Intent hash enables replay detection and audit correlation\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tool_name | string | true | Requested tool identifier |\n| requesting_user_id | string | true | User the agent acts on behalf of |\n| domain_context | string | true | Domain context for the request |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| intent_hash | string | Deterministic hash of normalized intent |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Intent hash generated |\n| VIOLATION | Invalid input |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_NORMALIZE_AGENT_REQUEST_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Validate request schema and generate deterministic intent hash\n\n  inputs:\n    tool_name:\n      type: string\n      required: true\n    requesting_user_id:\n      type: string\n      required: true\n    domain_context:\n      type: string\n      required: true\n\n  outputs:\n    intent_hash:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_intent_hash\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      inputs:\n        prefix: \"AREQ\"\n        data:\n          tool_name: $.inputs.tool_name\n          requesting_user_id: $.inputs.requesting_user_id\n          domain_context: $.inputs.domain_context\n      outputs:\n        intent_hash: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\nextensions:\n  description: Normalizes agent request and generates deterministic intent hash\n```\n",
+  "content_hash": "e4ec9c6734d3cb056f5e2b440c04330e76ed451251d0041bddd508730d01a029",
+  "fqdn_id": "ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0",
+  "frontmatter": {
+    "cc_code": "CC_NORMALIZE_AGENT_REQUEST_V0",
+    "core": {
+      "inputs": {
+        "domain_context": {
+          "required": true,
+          "type": "string"
+        },
+        "requesting_user_id": {
+          "required": true,
+          "type": "string"
+        },
+        "tool_name": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "intent_hash": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "data": {
+              "domain_context": "$.inputs.domain_context",
+              "requesting_user_id": "$.inputs.requesting_user_id",
+              "tool_name": "$.inputs.tool_name"
+            },
+            "prefix": "AREQ"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "intent_hash": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_intent_hash",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Validate request schema and generate deterministic intent hash"
+    },
+    "extensions": {
+      "description": "Normalizes agent request and generates deterministic intent hash"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

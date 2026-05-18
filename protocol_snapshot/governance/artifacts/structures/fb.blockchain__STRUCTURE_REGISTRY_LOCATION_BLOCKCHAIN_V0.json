@@ -1,0 +1,48 @@
+{
+  "artifact_code": "STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Governed By**: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\n---\n\n## Purpose\n\nDefines registry module location and discovery pattern for the BLOCKCHAIN layer. Establishes hierarchical subdomain structure (identity, transaction, wallet) for blockchain domain artifacts.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  layer_code: BLOCKCHAIN\n  registry_module: pgs_blockchain.registry\n  module_path_pattern: \"{registry_module}.{subdomain}\"\n\n  description: >\n    Blockchain domain artifacts with hierarchical subdomain structure:\n    identity, transaction, wallet.\n\n  subdomains:\n    - identity\n    - transaction\n    - wallet\n\ninvariants:\n  - no_cross_subdomain_imports: true\n  - subdomain_name_required: true\n\noutput_configuration:\n  artifacts_path:\n    layer: BLOCKCHAIN\n    subpath: compiled/artifacts\n\n  conformance_path:\n    layer: BLOCKCHAIN\n    subpath: compiled/conformance\n```\n\n---\n\n## Subdomain Structure\n\n### Identity Subdomain\n- **FQDN Pattern**: `blockchain.identity::ARTIFACT_CODE`\n- **Registry Module**: `pgs_blockchain.registry.identity`\n- **Responsibilities**: Actor verification, identity management\n\n### Transaction Subdomain\n- **FQDN Pattern**: `blockchain.transaction::ARTIFACT_CODE`\n- **Registry Module**: `pgs_blockchain.registry.transaction`\n- **Responsibilities**: Transaction submission, validation, recording\n\n### Wallet Subdomain\n- **FQDN Pattern**: `blockchain.wallet::ARTIFACT_CODE`\n- **Registry Module**: `pgs_blockchain.registry.wallet`\n- **Responsibilities**: Wallet creation, key management\n\n---\n\n## Version History\n\n- **V0**: Initial blockchain layer registry location definition (2026-04-23)\n",
+  "content_hash": "1d1a485b56096a81cc0aba8f7e938c9315285d8537f6bc33263d03e23ad2a59c",
+  "fqdn_id": "fb.blockchain::STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Blockchain domain artifacts with hierarchical subdomain structure: identity, transaction, wallet.\n",
+      "layer_code": "BLOCKCHAIN",
+      "module_path_pattern": "{registry_module}.{subdomain}",
+      "registry_module": "pgs_blockchain.registry",
+      "subdomains": [
+        "identity",
+        "transaction",
+        "wallet"
+      ]
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "invariants": [
+      {
+        "no_cross_subdomain_imports": true
+      },
+      {
+        "subdomain_name_required": true
+      }
+    ],
+    "output_configuration": {
+      "artifacts_path": {
+        "layer": "BLOCKCHAIN",
+        "subpath": "compiled/artifacts"
+      },
+      "conformance_path": {
+        "layer": "BLOCKCHAIN",
+        "subpath": "compiled/conformance"
+      }
+    },
+    "structure_code": "STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_BLOCKCHAIN.structures",
+  "namespace": "fb.blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

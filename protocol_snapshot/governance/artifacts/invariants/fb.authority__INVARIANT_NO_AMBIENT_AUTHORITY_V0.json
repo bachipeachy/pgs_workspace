@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_NO_AMBIENT_AUTHORITY_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_NO_AMBIENT_AUTHORITY_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_NO_AMBIENT_AUTHORITY_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0\n\ncore:\n  summary: All authority must be explicit and fully declared; implicit permissions, default authority, and inferred execution rights are forbidden\n  rule: No execution artifact, authority declaration, or schema may rely on implicit permissions, default authority grants, role inference, or undeclared execution rights; authority not explicitly granted is denied\n  scope:\n    - WF\n    - CC\n    - CT\n    - CS\n```\n\n## Summary\n\nAmbient authority arises when authority is assumed rather than declared \u2014 implicit admin state, default permissions, catch-all roles, or authority inferred from actor type or context. This invariant closes that class of vulnerability: authority must be explicit at every level. Authority not explicitly granted is denied. There are no defaults, no wildcards, no inferred rights.\n\nThis invariant governs **authority declaration completeness** \u2014 a distinct concern from `INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0`, which governs authority provenance recording. You can have explicit declarations without a complete trace record; you can have a trace record without having had explicit declarations. Both invariants are required.\n\n## Rule\n\nFor every execution artifact and authority declaration:\n1. MUST NOT rely on implicit permissions, default authority grants, or assumed execution rights\n2. MUST NOT infer authority from actor type, actor attributes, or structural position\n3. MUST NOT use wildcard authority grants (e.g., `allowed_workflows: \"*\"`)\n4. MUST NOT use catch-all roles that implicitly grant execution rights\n5. All authority references MUST resolve to explicit entries in the governed authority registry\n6. Authority not explicitly granted is implicitly denied \u2014 there is no default allow\n\n## Enforcement Scope\n\n- **Artifact Types**: WF, CC, CT, CS\n- **Validation Phase**: ASSERT (compile-time)\n- **Enforced By**: ASSERT_NO_AMBIENT_AUTHORITY_V0\n\n## Rationale\n\nAmbient authority is the root cause of privilege escalation at the architectural level. When authority is inferred from context rather than declared explicitly, the system has no way to audit what was authorized, by whom, and why. Every implicit permission is a gap in the admissibility record and the non-repudiation chain.\n\nThe PGS authority model is: authority not granted is denied. Explicit grants only. This invariant enforces that constraint structurally.\n",
+  "content_hash": "2c8b9db92da3c52649c995f9996080b9d620f8a2f8943694da2334a48b51889e",
+  "fqdn_id": "fb.authority::INVARIANT_NO_AMBIENT_AUTHORITY_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "No execution artifact, authority declaration, or schema may rely on implicit permissions, default authority grants, role inference, or undeclared execution rights; authority not explicitly granted is denied",
+      "scope": [
+        "WF",
+        "CC",
+        "CT",
+        "CS"
+      ],
+      "summary": "All authority must be explicit and fully declared; implicit permissions, default authority, and inferred execution rights are forbidden"
+    },
+    "governed_by": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+    "invariant_code": "INVARIANT_NO_AMBIENT_AUTHORITY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_AUTHORITY.invariants",
+  "namespace": "fb.authority",
+  "references": [
+    "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

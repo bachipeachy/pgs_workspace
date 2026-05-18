@@ -1,0 +1,84 @@
+{
+  "artifact_code": "CT_PURE_TERMINATION_CHECK_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_TERMINATION_CHECK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_TERMINATION_CHECK_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nVerify that every Collatz sequence in the input terminates at 1.\n\nInspects the final element of each sequence. If any sequence does not end at 1,\nthat seed is flagged as non-terminating. Returns a boolean verdict and the list\nof non-terminating seeds.\n\n---\n\n### 2. Rationale\n\nTermination verification is a protocol gate for conjecture demonstration.\nThis transform is deliberately separated from sequence computation (CT_COLLATZ_STEP_V0)\nso that the verification logic is independently auditable.\n\nThis transform provides:\n- Binary verdict: all_terminate (bool)\n- Evidence list: non_terminating seeds\n- Deterministic, replay-safe check\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_TERMINATION_CHECK_V0 (full versioned identifier)\n- **Operation:** TERMINATION_CHECK (execution opcode)\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n- Verifying conjecture holds for computed sequences\n- Input to CC_VERIFY_TERMINATION_V0\n\n#### 4.2 Invalid Use Cases\n- Computing sequences (use CT_COLLATZ_STEP_V0)\n- Making claims beyond the input set (conjecture is universally unproven)\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same sequences \u2192 same verdict |\n| Purity Class | ct_pure | No side effects, no state |\n| Side Effects | NONE | Fully pure computation |\n| Replay Safe | YES | Identical inputs produce identical output |\n\n---\n\n### 6. Structural Checklist\n\n- [x] Single responsibility\n- [x] No implicit state\n- [x] No domain semantics beyond termination check\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] No hidden control flow\n\n---\n\n### 7. Composition Rules (Atom-Specific)\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs\n- MUST perform exactly one atomic operation\n- MAY be composed by molecules\n\n---\n\n### 8. Validation Expectations\n\n**Static validation MUST fail if:**\n- `ct_kind` is not `atom`\n- `ct_purity` is not `ct_pure`\n- Required input `sequences` is not declared\n- Outputs `all_terminate` and `non_terminating` are not declared\n\n**Runtime validation MUST fail if:**\n- `sequences` is not a dict\n- Any sequence entry is not a list\n\n---\n\n### 9. Observability\n\nThis atom does NOT emit traces.\n\n**Rationale:** Pure computation with no side effects or state changes.\n\n---\n\n### 10. Minimal Usage Shape\n\n```\nsequences \u2192 CT_PURE_TERMINATION_CHECK_V0 \u2192 all_terminate, non_terminating\n```\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_TERMINATION_CHECK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Verify all Collatz sequences terminate at 1\n  description: Inspects last element of each sequence. Returns all_terminate boolean and list of non-terminating seeds.\n  inputs:\n    sequences:\n      type: object\n      required: true\n      description: \"Mapping from str(n) to Collatz sequence list\"\n\n  outputs:\n    all_terminate:\n      type: boolean\n      required: true\n      description: \"True if every sequence ends at 1\"\n    non_terminating:\n      type: array\n      required: true\n      description: \"List of seeds whose sequences did not end at 1\"\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: PURE_TERMINATION_CHECK\n  implementation:\n    module: pgs_ai_governance.implementation.capability_transforms.atoms.ct_pure_termination_check_v0\n    callable: execute\n```\n",
+  "content_hash": "627c83cc79c3fccc6f09ca1d45d579e4ddeeb1f26beeeb069866d28657f93744",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "sequences": "$.inputs.sequences"
+        },
+        "atom": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_ai_governance.implementation.capability_transforms.atoms.ct_pure_termination_check_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_TERMINATION_CHECK_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+    "inputs": {
+      "sequences": {
+        "description": "Mapping from str(n) to Collatz sequence list",
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "all_terminate": {
+        "from": "__atom_result__"
+      },
+      "non_terminating": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Inspects last element of each sequence. Returns all_terminate boolean and list of non-terminating seeds.",
+      "inputs": {
+        "sequences": {
+          "description": "Mapping from str(n) to Collatz sequence list",
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "all_terminate": {
+          "description": "True if every sequence ends at 1",
+          "required": true,
+          "type": "boolean"
+        },
+        "non_terminating": {
+          "description": "List of seeds whose sequences did not end at 1",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "summary": "Verify all Collatz sequences terminate at 1"
+    },
+    "ct_code": "CT_PURE_TERMINATION_CHECK_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_ai_governance.implementation.capability_transforms.atoms.ct_pure_termination_check_v0"
+      },
+      "operation": "PURE_TERMINATION_CHECK"
+    },
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.collatz_conjecture.capability_transforms",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,28 @@
+{
+  "artifact_code": "SURFACE_CONTRACT_TRANSPORT_SEND_V0",
+  "artifact_type": "SURFACE",
+  "content": "# SURFACE_CONTRACT_TRANSPORT_SEND_V0\n\n## Header\n\n- **Artifact Code:** SURFACE_CONTRACT_TRANSPORT_SEND_V0\n- **Artifact Kind:** surface_contract\n- **Governed By:** fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n- **Version:** V0\n- **Status:** canonical\n\n---\n\n## Purpose\n\nCanonical result surface for transport SEND operations.\n\nA transport SEND can succeed, encounter invalid input (malformed payload or target), or\nfail due to transport unavailability. These three outcomes are exhaustive. Transport\ncapabilities MUST NOT introduce domain-specific result codes at the step level.\n\n---\n\n## Machine\n\n```yaml\nsurface_contract_code: SURFACE_CONTRACT_TRANSPORT_SEND_V0\nartifact_kind: SURFACE_CONTRACT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncapability_family: TRANSPORT\nop: SEND\n\ncanonical_surface:\n  - SUCCESS\n  - VIOLATION\n  - BACKEND_ERROR\n\ngoverns: []\n```\n",
+  "content_hash": "49ac8eec72be3cf097e5a9ac30e980f0127031d64f71d99b6e2071f4bc440a5b",
+  "fqdn_id": "fb.transport::SURFACE_CONTRACT_TRANSPORT_SEND_V0",
+  "frontmatter": {
+    "artifact_kind": "SURFACE_CONTRACT",
+    "canonical_surface": [
+      "SUCCESS",
+      "VIOLATION",
+      "BACKEND_ERROR"
+    ],
+    "capability_family": "TRANSPORT",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "governs": [],
+    "op": "SEND",
+    "surface_contract_code": "SURFACE_CONTRACT_TRANSPORT_SEND_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.surface_contracts",
+  "namespace": "fb.transport",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

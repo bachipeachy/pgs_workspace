@@ -1,0 +1,34 @@
+{
+  "artifact_code": "AC_AGENT_V0",
+  "artifact_type": "AC",
+  "content": "# AC_AGENT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_AGENT_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nAn autonomous agent that proposes actions through the governance protocol.\n\n---\n\n## 2. Rationale\n\nAgent actors are probabilistic intent emitters:\n- Propose tool invocations on behalf of users\n- Subject to governance mediation before any action executes\n- May not invoke tools directly \u2014 all actions route through governance\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | agent |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| agent_id | string | true | Unique agent identifier |\n| requesting_user_id | string | true | User the agent acts on behalf of |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_AGENT_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: Probabilistic intent emitter\n  description: Autonomous agent that proposes actions through governance protocol\n  type: agent\n\n  attributes:\n    agent_id:\n      type: string\n      required: true\n    requesting_user_id:\n      type: string\n      required: true\n```\n",
+  "content_hash": "d8d57a22b3cf411dd39bc0db9550fff4129229436de1de242d4b9f79e64bfe4e",
+  "fqdn_id": "ai_governance::AC_AGENT_V0",
+  "frontmatter": {
+    "ac_code": "AC_AGENT_V0",
+    "core": {
+      "attributes": {
+        "agent_id": {
+          "required": true,
+          "type": "string"
+        },
+        "requesting_user_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Autonomous agent that proposes actions through governance protocol",
+      "summary": "Probabilistic intent emitter",
+      "type": "agent"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.actors",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

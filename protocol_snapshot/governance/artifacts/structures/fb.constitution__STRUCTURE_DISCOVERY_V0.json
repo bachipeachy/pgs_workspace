@@ -1,0 +1,114 @@
+{
+  "artifact_code": "STRUCTURE_DISCOVERY_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_DISCOVERY_V0\n\n**Artifact Type**: STRUCTURE\n**Version**: V0\n**Status**: CANONICAL\n**Authority**: CONSTITUTIONAL\n\n---\n\n## Purpose\n\nSingle source of truth for artifact discovery. Defines which layers are searched, how layer codes map to physical registry modules, and the rules governing artifact scanning.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_DISCOVERY_V0\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Consolidated artifact discovery configuration\n  description: >\n    Single source of truth for artifact discovery, replacing fragmented\n    registry location and layer authority discovery definitions.\n\ndiscovery:\n  layers:\n    GOVERNANCE:\n      registry_module: pgs_governance.registry\n      layer_category: platform\n\n    REUSABLE_TRANSFORMS:\n      registry_module: pgs_transforms.registry\n      layer_category: platform\n\n    REUSABLE_SIDE_EFFECTS:\n      registry_module: pgs_side_effects.registry\n      layer_category: platform\n\n    CAPABILITIES:\n      registry_module: pgs_capabilities.registry\n      layer_category: platform\n\n    COMPILER:\n      registry_module: pgs_compiler.registry\n      layer_category: platform\n\n    STRUCTURE:\n      registry_module: pgs_structure.structure\n      layer_category: platform\n\n    INGRESS:\n      registry_module: pgs_ingress.registry\n      layer_category: platform\n\n    EXECUTION:\n      registry_module: pgs_runtime\n      layer_category: platform\n\n    BLOCKCHAIN:\n      registry_module: pgs_blockchain.registry\n      module_path_pattern: \"{registry_module}.{subdomain}\"\n      layer_category: domain\n\n      # Subdomain enumeration (STRUCTURE-declared, no filesystem scanning)\n      allowed_subdomains:\n        - identity\n        - transaction\n        - wallet\n\n    AI_GOVERNANCE:\n      registry_module: pgs_ai_governance.registry\n      module_path_pattern: \"{registry_module}.{domain}\"\n      layer_category: domain\n\n      # Domain enumeration (STRUCTURE-declared, no filesystem scanning)\n      allowed_domains:\n        - ai_licensing\n        - agent_governance\n\n    TEST_DATA:\n      registry_module: pgs_transforms.testbed.ct_test_data\n      layer_category: platform\n\n  rules:\n    # Pattern updated to support multi-word types (TEST_DATA)\n    filename_pattern: \"^(?P<type>TEST_DATA|[A-Z]+)_(?P<name>[A-Z0-9_]+)_V(?P<version>\\\\d+)\\\\.md$\"\n    \n    excluded_directories:\n      - .git\n      - __pycache__\n      - node_modules\n      - .venv\n      - metadata\n\n    format_precedence:\n      - json\n      - markdown\n\n    format_extensions:\n      json: .json\n      markdown: .md\n\n    resolution:\n      method: importlib\n      fallback: forbidden\n\n    scope:\n      type: platform_only\n\n    validation:\n      require_registry: true\n      on_missing_registry: FAIL\n\n    ordering:\n      deterministic: true\n```\n",
+  "content_hash": "3fcf8e5ce14558cb3c71e7699227854644f95981cbabea21c1d99c35d17f0e5e",
+  "fqdn_id": "fb.constitution::STRUCTURE_DISCOVERY_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Single source of truth for artifact discovery, replacing fragmented registry location and layer authority discovery definitions.\n",
+      "summary": "Consolidated artifact discovery configuration"
+    },
+    "discovery": {
+      "layers": {
+        "AI_GOVERNANCE": {
+          "allowed_domains": [
+            "ai_licensing",
+            "agent_governance"
+          ],
+          "layer_category": "domain",
+          "module_path_pattern": "{registry_module}.{domain}",
+          "registry_module": "pgs_ai_governance.registry"
+        },
+        "BLOCKCHAIN": {
+          "allowed_subdomains": [
+            "identity",
+            "transaction",
+            "wallet"
+          ],
+          "layer_category": "domain",
+          "module_path_pattern": "{registry_module}.{subdomain}",
+          "registry_module": "pgs_blockchain.registry"
+        },
+        "CAPABILITIES": {
+          "layer_category": "platform",
+          "registry_module": "pgs_capabilities.registry"
+        },
+        "COMPILER": {
+          "layer_category": "platform",
+          "registry_module": "pgs_compiler.registry"
+        },
+        "EXECUTION": {
+          "layer_category": "platform",
+          "registry_module": "pgs_runtime"
+        },
+        "GOVERNANCE": {
+          "layer_category": "platform",
+          "registry_module": "pgs_governance.registry"
+        },
+        "INGRESS": {
+          "layer_category": "platform",
+          "registry_module": "pgs_ingress.registry"
+        },
+        "REUSABLE_SIDE_EFFECTS": {
+          "layer_category": "platform",
+          "registry_module": "pgs_side_effects.registry"
+        },
+        "REUSABLE_TRANSFORMS": {
+          "layer_category": "platform",
+          "registry_module": "pgs_transforms.registry"
+        },
+        "STRUCTURE": {
+          "layer_category": "platform",
+          "registry_module": "pgs_structure.structure"
+        },
+        "TEST_DATA": {
+          "layer_category": "platform",
+          "registry_module": "pgs_transforms.testbed.ct_test_data"
+        }
+      },
+      "rules": {
+        "excluded_directories": [
+          ".git",
+          "__pycache__",
+          "node_modules",
+          ".venv",
+          "metadata"
+        ],
+        "filename_pattern": "^(?P<type>TEST_DATA|[A-Z]+)_(?P<name>[A-Z0-9_]+)_V(?P<version>\\d+)\\.md$",
+        "format_extensions": {
+          "json": ".json",
+          "markdown": ".md"
+        },
+        "format_precedence": [
+          "json",
+          "markdown"
+        ],
+        "ordering": {
+          "deterministic": true
+        },
+        "resolution": {
+          "fallback": "forbidden",
+          "method": "importlib"
+        },
+        "scope": {
+          "type": "platform_only"
+        },
+        "validation": {
+          "on_missing_registry": "FAIL",
+          "require_registry": true
+        }
+      }
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "structure_code": "STRUCTURE_DISCOVERY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.structures",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

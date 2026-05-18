@@ -1,0 +1,30 @@
+{
+  "artifact_code": "AC_SYSTEM_GOVERNOR_V0",
+  "artifact_type": "AC",
+  "content": "# AC_SYSTEM_GOVERNOR_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_SYSTEM_GOVERNOR_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nThe governance execution authority that mediates agent-proposed actions.\n\n---\n\n## 2. Rationale\n\nThe system governor enforces protocol governance:\n- Evaluates agent requests against declared policy\n- Binds license authority to tool surfaces\n- Records all governance decisions (authorization and denial)\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | system |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| governor_id | string | true | Governance authority identifier |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_SYSTEM_GOVERNOR_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: Governance execution authority\n  description: Mediates agent-proposed actions with constitutional policy enforcement\n  type: system\n\n  attributes:\n    governor_id:\n      type: string\n      required: true\n```\n",
+  "content_hash": "6df49165ef5097fd30671cf010d984b4afb8d0c51e60cd8094319992a982f983",
+  "fqdn_id": "ai_governance::AC_SYSTEM_GOVERNOR_V0",
+  "frontmatter": {
+    "ac_code": "AC_SYSTEM_GOVERNOR_V0",
+    "core": {
+      "attributes": {
+        "governor_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Mediates agent-proposed actions with constitutional policy enforcement",
+      "summary": "Governance execution authority",
+      "type": "system"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.actors",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,67 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "execution_result": "$.inputs.execution_result",
+          "mapping": "$.inputs.mapping"
+        },
+        "atom": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_map_result_to_http_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_MAP_RESULT_TO_HTTP_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+    "input_types": {
+      "execution_result": "object",
+      "mapping": "object"
+    },
+    "inputs": {
+      "execution_result": {
+        "error_code": "VALIDATION_ERROR",
+        "exit_reason_code": "EXIT_VIOLATION",
+        "message": "Invalid email format",
+        "result_payload": {},
+        "status": "FAILED",
+        "trace_id": null
+      },
+      "mapping": {
+        "BACKEND_ERROR": 500,
+        "SUCCESS": 200,
+        "VIOLATION": 400
+      }
+    },
+    "outputs": {
+      "http_status": {
+        "from": "__atom_result__"
+      },
+      "response_body": {
+        "from": "__atom_result__"
+      },
+      "result_status": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "http_status": 400,
+    "response_body": {
+      "error_code": "VALIDATION_ERROR",
+      "exit_reason_code": "EXIT_VIOLATION",
+      "message": "Invalid email format",
+      "result_payload": {},
+      "status": "FAILED",
+      "trace_id": null
+    },
+    "result_status": "VIOLATION"
+  },
+  "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::failure_with_error",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_MAP_RESULT_TO_HTTP_V0"
+}

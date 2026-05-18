@@ -1,0 +1,44 @@
+{
+  "artifact_code": "INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_HANDLER_REGISTRY_CLOSED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_HANDLER_REGISTRY_CLOSED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_COMPILER_V0\n\ncore:\n  description: >\n    Every ASSERT artifact present in the compiled artifact set MUST have its\n    implementation handler registered in the static HANDLER_REGISTRY before the\n    ASSERT phase executes. No ASSERT artifact may reference an unregistered handler.\n    The registry is the sole authority for handler resolution \u2014 no dynamic discovery\n    is permitted.\n\n  enforcement_stage:\n    - compiler_assert\n\n  scope:\n    - ALL_BUILD_CONTEXTS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_HANDLER_REGISTRY_CLOSED_V0\n\n  anti_patterns:\n    - unregistered_handler: \"ASSERT artifact declares implementation.module not present in HANDLER_REGISTRY\"\n    - dynamic_resolution: \"Handler resolved at runtime via importlib or filesystem discovery\"\n    - partial_registry: \"Registry populated incrementally during assert phase execution\"\n```\n\n---\n\n## Purpose\n\nEnsures the ASSERT phase is fully closed before it begins: every declared assertion\nmust have a registered implementation. An unregistered handler is a compiler\nconformance violation \u2014 the build cannot proceed with incomplete enforcement surface.\n\nThis invariant makes the handler registry itself a governed, auditable artifact.\nAny implementation that allows unregistered handlers to silently pass violates the\nclosed-world assumption that PGS compilation depends on.\n\n## Relationship to CONSTITUTION_COMPILER_V0\n\nDirectly enforces `COMPILER_SURFACE_CLOSURE` (all references resolved at compile time)\nand `COMPILER_NO_PARTIAL_RESOLUTION` (symbol resolution is all-or-nothing) as applied\nto the ASSERT phase's handler surface.\n",
+  "content_hash": "b1cde415def83e9b7e9e8cdd60439e5ecda72206c6dfa990e01b8e7b6e7869dd",
+  "fqdn_id": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "unregistered_handler": "ASSERT artifact declares implementation.module not present in HANDLER_REGISTRY"
+        },
+        {
+          "dynamic_resolution": "Handler resolved at runtime via importlib or filesystem discovery"
+        },
+        {
+          "partial_registry": "Registry populated incrementally during assert phase execution"
+        }
+      ],
+      "description": "Every ASSERT artifact present in the compiled artifact set MUST have its implementation handler registered in the static HANDLER_REGISTRY before the ASSERT phase executes. No ASSERT artifact may reference an unregistered handler. The registry is the sole authority for handler resolution \u2014 no dynamic discovery is permitted.\n",
+      "enforced_by": [
+        "ASSERT_HANDLER_REGISTRY_CLOSED_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_assert"
+      ],
+      "scope": [
+        "ALL_BUILD_CONTEXTS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_COMPILER_V0",
+    "invariant_code": "INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.invariants",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_COMPILER_V0"
+  ],
+  "version": "0"
+}

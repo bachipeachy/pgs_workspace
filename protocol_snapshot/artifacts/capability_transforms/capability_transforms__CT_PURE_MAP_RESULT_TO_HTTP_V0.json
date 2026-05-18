@@ -1,0 +1,103 @@
+{
+  "artifact_code": "CT_PURE_MAP_RESULT_TO_HTTP_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_MAP_RESULT_TO_HTTP_V0\n\n## Header\n\n- **Artifact Code:** CT_PURE_MAP_RESULT_TO_HTTP_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** NONE\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_MAP_RESULT_TO_HTTP_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Map result status to HTTP\n  description: Maps an execution result status code to a corresponding HTTP status code and response body using a provided mapping object.\n  \n  inputs:\n    execution_result:\n      type: object\n      required: true\n      description: The workflow execution result object\n    mapping:\n      type: object\n      required: true\n      description: Status code mapping (e.g., SUCCESS -> 200)\n\n  outputs:\n    http_status:\n      type: integer\n      required: true\n      description: Resulting HTTP status code\n    response_body:\n      type: object\n      required: true\n      description: Composed response body\n    result_status:\n      type: string\n      required: true\n      description: Original execution status\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: MAP_RESULT_TO_HTTP\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_map_result_to_http_v0\n    callable: execute\n```\n",
+  "content_hash": "c15520017706ed50b8c75eef08dd7d2ce0f20fb999a6cb77c5b9f9d4e4204832",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "execution_result": "$.inputs.execution_result",
+          "mapping": "$.inputs.mapping"
+        },
+        "atom": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_map_result_to_http_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_MAP_RESULT_TO_HTTP_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+    "inputs": {
+      "execution_result": {
+        "description": "The workflow execution result object",
+        "required": true,
+        "type": "object"
+      },
+      "mapping": {
+        "description": "Status code mapping (e.g., SUCCESS -> 200)",
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "http_status": {
+        "from": "__atom_result__"
+      },
+      "response_body": {
+        "from": "__atom_result__"
+      },
+      "result_status": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Maps an execution result status code to a corresponding HTTP status code and response body using a provided mapping object.",
+      "inputs": {
+        "execution_result": {
+          "description": "The workflow execution result object",
+          "required": true,
+          "type": "object"
+        },
+        "mapping": {
+          "description": "Status code mapping (e.g., SUCCESS -> 200)",
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "http_status": {
+          "description": "Resulting HTTP status code",
+          "required": true,
+          "type": "integer"
+        },
+        "response_body": {
+          "description": "Composed response body",
+          "required": true,
+          "type": "object"
+        },
+        "result_status": {
+          "description": "Original execution status",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Map result status to HTTP"
+    },
+    "ct_code": "CT_PURE_MAP_RESULT_TO_HTTP_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_map_result_to_http_v0"
+      },
+      "operation": "MAP_RESULT_TO_HTTP"
+    },
+    "version": "V0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

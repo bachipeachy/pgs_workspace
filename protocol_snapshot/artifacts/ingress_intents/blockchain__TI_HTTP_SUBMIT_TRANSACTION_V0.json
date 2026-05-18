@@ -1,0 +1,62 @@
+{
+  "artifact_code": "TI_HTTP_SUBMIT_TRANSACTION_V0",
+  "artifact_type": "TI",
+  "content": "# TI_HTTP_SUBMIT_TRANSACTION_V0\n\n## Machine\n\n```yaml\nartifact_code: TI_HTTP_SUBMIT_TRANSACTION_V0\nartifact_type: TI\nartifact_kind: intent\nversion: 0\n\ngoverned_by:\n  - fb.transport::CONSTITUTION_TRANSPORT_V0\n\ncore:\n  summary: HTTP ingress for transaction submission\n  description: >\n    Declares the HTTP ingress point for transaction submission.\n    Defines the route, method, admission schema, and explicit workflow binding.\n\n  route:\n    method: POST\n    path: /api/v0/submit_transaction\n    content_type: application/json\n\n  admission_schema:\n    actor_record:\n      type: object\n      required: true\n    wallet_id:\n      type: string\n      required: true\n    to_address:\n      type: string\n      required: true\n      pattern: \"^0x[0-9a-fA-F]{40}$\"\n    value:\n      type: string\n      required: true\n    mnemonic:\n      type: string\n      required: true\n\n  workflow: blockchain::WF_SUBMIT_TRANSACTION_V0\n\n  outcomes:\n    ACK:\n      description: Request structurally valid, forwarded to workflow\n    NACK:\n      description: Request structurally invalid, rejected at admission\n```\n\n---\n\n## Purpose\n\nDeclares the HTTP transport ingress point for transaction submission.\n\nThis artifact governs the boundary between the external HTTP client and the\n`blockchain::WF_SUBMIT_TRANSACTION_V0` workflow. It defines:\n- The HTTP route and method\n- The admission schema (normalized canonical envelope fields)\n- The explicit, static workflow binding\n\nTransport ends at admission. Execution semantics are entirely owned by the\nbound workflow.\n\n## Route\n\n| Field | Value |\n|-------|-------|\n| Method | POST |\n| Path | /api/v0/submit_transaction |\n| Content-Type | application/json |\n\n## Admission Schema\n\n| Field | Type | Required | Notes |\n|-------|------|----------|-------|\n| actor_record | object | yes | Actor identity record |\n| wallet_id | string | yes | Wallet identifier |\n| to_address | string | yes | Ethereum address (0x + 40 hex chars) |\n| value | string | yes | Transaction value |\n| mnemonic | string | yes | Wallet mnemonic |\n\n## Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Request structurally valid, forwarded to workflow |\n| NACK | Request structurally invalid, rejected at admission |\n",
+  "content_hash": "80292d6cfcf48724507572aa0604d8aa1aeec793379bec19b6a3ec0b329eec35",
+  "fqdn_id": "blockchain::TI_HTTP_SUBMIT_TRANSACTION_V0",
+  "frontmatter": {
+    "artifact_code": "TI_HTTP_SUBMIT_TRANSACTION_V0",
+    "artifact_kind": "intent",
+    "artifact_type": "TI",
+    "core": {
+      "admission_schema": {
+        "actor_record": {
+          "required": true,
+          "type": "object"
+        },
+        "mnemonic": {
+          "required": true,
+          "type": "string"
+        },
+        "to_address": {
+          "pattern": "^0x[0-9a-fA-F]{40}$",
+          "required": true,
+          "type": "string"
+        },
+        "value": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Declares the HTTP ingress point for transaction submission. Defines the route, method, admission schema, and explicit workflow binding.\n",
+      "outcomes": {
+        "ACK": {
+          "description": "Request structurally valid, forwarded to workflow"
+        },
+        "NACK": {
+          "description": "Request structurally invalid, rejected at admission"
+        }
+      },
+      "route": {
+        "content_type": "application/json",
+        "method": "POST",
+        "path": "/api/v0/submit_transaction"
+      },
+      "summary": "HTTP ingress for transaction submission",
+      "workflow": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+    },
+    "governed_by": [
+      "fb.transport::CONSTITUTION_TRANSPORT_V0"
+    ],
+    "version": 0
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.ingress",
+  "namespace": "blockchain",
+  "references": [],
+  "version": "0"
+}

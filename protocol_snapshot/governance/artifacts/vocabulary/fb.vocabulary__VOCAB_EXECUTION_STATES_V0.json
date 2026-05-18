@@ -1,0 +1,53 @@
+{
+  "artifact_code": "VOCAB_EXECUTION_STATES_V0",
+  "artifact_type": "VOCAB",
+  "content": "# VOCAB_EXECUTION_STATES_V0 \u2014 Execution Semantics\n\n**Governance Header**\n- Vocabulary ID: VOCAB_EXECUTION_STATES_V0\n- Version: v0\n- Governed By: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n- Status: Active\n\n---\n\n## Purpose\n\nDefines execution outcome symbols: result statuses for node-level outcomes and exit reasons for workflow-level termination.\n\n## Allowed Usage\n\n- `result_status`: In `on_result` clauses, `result_status_contract.allowed` arrays, trace event `result_status` fields\n- `exit_reasons`: In EXIT node `reason` field, `execution_end` trace events\n\n## Prohibited Usage\n\n- Must NOT be used as protocol identifiers\n- Must NOT be used as node names or parameter names\n- result_status and exit_reasons are mutually exclusive symbol sets\n\n## Governance Rules\n\n- Status symbols represent semantic outcomes, not data values\n- Each capability contract declares which result statuses it may return\n- Exit reasons represent workflow-level termination states only\n- Additive changes preferred; removal requires migration planning\n\n---\n\n## Machine\n\n```yaml\nvocab_id: VOCAB_EXECUTION_STATES_V0\nversion: v0\ngoverned_by: fb.vocabulary::CONSTITUTION_VOCABULARY_V0\n\nresult_status:\n  casing: UPPER_SNAKE\n  entries:\n    # Success states\n    - SUCCESS\n    # Failure states\n    - FAILURE\n    - VIOLATION\n    - ERROR\n    # Lookup states\n    - NOT_FOUND\n    - ALREADY_EXISTS\n    # Domain outcome states\n    - ACTIVE\n    - CAP_REACHED\n    # System states\n    - BACKEND_ERROR\n    - SKIPPED\n    - HALTED\n    - TIMEOUT\n\nexit_reasons:\n  casing: UPPER_SNAKE\n  entries:\n    - COMPLETED\n    - DUPLICATE_NONCE\n    - EXITED\n    - FAILED\n    - HALTED\n    - TIMEOUT\n    # Transport-domain exit reasons (HTTP_xxx) \u2014 domain-scoped, not constitutional core\n    - HTTP_200\n    - HTTP_400\n    - HTTP_404\n    - HTTP_422\n    - HTTP_500\n    - HTTP_504\n```\n",
+  "content_hash": "0124e943333b1ff615cf1a8ce7aeb91c4566888f91c6d64aefa7fd271a4a1a6f",
+  "fqdn_id": "fb.vocabulary::VOCAB_EXECUTION_STATES_V0",
+  "frontmatter": {
+    "exit_reasons": {
+      "casing": "UPPER_SNAKE",
+      "entries": [
+        "COMPLETED",
+        "DUPLICATE_NONCE",
+        "EXITED",
+        "FAILED",
+        "HALTED",
+        "TIMEOUT",
+        "HTTP_200",
+        "HTTP_400",
+        "HTTP_404",
+        "HTTP_422",
+        "HTTP_500",
+        "HTTP_504"
+      ]
+    },
+    "governed_by": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+    "result_status": {
+      "casing": "UPPER_SNAKE",
+      "entries": [
+        "SUCCESS",
+        "FAILURE",
+        "VIOLATION",
+        "ERROR",
+        "NOT_FOUND",
+        "ALREADY_EXISTS",
+        "ACTIVE",
+        "CAP_REACHED",
+        "BACKEND_ERROR",
+        "SKIPPED",
+        "HALTED",
+        "TIMEOUT"
+      ]
+    },
+    "version": "v0",
+    "vocab_id": "VOCAB_EXECUTION_STATES_V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_VOCABULARY.vocabulary",
+  "namespace": "fb.vocabulary",
+  "references": [
+    "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+  ],
+  "version": "0"
+}

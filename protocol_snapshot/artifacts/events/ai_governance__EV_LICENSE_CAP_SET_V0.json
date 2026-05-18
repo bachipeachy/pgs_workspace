@@ -1,0 +1,34 @@
+{
+  "artifact_code": "EV_LICENSE_CAP_SET_V0",
+  "artifact_type": "EV",
+  "content": "# EV_LICENSE_CAP_SET_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_LICENSE_CAP_SET_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA license cap has been established for the system.\n\n---\n\n## 2. Rationale\n\nLicense cap is a hard constraint:\n- Injected from Finance/procurement\n- Enforces maximum concurrent licenses\n- Oversubscription impossible by construction\n\n---\n\n## 3. Emitted By\n\n| Source | Description |\n|--------|-------------|\n| Fact Injection | Finance system declares license cap |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| cap_count | integer | true | Maximum number of concurrent licenses |\n| effective_date | string (date-time) | true | When cap becomes effective |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_LICENSE_CAP_SET_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: License Cap Set\n  description: Emitted when a license cap is established\n\n  schema:\n    cap_count:\n      type: integer\n      required: true\n    effective_date:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "4acd8411e2eba4bd3b7b0ef05e6d4d9eea662e935c41bc0e1a1c1d7710517534",
+  "fqdn_id": "ai_governance::EV_LICENSE_CAP_SET_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a license cap is established",
+      "schema": {
+        "cap_count": {
+          "required": true,
+          "type": "integer"
+        },
+        "effective_date": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "License Cap Set"
+    },
+    "ev_code": "EV_LICENSE_CAP_SET_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

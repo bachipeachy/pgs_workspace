@@ -1,0 +1,70 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "wallet_record": "$.inputs.wallet_record"
+        },
+        "atom": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_increment_wallet_nonce_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_INCREMENT_WALLET_NONCE_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+    "input_types": {
+      "wallet_record": "object"
+    },
+    "inputs": {
+      "wallet_record": {
+        "actor_id": "ACTOR_02",
+        "addresses": {
+          "eoa": [
+            {
+              "address": "0xdeadbeef00000000000000000000000000000001"
+            }
+          ]
+        },
+        "state": {
+          "eoa": {
+            "nonce": 42
+          }
+        }
+      }
+    },
+    "outputs": {
+      "nonce": {
+        "from": "__atom_result__"
+      },
+      "updated_wallet_record": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "nonce": 42,
+    "updated_wallet_record": {
+      "actor_id": "ACTOR_02",
+      "addresses": {
+        "eoa": [
+          {
+            "address": "0xdeadbeef00000000000000000000000000000001"
+          }
+        ]
+      },
+      "state": {
+        "eoa": {
+          "nonce": 43
+        }
+      }
+    }
+  },
+  "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0::increment_from_positive",
+  "test_data_source": "blockchain::TEST_DATA_CT_PURE_INCREMENT_WALLET_NONCE_V0"
+}

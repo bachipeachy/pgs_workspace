@@ -1,0 +1,141 @@
+{
+  "artifact_code": "CC_RESOLVE_LICENSE_TIER_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "GET",
+          "PUT",
+          "DELETE",
+          "EXISTS",
+          "LIST"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "value": "read_license_record.license_status"
+        },
+        "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "inputs": [
+          "value",
+          "allowed_set"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "is_member"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RESOLVE_LICENSE_TIER_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RESOLVE_LICENSE_TIER_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n\n---\n\n## 1. Intent\n\nRead license facts for the requesting user and validate that the license is active.\n\n---\n\n## 2. Rationale\n\nLicense resolution is the third governance gate:\n- Retrieves license tier and status from the fact feed\n- Validates that the license is active (not inactive or missing)\n- Enforces Invariant I-A5 (Domain Isolation) \u2014 read-only access to license facts\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | READ |\n| 2 | CT_PURE_VALIDATE_SET_MEMBERSHIP_V0 | CT | VALIDATE_SET_MEMBERSHIP |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| requesting_user_id | string | true | User to look up in license facts |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| license_status | string | License status (active, inactive) |\n| license_tier | string | License tier (none, standard, enterprise) |\n| org_unit | string | Organizational unit |\n| is_active | boolean | Whether license is active |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | License found and active |\n| NOT_FOUND | No license record for user |\n| VIOLATION | License found but inactive |\n| BACKEND_ERROR | License facts store unavailable |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RESOLVE_LICENSE_TIER_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Read license facts for requesting user and validate license is active\n\n  inputs:\n    requesting_user_id:\n      type: string\n      required: true\n\n  outputs:\n    license_status:\n      type: string\n    license_tier:\n      type: string\n    org_unit:\n      type: string\n    is_active:\n      type: boolean\n\n  result_status_contract:\n    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: read_license_record\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      op: READ\n      store: LICENSE_FACTS\n      inputs:\n        key: $.inputs.requesting_user_id\n      outputs:\n        license_status: $.capability_result.value.license_status\n        license_tier: $.capability_result.value.license_tier\n        org_unit: $.capability_result.value.org_unit\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: validate_active_status\n      transform: capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0\n      inputs:\n        value: $.results.read_license_record.license_status\n        allowed_set:\n          - active\n      outputs:\n        is_active: $.capability_result.is_member\n        license_status: $.results.read_license_record.license_status\n        license_tier: $.results.read_license_record.license_tier\n        org_unit: $.results.read_license_record.org_unit\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\nextensions:\n  description: Resolves license tier and validates active status from immutable fact feed\n```\n",
+  "content_hash": "121aec0e0d62291cf5bd13eccff5ea767d796a0ea5ffa475589e019cbf152e28",
+  "fqdn_id": "ai_governance::CC_RESOLVE_LICENSE_TIER_V0",
+  "frontmatter": {
+    "cc_code": "CC_RESOLVE_LICENSE_TIER_V0",
+    "core": {
+      "inputs": {
+        "requesting_user_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "is_active": {
+          "type": "boolean"
+        },
+        "license_status": {
+          "type": "string"
+        },
+        "license_tier": {
+          "type": "string"
+        },
+        "org_unit": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.requesting_user_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "license_status": "$.capability_result.value.license_status",
+            "license_tier": "$.capability_result.value.license_tier",
+            "org_unit": "$.capability_result.value.org_unit"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "read_license_record",
+          "store": "LICENSE_FACTS"
+        },
+        {
+          "inputs": {
+            "allowed_set": [
+              "active"
+            ],
+            "value": "$.results.read_license_record.license_status"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "is_active": "$.capability_result.is_member",
+            "license_status": "$.results.read_license_record.license_status",
+            "license_tier": "$.results.read_license_record.license_tier",
+            "org_unit": "$.results.read_license_record.org_unit"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "validate_active_status",
+          "transform": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Read license facts for requesting user and validate license is active"
+    },
+    "extensions": {
+      "description": "Resolves license tier and validates active status from immutable fact feed"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,38 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "public_key_uncompressed_bytes": "$.inputs.public_key_uncompressed_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_pubkey_to_eth_address_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+    "input_types": {
+      "public_key_uncompressed_bytes": "hex_string"
+    },
+    "inputs": {
+      "public_key_uncompressed_bytes": "0x04000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f"
+    },
+    "outputs": {
+      "eth_address_hex": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "eth_address_hex": "0x5cd71875c4d0ab1708a380e03fefc3a28aa24831"
+  },
+  "fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0::pubkey_to_address",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0"
+}

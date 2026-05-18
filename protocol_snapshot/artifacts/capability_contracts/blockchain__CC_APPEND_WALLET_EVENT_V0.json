@@ -1,0 +1,93 @@
+{
+  "artifact_code": "CC_APPEND_WALLET_EVENT_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL",
+          "GET_RANGE",
+          "GET_SINCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_APPEND_WALLET_EVENT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_APPEND_WALLET_EVENT_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nAppend a wallet lifecycle event to the wallet event journal.\n\n---\n\n## 2. Rationale\n\nWallet events require:\n- Immutable event log\n- Event sourcing capability\n- Audit trail for wallet lifecycle\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| wallet_id | string | true | Wallet identifier (used as stream_id) |\n| actor_id | string | true | Actor performing the event |\n| record | object | true | Pre-assembled event record payload |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Event appended successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- Invalid inputs result in VIOLATION\n- Storage failure results in BACKEND_ERROR\n- APPEND is not idempotent; retries create duplicates\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_APPEND_WALLET_EVENT_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Append wallet lifecycle event\n\n  inputs:\n    wallet_id:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n    record:\n      type: object\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: append_wallet_event\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: WALLET_EVENTS\n      op: APPEND\n      inputs:\n        record: $.inputs.record\n        stream_id: $.inputs.wallet_id\n        actor_id: $.inputs.actor_id\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "ebc79729739dcafc33f4310d7a016e45bf5b5af2ff5813698fe5935dc4e7a7e8",
+  "fqdn_id": "blockchain::CC_APPEND_WALLET_EVENT_V0",
+  "frontmatter": {
+    "cc_code": "CC_APPEND_WALLET_EVENT_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "record": {
+          "required": true,
+          "type": "object"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "actor_id": "$.inputs.actor_id",
+            "record": "$.inputs.record",
+            "stream_id": "$.inputs.wallet_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_wallet_event",
+          "store": "WALLET_EVENTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Append wallet lifecycle event"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

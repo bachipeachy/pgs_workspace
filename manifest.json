@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+
+  "required_packages": [
+    "pgs_capabilities",
+    "pgs_blockchain",
+    "pgs_ai_governance"
+  ],
+
+  "optional_packages": {
+    "trace_examiner": ["pgs_protocol"]
+  },
+
+  "seed_data": [
+    "seeds/license_facts.json",
+    "seeds/register_actor_unverified_payload.json"
+  ]
+}

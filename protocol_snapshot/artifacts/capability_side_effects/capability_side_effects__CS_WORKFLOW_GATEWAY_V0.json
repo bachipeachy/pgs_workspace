@@ -1,0 +1,105 @@
+{
+  "artifact_code": "CS_WORKFLOW_GATEWAY_V0",
+  "artifact_type": "CS",
+  "content": "# CS_WORKFLOW_GATEWAY_V0\n\n## Header\n\n- **Artifact Code:** CS_WORKFLOW_GATEWAY_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nProvide a governed side-effect for invoking workflows via the execution gateway. This CS wraps `workflow_gateway.execute_workflow()` as a declarative operation.\n\n**Ownership:** This is an infrastructure-owned CS. Transport only binds to it via runtime bindings.\n\n## 2. Side-Effect Category\n\n- **Category:** Execution Gateway\n- **Side-Effect Type:** internal\n- **Idempotent:** false (workflows may have side effects)\n\n## 3. Operations\n\n### 3.1 EXECUTE\n\nExecute a workflow by code and return the execution result.\n\n- **Input:** `workflow_code` (string, required), `payload` (object, required)\n- **Output:** `result_status`, `execution_result`\n- **Result Status Values:** SUCCESS, NOT_FOUND, BACKEND_ERROR\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_WORKFLOW_GATEWAY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Execute a workflow via the gateway\n  category: execution_gateway\n\n  policy:\n    operations: [EXECUTE]\n\n  operations:\n    EXECUTE:\n      summary: Execute a workflow by code\n      handler: execute\n      input: [workflow_code, payload]\n      output: [result_status, execution_result]\n      idempotent: false\n      result_status_values: [SUCCESS, NOT_FOUND, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_GATEWAY_V0.runtime\n  callable: WorkflowGatewayRuntime\n\nextensions:\n  cs_kind: execution_gateway\n  side_effect_type: internal\n\n  vocabulary:\n    result_status: [SUCCESS, NOT_FOUND, BACKEND_ERROR]\n\n  configuration_schema:\n    default_runtime_binding:\n      type: string\n      required: true\n      description: RB code for the inner workflow execution\n```\n",
+  "content_hash": "eb117cb087f9072070c79082b0b902c17636ac99920afca25c8429477589d8a7",
+  "cs_ir": {
+    "cs_metadata": {
+      "capability": {
+        "supported_operation_specs": [
+          "EXECUTE"
+        ]
+      },
+      "operations": {
+        "operations": {
+          "EXECUTE": {
+            "handler": "execute",
+            "idempotent": false,
+            "input": [
+              "workflow_code",
+              "payload"
+            ],
+            "output": [
+              "result_status",
+              "execution_result"
+            ],
+            "result_status_values": [
+              "SUCCESS",
+              "NOT_FOUND",
+              "BACKEND_ERROR"
+            ],
+            "summary": "Execute a workflow by code"
+          }
+        }
+      }
+    },
+    "handler_ref": {
+      "callable": "WorkflowGatewayRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_GATEWAY_V0.runtime"
+    }
+  },
+  "fqdn_id": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+  "frontmatter": {
+    "core": {
+      "category": "execution_gateway",
+      "operations": {
+        "EXECUTE": {
+          "handler": "execute",
+          "idempotent": false,
+          "input": [
+            "workflow_code",
+            "payload"
+          ],
+          "output": [
+            "result_status",
+            "execution_result"
+          ],
+          "result_status_values": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "BACKEND_ERROR"
+          ],
+          "summary": "Execute a workflow by code"
+        }
+      },
+      "policy": {
+        "operations": [
+          "EXECUTE"
+        ]
+      },
+      "summary": "Execute a workflow via the gateway"
+    },
+    "cs_code": "CS_WORKFLOW_GATEWAY_V0",
+    "extensions": {
+      "configuration_schema": {
+        "default_runtime_binding": {
+          "description": "RB code for the inner workflow execution",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "cs_kind": "execution_gateway",
+      "side_effect_type": "internal",
+      "vocabulary": {
+        "result_status": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "BACKEND_ERROR"
+        ]
+      }
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "implementation": {
+      "callable": "WorkflowGatewayRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_GATEWAY_V0.runtime"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_SIDE_EFFECTS",
+  "module_path": "pgs_side_effects.registry.capability_side_effects",
+  "namespace": "capability_side_effects",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+  ],
+  "version": "0"
+}

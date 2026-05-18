@@ -1,0 +1,111 @@
+{
+  "artifact_code": "CC_APPEND_TX_EVENT_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL",
+          "GET_RANGE",
+          "GET_SINCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_APPEND_TX_EVENT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_APPEND_TX_EVENT_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nAppend a transaction lifecycle event to the transaction event journal.\n\n---\n\n## 2. Rationale\n\nTransaction events provide an observable, append-only trail of transaction\nlifecycle transitions. Events are emitted after successful persistence.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| event_type | string | true | Event code (e.g., EV_TRANSACTION_SUBMITTED_V0) |\n| tx_id | string | true | Transaction identifier |\n| tx_hash | string | true | Transaction hash |\n| wallet_id | string | true | Source wallet |\n| actor_id | string | true | Submitting actor |\n| data | object | true | Event-specific payload |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | SUCCESS, VIOLATION, or BACKEND_ERROR |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Event appended |\n| VIOLATION | Invalid event data |\n| BACKEND_ERROR | Storage write failure |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_APPEND_TX_EVENT_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Append transaction lifecycle event\n\n  inputs:\n    event_type:\n      type: string\n      required: true\n    tx_id:\n      type: string\n      required: true\n    tx_hash:\n      type: string\n      required: true\n    wallet_id:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n    data:\n      type: object\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n  pipeline:\n    - step: append_tx_event\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: TRANSACTION_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.tx_id\n        actor_id: $.inputs.actor_id\n        record:\n          event_code: $.inputs.event_type\n          tx_id: $.inputs.tx_id\n          tx_hash: $.inputs.tx_hash\n          wallet_id: $.inputs.wallet_id\n          payload: $.inputs.data\n          timestamp: \"{{timestamp}}\"\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "3234f9e3e418d321c6d2baaeb15859fba618428476d808ad08d698e87b77b6de",
+  "fqdn_id": "blockchain::CC_APPEND_TX_EVENT_V0",
+  "frontmatter": {
+    "cc_code": "CC_APPEND_TX_EVENT_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "data": {
+          "required": true,
+          "type": "object"
+        },
+        "event_type": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_id": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "actor_id": "$.inputs.actor_id",
+            "record": {
+              "event_code": "$.inputs.event_type",
+              "payload": "$.inputs.data",
+              "timestamp": "{{timestamp}}",
+              "tx_hash": "$.inputs.tx_hash",
+              "tx_id": "$.inputs.tx_id",
+              "wallet_id": "$.inputs.wallet_id"
+            },
+            "stream_id": "$.inputs.tx_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_tx_event",
+          "store": "TRANSACTION_EVENTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ]
+      },
+      "summary": "Append transaction lifecycle event"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

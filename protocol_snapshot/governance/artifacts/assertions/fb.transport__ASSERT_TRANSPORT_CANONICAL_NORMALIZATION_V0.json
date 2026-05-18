@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_transport_canonical_normalization_v0\n  callable: execute\n```\n\n---\n\n## Purpose\n\nValidates that TI_ artifacts declare an explicit admission schema (no passthrough\npayloads) and that TE_ artifacts declare an explicit projection schema (no\npassthrough execution results).\n\n**Validates:**\n- Every TI_ artifact declares an `admission_schema` with at least one field\n- No TI_ artifact uses passthrough mode (forwarding raw payload without normalization)\n- Every TE_ artifact declares a `response_schema` or equivalent projection declaration\n- No TE_ artifact passes the raw execution result through without projection\n\n**Does NOT validate:**\n- Type compatibility between admission schema fields and workflow payload schema\n- Completeness of projection (whether all execution output fields are projected)\n\n---\n\n## Enforcement\n\n**Phase:** COMPILER_VALIDATION\n\n**Severity:** HARD FAIL \u2014 build stops immediately on violation\n\n**Trigger:** Every TI_ and TE_ artifact discovered during compilation\n\n## Violation Examples\n\n```yaml\n# VIOLATION: no admission schema (passthrough)\nti_code: TI_HTTP_SUBMIT_TRANSACTION_V0\ncore:\n  route:\n    method: POST\n    path: /api/v0/transaction/submit\n  passthrough: true  # Not permitted \u2014 schema must be declared\n  workflow: blockchain::WF_HTTP_SUBMIT_TRANSACTION_V0\n```\n\n```yaml\n# VIOLATION: no projection schema in TE\nte_code: TE_HTTP_JSON_V0\ncore:\n  description: Projects execution result as HTTP JSON\n  # Missing: response_schema declaration\n```\n\n## Correct Form\n\n```yaml\n# TI with explicit admission schema\nti_code: TI_HTTP_SUBMIT_TRANSACTION_V0\ncore:\n  admission_schema:\n    actor_record: {type: object, required: true}\n    wallet_id: {type: string, required: true}\n```\n\n```yaml\n# TE with explicit projection schema\nte_code: TE_HTTP_JSON_V0\ncore:\n  response_schema:\n    status: {type: integer, required: true}\n    body: {type: object, required: true}\n```\n",
+  "content_hash": "95d2bd9410d8f1610e705cb963dbaaf2aa3de96dce2b5d7afeb15f958852b40f",
+  "fqdn_id": "fb.transport::ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_transport_canonical_normalization_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TRANSPORT.assertions",
+  "namespace": "fb.transport",
+  "references": [],
+  "version": "0"
+}

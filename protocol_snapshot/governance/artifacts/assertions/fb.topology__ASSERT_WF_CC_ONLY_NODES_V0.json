@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_WF_CC_ONLY_NODES_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_WF_CC_ONLY_NODES_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_WF_CC_ONLY_NODES_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_wf_cc_only_nodes_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that all non-structural WF nodes reference CC artifacts only:\n1. IN (entry intent) nodes are permitted structural nodes\n2. EXIT nodes are permitted structural nodes\n3. All other nodes MUST be of type CC\n4. No direct CT or CS node references are permitted\n\n## Enforcement\n\n- **Phase**: 4 (VALIDATE)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All WF artifacts\n\n## Handler Behavior\n\n### 1. Identify Non-Structural Nodes\n\nCollect all nodes with type other than IN and EXIT.\n\n### 2. Check Node Types\n\nFor each non-structural node, verify type is CC.\n\nViolation: Node type is CT, CS, or any unrecognized type.\n\n## Error Messages\n\n### Non-CC Node\n```\n\u274c ASSERT_WF_CC_ONLY_NODES_V0: Non-CC node in workflow\n   WF: WF_EXAMPLE_V0\n   Node: CT_TRANSFORM_V0\n   Type: CT\n   Violation: Workflow nodes must be CC only; CT and CS are not permitted\n   Fix: Move CT invocation inside a CC artifact\n```\n\n## Rationale\n\nWorkflows are execution graphs of CC nodes. CTs and CSs are invoked from within CCs,\nnever directly from workflows. This constraint enforces a clean separation between\norchestration (WF) and implementation (CC \u2192 CT/CS).\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-04)\n",
+  "content_hash": "baed9461fccd32ee98117c97d8f8efda340c74a2aa32c5b7288981645e179ef9",
+  "fqdn_id": "fb.topology::ASSERT_WF_CC_ONLY_NODES_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_WF_CC_ONLY_NODES_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_wf_cc_only_nodes_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

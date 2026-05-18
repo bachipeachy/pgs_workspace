@@ -1,0 +1,48 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "current_date": "$.inputs.current_date",
+          "last_active_date": "$.inputs.last_active_date",
+          "threshold_days": "$.inputs.threshold_days"
+        },
+        "atom": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_evaluate_inactivity_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_EVALUATE_INACTIVITY_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+    "input_types": {
+      "current_date": "string",
+      "last_active_date": "string",
+      "threshold_days": "integer"
+    },
+    "inputs": {
+      "current_date": "2024-02-15T00:00:00Z",
+      "last_active_date": "2024-02-10T00:00:00Z",
+      "threshold_days": 30
+    },
+    "outputs": {
+      "days_inactive": {
+        "from": "__atom_result__"
+      },
+      "is_inactive": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "days_inactive": 5,
+    "is_inactive": false
+  },
+  "fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0::user_active",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_EVALUATE_INACTIVITY_V0"
+}

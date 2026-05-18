@@ -1,0 +1,63 @@
+{
+  "artifact_code": "RB_AGENT_GOVERNANCE_BINDINGS_V0",
+  "artifact_type": "RB",
+  "content": "# RB_AGENT_GOVERNANCE_BINDINGS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_AGENT_GOVERNANCE_BINDINGS_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CS_REGISTRY_V0, CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Purpose\n\nBind capability side effects to concrete host implementations for agent governance execution.\n\n---\n\n## 2. Rationale\n\nRuntime bindings provide environment-specific execution wiring:\n- Maps CS artifacts to host classes\n- Configures storage paths via parameters\n- Keeps protocol artifacts environment-agnostic\n\n---\n\n## 3. Bindings\n\n| CS Artifact | Host | Purpose |\n|-------------|------|---------|\n| CS_MUTABLE_JSON_V0 | MutableJsonRuntime | Read-only license fact feed (immutable external facts) |\n| CS_REGISTRY_V0 | RegistryRuntime | Governance action registry |\n| CS_APPENDONLY_JSONL_V0 | AppendOnlyJsonlRuntime | Immutable governance audit trail |\n\n---\n\n## 4. Parameters\n\n| Parameter | Description |\n|-----------|-------------|\n| module_data_root | Base path for module runtime data (resolved from env_facts) |\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_AGENT_GOVERNANCE_BINDINGS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\nparameters:\n  - module_data_root\n\ncore:\n  summary: Runtime binding of agent governance capability side effects\n  description: Declares which concrete host implementations satisfy capability pipelines during agent governance execution.\n  storage_structure: ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      type: CS\n      host: MutableJsonRuntime\n      operation: READ_WRITE\n      policy: {}\n\n    capability_side_effects::CS_REGISTRY_V0:\n      type: CS\n      host: RegistryRuntime\n      operation: READ_WRITE\n      policy:\n        path: \"{{module_data_root}}/governance_actions.json\"\n        strict: true\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      type: CS\n      host: AppendOnlyJsonlRuntime\n      operation: APPEND\n      policy:\n        path: \"{{module_data_root}}/governance_audit.jsonl\"\n        strict: true\n\nextensions:\n  notes:\n    - CS_MUTABLE_JSON_V0 (license_facts.json) is READ-ONLY \u2014 agent governance may not mutate license facts\n    - All capability runtimes must be explicitly bound\n    - Storage paths are resolved via template parameters\n```\n",
+  "content_hash": "fcdd7845156ed93643edc7457e6fb2afe673baa7734f304dab373805190bf75f",
+  "fqdn_id": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
+          "host": "AppendOnlyJsonlRuntime",
+          "operation": "APPEND",
+          "policy": {
+            "path": "{{module_data_root}}/governance_audit.jsonl",
+            "strict": true
+          },
+          "type": "CS"
+        },
+        "capability_side_effects::CS_MUTABLE_JSON_V0": {
+          "host": "MutableJsonRuntime",
+          "operation": "READ_WRITE",
+          "policy": {},
+          "type": "CS"
+        },
+        "capability_side_effects::CS_REGISTRY_V0": {
+          "host": "RegistryRuntime",
+          "operation": "READ_WRITE",
+          "policy": {
+            "path": "{{module_data_root}}/governance_actions.json",
+            "strict": true
+          },
+          "type": "CS"
+        }
+      },
+      "description": "Declares which concrete host implementations satisfy capability pipelines during agent governance execution.",
+      "storage_structure": "ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+      "summary": "Runtime binding of agent governance capability side effects"
+    },
+    "extensions": {
+      "notes": [
+        "CS_MUTABLE_JSON_V0 (license_facts.json) is READ-ONLY \u2014 agent governance may not mutate license facts",
+        "All capability runtimes must be explicitly bound",
+        "Storage paths are resolved via template parameters"
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "parameters": [
+      "module_data_root"
+    ],
+    "rb_code": "RB_AGENT_GOVERNANCE_BINDINGS_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.runtime_bindings",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+    "capability_side_effects::CS_MUTABLE_JSON_V0",
+    "capability_side_effects::CS_REGISTRY_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

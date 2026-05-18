@@ -1,0 +1,38 @@
+{
+  "artifact_code": "EV_LICENSE_PROVISIONED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_LICENSE_PROVISIONED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_LICENSE_PROVISIONED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA license has been successfully provisioned to an employee.\n\n---\n\n## 2. Rationale\n\nLicense provisioning is a protocol-governed transition:\n- Only occurs when all prerequisites satisfied\n- Records assignment for audit trail\n- Increments assigned count toward cap\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_PROVISION_AI_LICENSING_V0 | CC_PROVISION_LICENSE_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| employee_id | string | true | Employee who received license |\n| license_id | string | true | Unique license identifier |\n| timestamp | string (date-time) | true | When provisioning occurred |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_LICENSE_PROVISIONED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: License Provisioned\n  description: Emitted when a license is successfully provisioned\n\n  schema:\n    employee_id:\n      type: string\n      required: true\n    license_id:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "f981eb1f47cd2b624a1877754882694bdf2dcdee606dabeb092b3455f3601226",
+  "fqdn_id": "ai_governance::EV_LICENSE_PROVISIONED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a license is successfully provisioned",
+      "schema": {
+        "employee_id": {
+          "required": true,
+          "type": "string"
+        },
+        "license_id": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "License Provisioned"
+    },
+    "ev_code": "EV_LICENSE_PROVISIONED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

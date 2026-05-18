@@ -1,0 +1,100 @@
+{
+  "artifact_code": "CC_STORE_RESULTS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "GET",
+          "PUT",
+          "DELETE",
+          "EXISTS",
+          "LIST"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_STORE_RESULTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_STORE_RESULTS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nPersist Collatz computation results to mutable JSON storage.\n\n---\n\n## 2. Rationale\n\nResult persistence is the final protocol step:\n- Stores sequences and conjecture verdict under a declared key\n- Uses last-write-wins semantics (results are overwritten on re-run)\n- Idempotent: re-running with same input produces same stored state\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| sequences | object | true | Computed Collatz sequences |\n| all_terminate | boolean | true | Conjecture verdict |\n| non_terminating | array | false | Seeds that did not terminate |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Storage operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Results stored successfully |\n| VIOLATION | Invalid input or storage constraint violated |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_STORE_RESULTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Store Collatz results to mutable JSON storage\n\n  inputs:\n    sequences:\n      type: object\n      required: true\n    all_terminate:\n      type: boolean\n      required: true\n    non_terminating:\n      type: array\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: store_results\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      op: WRITE\n      store: COLLATZ_RESULTS\n      inputs:\n        key: \"collatz_results\"\n        value:\n          sequences: $.inputs.sequences\n          all_terminate: $.inputs.all_terminate\n          non_terminating: $.inputs.non_terminating\n          timestamp: \"{{timestamp}}\"\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  description: Persists conjecture results with last-write-wins semantics\n```\n",
+  "content_hash": "32092a84b33bd8da53782764d398c0bf4bc1c95bbf454b33452d44d62becbf8f",
+  "fqdn_id": "ai_governance::CC_STORE_RESULTS_V0",
+  "frontmatter": {
+    "cc_code": "CC_STORE_RESULTS_V0",
+    "core": {
+      "inputs": {
+        "all_terminate": {
+          "required": true,
+          "type": "boolean"
+        },
+        "non_terminating": {
+          "type": "array"
+        },
+        "sequences": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "collatz_results",
+            "value": {
+              "all_terminate": "$.inputs.all_terminate",
+              "non_terminating": "$.inputs.non_terminating",
+              "sequences": "$.inputs.sequences",
+              "timestamp": "{{timestamp}}"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {
+            "result_status": "$.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "store_results",
+          "store": "COLLATZ_RESULTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Store Collatz results to mutable JSON storage"
+    },
+    "extensions": {
+      "description": "Persists conjecture results with last-write-wins semantics"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.collatz_conjecture.capability_contracts",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

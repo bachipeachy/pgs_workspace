@@ -1,0 +1,47 @@
+{
+  "artifact_code": "INVARIANT_COMPILER_NO_EXECUTION_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_COMPILER_NO_EXECUTION_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_COMPILER_NO_EXECUTION_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_COMPILER_V0\n\ncore:\n  description: >\n    Compiled CT and CS artifacts MUST NOT carry execution-time state in their\n    materialized frontmatter. Fields that only appear as the result of executing\n    an artifact (trace_id, execution_result, runtime_output, invocation_id,\n    execution_state, runtime_state) are forbidden in compiled artifact frontmatter.\n    The compiler phase MUST NOT invoke CT or CS implementations \u2014 compiled artifacts\n    are static declarations, not execution receipts.\n\n  enforcement_stage:\n    - compiler_assert\n\n  scope:\n    - ALL_BUILD_CONTEXTS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_COMPILER_NO_EXECUTION_V0\n\n  anti_patterns:\n    - execution_state_in_frontmatter: \"CT/CS artifact frontmatter contains trace_id, execution_result, or runtime_output\"\n    - compiler_invokes_ct: \"Compiler phase calls CT implementation module during compilation\"\n    - compiler_invokes_cs: \"Compiler phase calls CS implementation module during compilation\"\n    - execution_contamination: \"Compiled artifact preserves side-effect outputs in its canonical form\"\n```\n\n---\n\n## Purpose\n\nEnforces the compile-time purity boundary declared in \u00a79 of CONSTITUTION_COMPILER_V0:\n\"Execution of protocol behavior during compilation\" is a forbidden pattern.\n\nCT and CS artifacts are pure declarations at compile time. A compiled artifact's\nfrontmatter must reflect the declared structure, not an execution output. If a compiled\nCT artifact contains `execution_result` or `trace_id` fields, the compiler has violated\nthe boundary between compilation and execution.\n\nThis invariant is structural \u2014 it checks what is present in the compiled artifact, not\nwhat the compiler did at runtime. It is checkable from the artifact alone.\n\n## Relationship to CONSTITUTION_COMPILER_V0\n\nDirectly enforces \u00a79 Forbidden Pattern #6 (`Execution of protocol behavior during\ncompilation`) and the CT Purity doctrine: CT implementations have zero side effects and\nmust never be invoked during compilation.\n",
+  "content_hash": "daf23ff3ab61c35dc6935b64debfceb72ebd7fa983a1d90526c77eeaa3a8985a",
+  "fqdn_id": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "execution_state_in_frontmatter": "CT/CS artifact frontmatter contains trace_id, execution_result, or runtime_output"
+        },
+        {
+          "compiler_invokes_ct": "Compiler phase calls CT implementation module during compilation"
+        },
+        {
+          "compiler_invokes_cs": "Compiler phase calls CS implementation module during compilation"
+        },
+        {
+          "execution_contamination": "Compiled artifact preserves side-effect outputs in its canonical form"
+        }
+      ],
+      "description": "Compiled CT and CS artifacts MUST NOT carry execution-time state in their materialized frontmatter. Fields that only appear as the result of executing an artifact (trace_id, execution_result, runtime_output, invocation_id, execution_state, runtime_state) are forbidden in compiled artifact frontmatter. The compiler phase MUST NOT invoke CT or CS implementations \u2014 compiled artifacts are static declarations, not execution receipts.\n",
+      "enforced_by": [
+        "ASSERT_COMPILER_NO_EXECUTION_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_assert"
+      ],
+      "scope": [
+        "ALL_BUILD_CONTEXTS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_COMPILER_V0",
+    "invariant_code": "INVARIANT_COMPILER_NO_EXECUTION_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.invariants",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_COMPILER_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,59 @@
+{
+  "artifact_code": "CONSTITUTION_EXECUTION_SCHEDULING_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_EXECUTION_SCHEDULING_V0\n\n## Machine\n\n```yaml\nconstitution_code: CONSTITUTION_EXECUTION_SCHEDULING_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\nfqdn: fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0\n\ncore:\n  summary: >\n    Governs runtime execution scheduling legality \u2014 serial execution,\n    parallel branch authorization, non-blocking dispatch legality,\n    and deterministic synchronization behavior.\n  description: |\n    Declares which execution scheduling model is legally active for a compiled\n    snapshot. Governs how execution units within a topology are permitted to\n    coordinate: serially, in parallel branches, with non-blocking dispatch,\n    or with deterministic joins.\n\n    This boundary governs scheduling legality only. It does NOT govern\n    global PGS admissibility semantics (intent admission, payload validation,\n    or workflow entry-gate logic). Those concerns belong to FB_TRANSPORT and\n    the intent admission layer.\n  scope: system\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: SCHEDULING_MUST_BE_DECLARED\n    applies_to: compiled_snapshot\n    constraint: >\n      Every compiled snapshot MUST declare exactly one active scheduling contract.\n      A snapshot with no scheduling declaration is a compiler validation failure.\n    enforced_by: compiler_validation\n\n  - rule_id: PARALLEL_REQUIRES_EXPLICIT_AUTHORIZATION\n    applies_to: compiled_snapshot\n    constraint: >\n      Parallel branch execution is not permitted unless the active scheduling\n      contract explicitly sets parallel_branch_execution_allowed: true.\n      In V0, only SERIAL_SINGLE_WORKER is authorized.\n    enforced_by: compiler_validation\n\n  - rule_id: NON_BLOCKING_REQUIRES_EXPLICIT_AUTHORIZATION\n    applies_to: compiled_snapshot\n    constraint: >\n      Non-blocking dispatch is not permitted unless the active scheduling\n      contract explicitly sets non_blocking_dispatch_allowed: true.\n      In V0 SERIAL_SINGLE_WORKER mode, this is false.\n    enforced_by: compiler_validation\n\n  - rule_id: SCHEDULING_SCOPE_IS_COORDINATION_ONLY\n    applies_to: federation_boundary\n    constraint: >\n      FB_EXECUTION_SCHEDULING governs execution scheduling legality only.\n      It MUST NOT be confused with intent admission or payload validation.\n      Admission gate logic remains in FB_TRANSPORT and intent artifacts.\n    enforced_by: process_enforced\n\n  - rule_id: RUNTIME_READS_SCHEDULING_PASSIVELY\n    applies_to: runtime\n    constraint: >\n      Runtime MAY read the active scheduling contract for trace metadata emission.\n      Runtime MUST NOT branch on scheduling mode or alter execution behavior\n      based on scheduling values. In V0, the runtime is always serial.\n    enforced_by: process_enforced\n```\n\n---\n\n## Purpose\n\nThis constitution governs execution scheduling legality. It answers the question:\n*how are execution units within a workflow topology permitted to be scheduled\nand coordinated with each other?*\n\nThis is distinct from whether a workflow is admissible at the entry gate (intent/transport\nconcern) or where it runs (placement concern). Scheduling governs: is this coordination\npattern \u2014 serial, parallel, non-blocking \u2014 legally authorized for this snapshot?\n\n## \u00a71. V0 Scheduling Mode\n\nThe only authorized scheduling mode in V0 is `SERIAL_SINGLE_WORKER`.\n\nThis means:\n- CC nodes execute one at a time, in topological order\n- No parallel branch execution occurs\n- No non-blocking dispatch occurs\n- No deterministic join synchronization is required\n\nThis is the correct and complete description of V0 runtime scheduling behavior.\n\n## \u00a72. Compiler Behavior\n\nThe compiler MUST:\n- Discover the active scheduling contract in this boundary\n- Validate that exactly one contract is active\n- Materialize scheduling mode into the snapshot federation profile under:\n\n```yaml\nfederation_profile:\n  execution_scheduling: SERIAL_SINGLE_WORKER\n```\n\n## \u00a73. Runtime Behavior\n\nThe runtime MUST:\n- Record `federation_profile.execution_scheduling` in trace metadata\n- Execute serially as the current topology requires\n- NOT consult scheduling mode for any execution branching\n\n## \u00a74. Future Expansion Path\n\n```\nSERIAL_SINGLE_WORKER\n  \u2192 PARALLEL_SAFE_DAG\n  \u2192 NON_BLOCKING_DISPATCH\n  \u2192 DETERMINISTIC_JOIN\n```\n\nEach step requires a new scheduling contract and corresponding runtime evolution\n(Runtime V2+). No runtime changes are needed in V0.\n\n## \u00a75. Versioning\n\nChanges to scheduling semantics require a new constitution version and migration rationale.\n",
+  "content_hash": "baf25ee4590468dec2e7b616c8c0e0ed4107b1695693fbf6a52d4eef7c21a626",
+  "fqdn_id": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_EXECUTION_SCHEDULING_V0",
+    "core": {
+      "description": "Declares which execution scheduling model is legally active for a compiled\nsnapshot. Governs how execution units within a topology are permitted to\ncoordinate: serially, in parallel branches, with non-blocking dispatch,\nor with deterministic joins.\n\nThis boundary governs scheduling legality only. It does NOT govern\nglobal PGS admissibility semantics (intent admission, payload validation,\nor workflow entry-gate logic). Those concerns belong to FB_TRANSPORT and\nthe intent admission layer.\n",
+      "enforcement_model": "compiler_enforced",
+      "scope": "system",
+      "summary": "Governs runtime execution scheduling legality \u2014 serial execution, parallel branch authorization, non-blocking dispatch legality, and deterministic synchronization behavior.\n"
+    },
+    "fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "rules": [
+      {
+        "applies_to": "compiled_snapshot",
+        "constraint": "Every compiled snapshot MUST declare exactly one active scheduling contract. A snapshot with no scheduling declaration is a compiler validation failure.\n",
+        "enforced_by": "compiler_validation",
+        "rule_id": "SCHEDULING_MUST_BE_DECLARED"
+      },
+      {
+        "applies_to": "compiled_snapshot",
+        "constraint": "Parallel branch execution is not permitted unless the active scheduling contract explicitly sets parallel_branch_execution_allowed: true. In V0, only SERIAL_SINGLE_WORKER is authorized.\n",
+        "enforced_by": "compiler_validation",
+        "rule_id": "PARALLEL_REQUIRES_EXPLICIT_AUTHORIZATION"
+      },
+      {
+        "applies_to": "compiled_snapshot",
+        "constraint": "Non-blocking dispatch is not permitted unless the active scheduling contract explicitly sets non_blocking_dispatch_allowed: true. In V0 SERIAL_SINGLE_WORKER mode, this is false.\n",
+        "enforced_by": "compiler_validation",
+        "rule_id": "NON_BLOCKING_REQUIRES_EXPLICIT_AUTHORIZATION"
+      },
+      {
+        "applies_to": "federation_boundary",
+        "constraint": "FB_EXECUTION_SCHEDULING governs execution scheduling legality only. It MUST NOT be confused with intent admission or payload validation. Admission gate logic remains in FB_TRANSPORT and intent artifacts.\n",
+        "enforced_by": "process_enforced",
+        "rule_id": "SCHEDULING_SCOPE_IS_COORDINATION_ONLY"
+      },
+      {
+        "applies_to": "runtime",
+        "constraint": "Runtime MAY read the active scheduling contract for trace metadata emission. Runtime MUST NOT branch on scheduling mode or alter execution behavior based on scheduling values. In V0, the runtime is always serial.\n",
+        "enforced_by": "process_enforced",
+        "rule_id": "RUNTIME_READS_SCHEDULING_PASSIVELY"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_EXECUTION_SCHEDULING.constitutions",
+  "namespace": "fb.execution_scheduling",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

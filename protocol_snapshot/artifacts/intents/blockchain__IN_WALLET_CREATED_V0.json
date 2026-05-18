@@ -1,0 +1,50 @@
+{
+  "artifact_code": "IN_WALLET_CREATED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_WALLET_CREATED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_WALLET_CREATED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_CREATE_WALLET_V0\n\n---\n\n## 1. Intent\n\nCreate a wallet for a verified actor, establishing their financial account within the system.\n\n---\n\n## 2. Rationale\n\nWallet creation requires:\n- Actor must be resolved (verified)\n- Wallet ID is deterministically generated\n- Wallet record is persisted with event trail\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_CREATE_WALLET_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Actor identity data (first_name, last_name, email_registration) |\n| wallet_type | string | false | Type of wallet to create (default: standard) |\n| wallet_config | object | false | Optional configuration for the wallet (name, currency, metadata) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Wallet creation initiated |\n| NACK | Wallet creation failed |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.finance.wallet\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_WALLET_CREATED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Create wallet for verified actor\n  workflow: WF_CREATE_WALLET_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Actor identity data (first_name, last_name, email_registration)\n    wallet_type:\n      type: string\n      default: standard\n      description: Type of wallet to create\n    wallet_config:\n      type: object\n      description: Optional configuration for the wallet (name, currency, metadata)\n\n  outcomes:\n    ACK:\n      description: Wallet creation initiated\n    NACK:\n      description: Wallet creation failed\n\nextensions:\n  domain: pgs.finance.wallet\n```\n",
+  "content_hash": "3397405cb0128ab694e9ce03f44de3b6498bda6c5e7d160d892d3ad8dd5a8679",
+  "fqdn_id": "blockchain::IN_WALLET_CREATED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "actor_record": {
+          "description": "Actor identity data (first_name, last_name, email_registration)",
+          "required": true,
+          "type": "object"
+        },
+        "wallet_config": {
+          "description": "Optional configuration for the wallet (name, currency, metadata)",
+          "type": "object"
+        },
+        "wallet_type": {
+          "default": "standard",
+          "description": "Type of wallet to create",
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Wallet creation initiated"
+        },
+        "NACK": {
+          "description": "Wallet creation failed"
+        }
+      },
+      "summary": "Create wallet for verified actor",
+      "workflow": "WF_CREATE_WALLET_V0"
+    },
+    "extensions": {
+      "domain": "pgs.finance.wallet"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_WALLET_CREATED_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

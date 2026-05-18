@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0\n\ncore:\n  summary: Identity declaration and execution authority must remain orthogonal governance surfaces\n  rule: AC_ artifacts must not conflate identity with authority; no actor artifact may declare permissions, execution rights, admissibility rules, or authorization semantics\n  scope:\n    - AC\n```\n\n## Summary\n\nActor identity governance and execution authority governance are orthogonal surfaces. An actor artifact that conflates identity with authority collapses two sovereign governance dimensions into one, destroying the separation that makes authority governance composable and transport-independent.\n\n## Rule\n\nFor every AC_ artifact:\n1. `core.attributes` MUST NOT contain fields named to signal permissions, roles, capabilities, or execution rights (e.g., `allowed_workflows`, `permissions`, `roles`, `authorization`, `execution_rights`)\n2. The artifact MUST NOT declare admissibility rules, projection visibility constraints, or workflow authorization grants\n3. The artifact MUST NOT reference authorization databases, authority stores, or runtime permission tables\n4. Identity attributes (type, email, agent_id, etc.) MUST carry no implicit authority semantics\n\n## Enforcement Scope\n\n- **Artifact Types**: AC\n- **Validation Phase**: ASSERT (compile-time)\n- **Enforced By**: ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0\n\n## Rationale\n\nIdentity answers: *what is this entity?*\nAuthority answers: *what may this entity do?*\n\nThese are orthogonal governance questions with different answer surfaces, different lifecycle semantics, and different downstream consumers. Identity is stable and structural; authority is dynamic, workflow-scoped, and policy-driven.\n\nCollapsing them into a single artifact conflates identity declaration with execution eligibility, introduces hidden authority semantics into the compiled snapshot, and makes authority governance dependent on identity artifact structure. This is the same class of error as embedding routing logic in transport artifacts or embedding domain logic in the runtime.\n\nThe separation is not a convention \u2014 it is a structural invariant enforced at compile time. Future authority systems (cryptographic, federated, distributed) may evolve independently of actor identity governance precisely because this boundary is invariant.\n",
+  "content_hash": "d29199bc6f8a88b2a3d6bf41e07156a7a462cccebcef72e0799afff4f40c8188",
+  "fqdn_id": "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "AC_ artifacts must not conflate identity with authority; no actor artifact may declare permissions, execution rights, admissibility rules, or authorization semantics",
+      "scope": [
+        "AC"
+      ],
+      "summary": "Identity declaration and execution authority must remain orthogonal governance surfaces"
+    },
+    "governed_by": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0",
+    "invariant_code": "INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_IDENTITY.invariants",
+  "namespace": "fb.identity",
+  "references": [
+    "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0"
+  ],
+  "version": "0"
+}

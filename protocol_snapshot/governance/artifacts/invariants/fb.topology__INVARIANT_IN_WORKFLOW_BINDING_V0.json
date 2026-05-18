@@ -1,0 +1,46 @@
+{
+  "artifact_code": "INVARIANT_IN_WORKFLOW_BINDING_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_IN_WORKFLOW_BINDING_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_IN_WORKFLOW_BINDING_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Every IN artifact used as a WF entry node must resolve to a declared IN artifact,\n    and each IN artifact may be the entry point of at most one workflow. Shared entry\n    intents create ambiguous admission semantics.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - INTENTS\n    - WORKFLOWS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_IN_WORKFLOW_BINDING_V0\n\n  anti_patterns:\n    - shared_entry_intent: \"Same IN FQDN referenced as start_node by multiple WFs\"\n    - unresolvable_in: \"IN FQDN referenced by WF does not resolve to a declared IN artifact\"\n\n  clarification:\n    single_binding: >\n      An IN artifact is a workflow-specific admission contract. Sharing it\n      across workflows would couple admission semantics of distinct workflows.\n    fqdn_resolution: >\n      The IN node code in the WF nodes map must resolve to a declared IN artifact\n      via FQDN. This invariant enforces both resolution and uniqueness.\n```\n\n---\n\n## Purpose\n\nEnsure entry intents are dedicated per-workflow and resolvable.\n\n---\n\n## Validation Rules\n\n### Rule: IN Resolves to Declared Artifact\n\nIN node FQDN in each WF must resolve to an IN artifact in the compilation graph.\n\n**Violation**:\n```yaml\nnodes:\n  IN_MISSING_V0:    # Not declared anywhere\n    type: IN\n```\n\n### Rule: IN Used by At Most One WF\n\nNo IN FQDN may appear as start_node in more than one workflow.\n\n**Violation**:\n- `WF_REGISTER_ACTOR_V0` start_node \u2192 `IN_REGISTER_V0`\n- `WF_REGISTER_DEVICE_V0` start_node \u2192 `IN_REGISTER_V0`  \u2190 WRONG: same IN\n\n---\n\n## Scope\n\n**Applies to**: All IN artifacts, all WF artifacts\n\n**Does NOT validate**: IN schema content (see INVARIANT_IN_SCHEMA_REQUIRED_V0)\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-04)\n",
+  "content_hash": "7b168bd0b723d6cf325b37a41b1bed2f5458d2f4fd57b4dda854139a4060379f",
+  "fqdn_id": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "shared_entry_intent": "Same IN FQDN referenced as start_node by multiple WFs"
+        },
+        {
+          "unresolvable_in": "IN FQDN referenced by WF does not resolve to a declared IN artifact"
+        }
+      ],
+      "clarification": {
+        "fqdn_resolution": "The IN node code in the WF nodes map must resolve to a declared IN artifact via FQDN. This invariant enforces both resolution and uniqueness.",
+        "single_binding": "An IN artifact is a workflow-specific admission contract. Sharing it across workflows would couple admission semantics of distinct workflows.\n"
+      },
+      "description": "Every IN artifact used as a WF entry node must resolve to a declared IN artifact, and each IN artifact may be the entry point of at most one workflow. Shared entry intents create ambiguous admission semantics.\n",
+      "enforced_by": [
+        "ASSERT_IN_WORKFLOW_BINDING_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "INTENTS",
+        "WORKFLOWS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_IN_WORKFLOW_BINDING_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,46 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "fields": "$.inputs.fields"
+        },
+        "atom": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_assemble_record_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_ASSEMBLE_RECORD_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+    "input_types": {
+      "fields": "object"
+    },
+    "inputs": {
+      "fields": {
+        "active": true,
+        "age": 30,
+        "name": "Alice"
+      }
+    },
+    "outputs": {
+      "record": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "record": {
+      "active": true,
+      "age": 30,
+      "name": "Alice"
+    }
+  },
+  "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0::assemble_simple_record",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_ASSEMBLE_RECORD_V0"
+}

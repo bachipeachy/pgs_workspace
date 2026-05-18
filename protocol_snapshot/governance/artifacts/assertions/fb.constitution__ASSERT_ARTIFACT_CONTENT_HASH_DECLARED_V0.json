@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: V0\n\ngoverned_by:\n  - fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_artifact_content_hash_declared_v0\n  callable: execute\n```\n\n## Summary\n\nVerifies every compiled artifact in the snapshot carries a non-empty content_hash \u2014\nconfirming full materialization of the compiled set.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All build contexts\n\n---\n\n## Purpose\n\nEnforce INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0 during compilation.\n\nScans every artifact in the compiled set. Any artifact missing a `content_hash`\nfield, or with a `content_hash` that is empty or null, is an incomplete\nmaterialization \u2014 the MATERIALIZE phase did not fully process it.\n\nA snapshot where any artifact lacks a `content_hash` cannot be integrity-audited,\nused for incremental build comparison, or treated as a deterministic output.\nThe build must fail rather than emit a partial snapshot.\n",
+  "content_hash": "5a785017dc1cdb497f26ade735a16e08a4393208b3e644914508dc605d386564",
+  "fqdn_id": "fb.constitution::ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_artifact_content_hash_declared_v0"
+    },
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.assertions",
+  "namespace": "fb.constitution",
+  "references": [],
+  "version": "0"
+}

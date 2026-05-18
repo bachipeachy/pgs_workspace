@@ -1,0 +1,67 @@
+{
+  "artifact_code": "CONSTITUTION_CAPABILITY_CONTRACT_V0",
+  "artifact_type": "CONSTITUTION",
+  "content": "# CONSTITUTION_CAPABILITY_CONTRACT_V0\n\n## Machine\n```yaml\nfqdn: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\nconstitution_code: CONSTITUTION_CAPABILITY_CONTRACT_V0\nartifact_kind: CONSTITUTION\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  description: Governs Capability Contract (CC) artifacts \u2014 explicit binding, determinism, and governed denial\n  scope: artifact\n  governs:\n    - CC\n  enforcement_model: compiler_enforced\n\nrules:\n  - rule_id: CC_INPUTS_SATISFIED\n    applies_to: CC\n    constraint: all CC inputs MUST be satisfied by declared bindings before execution\n    enforced_by: ASSERT_CC_INPUTS_SATISFIED_V0\n\n  - rule_id: CC_CAPABILITY_BINDING_VALID\n    applies_to: CC\n    constraint: every capability reference in CC MUST resolve to a declared CT or CS artifact\n    enforced_by: ASSERT_CC_CAPABILITY_BINDING_VALID_V0\n\n  - rule_id: CC_NO_IMPLICIT_CHAINING\n    applies_to: CC\n    constraint: CC MUST NOT implicitly chain capabilities; all dataflow MUST be explicitly declared\n    enforced_by: ASSERT_CC_NO_IMPLICIT_CHAINING_V0\n\n  - rule_id: CC_NO_MISSING_DEPENDENCIES\n    applies_to: CC\n    constraint: CC MUST NOT reference undeclared inputs or capabilities\n    enforced_by: ASSERT_CC_NO_MISSING_DEPENDENCIES_V0\n\n  - rule_id: CC_NO_UNUSED_OUTPUTS\n    applies_to: CC\n    constraint: CC MUST NOT declare outputs that are never consumed or emitted\n    enforced_by: ASSERT_CC_NO_UNUSED_OUTPUTS_V0\n\n  - rule_id: CC_FQDN_REFERENCES\n    applies_to: CC\n    constraint: all artifact references in CC MUST use FQDN\n    enforced_by: ASSERT_FQDN_ONLY_REFERENCES_V0\n```\n\n---\n\n## 1. Purpose\n\nThis constitution defines the governance and enforcement rules for Capability Contract (CC) artifacts.\n\nCapability Contracts bind pure Capability Transforms (CTs) and authorized Capability Side Effects (CSs) into governed executable units. They are the execution nodes within a workflow \u2014 declarative, deterministic, and auditable.\n\n---\n\n## 2. Core Principles\n\n- **Input Completeness:** All inputs required by a CC MUST be satisfied by declared bindings before execution begins. Unsatisfied inputs are constitutional violations.\n- **Valid Capability Bindings:** Every capability referenced in a CC MUST resolve to a declared CT or CS artifact. Unresolved references fail the build.\n- **No Implicit Chaining:** All dataflow between capabilities MUST be explicitly declared. Implicit chaining or ambient state is forbidden.\n- **No Missing Dependencies:** A CC MUST NOT reference inputs or capabilities not declared in scope.\n- **No Unused Outputs:** All declared outputs MUST be consumed or emitted. Dead outputs are governance noise.\n- **FQDN References:** All artifact references within a CC MUST use fully-qualified names.\n\n---\n\n## 3. Required Fields\n\n- `cc_code`: Unique identifier for the capability contract.\n- `version`: Version of the capability contract artifact.\n- `governed_by`: The constitution governing this capability contract.\n- `core`: Metadata including summary, inputs, outputs, result_status_contract, and pipeline.\n\n**Schema**: `SCHEMA_CAPABILITY_CONTRACT_V0.json` \u2014 canonical JSON Schema for CC artifact structure.\n**Pipeline step schema**: `SCHEMA_CC_PIPELINE_STEP_V0.json` \u2014 canonical JSON Schema for a single execution topology step.\n\n---\n\n## 4. Validation Rules\n\n- All input fields declared in `core.inputs` MUST be bound before execution.\n- All capability references in `core.pipeline` MUST resolve to declared CT or CS artifacts.\n- No output declared in `core.outputs` may remain unconsumed across the pipeline.\n\n---\n\n## End of Constitution\n",
+  "content_hash": "f145673980b55e72747e87e4eb24f7bc8031425188ca997ef691d8727e374329",
+  "fqdn_id": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+  "frontmatter": {
+    "artifact_kind": "CONSTITUTION",
+    "constitution_code": "CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "core": {
+      "description": "Governs Capability Contract (CC) artifacts \u2014 explicit binding, determinism, and governed denial",
+      "enforcement_model": "compiler_enforced",
+      "governs": [
+        "CC"
+      ],
+      "scope": "artifact"
+    },
+    "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "rules": [
+      {
+        "applies_to": "CC",
+        "constraint": "all CC inputs MUST be satisfied by declared bindings before execution",
+        "enforced_by": "ASSERT_CC_INPUTS_SATISFIED_V0",
+        "rule_id": "CC_INPUTS_SATISFIED"
+      },
+      {
+        "applies_to": "CC",
+        "constraint": "every capability reference in CC MUST resolve to a declared CT or CS artifact",
+        "enforced_by": "ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
+        "rule_id": "CC_CAPABILITY_BINDING_VALID"
+      },
+      {
+        "applies_to": "CC",
+        "constraint": "CC MUST NOT implicitly chain capabilities; all dataflow MUST be explicitly declared",
+        "enforced_by": "ASSERT_CC_NO_IMPLICIT_CHAINING_V0",
+        "rule_id": "CC_NO_IMPLICIT_CHAINING"
+      },
+      {
+        "applies_to": "CC",
+        "constraint": "CC MUST NOT reference undeclared inputs or capabilities",
+        "enforced_by": "ASSERT_CC_NO_MISSING_DEPENDENCIES_V0",
+        "rule_id": "CC_NO_MISSING_DEPENDENCIES"
+      },
+      {
+        "applies_to": "CC",
+        "constraint": "CC MUST NOT declare outputs that are never consumed or emitted",
+        "enforced_by": "ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
+        "rule_id": "CC_NO_UNUSED_OUTPUTS"
+      },
+      {
+        "applies_to": "CC",
+        "constraint": "all artifact references in CC MUST use FQDN",
+        "enforced_by": "ASSERT_FQDN_ONLY_REFERENCES_V0",
+        "rule_id": "CC_FQDN_REFERENCES"
+      }
+    ],
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.constitutions",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

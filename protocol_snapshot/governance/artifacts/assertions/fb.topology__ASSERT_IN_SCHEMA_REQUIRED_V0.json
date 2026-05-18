@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_IN_SCHEMA_REQUIRED_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_IN_SCHEMA_REQUIRED_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_IN_SCHEMA_REQUIRED_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_in_schema_required_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that every IN artifact declares a non-empty inputs block:\n1. IN artifact must have a core.inputs field (not a top-level schema field)\n2. core.inputs must declare at least one field\n3. Each declared input field must have a non-empty type\n\n## Enforcement\n\n- **Phase**: 4 (VALIDATE)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All IN artifacts\n\n## Handler Behavior\n\n### 1. Check Inputs Presence\n\nVerify each IN artifact has core.inputs.\n\nViolation: core.inputs missing or null.\n\n### 2. Check Inputs Non-Empty\n\nVerify core.inputs declares at least one field.\n\nViolation: core.inputs is an empty mapping.\n\n### 3. Check Field Types\n\nVerify each input field declares a non-empty type.\n\nViolation: field present but type missing or empty.\n\n## Error Messages\n\n### Missing Schema\n```\n\u274c ASSERT_IN_SCHEMA_REQUIRED_V0: Missing schema\n   IN: IN_EXAMPLE_V0\n   Violation: IN artifact must declare a schema\n   Fix: Add schema field with at least one typed field declaration\n```\n\n### Empty Schema\n```\n\u274c ASSERT_IN_SCHEMA_REQUIRED_V0: Empty schema\n   IN: IN_EXAMPLE_V0\n   Violation: IN schema must declare at least one field\n   Fix: Declare at least one input field in schema\n```\n\n## Rationale\n\nIntent artifacts are admission gates. A schema-less intent cannot validate\nincoming payloads, defeating the purpose of the admission check. Every intent\nmust declare what it expects.\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-04)\n",
+  "content_hash": "cb67131a930b15c3a37124b602ea6ce6a5b919a708d1562179e7f6e17de10f51",
+  "fqdn_id": "fb.topology::ASSERT_IN_SCHEMA_REQUIRED_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_IN_SCHEMA_REQUIRED_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_in_schema_required_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

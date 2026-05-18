@@ -1,0 +1,59 @@
+{
+  "artifact_code": "IN_ACTOR_VERIFIED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_ACTOR_VERIFIED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_ACTOR_VERIFIED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_VERIFY_ACTOR_V0\n\n---\n\n## 1. Intent\n\nRecord a verification decision for an actor, transitioning from unverified to verified or rejected state.\n\n---\n\n## 2. Rationale\n\nActor verification is a governance checkpoint:\n- Requires explicit decision (VERIFIED or REJECTED)\n- Requires verifier authority identification\n- Creates immutable audit trail\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_VERIFY_ACTOR_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Actor identity data (first_name, last_name, email_registration) |\n| verifier_id | string | true | ID of the system authority performing verification |\n| decision | string (enum) | true | Verification decision: VERIFIED or REJECTED |\n| notes | string | false | Optional verification notes |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Verification decision recorded |\n| NACK | Verification failed |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.identity.actor\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_ACTOR_VERIFIED_V0\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Verify an actor\n  workflow: WF_VERIFY_ACTOR_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Actor identity data (first_name, last_name, email_registration)\n    verifier_id:\n      type: string\n      required: true\n      description: ID of the layers authority performing verification\n    decision:\n      type: string\n      enum:\n        - VERIFIED\n        - REJECTED\n      required: true\n      description: Verification decision\n    notes:\n      type: string\n      description: Optional verification notes\n\n  outcomes:\n    ACK:\n      description: Verification decision recorded\n    NACK:\n      description: Verification failed\n\nextensions:\n  domain: pgs.identity.actor\n```\n",
+  "content_hash": "7472bc9d70399681c4197e158a4571a71a997e2c53797c1e906ba15a8da42dfb",
+  "fqdn_id": "blockchain::IN_ACTOR_VERIFIED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "actor_record": {
+          "description": "Actor identity data (first_name, last_name, email_registration)",
+          "required": true,
+          "type": "object"
+        },
+        "decision": {
+          "description": "Verification decision",
+          "enum": [
+            "VERIFIED",
+            "REJECTED"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "notes": {
+          "description": "Optional verification notes",
+          "type": "string"
+        },
+        "verifier_id": {
+          "description": "ID of the layers authority performing verification",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Verification decision recorded"
+        },
+        "NACK": {
+          "description": "Verification failed"
+        }
+      },
+      "summary": "Verify an actor",
+      "workflow": "WF_VERIFY_ACTOR_V0"
+    },
+    "extensions": {
+      "domain": "pgs.identity.actor"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_ACTOR_VERIFIED_V0",
+    "version": "V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

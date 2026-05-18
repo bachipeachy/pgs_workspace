@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_HANDLER_REGISTRY_CLOSED_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_HANDLER_REGISTRY_CLOSED_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: V0\n\ngoverned_by:\n  - fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_handler_registry_closed_v0\n  callable: execute\n```\n\n## Summary\n\nVerifies every ASSERT artifact in the compiled set has its implementation handler\nregistered in the static HANDLER_REGISTRY before the ASSERT phase executes.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All build contexts\n\n---\n\n## Purpose\n\nEnforce INVARIANT_HANDLER_REGISTRY_CLOSED_V0 during compilation.\n\nScans all ASSERT artifacts in the compiled set. For each, resolves the\n`implementation.module` declared in its frontmatter against the static\nHANDLER_REGISTRY. Any ASSERT artifact whose handler is absent from the registry\nis a conformance violation \u2014 the build cannot proceed with an incomplete enforcement\nsurface.\n\nThis assertion enforces the closed-world assumption: the registry is the sole\nauthority for handler resolution. Dynamic discovery via importlib or filesystem\nscanning is forbidden.\n",
+  "content_hash": "77e5d81dbbbf470bab07fed08cff2f3d554733520da36482a8c4674daab9ef36",
+  "fqdn_id": "fb.constitution::ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_handler_registry_closed_v0"
+    },
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.assertions",
+  "namespace": "fb.constitution",
+  "references": [],
+  "version": "0"
+}

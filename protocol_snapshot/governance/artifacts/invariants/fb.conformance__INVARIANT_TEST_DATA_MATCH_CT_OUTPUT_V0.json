@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  summary: TEST_DATA expected outputs must match CT output contract\n  rule: All TEST_DATA artifacts must declare expected outputs matching their target CT output keys\n  scope:\n    - TEST_DATA\n```\n\n## Summary\n\nEvery TEST_DATA artifact must declare `expected` outputs with keys that exactly match the output contract of its target CT.\n\n## Rule\n\nFor every TEST_DATA artifact:\n1. TEST_DATA must reference a target CT (via test_target or equivalent)\n2. TEST_DATA must declare `expected` section\n3. Expected keys must match CT's CC output declaration\n4. Missing keys or extra keys are violations\n\n## Enforcement Scope\n\n- **Artifact Types**: TEST_DATA\n- **Validation Phase**: Phase 5 (ASSERT)\n- **Enforcement**: MANDATORY (build fails on violation)\n\n## Examples\n\n### \u2705 VALID\n\n**CT Output Contract (from CC):**\n```yaml\noutput:\n  seed_bytes: hex_string\n  is_valid: bool\n```\n\n**TEST_DATA:**\n```yaml\ntest_cases:\n  - inputs: {...}\n    expected:\n      seed_bytes: \"NOT_NONE\"\n      is_valid: true\n```\n\n### \u274c INVALID\n\n**Missing key:**\n```yaml\nexpected:\n  seed_bytes: \"NOT_NONE\"\n  # \u274c Missing \"is_valid\"\n```\n\n**Extra key:**\n```yaml\nexpected:\n  seed_bytes: \"NOT_NONE\"\n  is_valid: true\n  bonus_field: \"value\"  # \u274c Not in CT contract\n```\n\n## Rationale\n\nTEST_DATA contract matching ensures:\n- Test coverage completeness\n- Catch contract changes at compile time\n- No silent test gaps\n- Explicit test expectations\n- Traceable conformance validation\n\n## Related Artifacts\n\n- `governance::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0` - Complementary check\n- `fb.conformance::CONSTITUTION_TEST_DATA_V0` - Governs TEST_DATA structure\n",
+  "content_hash": "27806f4396779a2a2ba07dede389e3d9990645b4f1422d76dc395ce877266da3",
+  "fqdn_id": "fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "All TEST_DATA artifacts must declare expected outputs matching their target CT output keys",
+      "scope": [
+        "TEST_DATA"
+      ],
+      "summary": "TEST_DATA expected outputs must match CT output contract"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONFORMANCE.invariants",
+  "namespace": "fb.conformance",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

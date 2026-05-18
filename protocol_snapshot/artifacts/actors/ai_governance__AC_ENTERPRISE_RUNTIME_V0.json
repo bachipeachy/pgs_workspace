@@ -1,0 +1,30 @@
+{
+  "artifact_code": "AC_ENTERPRISE_RUNTIME_V0",
+  "artifact_type": "AC",
+  "content": "# AC_ENTERPRISE_RUNTIME_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** AC_ENTERPRISE_RUNTIME_V0\n- **Artifact Kind:** actor\n- **Governed By:** CONSTITUTION_GOVERNANCE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Identity\n\nThe isolated side-effect executor that performs authorized actions.\n\n---\n\n## 2. Rationale\n\nThe enterprise runtime executes governed side effects:\n- Receives only authorized actions from the governance pipeline\n- Executes within isolated capability boundaries\n- Produces auditable persistence records\n\n---\n\n## 3. Type\n\n| Property | Value |\n|----------|-------|\n| Type | system |\n\n---\n\n## 4. Attributes\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| runtime_id | string | true | Runtime executor identifier |\n\n---\n\n## Machine\n\n```yaml\nac_code: AC_ENTERPRISE_RUNTIME_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_GOVERNANCE_V0\n\ncore:\n  summary: Isolated side-effect executor\n  description: Executes authorized actions within isolated capability boundaries\n  type: system\n\n  attributes:\n    runtime_id:\n      type: string\n      required: true\n```\n",
+  "content_hash": "eda3a0a3b5588860fd562ebd9ff231b5a33ec5b2899ee945a4ec2fca7962f7ef",
+  "fqdn_id": "ai_governance::AC_ENTERPRISE_RUNTIME_V0",
+  "frontmatter": {
+    "ac_code": "AC_ENTERPRISE_RUNTIME_V0",
+    "core": {
+      "attributes": {
+        "runtime_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "description": "Executes authorized actions within isolated capability boundaries",
+      "summary": "Isolated side-effect executor",
+      "type": "system"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.actors",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+  ],
+  "version": "0"
+}

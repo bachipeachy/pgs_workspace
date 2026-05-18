@@ -1,0 +1,131 @@
+{
+  "artifact_code": "CC_DERIVE_WALLET_KEYS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+        "id": "CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+        "inputs": [
+          "entropy_bits",
+          "entropy_bytes",
+          "passphrase",
+          "root_path_indices",
+          "eoa_child_indices"
+        ],
+        "inputs_truncated": true,
+        "kind": "CT",
+        "outputs": [
+          "eoa_public_key_hex",
+          "eoa_address",
+          "eoa_derivation_path",
+          "utxo_public_key_hex",
+          "utxo_address"
+        ],
+        "outputs_truncated": true
+      }
+    ]
+  },
+  "content": "# CC_DERIVE_WALLET_KEYS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_DERIVE_WALLET_KEYS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\n\n---\n\n## 1. Intent\n\nDerive dual-address HD wallet keypairs (EOA + UTXO) for a new wallet. Generates entropy, derives keys through BIP32/BIP39, and returns only public-derivable fields.\n\n---\n\n## 2. Rationale\n\nWallet key derivation:\n- Generates fresh entropy per invocation (no key reuse)\n- Derives EOA and UTXO addresses from a single seed with shared root path\n- Returns only public keys, addresses, derivation paths, and master fingerprint\n- Private material never leaves the CT execution scope\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_DERIVE_WALLET_KEYPAIRS_V0 | CT | DERIVE_WALLET_KEYPAIRS |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| coin_type | integer | false | BIP44 coin type (default 66 for BACHI) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| eoa_public_key_hex | string | EOA uncompressed public key, hex |\n| eoa_address | string | EOA Ethereum address, 0x-prefixed |\n| eoa_derivation_path | string | Full EOA BIP32 path |\n| utxo_public_key_hex | string | UTXO uncompressed public key, hex |\n| utxo_address | string | UTXO Ethereum address, 0x-prefixed |\n| utxo_derivation_path | string | Full UTXO BIP32 path |\n| master_fingerprint | string | HASH160(master_pubkey)[:4], hex |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Key derivation completed |\n| VIOLATION | Invalid input or CT execution failure |\n\n---\n\n## 7. Failure Semantics\n\n- CT failure results in VIOLATION and exit\n- No side effects on failure \u2014 entropy is discarded\n\n---\n\n## 8. Security Invariant\n\nNo CT output field containing `private_key`, `seed`, `mnemonic`, or `entropy` may be bound to any CS or persistent capability. Only the output fields listed in \u00a75 appear in the CC output bindings. Private material exists only within the CT execution scope and is discarded when the pipeline completes.\n\n---\n\n## 9. Derivation Path Semantics\n\n```\nderivation_root = m/44'/66'/0'     (purpose / coin_type / account \u2014 all hardened)\nchild paths (relative to root):\n  EOA  = 0/0                        (change=0 / address_index=0 \u2014 NOT hardened)\n  UTXO = 1/0                        (change=1 / address_index=0 \u2014 NOT hardened)\n\nFull resolved paths:\n  EOA  = m/44'/66'/0'/0/0\n  UTXO = m/44'/66'/0'/1/0\n```\n\nThe derivation_root includes account-level hardening. Child path indices are non-hardened. Do not double-harden.\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_DERIVE_WALLET_KEYS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Derive dual-address HD wallet keypairs\n\n  inputs:\n    coin_type:\n      type: integer\n      required: false\n\n  outputs:\n    eoa_public_key_hex:\n      type: string\n    eoa_address:\n      type: string\n    eoa_derivation_path:\n      type: string\n    utxo_public_key_hex:\n      type: string\n    utxo_address:\n      type: string\n    utxo_derivation_path:\n      type: string\n    master_fingerprint:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: derive_wallet_keypairs\n      transform: blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\n      op: DERIVE_WALLET_KEYPAIRS\n      inputs:\n        entropy_bits: 128\n        passphrase: \"\"\n        root_path_indices: [2147483692, 2147483714, 2147483648]\n        eoa_child_indices: [0, 0]\n        utxo_child_indices: [1, 0]\n        curve: secp256k1\n      outputs:\n        eoa_public_key_hex: $.capability_result.eoa_public_key_hex\n        eoa_address: $.capability_result.eoa_address\n        eoa_derivation_path: $.capability_result.eoa_derivation_path\n        utxo_public_key_hex: $.capability_result.utxo_public_key_hex\n        utxo_address: $.capability_result.utxo_address\n        utxo_derivation_path: $.capability_result.utxo_derivation_path\n        master_fingerprint: $.capability_result.master_fingerprint\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n```\n",
+  "content_hash": "d918f6464fb3ac8234fda320fb042f5bb38b00f8f729f093535edd570ec30ea0",
+  "fqdn_id": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+  "frontmatter": {
+    "cc_code": "CC_DERIVE_WALLET_KEYS_V0",
+    "core": {
+      "inputs": {
+        "coin_type": {
+          "required": false,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "eoa_address": {
+          "type": "string"
+        },
+        "eoa_derivation_path": {
+          "type": "string"
+        },
+        "eoa_public_key_hex": {
+          "type": "string"
+        },
+        "master_fingerprint": {
+          "type": "string"
+        },
+        "utxo_address": {
+          "type": "string"
+        },
+        "utxo_derivation_path": {
+          "type": "string"
+        },
+        "utxo_public_key_hex": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "curve": "secp256k1",
+            "entropy_bits": 128,
+            "eoa_child_indices": [
+              0,
+              0
+            ],
+            "passphrase": "",
+            "root_path_indices": [
+              2147483692,
+              2147483714,
+              2147483648
+            ],
+            "utxo_child_indices": [
+              1,
+              0
+            ]
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_WALLET_KEYPAIRS",
+          "outputs": {
+            "eoa_address": "$.capability_result.eoa_address",
+            "eoa_derivation_path": "$.capability_result.eoa_derivation_path",
+            "eoa_public_key_hex": "$.capability_result.eoa_public_key_hex",
+            "master_fingerprint": "$.capability_result.master_fingerprint",
+            "utxo_address": "$.capability_result.utxo_address",
+            "utxo_derivation_path": "$.capability_result.utxo_derivation_path",
+            "utxo_public_key_hex": "$.capability_result.utxo_public_key_hex"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_wallet_keypairs",
+          "transform": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Derive dual-address HD wallet keypairs"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

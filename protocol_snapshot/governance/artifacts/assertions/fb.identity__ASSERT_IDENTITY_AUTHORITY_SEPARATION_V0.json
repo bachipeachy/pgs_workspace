@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_identity_authority_separation_v0\n  callable: execute\n```\n\n## Summary\n\nIdentity declaration and execution authority must remain orthogonal governance surfaces. This assertion detects conflation from the identity governance side: actor artifacts that carry authority semantics (permissions, workflow eligibility, admissibility rules, execution rights) are a constitutional violation.\n\n## Rule\n\nFor every AC_ artifact:\n1. `core.attributes` MUST NOT contain fields named to signal permissions, roles, capabilities, or execution rights (e.g., `allowed_workflows`, `permissions`, `roles`, `authorization`, `execution_rights`)\n2. The artifact MUST NOT declare admissibility rules, projection visibility constraints, or workflow authorization grants\n3. The artifact MUST NOT reference the authority registry, authorization databases, or runtime permission tables\n4. Identity attributes (type, email, agent_id, etc.) MUST carry no implicit authority semantics\n\n## Enforcement\n\n- **Artifact Types**: AC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_identity_authority_separation_v0`\n- **Paired Invariant**: INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0\n\n## Rationale\n\nThis assertion enforces the boundary from the identity governance side. `ASSERT_ACTOR_AUTHORITY_SEPARATION_V0` enforces the same boundary from the authority governance side. Both are required for complete bilateral enforcement of the identity/authority orthogonality law.\n\nThis is a Phase 1 stub. Attribute field name detection is implemented in Phase 4.\n",
+  "content_hash": "fea29beb90c27a8b9b200abd23ae81837f178c9559415f5007174a8f18e8c632",
+  "fqdn_id": "fb.identity::ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_identity_authority_separation_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_IDENTITY.assertions",
+  "namespace": "fb.identity",
+  "references": [],
+  "version": "0"
+}

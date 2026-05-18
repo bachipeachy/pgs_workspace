@@ -1,0 +1,41 @@
+{
+  "artifact_code": "EV_LICENSE_REVOKED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_LICENSE_REVOKED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_LICENSE_REVOKED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA license has been revoked and returned to the pool.\n\n---\n\n## 2. Rationale\n\nLicense revocation is autonomous reclamation:\n- Triggered by inactivity threshold\n- No human intervention required\n- Returns license for pending employees\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_AUTO_RECLAIM_V0 | CC_RECLAIM_UNUSED_LICENSE_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| license_id | string | true | License that was revoked |\n| reason | string | true | Revocation reason: INACTIVITY |\n| timestamp | string (date-time) | true | When revocation occurred |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_LICENSE_REVOKED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: License Revoked\n  description: Emitted when a license is revoked and returned to pool\n\n  schema:\n    license_id:\n      type: string\n      required: true\n    reason:\n      type: string\n      enum:\n        - INACTIVITY\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "10354a31aace780dddce3c5e9af965c74e72986f61f4a9f3498e7834f3928269",
+  "fqdn_id": "ai_governance::EV_LICENSE_REVOKED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a license is revoked and returned to pool",
+      "schema": {
+        "license_id": {
+          "required": true,
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "INACTIVITY"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "License Revoked"
+    },
+    "ev_code": "EV_LICENSE_REVOKED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.ai_licensing.events",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

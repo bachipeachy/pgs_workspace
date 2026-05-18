@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0\n\nGovernance Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_topology_authority_orthogonal_v0\n  callable: execute\n```\n\n## Summary\n\nExecution topology steps must not encode authority semantics. This assertion detects\nauthority-semantic field names inside CC pipeline steps \u2014 role declarations, permission\nchecks, authorization branching, actor-type gating. Topology that encodes authority\nsemantics collapses two orthogonal governance planes.\n\nThis is the topology-side complement of `ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0` (identity\nplane) and `ASSERT_ACTOR_AUTHORITY_SEPARATION_V0` (authority plane). All three enforce the\nidentity/authority/topology orthogonality law from their respective governance surfaces.\n\n## Rule\n\nFor every CC execution topology step:\n1. Steps MUST NOT declare authority-semantic fields:\n   - `role`, `required_role`, `permissions`, `authorization`, `authorized_by`\n   - `on_role`, `execution_rights`, `actor_type_gate`, `permission_check`\n2. Steps MUST NOT route based on actor identity or permission state\n3. Steps MUST NOT reference authority registries or permission tables\n\n## Enforcement\n\n- **Artifact Types**: CC\n- **Validation Phase**: compile_time\n- **Handler**: `pgs_governance.registry.handlers.assert_topology_authority_orthogonal_v0`\n- **Paired Invariant**: INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0\n\n## Rationale\n\nAuthority is evaluated before topology traversal begins. The topology surface receives\na binary admissibility outcome \u2014 admitted or not. It does not receive authority state to\nconsume, route on, or re-evaluate. Topology that encodes authority semantics has bypassed\nthe authority governance plane and embedded authorization logic in execution traversal.\n\nEnforced at compile time: detects authority-semantic field names (`role`, `permissions`, `authorized_by`, etc.) inside CC pipeline steps.\n",
+  "content_hash": "557414c4baa6f6471c349f2a3751d75ef2c30acc453b1d7e1650ee2cc2e16a77",
+  "fqdn_id": "fb.topology::ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_topology_authority_orthogonal_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

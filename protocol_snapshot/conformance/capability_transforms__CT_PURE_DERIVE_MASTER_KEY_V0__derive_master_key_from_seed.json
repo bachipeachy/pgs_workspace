@@ -1,0 +1,42 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "seed_bytes": "$.inputs.seed_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_master_key_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_DERIVE_MASTER_KEY_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+    "input_types": {
+      "seed_bytes": "hex_string"
+    },
+    "inputs": {
+      "seed_bytes": "0x5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4"
+    },
+    "outputs": {
+      "master_chain_code_bytes": {
+        "from": "__atom_result__"
+      },
+      "master_private_key_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "master_chain_code_bytes": "0x7923408dadd3c7b56eed15567707ae5e5dca089de972e07f3b860450e2a3b70e",
+    "master_private_key_bytes": "0x1837c1be8e2995ec11cda2b066151be2cfb48adf9e47b151d46adab3a21cdf67"
+  },
+  "fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0::derive_master_key_from_seed",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_DERIVE_MASTER_KEY_V0"
+}

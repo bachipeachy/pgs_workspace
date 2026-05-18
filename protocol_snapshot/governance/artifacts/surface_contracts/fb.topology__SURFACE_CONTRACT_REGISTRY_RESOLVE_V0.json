@@ -1,0 +1,31 @@
+{
+  "artifact_code": "SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
+  "artifact_type": "SURFACE",
+  "content": "# SURFACE_CONTRACT_REGISTRY_RESOLVE_V0\n\n## Header\n\n- **Artifact Code:** SURFACE_CONTRACT_REGISTRY_RESOLVE_V0\n- **Artifact Kind:** surface_contract\n- **Governed By:** fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n- **Version:** V0\n- **Status:** canonical\n\n---\n\n## Purpose\n\nCanonical result surface for registry READ (resolve/lookup) operations.\n\nA registry READ operation can succeed with the resolved record, report that the key is not\nregistered, encounter an invalid input, or fail due to storage unavailability. These four\noutcomes are exhaustive.\n\n---\n\n## Machine\n\n```yaml\nsurface_contract_code: SURFACE_CONTRACT_REGISTRY_RESOLVE_V0\nartifact_kind: SURFACE_CONTRACT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncapability_family: REGISTRY\nop: READ\n\ncanonical_surface:\n  - SUCCESS\n  - NOT_FOUND\n  - VIOLATION\n  - BACKEND_ERROR\n\ngoverns:\n  - CS_REGISTRY_V0\n```\n",
+  "content_hash": "5f6811f58b76c7974576db058735da56cc8cbaf270b4ad0160709b3db0c0cef8",
+  "fqdn_id": "fb.topology::SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
+  "frontmatter": {
+    "artifact_kind": "SURFACE_CONTRACT",
+    "canonical_surface": [
+      "SUCCESS",
+      "NOT_FOUND",
+      "VIOLATION",
+      "BACKEND_ERROR"
+    ],
+    "capability_family": "REGISTRY",
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "governs": [
+      "CS_REGISTRY_V0"
+    ],
+    "op": "READ",
+    "surface_contract_code": "SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.surface_contracts",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

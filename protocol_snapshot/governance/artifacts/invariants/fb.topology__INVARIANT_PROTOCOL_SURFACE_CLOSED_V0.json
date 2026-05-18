@@ -1,0 +1,52 @@
+{
+  "artifact_code": "INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_PROTOCOL_SURFACE_CLOSED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_PROTOCOL_SURFACE_CLOSED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Protocol surface must be closed: all artifact references must resolve\n    to valid FQDNs in the compilation graph. No dangling references, no\n    short names in reference fields.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - ALL_ARTIFACT_KINDS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_PROTOCOL_SURFACE_CLOSED_V0\n\n  anti_patterns:\n    - dangling_reference: \"Reference to artifact not in compilation graph\"\n    - short_name_reference: \"Reference using short name instead of FQDN\"\n    - unresolved_dependency: \"Dependency declared but not discoverable\"\n    - ambiguous_reference: \"Short name resolving to multiple FQDNs\"\n\n  clarification:\n    bootstrap_artifacts: >\n      Bootstrap artifacts (STRUCTURE, WF, RB for bootstrap phase) are exempt\n      from closure checks during bootstrap discovery phase only.\n    external_references: >\n      External system references (URLs, file paths outside PGS) must be\n      marked as external in artifact metadata, not treated as FQDN references.\n    transitive_closure: >\n      Closure includes transitive references. If A \u2192 B \u2192 C, all three must\n      be in compilation graph.\n```\n\n---\n\n## Purpose\n\nEnsure protocol surface is closed during compilation.\n\n**Core Principle**: Every reference must resolve to a known artifact in the compilation graph.\n\n---\n\n## Enforcement Rules\n\n### Rule 1: No Dangling References\n\nEvery reference must resolve to an artifact in the compilation graph.\n\n**Violation**:\n```yaml\nreferences:\n  - \"pgs.platform.compiler::CT_MISSING_V0\"  # Not found!\n```\n\n**Detection**: After discovery phase, check all references against graph.\n\n---\n\n### Rule 2: No Short Name References\n\nAll references must use FQDN format (`fb.vocabulary::artifact_code`).\n\n**Violation**:\n```yaml\nreferences:\n  - \"CT_TRANSFORM_V0\"  # Short name!\n```\n\n**Expected**:\n```yaml\nreferences:\n  - \"pgs.platform.compiler::CT_TRANSFORM_V0\"  # FQDN\n```\n\n**Detection**: After normalization, check for `::` in all reference strings.\n\n---\n\n### Rule 3: No Ambiguous References\n\nShort names that could resolve to multiple FQDNs are forbidden.\n\n**Violation**:\n```yaml\n# Ambiguous: CT_SCAN_V0 exists in multiple namespaces\nreferences:\n  - \"CT_SCAN_V0\"\n```\n\n**Detection**: Cross-reference discovery results to detect duplicates.\n\n---\n\n### Rule 4: Transitive Closure\n\nIf A references B, and B references C, all three must be in the graph.\n\n**Violation**:\n```yaml\n# A \u2192 B (in graph)\n# B \u2192 C (C missing!)\n```\n\n**Detection**: Recursive reference traversal until closure confirmed.\n\n---\n\n## Scope\n\n**Applies to**:\n- All discovered artifacts (platform + domains)\n- All reference fields (explicit + derived)\n- All compilation phases after normalization\n\n**Exempt**:\n- Bootstrap artifacts during bootstrap phase only\n- External references (explicitly marked)\n- Runtime-only references (not compile-time dependencies)\n\n---\n\n## Version History\n\n- **V0**: Initial invariant (2026-03-31) - ASSERT Activation Phase\n",
+  "content_hash": "ba19d1f8ba3464537e738719af96538067f9c3537d24f6bb4ea951679b923507",
+  "fqdn_id": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "dangling_reference": "Reference to artifact not in compilation graph"
+        },
+        {
+          "short_name_reference": "Reference using short name instead of FQDN"
+        },
+        {
+          "unresolved_dependency": "Dependency declared but not discoverable"
+        },
+        {
+          "ambiguous_reference": "Short name resolving to multiple FQDNs"
+        }
+      ],
+      "clarification": {
+        "bootstrap_artifacts": "Bootstrap artifacts (STRUCTURE, WF, RB for bootstrap phase) are exempt from closure checks during bootstrap discovery phase only.\n",
+        "external_references": "External system references (URLs, file paths outside PGS) must be marked as external in artifact metadata, not treated as FQDN references.\n",
+        "transitive_closure": "Closure includes transitive references. If A \u2192 B \u2192 C, all three must be in compilation graph."
+      },
+      "description": "Protocol surface must be closed: all artifact references must resolve to valid FQDNs in the compilation graph. No dangling references, no short names in reference fields.\n",
+      "enforced_by": [
+        "ASSERT_PROTOCOL_SURFACE_CLOSED_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "ALL_ARTIFACT_KINDS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

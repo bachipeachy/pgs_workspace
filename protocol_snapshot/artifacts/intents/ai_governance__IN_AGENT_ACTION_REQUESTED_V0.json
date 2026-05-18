@@ -1,0 +1,61 @@
+{
+  "artifact_code": "IN_AGENT_ACTION_REQUESTED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_AGENT_ACTION_REQUESTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_AGENT_ACTION_REQUESTED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_GOVERN_AGENT_ACTION_V0\n\n---\n\n## 1. Intent\n\nRequest governance mediation of an agent-proposed action.\n\n---\n\n## 2. Rationale\n\nAll agent actions normalize to a single governed intent:\n- No ambient authority \u2014 agents cannot invoke tools directly\n- Every proposed action enters the governance pipeline through this intent\n- The intent declares the full input surface for governance evaluation\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_GOVERN_AGENT_ACTION_V0 | Workflow that mediates this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tool_name | string | true | Requested tool identifier from closed registry |\n| parameters | object | true | Tool-specific parameter key-value map |\n| requesting_user_id | string | true | Identifier of the user the agent acts on behalf of |\n| domain_context | string | true | Domain context for the request |\n| request_id | string | false | Client-provided request correlation ID |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Governance request accepted for processing |\n| NACK | Governance request rejected at admission |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.governance.agent\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_AGENT_ACTION_REQUESTED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Request governance mediation of agent-proposed action\n  workflow: WF_GOVERN_AGENT_ACTION_V0\n\n  inputs:\n    tool_name:\n      type: string\n      required: true\n      description: Requested tool identifier from closed registry\n    parameters:\n      type: object\n      required: true\n      description: Tool-specific parameter key-value map\n    requesting_user_id:\n      type: string\n      required: true\n      description: Identifier of the user the agent acts on behalf of\n    domain_context:\n      type: string\n      required: true\n      description: Domain context for the request\n    request_id:\n      type: string\n      required: false\n      description: Client-provided request correlation ID\n\n  outcomes:\n    ACK:\n      description: Governance request accepted for processing\n    NACK:\n      description: Governance request rejected at admission\n\nextensions:\n  domain: pgs.governance.agent\n```\n",
+  "content_hash": "51ec5f580e41f54f5b3aa0d0bd812082239a73aae694b1b4247c65380588cad9",
+  "fqdn_id": "ai_governance::IN_AGENT_ACTION_REQUESTED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "domain_context": {
+          "description": "Domain context for the request",
+          "required": true,
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Tool-specific parameter key-value map",
+          "required": true,
+          "type": "object"
+        },
+        "request_id": {
+          "description": "Client-provided request correlation ID",
+          "required": false,
+          "type": "string"
+        },
+        "requesting_user_id": {
+          "description": "Identifier of the user the agent acts on behalf of",
+          "required": true,
+          "type": "string"
+        },
+        "tool_name": {
+          "description": "Requested tool identifier from closed registry",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Governance request accepted for processing"
+        },
+        "NACK": {
+          "description": "Governance request rejected at admission"
+        }
+      },
+      "summary": "Request governance mediation of agent-proposed action",
+      "workflow": "WF_GOVERN_AGENT_ACTION_V0"
+    },
+    "extensions": {
+      "domain": "pgs.governance.agent"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_AGENT_ACTION_REQUESTED_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_governance.intents",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

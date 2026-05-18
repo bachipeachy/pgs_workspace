@@ -1,0 +1,131 @@
+{
+  "artifact_code": "CC_RESERVE_NONCE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "wallet_record": "in.wallet_record"
+        },
+        "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+        "id": "CT_PURE_INCREMENT_WALLET_NONCE_V0",
+        "inputs": [
+          "wallet_record"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "updated_wallet_record",
+          "nonce"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "GET",
+          "PUT",
+          "DELETE",
+          "EXISTS",
+          "LIST"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RESERVE_NONCE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RESERVE_NONCE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_INCREMENT_WALLET_NONCE_V0, CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nReserve the current nonce and write the incremented value back to wallet state.\n\n---\n\n## 2. Rationale\n\nThe wallet record (including current nonce) is read by CC_VALIDATE_TX_POLICY_V0\nand passed through the payload. This CC increments the nonce, writes the updated\nrecord back, and outputs the reserved nonce for transaction building.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_INCREMENT_WALLET_NONCE_V0 | CT | INCREMENT_WALLET_NONCE |\n| 2 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| wallet_id | string | true | Wallet to update nonce for |\n| wallet_record | object | true | Current wallet record from CC_VALIDATE_TX_POLICY_V0 |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| nonce | integer | Reserved nonce value for this transaction |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Nonce reserved and state updated |\n| VIOLATION | Invalid input |\n| BACKEND_ERROR | Storage write failure |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RESERVE_NONCE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Reserve nonce and write incremented value to wallet state\n\n  inputs:\n    wallet_id:\n      type: string\n      required: true\n    wallet_record:\n      type: object\n      required: true\n\n  outputs:\n    nonce:\n      type: integer\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n  pipeline:\n    - step: increment_wallet_nonce\n      transform: blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0\n      op: INCREMENT_WALLET_NONCE\n      inputs:\n        wallet_record: $.inputs.wallet_record\n      outputs:\n        updated_wallet_record: $.capability_result.updated_wallet_record\n        nonce: $.capability_result.nonce\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: write_updated_wallet\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: WALLET\n      op: WRITE\n      inputs:\n        key: $.inputs.wallet_id\n        value: $.results.increment_wallet_nonce.updated_wallet_record\n      outputs:\n        nonce: $.results.increment_wallet_nonce.nonce\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n  error_codes:\n    BACKEND_ERROR: TX_NONCE_CONFLICT\n```\n",
+  "content_hash": "5afca1d6a71a2f72269ddf01a92334b6399d2e3cb21c083f582a5f2cb351566d",
+  "fqdn_id": "blockchain::CC_RESERVE_NONCE_V0",
+  "frontmatter": {
+    "cc_code": "CC_RESERVE_NONCE_V0",
+    "core": {
+      "error_codes": {
+        "BACKEND_ERROR": "TX_NONCE_CONFLICT"
+      },
+      "inputs": {
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "nonce": {
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "wallet_record": "$.inputs.wallet_record"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "INCREMENT_WALLET_NONCE",
+          "outputs": {
+            "nonce": "$.capability_result.nonce",
+            "updated_wallet_record": "$.capability_result.updated_wallet_record"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "increment_wallet_nonce",
+          "transform": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0"
+        },
+        {
+          "inputs": {
+            "key": "$.inputs.wallet_id",
+            "value": "$.results.increment_wallet_nonce.updated_wallet_record"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {
+            "nonce": "$.results.increment_wallet_nonce.nonce"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_updated_wallet",
+          "store": "WALLET"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ]
+      },
+      "summary": "Reserve nonce and write incremented value to wallet state"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

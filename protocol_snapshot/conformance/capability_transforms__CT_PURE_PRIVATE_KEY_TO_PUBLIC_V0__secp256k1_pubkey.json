@@ -1,0 +1,41 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "curve": "$.inputs.curve",
+          "private_key_bytes": "$.inputs.private_key_bytes"
+        },
+        "atom": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_private_key_to_public_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+    "input_types": {
+      "curve": "string",
+      "private_key_bytes": "hex_string"
+    },
+    "inputs": {
+      "curve": "secp256k1",
+      "private_key_bytes": "0xf79bb0d317b310b261a55a8ab393b4c8a1aba6fa4d08aef379caba502d5d67f9"
+    },
+    "outputs": {
+      "public_key_uncompressed_bytes": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "public_key_uncompressed_bytes": "0x0452c616d91a2488c1fd1f0f172e98f7d1f6e51f8f389b2f8d632a8b490d5f6da9e31e8d2571464198117614b47ddb7238c7c9d3706c3d05daf937e2c387b49c6e"
+  },
+  "fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0::secp256k1_pubkey",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0"
+}

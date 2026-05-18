@@ -1,0 +1,68 @@
+{
+  "wf_id": "WF_LOOKUP_NAME_V0",
+  "entry": "entry",
+  "nodes": [
+    {
+      "id": "entry",
+      "type": "IN"
+    },
+    {
+      "id": "lookup",
+      "type": "CC",
+      "cc_code": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0"
+    },
+    {
+      "id": "exit",
+      "type": "EXIT"
+    }
+  ],
+  "edges": [
+    {
+      "from": "entry",
+      "to": "lookup",
+      "condition": "default"
+    },
+    {
+      "from": "lookup",
+      "to": "exit",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "lookup",
+      "to": "exit",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "lookup",
+      "to": "exit",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "lookup",
+      "to": "exit",
+      "condition": "BACKEND_ERROR"
+    }
+  ],
+  "execution_paths": [
+    [
+      "entry",
+      "lookup",
+      "exit"
+    ],
+    [
+      "entry",
+      "lookup",
+      "exit"
+    ],
+    [
+      "entry",
+      "lookup",
+      "exit"
+    ],
+    [
+      "entry",
+      "lookup",
+      "exit"
+    ]
+  ]
+}

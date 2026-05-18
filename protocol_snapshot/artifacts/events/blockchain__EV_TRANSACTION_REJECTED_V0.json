@@ -1,0 +1,45 @@
+{
+  "artifact_code": "EV_TRANSACTION_REJECTED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_TRANSACTION_REJECTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_TRANSACTION_REJECTED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA transaction has been rejected during validation.\n\n---\n\n## 2. Rationale\n\nThis event records transaction rejection:\n- Captures the error code and reason\n- Links rejection to wallet for audit\n- Enables observability of failure patterns\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_SUBMIT_TRANSACTION_V0 | CC_APPEND_TX_EVENT_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_id | string | false | Transaction identifier (may not exist if rejected early) |\n| wallet_id | string | true | Source wallet |\n| error_code | string | true | Structured error code |\n| reason | string | true | Human-readable rejection reason |\n| timestamp | string (date-time) | true | When rejection occurred |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_TRANSACTION_REJECTED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Transaction rejected during validation\n  description: Emitted when a transaction fails structural, policy, or signing validation\n\n  schema:\n    tx_id:\n      type: string\n    wallet_id:\n      type: string\n      required: true\n    error_code:\n      type: string\n      required: true\n    reason:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "857734845d12d21d1e9d0188fc4516c6976c087cffc8474794f17e5d1675d557",
+  "fqdn_id": "blockchain::EV_TRANSACTION_REJECTED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a transaction fails structural, policy, or signing validation",
+      "schema": {
+        "error_code": {
+          "required": true,
+          "type": "string"
+        },
+        "reason": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "tx_id": {
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Transaction rejected during validation"
+    },
+    "ev_code": "EV_TRANSACTION_REJECTED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

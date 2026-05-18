@@ -1,0 +1,27 @@
+{
+  "artifact_code": "INVARIANT_EV_APPEND_ONLY_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_EV_APPEND_ONLY_V0\n\nArchitectural Invariant\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_EV_APPEND_ONLY_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: EV artifacts must not declare mutation operations\n  rule: EV artifacts must not contain update/delete/patch/mutate field declarations\n  scope:\n    - EV\n```\n\n## Summary\n\nEvent stores are append-only. EV artifact declarations must not express mutability semantics.\nNo field in an EV schema or extensions block may declare mutation intent.\n\n## Rule\n\nFor every EV artifact:\n1. `core.schema` MUST NOT contain mutation-signaling field names (`_update`, `_delete`, `_patch`, `_mutate`)\n2. `extensions` MUST NOT declare mutation operation keys\n\nRuntime append-only enforcement is provided by CS_APPENDONLY_JSONL_V0 and the execution engine.\n\n## Enforcement Scope\n\n- **Artifact Types**: EV\n- **Validation Phase**: ASSERT (Phase 5, compile-time)\n- **Runtime Enforcement**: CS_APPENDONLY_JSONL_V0 (hard fail at execution time)\n- **Enforced By**: ASSERT_EV_APPEND_ONLY_V0\n\n## Rationale\n\nAppend-only event stores are the foundation of auditability and replay. Mutation operations\non event records destroy the causal chain. This invariant ensures that no EV artifact\naccidentally declares mutation semantics that could be interpreted as permitting mutation.\n",
+  "content_hash": "ba38f6ff66473f73d7b56f68682b5e5829b68312a82c13183369aa78e0ada8de",
+  "fqdn_id": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "rule": "EV artifacts must not contain update/delete/patch/mutate field declarations",
+      "scope": [
+        "EV"
+      ],
+      "summary": "EV artifacts must not declare mutation operations"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "invariant_code": "INVARIANT_EV_APPEND_ONLY_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_CONSTITUTION.invariants",
+  "namespace": "fb.constitution",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

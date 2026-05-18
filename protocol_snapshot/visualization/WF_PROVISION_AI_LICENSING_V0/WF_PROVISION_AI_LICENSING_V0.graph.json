@@ -1,0 +1,314 @@
+{
+  "wf_id": "WF_PROVISION_AI_LICENSING_V0",
+  "entry": "IN_PROVISION_AI_LICENSE_V0",
+  "nodes": [
+    {
+      "id": "IN_PROVISION_AI_LICENSE_V0",
+      "type": "IN"
+    },
+    {
+      "id": "CC_VALIDATE_ELIGIBILITY_V0",
+      "type": "CC",
+      "cc_code": "CC_VALIDATE_ELIGIBILITY_V0",
+      "capability": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "id": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+            "fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+            "kind": "CT",
+            "inputs": [
+              "training_completed"
+            ],
+            "outputs": [
+              "is_eligible"
+            ],
+            "bindings": {
+              "training_completed": "in.training_completed"
+            }
+          },
+          {
+            "id": "CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+            "fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+            "kind": "CT",
+            "inputs": [
+              "assigned_count",
+              "quota"
+            ],
+            "outputs": [
+              "quota_available"
+            ],
+            "bindings": {
+              "assigned_count": "in.assigned_count",
+              "quota": "in.cap"
+            }
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "employee_id": "IN.employee_id",
+          "training_completed": "IN.context.training_completed",
+          "assigned_count": "IN.context.assigned_count",
+          "cap": "IN.context.cap"
+        }
+      }
+    },
+    {
+      "id": "CC_PROVISION_LICENSE_V0",
+      "type": "CC",
+      "cc_code": "CC_PROVISION_LICENSE_V0",
+      "capability": "capability_side_effects::CS_REGISTRY_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_REGISTRY_V0",
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "employee_id": "IN.employee_id",
+          "license_id": "IN.generated.license_id"
+        }
+      }
+    },
+    {
+      "id": "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "type": "CC",
+      "cc_code": "CC_APPEND_AUDIT_EVENT_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "event_type": "EV_LICENSE_PROVISIONED_V0",
+          "employee_id": "IN.employee_id",
+          "decision": "PROVISIONED",
+          "reason_code": "",
+          "license_id": "IN.generated.license_id",
+          "data": {}
+        }
+      }
+    },
+    {
+      "id": "CC_APPEND_AUDIT_EVENT_DENIED",
+      "type": "CC",
+      "cc_code": "CC_APPEND_AUDIT_EVENT_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "event_type": "EV_PROVISION_DENIED_V0",
+          "employee_id": "IN.employee_id",
+          "decision": "DENIED",
+          "reason_code": "IN.context.reason_code",
+          "data": {}
+        }
+      }
+    },
+    {
+      "id": "EXIT_PROVISIONED",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_DENIED",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_REJECTED",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_ERROR",
+      "type": "EXIT"
+    }
+  ],
+  "edges": [
+    {
+      "from": "IN_PROVISION_AI_LICENSE_V0",
+      "to": "CC_VALIDATE_ELIGIBILITY_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_PROVISION_AI_LICENSE_V0",
+      "to": "EXIT_REJECTED",
+      "condition": "NACK"
+    },
+    {
+      "from": "CC_VALIDATE_ELIGIBILITY_V0",
+      "to": "CC_PROVISION_LICENSE_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_ELIGIBILITY_V0",
+      "to": "CC_APPEND_AUDIT_EVENT_DENIED",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_PROVISION_LICENSE_V0",
+      "to": "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_PROVISION_LICENSE_V0",
+      "to": "EXIT_ERROR",
+      "condition": "ALREADY_EXISTS"
+    },
+    {
+      "from": "CC_PROVISION_LICENSE_V0",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_PROVISION_LICENSE_V0",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "to": "EXIT_PROVISIONED",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_DENIED",
+      "to": "EXIT_DENIED",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_DENIED",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_APPEND_AUDIT_EVENT_DENIED",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_PROVISION_LICENSE_V0",
+      "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "EXIT_PROVISIONED"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_PROVISION_LICENSE_V0",
+      "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_PROVISION_LICENSE_V0",
+      "CC_APPEND_AUDIT_EVENT_SUCCESS",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_PROVISION_LICENSE_V0",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_PROVISION_LICENSE_V0",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_PROVISION_LICENSE_V0",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_APPEND_AUDIT_EVENT_DENIED",
+      "EXIT_DENIED"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_APPEND_AUDIT_EVENT_DENIED",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "CC_VALIDATE_ELIGIBILITY_V0",
+      "CC_APPEND_AUDIT_EVENT_DENIED",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_PROVISION_AI_LICENSE_V0",
+      "EXIT_REJECTED"
+    ]
+  ]
+}

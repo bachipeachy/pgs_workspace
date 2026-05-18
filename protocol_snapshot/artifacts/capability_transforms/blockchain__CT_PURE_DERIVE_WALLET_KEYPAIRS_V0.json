@@ -1,0 +1,203 @@
+{
+  "artifact_code": "CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\n- **Artifact Kind:** atom\n- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nGenerate entropy, derive an HD wallet master key, and produce dual-address keypairs (EOA + UTXO) from a single seed. Returns only public-derivable fields. All private material (private keys, mnemonic, seed, entropy) is discarded after execution.\n\n---\n\n## 2. Rationale\n\nWallet creation requires two address types (EOA for account-model, UTXO for transaction-model). Deriving both from a single seed with a shared root path avoids redundant entropy generation and master key computation. This atom composes the full BIP32/BIP39 derivation pipeline internally while exposing only public outputs.\n\n---\n\n## 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\n- **Operation:** DERIVE_WALLET_KEYPAIRS\n\n---\n\n## 4. Applicability & Non-Applicability\n\n### 4.1 Valid Use Cases\n\n- Generating dual-address keypairs for new wallet creation\n- Any HD wallet derivation requiring multiple address types from a single seed\n\n### 4.2 Invalid Use Cases\n\n- Single-address derivation (use appropriate CT_MOLECULE_* instead)\n- Key recovery from existing mnemonic (this atom generates new entropy)\n- Signing operations (private keys are not returned)\n\n---\n\n## 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|----------|-------|-------|\n| Deterministic | NO | Generates fresh entropy via OS CSPRNG |\n| Purity Class | ct_pure | No persistent state, no side effects |\n| Side Effects | NONE | All computation is local |\n| Replay Safe | NO | Each invocation produces different keys |\n\n---\n\n## 6. Security Invariant\n\nNo output field contains `private_key`, `seed`, `mnemonic`, or `entropy`. These values exist only within the atom's execution scope and are discarded when the function returns. This atom MUST NOT be modified to return private material.\n\n---\n\n## 7. Internal Composition\n\nThis atom internally performs the equivalent of:\n\n```\nCT_PURE_GENERATE_ENTROPY_V0           \u2192 entropy_bytes\nCT_PURE_ENTROPY_TO_MNEMONIC_V0        \u2192 mnemonic\nCT_PURE_MNEMONIC_TO_SEED_V0           \u2192 seed_bytes\nCT_PURE_DERIVE_MASTER_KEY_V0          \u2192 master_key (+ fingerprint)\nCT_PURE_DERIVE_CHILD_KEY_V0 foreach   \u2192 root_key (m/root_path)\nCT_PURE_DERIVE_CHILD_KEY_V0 foreach   \u2192 eoa_key (root/eoa_child)\nCT_PURE_PRIVATE_KEY_TO_PUBLIC_V0      \u2192 eoa_public_key\nCT_PURE_PUBKEY_TO_ETH_ADDRESS_V0      \u2192 eoa_address\nCT_PURE_DERIVE_CHILD_KEY_V0 foreach   \u2192 utxo_key (root/utxo_child)\nCT_PURE_PRIVATE_KEY_TO_PUBLIC_V0      \u2192 utxo_public_key\nCT_PURE_PUBKEY_TO_ETH_ADDRESS_V0      \u2192 utxo_address\n```\n\nPackaged as a single atom because the CC pipeline cannot invoke the same capability code twice with different inputs.\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_DERIVE_WALLET_KEYPAIRS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Derive dual-address HD wallet keypairs\n  description: Generate entropy, derive HD wallet master key, and produce EOA + UTXO keypairs from a single seed\n  inputs:\n    entropy_bits:\n      type: integer\n      required: true\n      allowed_values: [128, 160, 192, 224, 256]\n    entropy_bytes:\n      type: hex_string\n      required: false\n      description: \"Optional injected entropy for deterministic testing; overrides OS-generated entropy\"\n    passphrase:\n      type: string\n      required: false\n      default: \"\"\n    root_path_indices:\n      type: array\n      required: true\n      description: \"Hardened root path indices (e.g., [2147483692, 2147483714, 2147483648] for m/44'/66'/0')\"\n    eoa_child_indices:\n      type: array\n      required: true\n      description: \"EOA child path indices, non-hardened (e.g., [0, 0])\"\n    utxo_child_indices:\n      type: array\n      required: true\n      description: \"UTXO child path indices, non-hardened (e.g., [1, 0])\"\n    curve:\n      type: string\n      required: false\n      default: \"secp256k1\"\n      enum: [\"secp256k1\", \"secp256r1\"]\n  outputs:\n    eoa_public_key_hex:\n      type: string\n      description: \"EOA uncompressed public key, hex-encoded\"\n    eoa_address:\n      type: string\n      description: \"EOA Ethereum address, 0x-prefixed hex\"\n    eoa_derivation_path:\n      type: string\n      description: \"Full EOA BIP32 path string (e.g., m/44'/66'/0'/0/0)\"\n    utxo_public_key_hex:\n      type: string\n      description: \"UTXO uncompressed public key, hex-encoded\"\n    utxo_address:\n      type: string\n      description: \"UTXO Ethereum address, 0x-prefixed hex\"\n    utxo_derivation_path:\n      type: string\n      description: \"Full UTXO BIP32 path string (e.g., m/44'/66'/0'/1/0)\"\n    master_fingerprint:\n      type: string\n      description: \"First 4 bytes of HASH160(master_compressed_pubkey), hex-encoded\"\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: DERIVE_WALLET_KEYPAIRS\n  implementation:\n    module: pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_keypairs_v0\n    callable: execute\n```\n",
+  "content_hash": "bc06557d89fad5e0bc2205423fb231cfcf47728c21eac1e5c52d21acc169d918",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "curve": "$.inputs.curve",
+          "entropy_bits": "$.inputs.entropy_bits",
+          "entropy_bytes": "$.inputs.entropy_bytes",
+          "eoa_child_indices": "$.inputs.eoa_child_indices",
+          "passphrase": "$.inputs.passphrase",
+          "root_path_indices": "$.inputs.root_path_indices",
+          "utxo_child_indices": "$.inputs.utxo_child_indices"
+        },
+        "atom": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_keypairs_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+    "inputs": {
+      "curve": {
+        "default": "secp256k1",
+        "enum": [
+          "secp256k1",
+          "secp256r1"
+        ],
+        "required": false,
+        "type": "string"
+      },
+      "entropy_bits": {
+        "allowed_values": [
+          128,
+          160,
+          192,
+          224,
+          256
+        ],
+        "required": true,
+        "type": "integer"
+      },
+      "entropy_bytes": {
+        "description": "Optional injected entropy for deterministic testing; overrides OS-generated entropy",
+        "required": false,
+        "type": "hex_string"
+      },
+      "eoa_child_indices": {
+        "description": "EOA child path indices, non-hardened (e.g., [0, 0])",
+        "required": true,
+        "type": "array"
+      },
+      "passphrase": {
+        "default": "",
+        "required": false,
+        "type": "string"
+      },
+      "root_path_indices": {
+        "description": "Hardened root path indices (e.g., [2147483692, 2147483714, 2147483648] for m/44'/66'/0')",
+        "required": true,
+        "type": "array"
+      },
+      "utxo_child_indices": {
+        "description": "UTXO child path indices, non-hardened (e.g., [1, 0])",
+        "required": true,
+        "type": "array"
+      }
+    },
+    "outputs": {
+      "eoa_address": {
+        "from": "__atom_result__"
+      },
+      "eoa_derivation_path": {
+        "from": "__atom_result__"
+      },
+      "eoa_public_key_hex": {
+        "from": "__atom_result__"
+      },
+      "master_fingerprint": {
+        "from": "__atom_result__"
+      },
+      "utxo_address": {
+        "from": "__atom_result__"
+      },
+      "utxo_derivation_path": {
+        "from": "__atom_result__"
+      },
+      "utxo_public_key_hex": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Generate entropy, derive HD wallet master key, and produce EOA + UTXO keypairs from a single seed",
+      "inputs": {
+        "curve": {
+          "default": "secp256k1",
+          "enum": [
+            "secp256k1",
+            "secp256r1"
+          ],
+          "required": false,
+          "type": "string"
+        },
+        "entropy_bits": {
+          "allowed_values": [
+            128,
+            160,
+            192,
+            224,
+            256
+          ],
+          "required": true,
+          "type": "integer"
+        },
+        "entropy_bytes": {
+          "description": "Optional injected entropy for deterministic testing; overrides OS-generated entropy",
+          "required": false,
+          "type": "hex_string"
+        },
+        "eoa_child_indices": {
+          "description": "EOA child path indices, non-hardened (e.g., [0, 0])",
+          "required": true,
+          "type": "array"
+        },
+        "passphrase": {
+          "default": "",
+          "required": false,
+          "type": "string"
+        },
+        "root_path_indices": {
+          "description": "Hardened root path indices (e.g., [2147483692, 2147483714, 2147483648] for m/44'/66'/0')",
+          "required": true,
+          "type": "array"
+        },
+        "utxo_child_indices": {
+          "description": "UTXO child path indices, non-hardened (e.g., [1, 0])",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "eoa_address": {
+          "description": "EOA Ethereum address, 0x-prefixed hex",
+          "type": "string"
+        },
+        "eoa_derivation_path": {
+          "description": "Full EOA BIP32 path string (e.g., m/44'/66'/0'/0/0)",
+          "type": "string"
+        },
+        "eoa_public_key_hex": {
+          "description": "EOA uncompressed public key, hex-encoded",
+          "type": "string"
+        },
+        "master_fingerprint": {
+          "description": "First 4 bytes of HASH160(master_compressed_pubkey), hex-encoded",
+          "type": "string"
+        },
+        "utxo_address": {
+          "description": "UTXO Ethereum address, 0x-prefixed hex",
+          "type": "string"
+        },
+        "utxo_derivation_path": {
+          "description": "Full UTXO BIP32 path string (e.g., m/44'/66'/0'/1/0)",
+          "type": "string"
+        },
+        "utxo_public_key_hex": {
+          "description": "UTXO uncompressed public key, hex-encoded",
+          "type": "string"
+        }
+      },
+      "summary": "Derive dual-address HD wallet keypairs"
+    },
+    "ct_code": "CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_derive_wallet_keypairs_v0"
+      },
+      "operation": "DERIVE_WALLET_KEYPAIRS"
+    },
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.capability_transforms",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}
