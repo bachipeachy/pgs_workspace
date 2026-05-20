@@ -126,8 +126,10 @@ mkdir -p "$WS_ROOT/traces"
 mkdir -p "$WS_ROOT/protocol_snapshot"
 
 # Install seed data — seeds/ is the committed source of truth
-cp "$WS_ROOT/seeds/license_facts.json" "$WS_ROOT/data/license_facts.json"
-echo "  [seed] license_facts.json → data/"
+# Data is organized by domain/subdomain for human-inspectable isolation
+mkdir -p "$WS_ROOT/data/ai_governance/ai_licensing"
+cp "$WS_ROOT/seeds/license_facts.json" "$WS_ROOT/data/ai_governance/ai_licensing/license_facts.json"
+echo "  [seed] license_facts.json → data/ai_governance/ai_licensing/"
 
 # --------------------------------------------------
 # Compile protocol artifacts (Phase A then Phase B)

@@ -1,8 +1,8 @@
 {
   "artifact_code": "STRUCTURE_BLOCKCHAIN_STORAGE_V0",
   "artifact_type": "STRUCTURE",
-  "content": "# STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_BLOCKCHAIN_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare storage topology for blockchain domain entities. Maps entity types to storage implementations and paths.\n\n---\n\n## 2. Rationale\n\nStorage paths are governance concern, not runtime implementation detail. This STRUCTURE artifact:\n- Centralizes storage topology (single source of truth)\n- Decouples CC artifacts from filesystem layout\n- Enables storage migration without CC changes\n- Enforces entity-level isolation (WALLET \u2260 TRANSACTION)\n\n---\n\n## 3. Storage Model\n\n**Principle:** One store per domain entity type.\n\n**Entity Types:**\n- ACTOR: Identity registry\n- WALLET: Wallet state\n- TRANSACTION: Transaction state\n- WALLET_EVENTS: Wallet lifecycle events\n- TRANSACTION_EVENTS: Transaction lifecycle events\n- ACTOR_EVENTS: Actor lifecycle events\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_BLOCKCHAIN_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Blockchain domain storage topology\n  description: Maps entity types to storage implementations and paths\n\n  layer: DOMAINS\n  domain: blockchain\n\n  storage_roots:\n    base_path: \"{{module_data_root}}\"\n    description: \"Root path for all blockchain domain storage (resolved at runtime)\"\n\n  entity_stores:\n    ACTOR:\n      description: \"Actor identity registry (KYC \u2192 actor_id resolution)\"\n      path: \"registry/actors.json\"\n\n    WALLET:\n      description: \"Wallet state storage (wallet_id \u2192 wallet record)\"\n      path: \"state/wallets.json\"\n\n    TRANSACTION:\n      description: \"Transaction state storage (tx_id \u2192 transaction record)\"\n      path: \"state/transactions.json\"\n\n    WALLET_EVENTS:\n      description: \"Wallet lifecycle event journal\"\n      path: \"events/wallet_events.jsonl\"\n\n    TRANSACTION_EVENTS:\n      description: \"Transaction lifecycle event journal\"\n      path: \"events/transaction_events.jsonl\"\n\n    ACTOR_EVENTS:\n      description: \"Actor lifecycle event journal\"\n      path: \"events/actor_events.jsonl\"\n\n  resolution:\n    description: \"Runtime path resolution strategy\"\n    algorithm: \"base_path / entity_stores[entity_type].path\"\n    example: \"{{module_data_root}}/state/wallets.json\"\n\n  isolation:\n    description: \"Entity storage isolation constraints\"\n    rules:\n      - \"Each entity type has dedicated storage\"\n      - \"Cross-entity queries forbidden (no joins)\"\n      - \"Entity reads must specify entity type explicitly\"\n      - \"Storage paths resolved via STRUCTURE only\"\n\n  migration:\n    description: \"Storage migration policy\"\n    rules:\n      - \"Path changes are STRUCTURE updates (versioned)\"\n      - \"CC artifacts remain unchanged during migration\"\n      - \"Runtime resolves paths from active STRUCTURE version\"\n```\n",
-  "content_hash": "fef6a5c2005b1138fdbf7f26faa814ee4f9f789f8522476ea3711943842448f7",
+  "content": "# STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_BLOCKCHAIN_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare storage topology for blockchain domain entities. Maps entity types to storage implementations and paths.\n\n---\n\n## 2. Rationale\n\nStorage paths are governance concern, not runtime implementation detail. This STRUCTURE artifact:\n- Centralizes storage topology (single source of truth)\n- Decouples CC artifacts from filesystem layout\n- Enables storage migration without CC changes\n- Enforces entity-level isolation (WALLET \u2260 TRANSACTION)\n\n---\n\n## 3. Storage Model\n\n**Principle:** One store per domain entity type.\n\n**Entity Types:**\n- ACTOR: Identity registry\n- WALLET: Wallet state\n- TRANSACTION: Transaction state\n- WALLET_EVENTS: Wallet lifecycle events\n- TRANSACTION_EVENTS: Transaction lifecycle events\n- ACTOR_EVENTS: Actor lifecycle events\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_BLOCKCHAIN_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Blockchain domain storage topology\n  description: Maps entity types to storage implementations and paths\n\n  layer: DOMAINS\n  domain: blockchain\n\n  storage_roots:\n    base_path: \"{{module_data_root}}\"\n    description: \"Root path for all blockchain domain storage (resolved at runtime)\"\n\n  entity_stores:\n    ACTOR:\n      description: \"Actor identity registry (KYC \u2192 actor_id resolution)\"\n      path: \"blockchain/identity/registry/actors.json\"\n\n    WALLET:\n      description: \"Wallet state storage (wallet_id \u2192 wallet record)\"\n      path: \"blockchain/wallet/state/wallets.json\"\n\n    TRANSACTION:\n      description: \"Transaction state storage (tx_id \u2192 transaction record)\"\n      path: \"blockchain/transaction/state/transactions.json\"\n\n    WALLET_EVENTS:\n      description: \"Wallet lifecycle event journal\"\n      path: \"blockchain/wallet/events/wallet_events.jsonl\"\n\n    TRANSACTION_EVENTS:\n      description: \"Transaction lifecycle event journal\"\n      path: \"blockchain/transaction/events/transaction_events.jsonl\"\n\n    ACTOR_EVENTS:\n      description: \"Actor lifecycle event journal\"\n      path: \"blockchain/identity/events/identity_events.jsonl\"\n\n  resolution:\n    description: \"Runtime path resolution strategy\"\n    algorithm: \"base_path / entity_stores[entity_type].path\"\n    example: \"{{module_data_root}}/blockchain/wallet/state/wallets.json\"\n\n  isolation:\n    description: \"Entity storage isolation constraints\"\n    rules:\n      - \"Each entity type has dedicated storage\"\n      - \"Cross-entity queries forbidden (no joins)\"\n      - \"Entity reads must specify entity type explicitly\"\n      - \"Storage paths resolved via STRUCTURE only\"\n\n  migration:\n    description: \"Storage migration policy\"\n    rules:\n      - \"Path changes are STRUCTURE updates (versioned)\"\n      - \"CC artifacts remain unchanged during migration\"\n      - \"Runtime resolves paths from active STRUCTURE version\"\n```\n",
+  "content_hash": "4ae818c02ce118ebf0ea1c4c7d0bb3477bf737e79f4f394ba23b9698ae9f5c87",
   "fqdn_id": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
   "frontmatter": {
     "core": {
@@ -11,27 +11,27 @@
       "entity_stores": {
         "ACTOR": {
           "description": "Actor identity registry (KYC \u2192 actor_id resolution)",
-          "path": "registry/actors.json"
+          "path": "blockchain/identity/registry/actors.json"
         },
         "ACTOR_EVENTS": {
           "description": "Actor lifecycle event journal",
-          "path": "events/actor_events.jsonl"
+          "path": "blockchain/identity/events/identity_events.jsonl"
         },
         "TRANSACTION": {
           "description": "Transaction state storage (tx_id \u2192 transaction record)",
-          "path": "state/transactions.json"
+          "path": "blockchain/transaction/state/transactions.json"
         },
         "TRANSACTION_EVENTS": {
           "description": "Transaction lifecycle event journal",
-          "path": "events/transaction_events.jsonl"
+          "path": "blockchain/transaction/events/transaction_events.jsonl"
         },
         "WALLET": {
           "description": "Wallet state storage (wallet_id \u2192 wallet record)",
-          "path": "state/wallets.json"
+          "path": "blockchain/wallet/state/wallets.json"
         },
         "WALLET_EVENTS": {
           "description": "Wallet lifecycle event journal",
-          "path": "events/wallet_events.jsonl"
+          "path": "blockchain/wallet/events/wallet_events.jsonl"
         }
       },
       "isolation": {
@@ -55,7 +55,7 @@
       "resolution": {
         "algorithm": "base_path / entity_stores[entity_type].path",
         "description": "Runtime path resolution strategy",
-        "example": "{{module_data_root}}/state/wallets.json"
+        "example": "{{module_data_root}}/blockchain/wallet/state/wallets.json"
       },
       "storage_roots": {
         "base_path": "{{module_data_root}}",

@@ -1,15 +1,15 @@
 {
   "artifact_code": "RB_SUBMIT_TRANSACTION_V0",
   "artifact_type": "RB",
-  "content": "# RB_SUBMIT_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_SUBMIT_TRANSACTION_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_SUBMIT_TRANSACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for transaction submission workflow\n  description: Binds capability side effects to concrete runtime implementations for transaction submission.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy:\n        path: \"{{module_data_root}}/events/transaction_events.jsonl\"\n\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n```",
-  "content_hash": "63777bb5e651b64b06c4430d3198db8af54a27d4adaebd2d4e5feaf454ff1893",
+  "content": "# RB_SUBMIT_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_SUBMIT_TRANSACTION_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_SUBMIT_TRANSACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for transaction submission workflow\n  description: Binds capability side effects to concrete runtime implementations for transaction submission.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/transaction/events/transaction_events.jsonl\"\n\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n```",
+  "content_hash": "a07d0516c6ce47c33b78e3e79b0af089058fff7461e1c301497b76ec171edc49",
   "fqdn_id": "blockchain::RB_SUBMIT_TRANSACTION_V0",
   "frontmatter": {
     "core": {
       "bindings": {
         "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
           "policy": {
-            "path": "{{module_data_root}}/events/transaction_events.jsonl"
+            "path": "{{module_data_root}}/blockchain/transaction/events/transaction_events.jsonl"
           }
         },
         "capability_side_effects::CS_MUTABLE_JSON_V0": {
@@ -17,7 +17,7 @@
         },
         "capability_side_effects::CS_REGISTRY_V0": {
           "policy": {
-            "path": "{{module_data_root}}/registry/actors.json"
+            "path": "{{module_data_root}}/blockchain/identity/registry/actors.json"
           }
         }
       },

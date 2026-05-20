@@ -41,7 +41,8 @@ omnibachi run \
 
 TRACE2=$(grep "Trace ID:" "$OUT2" | awk '{print $3}')
 
-if omnibachi examine "$TRACE_ROOT/$TRACE2/$TRACE2.jsonl"; then
+TRACE2_PATH=$(find "$TRACE_ROOT" -name "$TRACE2.jsonl" 2>/dev/null | head -1)
+if [ -n "$TRACE2_PATH" ] && omnibachi examine "$TRACE2_PATH"; then
   echo ""
 else
   echo ""
@@ -111,12 +112,12 @@ echo "[4] Data state"
 
 echo ""
 echo "→ Actor Registry:"
-cat "$DATA_ROOT/registry/actors.json"
+cat "$DATA_ROOT/blockchain/identity/registry/actors.json"
 
 echo ""
 echo ""
 echo "→ Event Stream (last 2 records):"
-tail -n 2 "$DATA_ROOT/events/identity_events.jsonl"
+tail -n 2 "$DATA_ROOT/blockchain/identity/events/identity_events.jsonl"
 
 echo ""
 echo "[5] Interpretation"
