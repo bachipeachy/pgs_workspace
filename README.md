@@ -200,16 +200,19 @@ without sacrificing extensibility.
 
 ---
 
-# Technical Paper and Practitioner's Guide
+# Publications
 
 The full architectural model, governance system, compiler/runtime separation, and federated execution model are described in:
 
-- [Technical Paper](doc/techpapers/techpaper_protocol-governed_systems_v1.pdf) — formal model, dual-space architecture, security inversion, scalability analysis
+- [Technical Paper](doc/techpaper_protocol-governed_systems_v1.pdf) — formal model, dual-space architecture, security inversion, scalability analysis
 - [DOI: 10.5281/zenodo.20272695](https://zenodo.org/doi/10.5281/zenodo.20272695) — persistent global reference (Zenodo)
+
+- [Conceptual Model](doc/pgs_conceptual_model_v0.pdf) — protocol snapshot, four-layer admissibility model, constitutional invariants, evidence model
+- [DOI: 10.5281/zenodo.20300611](https://zenodo.org/doi/10.5281/zenodo.20300611) — persistent global reference (Zenodo)
 
 The practitioner's guide (18 chapters, ~102K words) covers PGS from first principles through advanced topics:
 
-- [Practitioner's Guide](doc/pgs_practioner_guide_v0/pgs_practioner_guide_all_chapters.md) — all chapters in a single document
+- [Practitioner's Guide](doc/pgs_practioner_guide_all_chapters.pdf) — all chapters in a single document
 
 **Author:** [ORCID 0009-0007-3810-6520](https://orcid.org/0009-0007-3810-6520) — public profile and full publication list
 ---

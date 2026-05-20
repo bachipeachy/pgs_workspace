@@ -187,8 +187,9 @@ PGS fundamentally changes how software is built and governed, offering significa
 
 For a deeper dive into the theoretical foundations, architectural model, and empirical validation of Protocol-Governed Systems, please refer to the accompanying technical paper:
 
-*   [**Protocol-Governed Systems: A Constitutionally Constrained Architecture for Autonomous and AI-Generated Software**](/doc/techpapers/techpaper_pgs_v1.md) (Link to the main paper within this repository)
-*   [**Working Paper Series**](/doc/techpapers/techpaper_pgs_v1.md#appendix-c-references-1) (Links to individual research papers detailed in Appendix C of the main paper)
+*   [**Technical Paper**](doc/techpaper_protocol-governed_systems_v1.pdf) — formal model, dual-space architecture, security inversion, scalability analysis
+*   [**Conceptual Model**](doc/pgs_conceptual_model_v0.pdf) — protocol snapshot, four-layer admissibility model, constitutional invariants, evidence model
+*   [**Practitioner's Guide**](doc/pgs_practioner_guide_all_chapters.pdf) — all chapters in a single document
 
 ---
 

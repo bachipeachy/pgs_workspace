@@ -13,11 +13,20 @@ If you are new to PGS, begin at the root of this repository:
 
 ## Technical Paper
 
-**techpapers/techpaper_protocol-governed_systems_v1.pdf**
+**techpaper_protocol-governed_systems_v1.pdf**
 The primary academic paper on PGS. Covers the formal model, dual-space architecture,
 execution semantics, security inversion, linear scalability analysis, and the Governance
 Dividend. Includes the OmniBachi reference implementation.
-Also available as: techpaper_protocol-governed_systems_v1.docx
+Also available as: techpapers/techpaper_protocol-governed_systems_v1.docx
+
+
+## Conceptual Model
+
+**pgs_conceptual_model_v0.pdf**
+Defines the conceptual model for Protocol-Governed Systems, validated through the PGS
+reference implementation. Covers the protocol snapshot, four-layer admissibility model,
+constitutional invariants, and evidence model.
+Also available as: parkinglot/pgs_conceptual_model_v0.md
 
 
 ## Field Manual
@@ -31,7 +40,7 @@ full architectural context in any session.
 
 ## Practitioner's Guide
 
-**pgs_practioner_guide_v0/**
+**pgs_practioner_guide_all_chapters.pdf**
 An 18-chapter guide covering PGS from first principles through advanced topics. Chapters
 progress from why software breaks at scale, through protocol authoring, execution
 semantics, capability design, security, federation, scalability, and AI-augmented
