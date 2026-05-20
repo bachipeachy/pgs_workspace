@@ -118,6 +118,18 @@ compile phases (Phase A per-structure, Phase B aggregation), snapshot sync, work
 execution, and trace examination. Keep this open during active development.
 
 
+## Challenge Projects
+
+**challenge_projects/**
+Experimental project proposals exploring PGS as a governance substrate for intelligent
+systems. Each document describes an ambitious prototyping challenge for developers
+interested in extending PGS beyond workflow governance.
+
+  1. pgs_governed_transformer_runtime.md     -- Protocol-governed Transformer inference topology (5/5 difficulty)
+
+  2. pgs_governed_autonomous_agent_runtime.md -- Structural governance for autonomous AI agents (3/5 difficulty)
+
+
 ## Assets
 
 **assets/**

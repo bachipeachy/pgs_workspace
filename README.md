@@ -217,6 +217,15 @@ The practitioner's guide (18 chapters, ~102K words) covers PGS from first princi
 **Author:** [ORCID 0009-0007-3810-6520](https://orcid.org/0009-0007-3810-6520) — public profile and full publication list
 ---
 
+# Challenge Projects
+
+Explore what PGS makes possible beyond workflow governance:
+
+- [Protocol-Governed Transformer Runtime](doc/challenge_projects/pgs_governed_transformer_runtime.md) — declarative AI model topology as a governed execution substrate
+- [Protocol-Governed Autonomous Agent Runtime](doc/challenge_projects/pgs_governed_autonomous_agent_runtime.md) — structural governance for autonomous AI agents
+
+---
+
 # Ready to run it?
 
 Start here:
