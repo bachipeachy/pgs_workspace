@@ -204,8 +204,8 @@ without sacrificing extensibility.
 
 The full architectural model, governance system, compiler/runtime separation, and federated execution model are described in:
 
-- [Technical Paper](doc/techpaper_protocol-governed_systems_v1.pdf) — formal model, dual-space architecture, security inversion, scalability analysis
-- [DOI: 10.5281/zenodo.20272695](https://zenodo.org/doi/10.5281/zenodo.20272695) — persistent global reference (Zenodo)
+- [Technical Paper](doc/techpaper_protocol-governed_systems_v2.pdf) — formal model, dual-space architecture, security inversion, scalability analysis
+- [DOI: 10.5281/zenodo.20330650](https://zenodo.org/doi/10.5281/zenodo.20330650) — persistent global reference (Zenodo)
 
 - [Conceptual Model](doc/pgs_conceptual_model_v0.pdf) — protocol snapshot, four-layer admissibility model, constitutional invariants, evidence model
 - [DOI: 10.5281/zenodo.20300611](https://zenodo.org/doi/10.5281/zenodo.20300611) — persistent global reference (Zenodo)

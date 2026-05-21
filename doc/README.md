@@ -13,11 +13,11 @@ If you are new to PGS, begin at the root of this repository:
 
 ## Technical Paper
 
-**techpaper_protocol-governed_systems_v1.pdf**
+**techpaper_protocol-governed_systems_v2.pdf**
 The primary academic paper on PGS. Covers the formal model, dual-space architecture,
 execution semantics, security inversion, linear scalability analysis, and the Governance
 Dividend. Includes the OmniBachi reference implementation.
-Also available as: techpapers/techpaper_protocol-governed_systems_v1.docx
+Also available as: techpapers/techpaper_protocol-governed_systems_v2.docx
 
 
 ## Conceptual Model
