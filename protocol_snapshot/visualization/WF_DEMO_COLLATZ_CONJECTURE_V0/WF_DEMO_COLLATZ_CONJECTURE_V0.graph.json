@@ -3,10 +3,6 @@
   "entry": "IN_COLLATZ_INPUT_VALIDATED_V0",
   "nodes": [
     {
-      "id": "IN_COLLATZ_INPUT_VALIDATED_V0",
-      "type": "IN"
-    },
-    {
       "id": "CC_COMPUTE_SEQUENCES_V0",
       "type": "CC",
       "cc_code": "CC_COMPUTE_SEQUENCES_V0",
@@ -15,18 +11,18 @@
       "projection": {
         "steps": [
           {
-            "id": "CT_PURE_COLLATZ_STEP_V0",
+            "bindings": {
+              "numbers": "in.numbers"
+            },
             "fqdn": "ai_governance::CT_PURE_COLLATZ_STEP_V0",
-            "kind": "CT",
+            "id": "CT_PURE_COLLATZ_STEP_V0",
             "inputs": [
               "numbers"
             ],
+            "kind": "CT",
             "outputs": [
               "sequences"
-            ],
-            "bindings": {
-              "numbers": "in.numbers"
-            }
+            ]
           }
         ]
       },
@@ -34,38 +30,6 @@
         "type": "wf_boundary",
         "bindings": {
           "numbers": "IN.numbers"
-        }
-      }
-    },
-    {
-      "id": "CC_VERIFY_TERMINATION_V0",
-      "type": "CC",
-      "cc_code": "CC_VERIFY_TERMINATION_V0",
-      "capability": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_TERMINATION_CHECK_V0",
-            "fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
-            "kind": "CT",
-            "inputs": [
-              "sequences"
-            ],
-            "outputs": [
-              "all_terminate",
-              "non_terminating"
-            ],
-            "bindings": {
-              "sequences": "in.sequences"
-            }
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "sequences": "CC_COMPUTE_SEQUENCES_V0.sequences"
         }
       }
     },
@@ -78,8 +42,8 @@
       "projection": {
         "steps": [
           {
-            "id": "CS_MUTABLE_JSON_V0",
             "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
             "kind": "CS",
             "ops": [
               "GET",
@@ -97,9 +61,41 @@
       "input_bindings": {
         "type": "wf_boundary",
         "bindings": {
-          "sequences": "CC_COMPUTE_SEQUENCES_V0.sequences",
           "all_terminate": "CC_VERIFY_TERMINATION_V0.all_terminate",
-          "non_terminating": "CC_VERIFY_TERMINATION_V0.non_terminating"
+          "non_terminating": "CC_VERIFY_TERMINATION_V0.non_terminating",
+          "sequences": "CC_COMPUTE_SEQUENCES_V0.sequences"
+        }
+      }
+    },
+    {
+      "id": "CC_VERIFY_TERMINATION_V0",
+      "type": "CC",
+      "cc_code": "CC_VERIFY_TERMINATION_V0",
+      "capability": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "sequences": "in.sequences"
+            },
+            "fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+            "id": "CT_PURE_TERMINATION_CHECK_V0",
+            "inputs": [
+              "sequences"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "all_terminate",
+              "non_terminating"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "sequences": "CC_COMPUTE_SEQUENCES_V0.sequences"
         }
       }
     },
@@ -112,25 +108,19 @@
       "type": "EXIT"
     },
     {
+      "id": "EXIT_ERROR",
+      "type": "EXIT"
+    },
+    {
       "id": "EXIT_REJECTED",
       "type": "EXIT"
     },
     {
-      "id": "EXIT_ERROR",
-      "type": "EXIT"
+      "id": "IN_COLLATZ_INPUT_VALIDATED_V0",
+      "type": "IN"
     }
   ],
   "edges": [
-    {
-      "from": "IN_COLLATZ_INPUT_VALIDATED_V0",
-      "to": "CC_COMPUTE_SEQUENCES_V0",
-      "condition": "ACK"
-    },
-    {
-      "from": "IN_COLLATZ_INPUT_VALIDATED_V0",
-      "to": "EXIT_REJECTED",
-      "condition": "NACK"
-    },
     {
       "from": "CC_COMPUTE_SEQUENCES_V0",
       "to": "CC_VERIFY_TERMINATION_V0",
@@ -138,6 +128,21 @@
     },
     {
       "from": "CC_COMPUTE_SEQUENCES_V0",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_STORE_RESULTS_V0",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_STORE_RESULTS_V0",
+      "to": "EXIT_CONJECTURE_PROVEN",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_STORE_RESULTS_V0",
       "to": "EXIT_ERROR",
       "condition": "VIOLATION"
     },
@@ -152,19 +157,14 @@
       "condition": "VIOLATION"
     },
     {
-      "from": "CC_STORE_RESULTS_V0",
-      "to": "EXIT_CONJECTURE_PROVEN",
-      "condition": "SUCCESS"
+      "from": "IN_COLLATZ_INPUT_VALIDATED_V0",
+      "to": "CC_COMPUTE_SEQUENCES_V0",
+      "condition": "ACK"
     },
     {
-      "from": "CC_STORE_RESULTS_V0",
-      "to": "EXIT_ERROR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_STORE_RESULTS_V0",
-      "to": "EXIT_ERROR",
-      "condition": "BACKEND_ERROR"
+      "from": "IN_COLLATZ_INPUT_VALIDATED_V0",
+      "to": "EXIT_REJECTED",
+      "condition": "NACK"
     }
   ],
   "execution_paths": [
@@ -173,14 +173,14 @@
       "CC_COMPUTE_SEQUENCES_V0",
       "CC_VERIFY_TERMINATION_V0",
       "CC_STORE_RESULTS_V0",
-      "EXIT_CONJECTURE_PROVEN"
+      "EXIT_ERROR"
     ],
     [
       "IN_COLLATZ_INPUT_VALIDATED_V0",
       "CC_COMPUTE_SEQUENCES_V0",
       "CC_VERIFY_TERMINATION_V0",
       "CC_STORE_RESULTS_V0",
-      "EXIT_ERROR"
+      "EXIT_CONJECTURE_PROVEN"
     ],
     [
       "IN_COLLATZ_INPUT_VALIDATED_V0",

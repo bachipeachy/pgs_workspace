@@ -3,89 +3,6 @@
   "entry": "IN_ACTOR_VERIFIED_V0",
   "nodes": [
     {
-      "id": "IN_ACTOR_VERIFIED_V0",
-      "type": "IN"
-    },
-    {
-      "id": "CC_RESOLVE_ACTOR_ID_V0",
-      "type": "CC",
-      "cc_code": "CC_RESOLVE_ACTOR_ID_V0",
-      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_GENERATE_ID_V0",
-            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
-            "inputs": [
-              "prefix",
-              "data"
-            ],
-            "outputs": [
-              "id"
-            ],
-            "bindings": {}
-          },
-          {
-            "id": "CS_REGISTRY_V0",
-            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
-            "kind": "CS",
-            "ops": [
-              "REGISTER",
-              "RESOLVE",
-              "EXISTS",
-              "DEREGISTER"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "actor_record": "IN.actor_record"
-        }
-      }
-    },
-    {
-      "id": "CC_RECORD_ACTOR_STATE_V0",
-      "type": "CC",
-      "cc_code": "CC_RECORD_ACTOR_STATE_V0",
-      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-      "capability_type": "CS",
-      "projection": {
-        "steps": [
-          {
-            "id": "CS_APPENDONLY_JSONL_V0",
-            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-            "kind": "CS",
-            "ops": [
-              "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
-          "old_state": "UNVERIFIED",
-          "new_state": "IN.decision",
-          "reason": "IN.notes",
-          "timestamp": "2025-01-01T00:00:00Z"
-        }
-      }
-    },
-    {
       "id": "CC_APPEND_ACTOR_EVENT_V0",
       "type": "CC",
       "cc_code": "CC_APPEND_ACTOR_EVENT_V0",
@@ -94,8 +11,8 @@
       "projection": {
         "steps": [
           {
-            "id": "CS_APPENDONLY_JSONL_V0",
             "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
             "kind": "CS",
             "ops": [
               "APPEND",
@@ -112,13 +29,13 @@
       "input_bindings": {
         "type": "wf_boundary",
         "bindings": {
-          "event_type": "EV_ACTOR_VERIFIED_V0",
           "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
           "data": {
-            "verifier_id": "$.payload.verifier_id",
             "decision": "$.payload.decision",
-            "notes": "$.payload.notes"
-          }
+            "notes": "$.payload.notes",
+            "verifier_id": "$.payload.verifier_id"
+          },
+          "event_type": "EV_ACTOR_VERIFIED_V0"
         }
       }
     },
@@ -131,8 +48,8 @@
       "projection": {
         "steps": [
           {
-            "id": "CS_REGISTRY_V0",
             "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
             "kind": "CS",
             "ops": [
               "REGISTER",
@@ -156,48 +73,96 @@
       }
     },
     {
+      "id": "CC_RECORD_ACTOR_STATE_V0",
+      "type": "CC",
+      "cc_code": "CC_RECORD_ACTOR_STATE_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "new_state": "IN.decision",
+          "old_state": "UNVERIFIED",
+          "reason": "IN.notes",
+          "timestamp": "2025-01-01T00:00:00Z"
+        }
+      }
+    },
+    {
+      "id": "CC_RESOLVE_ACTOR_ID_V0",
+      "type": "CC",
+      "cc_code": "CC_RESOLVE_ACTOR_ID_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_record": "IN.actor_record"
+        }
+      }
+    },
+    {
       "id": "EXIT",
       "type": "EXIT"
+    },
+    {
+      "id": "IN_ACTOR_VERIFIED_V0",
+      "type": "IN"
     }
   ],
   "edges": [
     {
-      "from": "IN_ACTOR_VERIFIED_V0",
-      "to": "CC_RESOLVE_ACTOR_ID_V0",
-      "condition": "ACK"
-    },
-    {
-      "from": "IN_ACTOR_VERIFIED_V0",
-      "to": "EXIT",
-      "condition": "NACK"
-    },
-    {
-      "from": "CC_RESOLVE_ACTOR_ID_V0",
-      "to": "CC_RECORD_ACTOR_STATE_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_RESOLVE_ACTOR_ID_V0",
-      "to": "EXIT",
-      "condition": "NOT_FOUND"
-    },
-    {
-      "from": "CC_RESOLVE_ACTOR_ID_V0",
-      "to": "EXIT",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_RECORD_ACTOR_STATE_V0",
-      "to": "CC_APPEND_ACTOR_EVENT_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_RECORD_ACTOR_STATE_V0",
-      "to": "EXIT",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_RECORD_ACTOR_STATE_V0",
+      "from": "CC_APPEND_ACTOR_EVENT_V0",
       "to": "EXIT",
       "condition": "BACKEND_ERROR"
     },
@@ -212,7 +177,12 @@
       "condition": "VIOLATION"
     },
     {
-      "from": "CC_APPEND_ACTOR_EVENT_V0",
+      "from": "CC_PERSIST_VERIFIED_ACTOR_V0",
+      "to": "EXIT",
+      "condition": "ALREADY_EXISTS"
+    },
+    {
+      "from": "CC_PERSIST_VERIFIED_ACTOR_V0",
       "to": "EXIT",
       "condition": "BACKEND_ERROR"
     },
@@ -227,20 +197,68 @@
       "condition": "VIOLATION"
     },
     {
-      "from": "CC_PERSIST_VERIFIED_ACTOR_V0",
+      "from": "CC_RECORD_ACTOR_STATE_V0",
       "to": "EXIT",
       "condition": "BACKEND_ERROR"
     },
     {
-      "from": "CC_PERSIST_VERIFIED_ACTOR_V0",
+      "from": "CC_RECORD_ACTOR_STATE_V0",
+      "to": "CC_APPEND_ACTOR_EVENT_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RECORD_ACTOR_STATE_V0",
       "to": "EXIT",
-      "condition": "ALREADY_EXISTS"
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "CC_RECORD_ACTOR_STATE_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_ACTOR_VERIFIED_V0",
+      "to": "CC_RESOLVE_ACTOR_ID_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_ACTOR_VERIFIED_V0",
+      "to": "EXIT",
+      "condition": "NACK"
     }
   ],
   "execution_paths": [
     [
       "IN_ACTOR_VERIFIED_V0",
       "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_ACTOR_VERIFIED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_RECORD_ACTOR_STATE_V0",
+      "EXIT"
+    ],
+    [
+      "IN_ACTOR_VERIFIED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_RECORD_ACTOR_STATE_V0",
+      "CC_APPEND_ACTOR_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_ACTOR_VERIFIED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
       "CC_RECORD_ACTOR_STATE_V0",
       "CC_APPEND_ACTOR_EVENT_V0",
       "CC_PERSIST_VERIFIED_ACTOR_V0",
@@ -281,24 +299,6 @@
       "IN_ACTOR_VERIFIED_V0",
       "CC_RESOLVE_ACTOR_ID_V0",
       "CC_RECORD_ACTOR_STATE_V0",
-      "CC_APPEND_ACTOR_EVENT_V0",
-      "EXIT"
-    ],
-    [
-      "IN_ACTOR_VERIFIED_V0",
-      "CC_RESOLVE_ACTOR_ID_V0",
-      "CC_RECORD_ACTOR_STATE_V0",
-      "EXIT"
-    ],
-    [
-      "IN_ACTOR_VERIFIED_V0",
-      "CC_RESOLVE_ACTOR_ID_V0",
-      "CC_RECORD_ACTOR_STATE_V0",
-      "EXIT"
-    ],
-    [
-      "IN_ACTOR_VERIFIED_V0",
-      "CC_RESOLVE_ACTOR_ID_V0",
       "EXIT"
     ],
     [

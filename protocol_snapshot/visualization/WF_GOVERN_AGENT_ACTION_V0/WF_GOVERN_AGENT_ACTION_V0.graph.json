@@ -3,38 +3,239 @@
   "entry": "IN_AGENT_ACTION_REQUESTED_V0",
   "nodes": [
     {
-      "id": "IN_AGENT_ACTION_REQUESTED_V0",
-      "type": "IN"
-    },
-    {
-      "id": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "id": "CC_AUDIT_PARAMETER_VIOLATION",
       "type": "CC",
-      "cc_code": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
       "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
       "capability_type": "CT",
       "projection": {
         "steps": [
           {
-            "id": "CT_PURE_GENERATE_ID_V0",
+            "bindings": {},
             "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
+            "id": "CT_PURE_GENERATE_ID_V0",
             "inputs": [
               "prefix",
               "data"
             ],
+            "kind": "CT",
             "outputs": [
               "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
             ],
-            "bindings": {}
+            "outputs": [
+              "result_status"
+            ]
           }
         ]
       },
       "input_bindings": {
         "type": "wf_boundary",
         "bindings": {
-          "tool_name": "IN.tool_name",
+          "denial_reason": "PARAMETER_VIOLATION",
+          "domain_context": "IN.domain_context",
           "requesting_user_id": "IN.requesting_user_id",
-          "domain_context": "IN.domain_context"
+          "tool_name": "IN.tool_name"
+        }
+      }
+    },
+    {
+      "id": "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "type": "CC",
+      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "denial_reason": "UNAUTHORIZED_ACTOR",
+          "domain_context": "IN.domain_context",
+          "requesting_user_id": "IN.requesting_user_id",
+          "tool_name": "IN.tool_name"
+        }
+      }
+    },
+    {
+      "id": "CC_AUDIT_UNAUTHORIZED_TOOL",
+      "type": "CC",
+      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "denial_reason": "UNAUTHORIZED_TOOL",
+          "domain_context": "IN.domain_context",
+          "requesting_user_id": "IN.requesting_user_id",
+          "tool_name": "IN.tool_name"
+        }
+      }
+    },
+    {
+      "id": "CC_AUDIT_UNDECLARED_TOOL",
+      "type": "CC",
+      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "denial_reason": "UNDECLARED_TOOL",
+          "domain_context": "IN.domain_context",
+          "requesting_user_id": "IN.requesting_user_id",
+          "tool_name": "IN.tool_name"
+        }
+      }
+    },
+    {
+      "id": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "type": "CC",
+      "cc_code": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "capability": "capability_transforms::CT_PURE_LOOKUP_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "key": "in.license_tier"
+            },
+            "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+            "id": "CT_PURE_LOOKUP_V0",
+            "inputs": [
+              "key",
+              "map"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "result"
+            ]
+          },
+          {
+            "bindings": {
+              "allowed_set": "lookup_tier_tools.allowed_tools",
+              "value": "in.tool_name"
+            },
+            "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+            "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+            "inputs": [
+              "value",
+              "allowed_set"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "is_member"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "license_tier": "CC_RESOLVE_LICENSE_TIER_V0.license_tier",
+          "tool_name": "IN.tool_name"
         }
       }
     },
@@ -47,25 +248,120 @@
       "projection": {
         "steps": [
           {
-            "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+            "bindings": {
+              "value": "in.tool_name"
+            },
             "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
-            "kind": "CT",
+            "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
             "inputs": [
               "value",
               "allowed_set"
             ],
+            "kind": "CT",
             "outputs": [
               "is_member"
-            ],
-            "bindings": {
-              "value": "in.tool_name"
-            }
+            ]
           }
         ]
       },
       "input_bindings": {
         "type": "wf_boundary",
         "bindings": {
+          "tool_name": "IN.tool_name"
+        }
+      }
+    },
+    {
+      "id": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "type": "CC",
+      "cc_code": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "domain_context": "IN.domain_context",
+          "requesting_user_id": "IN.requesting_user_id",
+          "tool_name": "IN.tool_name"
+        }
+      }
+    },
+    {
+      "id": "CC_RECORD_GOVERNED_ACTION_V0",
+      "type": "CC",
+      "cc_code": "CC_RECORD_GOVERNED_ACTION_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL",
+              "GET_RANGE",
+              "GET_SINCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "domain_context": "IN.domain_context",
+          "intent_hash": "CC_NORMALIZE_AGENT_REQUEST_V0.intent_hash",
+          "license_tier": "CC_RESOLVE_LICENSE_TIER_V0.license_tier",
+          "parameters": "IN.parameters",
+          "requesting_user_id": "IN.requesting_user_id",
           "tool_name": "IN.tool_name"
         }
       }
@@ -79,8 +375,8 @@
       "projection": {
         "steps": [
           {
-            "id": "CS_MUTABLE_JSON_V0",
             "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
             "kind": "CS",
             "ops": [
               "GET",
@@ -94,19 +390,19 @@
             ]
           },
           {
-            "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+            "bindings": {
+              "value": "read_license_record.license_status"
+            },
             "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
-            "kind": "CT",
+            "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
             "inputs": [
               "value",
               "allowed_set"
             ],
+            "kind": "CT",
             "outputs": [
               "is_member"
-            ],
-            "bindings": {
-              "value": "read_license_record.license_status"
-            }
+            ]
           }
         ]
       },
@@ -114,55 +410,6 @@
         "type": "wf_boundary",
         "bindings": {
           "requesting_user_id": "IN.requesting_user_id"
-        }
-      }
-    },
-    {
-      "id": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "type": "CC",
-      "cc_code": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "capability": "capability_transforms::CT_PURE_LOOKUP_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_LOOKUP_V0",
-            "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
-            "kind": "CT",
-            "inputs": [
-              "key",
-              "map"
-            ],
-            "outputs": [
-              "result"
-            ],
-            "bindings": {
-              "key": "in.license_tier"
-            }
-          },
-          {
-            "id": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
-            "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
-            "kind": "CT",
-            "inputs": [
-              "value",
-              "allowed_set"
-            ],
-            "outputs": [
-              "is_member"
-            ],
-            "bindings": {
-              "value": "in.tool_name",
-              "allowed_set": "lookup_tier_tools.allowed_tools"
-            }
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "tool_name": "IN.tool_name",
-          "license_tier": "CC_RESOLVE_LICENSE_TIER_V0.license_tier"
         }
       }
     },
@@ -175,94 +422,35 @@
       "projection": {
         "steps": [
           {
-            "id": "CT_PURE_LOOKUP_V0",
+            "bindings": {
+              "key": "in.tool_name"
+            },
             "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
-            "kind": "CT",
+            "id": "CT_PURE_LOOKUP_V0",
             "inputs": [
               "key",
               "map"
             ],
+            "kind": "CT",
             "outputs": [
               "result"
-            ],
-            "bindings": {
-              "key": "in.tool_name"
-            }
+            ]
           },
           {
-            "id": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+            "bindings": {
+              "parameters": "in.parameters",
+              "rules": "lookup_parameter_rules.rules"
+            },
             "fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
-            "kind": "CT",
+            "id": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
             "inputs": [
               "parameters",
               "rules"
             ],
+            "kind": "CT",
             "outputs": [
               "valid",
               "failed_rule"
-            ],
-            "bindings": {
-              "parameters": "in.parameters",
-              "rules": "lookup_parameter_rules.rules"
-            }
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "tool_name": "IN.tool_name",
-          "parameters": "IN.parameters"
-        }
-      }
-    },
-    {
-      "id": "CC_RECORD_GOVERNED_ACTION_V0",
-      "type": "CC",
-      "cc_code": "CC_RECORD_GOVERNED_ACTION_V0",
-      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_GENERATE_ID_V0",
-            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
-            "inputs": [
-              "prefix",
-              "data"
-            ],
-            "outputs": [
-              "id"
-            ],
-            "bindings": {}
-          },
-          {
-            "id": "CS_REGISTRY_V0",
-            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
-            "kind": "CS",
-            "ops": [
-              "REGISTER",
-              "RESOLVE",
-              "EXISTS",
-              "DEREGISTER"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          },
-          {
-            "id": "CS_APPENDONLY_JSONL_V0",
-            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-            "kind": "CS",
-            "ops": [
-              "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
-            ],
-            "outputs": [
-              "result_status"
             ]
           }
         ]
@@ -270,209 +458,25 @@
       "input_bindings": {
         "type": "wf_boundary",
         "bindings": {
-          "tool_name": "IN.tool_name",
           "parameters": "IN.parameters",
-          "requesting_user_id": "IN.requesting_user_id",
-          "license_tier": "CC_RESOLVE_LICENSE_TIER_V0.license_tier",
-          "domain_context": "IN.domain_context",
-          "intent_hash": "CC_NORMALIZE_AGENT_REQUEST_V0.intent_hash"
+          "tool_name": "IN.tool_name"
         }
       }
     },
     {
-      "id": "CC_AUDIT_UNDECLARED_TOOL",
-      "type": "CC",
-      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
-      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_GENERATE_ID_V0",
-            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
-            "inputs": [
-              "prefix",
-              "data"
-            ],
-            "outputs": [
-              "id"
-            ],
-            "bindings": {}
-          },
-          {
-            "id": "CS_APPENDONLY_JSONL_V0",
-            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-            "kind": "CS",
-            "ops": [
-              "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "tool_name": "IN.tool_name",
-          "requesting_user_id": "IN.requesting_user_id",
-          "domain_context": "IN.domain_context",
-          "denial_reason": "UNDECLARED_TOOL"
-        }
-      }
-    },
-    {
-      "id": "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "type": "CC",
-      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
-      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_GENERATE_ID_V0",
-            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
-            "inputs": [
-              "prefix",
-              "data"
-            ],
-            "outputs": [
-              "id"
-            ],
-            "bindings": {}
-          },
-          {
-            "id": "CS_APPENDONLY_JSONL_V0",
-            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-            "kind": "CS",
-            "ops": [
-              "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "tool_name": "IN.tool_name",
-          "requesting_user_id": "IN.requesting_user_id",
-          "domain_context": "IN.domain_context",
-          "denial_reason": "UNAUTHORIZED_ACTOR"
-        }
-      }
-    },
-    {
-      "id": "CC_AUDIT_UNAUTHORIZED_TOOL",
-      "type": "CC",
-      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
-      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_GENERATE_ID_V0",
-            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
-            "inputs": [
-              "prefix",
-              "data"
-            ],
-            "outputs": [
-              "id"
-            ],
-            "bindings": {}
-          },
-          {
-            "id": "CS_APPENDONLY_JSONL_V0",
-            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-            "kind": "CS",
-            "ops": [
-              "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "tool_name": "IN.tool_name",
-          "requesting_user_id": "IN.requesting_user_id",
-          "domain_context": "IN.domain_context",
-          "denial_reason": "UNAUTHORIZED_TOOL"
-        }
-      }
-    },
-    {
-      "id": "CC_AUDIT_PARAMETER_VIOLATION",
-      "type": "CC",
-      "cc_code": "CC_RECORD_DENIED_ACTION_V0",
-      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "capability_type": "CT",
-      "projection": {
-        "steps": [
-          {
-            "id": "CT_PURE_GENERATE_ID_V0",
-            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-            "kind": "CT",
-            "inputs": [
-              "prefix",
-              "data"
-            ],
-            "outputs": [
-              "id"
-            ],
-            "bindings": {}
-          },
-          {
-            "id": "CS_APPENDONLY_JSONL_V0",
-            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-            "kind": "CS",
-            "ops": [
-              "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
-            ],
-            "outputs": [
-              "result_status"
-            ]
-          }
-        ]
-      },
-      "input_bindings": {
-        "type": "wf_boundary",
-        "bindings": {
-          "tool_name": "IN.tool_name",
-          "requesting_user_id": "IN.requesting_user_id",
-          "domain_context": "IN.domain_context",
-          "denial_reason": "PARAMETER_VIOLATION"
-        }
-      }
-    },
-    {
-      "id": "EXIT_SUCCESS",
+      "id": "EXIT_ERROR",
       "type": "EXIT"
     },
     {
-      "id": "EXIT_UNDECLARED_TOOL",
+      "id": "EXIT_PARAMETER_VIOLATION",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_REJECTED",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_SUCCESS",
       "type": "EXIT"
     },
     {
@@ -484,151 +488,17 @@
       "type": "EXIT"
     },
     {
-      "id": "EXIT_PARAMETER_VIOLATION",
+      "id": "EXIT_UNDECLARED_TOOL",
       "type": "EXIT"
     },
     {
-      "id": "EXIT_ERROR",
-      "type": "EXIT"
-    },
-    {
-      "id": "EXIT_REJECTED",
-      "type": "EXIT"
+      "id": "IN_AGENT_ACTION_REQUESTED_V0",
+      "type": "IN"
     }
   ],
   "edges": [
     {
-      "from": "IN_AGENT_ACTION_REQUESTED_V0",
-      "to": "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "condition": "ACK"
-    },
-    {
-      "from": "IN_AGENT_ACTION_REQUESTED_V0",
-      "to": "EXIT_REJECTED",
-      "condition": "NACK"
-    },
-    {
-      "from": "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "to": "CC_CHECK_TOOL_DECLARED_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "to": "EXIT_ERROR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_CHECK_TOOL_DECLARED_V0",
-      "to": "CC_RESOLVE_LICENSE_TIER_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_CHECK_TOOL_DECLARED_V0",
-      "to": "CC_AUDIT_UNDECLARED_TOOL",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_RESOLVE_LICENSE_TIER_V0",
-      "to": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_RESOLVE_LICENSE_TIER_V0",
-      "to": "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "condition": "NOT_FOUND"
-    },
-    {
-      "from": "CC_RESOLVE_LICENSE_TIER_V0",
-      "to": "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_RESOLVE_LICENSE_TIER_V0",
-      "to": "EXIT_ERROR",
-      "condition": "BACKEND_ERROR"
-    },
-    {
-      "from": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "to": "CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "to": "CC_AUDIT_UNAUTHORIZED_TOOL",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "to": "CC_RECORD_GOVERNED_ACTION_V0",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "to": "CC_AUDIT_PARAMETER_VIOLATION",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_RECORD_GOVERNED_ACTION_V0",
-      "to": "EXIT_SUCCESS",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_RECORD_GOVERNED_ACTION_V0",
-      "to": "EXIT_SUCCESS",
-      "condition": "ALREADY_EXISTS"
-    },
-    {
-      "from": "CC_RECORD_GOVERNED_ACTION_V0",
-      "to": "EXIT_ERROR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_RECORD_GOVERNED_ACTION_V0",
-      "to": "EXIT_ERROR",
-      "condition": "BACKEND_ERROR"
-    },
-    {
-      "from": "CC_AUDIT_UNDECLARED_TOOL",
-      "to": "EXIT_UNDECLARED_TOOL",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_AUDIT_UNDECLARED_TOOL",
-      "to": "EXIT_ERROR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_AUDIT_UNDECLARED_TOOL",
-      "to": "EXIT_ERROR",
-      "condition": "BACKEND_ERROR"
-    },
-    {
-      "from": "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "to": "EXIT_UNAUTHORIZED_ACTOR",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "to": "EXIT_ERROR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "to": "EXIT_ERROR",
-      "condition": "BACKEND_ERROR"
-    },
-    {
-      "from": "CC_AUDIT_UNAUTHORIZED_TOOL",
-      "to": "EXIT_UNAUTHORIZED_TOOL",
-      "condition": "SUCCESS"
-    },
-    {
-      "from": "CC_AUDIT_UNAUTHORIZED_TOOL",
-      "to": "EXIT_ERROR",
-      "condition": "VIOLATION"
-    },
-    {
-      "from": "CC_AUDIT_UNAUTHORIZED_TOOL",
+      "from": "CC_AUDIT_PARAMETER_VIOLATION",
       "to": "EXIT_ERROR",
       "condition": "BACKEND_ERROR"
     },
@@ -643,9 +513,139 @@
       "condition": "VIOLATION"
     },
     {
-      "from": "CC_AUDIT_PARAMETER_VIOLATION",
+      "from": "CC_AUDIT_UNAUTHORIZED_ACTOR",
       "to": "EXIT_ERROR",
       "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "to": "EXIT_UNAUTHORIZED_ACTOR",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_AUDIT_UNAUTHORIZED_TOOL",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_AUDIT_UNAUTHORIZED_TOOL",
+      "to": "EXIT_UNAUTHORIZED_TOOL",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_AUDIT_UNAUTHORIZED_TOOL",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_AUDIT_UNDECLARED_TOOL",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_AUDIT_UNDECLARED_TOOL",
+      "to": "EXIT_UNDECLARED_TOOL",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_AUDIT_UNDECLARED_TOOL",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "to": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "to": "CC_AUDIT_UNAUTHORIZED_TOOL",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_CHECK_TOOL_DECLARED_V0",
+      "to": "CC_RESOLVE_LICENSE_TIER_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_CHECK_TOOL_DECLARED_V0",
+      "to": "CC_AUDIT_UNDECLARED_TOOL",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "to": "CC_CHECK_TOOL_DECLARED_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RECORD_GOVERNED_ACTION_V0",
+      "to": "EXIT_SUCCESS",
+      "condition": "ALREADY_EXISTS"
+    },
+    {
+      "from": "CC_RECORD_GOVERNED_ACTION_V0",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RECORD_GOVERNED_ACTION_V0",
+      "to": "EXIT_SUCCESS",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RECORD_GOVERNED_ACTION_V0",
+      "to": "EXIT_ERROR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RESOLVE_LICENSE_TIER_V0",
+      "to": "EXIT_ERROR",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RESOLVE_LICENSE_TIER_V0",
+      "to": "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_RESOLVE_LICENSE_TIER_V0",
+      "to": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RESOLVE_LICENSE_TIER_V0",
+      "to": "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+      "to": "CC_RECORD_GOVERNED_ACTION_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_TOOL_PARAMETERS_V0",
+      "to": "CC_AUDIT_PARAMETER_VIOLATION",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_AGENT_ACTION_REQUESTED_V0",
+      "to": "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_AGENT_ACTION_REQUESTED_V0",
+      "to": "EXIT_REJECTED",
+      "condition": "NACK"
     }
   ],
   "execution_paths": [
@@ -654,10 +654,31 @@
       "CC_NORMALIZE_AGENT_REQUEST_V0",
       "CC_CHECK_TOOL_DECLARED_V0",
       "CC_RESOLVE_LICENSE_TIER_V0",
-      "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "CC_RECORD_GOVERNED_ACTION_V0",
-      "EXIT_SUCCESS"
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_AGENT_ACTION_REQUESTED_V0",
+      "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "CC_CHECK_TOOL_DECLARED_V0",
+      "CC_RESOLVE_LICENSE_TIER_V0",
+      "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_AGENT_ACTION_REQUESTED_V0",
+      "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "CC_CHECK_TOOL_DECLARED_V0",
+      "CC_RESOLVE_LICENSE_TIER_V0",
+      "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "EXIT_UNAUTHORIZED_ACTOR"
+    ],
+    [
+      "IN_AGENT_ACTION_REQUESTED_V0",
+      "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "CC_CHECK_TOOL_DECLARED_V0",
+      "CC_RESOLVE_LICENSE_TIER_V0",
+      "CC_AUDIT_UNAUTHORIZED_ACTOR",
+      "EXIT_ERROR"
     ],
     [
       "IN_AGENT_ACTION_REQUESTED_V0",
@@ -687,6 +708,26 @@
       "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
       "CC_VALIDATE_TOOL_PARAMETERS_V0",
       "CC_RECORD_GOVERNED_ACTION_V0",
+      "EXIT_SUCCESS"
+    ],
+    [
+      "IN_AGENT_ACTION_REQUESTED_V0",
+      "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "CC_CHECK_TOOL_DECLARED_V0",
+      "CC_RESOLVE_LICENSE_TIER_V0",
+      "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "CC_VALIDATE_TOOL_PARAMETERS_V0",
+      "CC_RECORD_GOVERNED_ACTION_V0",
+      "EXIT_ERROR"
+    ],
+    [
+      "IN_AGENT_ACTION_REQUESTED_V0",
+      "CC_NORMALIZE_AGENT_REQUEST_V0",
+      "CC_CHECK_TOOL_DECLARED_V0",
+      "CC_RESOLVE_LICENSE_TIER_V0",
+      "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
+      "CC_VALIDATE_TOOL_PARAMETERS_V0",
+      "CC_AUDIT_PARAMETER_VIOLATION",
       "EXIT_ERROR"
     ],
     [
@@ -715,8 +756,7 @@
       "CC_CHECK_TOOL_DECLARED_V0",
       "CC_RESOLVE_LICENSE_TIER_V0",
       "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "CC_AUDIT_PARAMETER_VIOLATION",
+      "CC_AUDIT_UNAUTHORIZED_TOOL",
       "EXIT_ERROR"
     ],
     [
@@ -742,31 +782,6 @@
       "CC_NORMALIZE_AGENT_REQUEST_V0",
       "CC_CHECK_TOOL_DECLARED_V0",
       "CC_RESOLVE_LICENSE_TIER_V0",
-      "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "CC_AUDIT_UNAUTHORIZED_TOOL",
-      "EXIT_ERROR"
-    ],
-    [
-      "IN_AGENT_ACTION_REQUESTED_V0",
-      "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "CC_CHECK_TOOL_DECLARED_V0",
-      "CC_RESOLVE_LICENSE_TIER_V0",
-      "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "EXIT_UNAUTHORIZED_ACTOR"
-    ],
-    [
-      "IN_AGENT_ACTION_REQUESTED_V0",
-      "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "CC_CHECK_TOOL_DECLARED_V0",
-      "CC_RESOLVE_LICENSE_TIER_V0",
-      "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "EXIT_ERROR"
-    ],
-    [
-      "IN_AGENT_ACTION_REQUESTED_V0",
-      "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "CC_CHECK_TOOL_DECLARED_V0",
-      "CC_RESOLVE_LICENSE_TIER_V0",
       "CC_AUDIT_UNAUTHORIZED_ACTOR",
       "EXIT_ERROR"
     ],
@@ -790,15 +805,7 @@
       "IN_AGENT_ACTION_REQUESTED_V0",
       "CC_NORMALIZE_AGENT_REQUEST_V0",
       "CC_CHECK_TOOL_DECLARED_V0",
-      "CC_RESOLVE_LICENSE_TIER_V0",
-      "CC_AUDIT_UNAUTHORIZED_ACTOR",
-      "EXIT_ERROR"
-    ],
-    [
-      "IN_AGENT_ACTION_REQUESTED_V0",
-      "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "CC_CHECK_TOOL_DECLARED_V0",
-      "CC_RESOLVE_LICENSE_TIER_V0",
+      "CC_AUDIT_UNDECLARED_TOOL",
       "EXIT_ERROR"
     ],
     [
@@ -807,13 +814,6 @@
       "CC_CHECK_TOOL_DECLARED_V0",
       "CC_AUDIT_UNDECLARED_TOOL",
       "EXIT_UNDECLARED_TOOL"
-    ],
-    [
-      "IN_AGENT_ACTION_REQUESTED_V0",
-      "CC_NORMALIZE_AGENT_REQUEST_V0",
-      "CC_CHECK_TOOL_DECLARED_V0",
-      "CC_AUDIT_UNDECLARED_TOOL",
-      "EXIT_ERROR"
     ],
     [
       "IN_AGENT_ACTION_REQUESTED_V0",

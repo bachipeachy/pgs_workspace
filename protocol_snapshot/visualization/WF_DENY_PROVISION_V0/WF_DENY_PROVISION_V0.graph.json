@@ -3,10 +3,6 @@
   "entry": "IN_DENY_PROVISION_V0",
   "nodes": [
     {
-      "id": "IN_DENY_PROVISION_V0",
-      "type": "IN"
-    },
-    {
       "id": "CC_APPEND_AUDIT_EVENT_V0",
       "type": "CC",
       "cc_code": "CC_APPEND_AUDIT_EVENT_V0",
@@ -15,8 +11,8 @@
       "projection": {
         "steps": [
           {
-            "id": "CS_APPENDONLY_JSONL_V0",
             "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
             "kind": "CS",
             "ops": [
               "APPEND",
@@ -33,9 +29,9 @@
       "input_bindings": {
         "type": "wf_boundary",
         "bindings": {
-          "event_type": "EV_PROVISION_DENIED_V0",
-          "employee_id": "IN.employee_id",
           "decision": "DENIED",
+          "employee_id": "IN.employee_id",
+          "event_type": "EV_PROVISION_DENIED_V0",
           "reason_code": "IN.reason_code"
         }
       }
@@ -47,18 +43,17 @@
     {
       "id": "EXIT_ERROR",
       "type": "EXIT"
+    },
+    {
+      "id": "IN_DENY_PROVISION_V0",
+      "type": "IN"
     }
   ],
   "edges": [
     {
-      "from": "IN_DENY_PROVISION_V0",
-      "to": "CC_APPEND_AUDIT_EVENT_V0",
-      "condition": "ACK"
-    },
-    {
-      "from": "IN_DENY_PROVISION_V0",
+      "from": "CC_APPEND_AUDIT_EVENT_V0",
       "to": "EXIT_ERROR",
-      "condition": "NACK"
+      "condition": "BACKEND_ERROR"
     },
     {
       "from": "CC_APPEND_AUDIT_EVENT_V0",
@@ -71,21 +66,26 @@
       "condition": "VIOLATION"
     },
     {
-      "from": "CC_APPEND_AUDIT_EVENT_V0",
+      "from": "IN_DENY_PROVISION_V0",
+      "to": "CC_APPEND_AUDIT_EVENT_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_DENY_PROVISION_V0",
       "to": "EXIT_ERROR",
-      "condition": "BACKEND_ERROR"
+      "condition": "NACK"
     }
   ],
   "execution_paths": [
     [
       "IN_DENY_PROVISION_V0",
       "CC_APPEND_AUDIT_EVENT_V0",
-      "EXIT_DENIED"
+      "EXIT_ERROR"
     ],
     [
       "IN_DENY_PROVISION_V0",
       "CC_APPEND_AUDIT_EVENT_V0",
-      "EXIT_ERROR"
+      "EXIT_DENIED"
     ],
     [
       "IN_DENY_PROVISION_V0",
