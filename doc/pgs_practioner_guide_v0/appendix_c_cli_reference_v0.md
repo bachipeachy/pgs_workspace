@@ -1,27 +1,27 @@
-# Appendix C — OmniBachi CLI Reference
+# Appendix C — pgs_runtime CLI Reference
 
-`omnibachi` is the command-line interface for the PGS runtime engine. It provides two subcommands: `run` executes a workflow or intent against a compiled snapshot, and `examine` inspects an execution trace.
+`pgs_runtime` is the command-line interface for the PGS runtime engine. It provides two subcommands: `run` executes a workflow or intent against a compiled snapshot, and `examine` inspects an execution trace.
 
 * * *
 
 ## Global Usage
 
 ```
-omnibachi <subcommand> [options]
+pgs_runtime <subcommand> [options]
 ```
 
 The CLI reads from `protocol_snapshot/` and writes traces to `traces/`. It does not modify snapshot artifacts.
 
 * * *
 
-## `omnibachi run`
+## `pgs_runtime run`
 
 Executes a workflow or intent against the compiled protocol snapshot.
 
 ### Synopsis
 
 ```
-omnibachi run \
+pgs_runtime run \
   (--wf <FQDN> | --intent <FQDN>) \
   --payload <path> \
   [--rb <FQDN>] \
@@ -53,7 +53,7 @@ omnibachi run \
 | `--rb` | `<FQDN>` | Resolved from snapshot | Runtime binding FQDN override. Overrides the default binding for the workflow. Used when testing an alternative implementation without recompiling. |
 | `--mode` | `runtime` \| `authoring` | `authoring` | Execution mode. `authoring` runs governance checks and produces full trace output. `runtime` is a leaner path for production execution. |
 | `--debug` | _(flag)_ | off | Enable DEBUG-level logging. Outputs internal resolution steps, JSONPath evaluations, and capability dispatch events to stderr. |
-| `--data-root` | `<path>` | `PGS_DATA_ROOT` env var | Absolute path to the directory where CS\_ side effects write runtime state (e.g., `registry/actors.json`, `events/*.jsonl`). Must be absolute. |
+| `--data-root` | `<path>` | `PGS_DATA_ROOT` env var | **Must be an absolute path.** Directory where CS\_ side effects write runtime state (e.g., `registry/actors.json`, `events/*.jsonl`). |
 | `--workspace` | `<path>` | `PGS_WORKSPACE` env var | Path to the `pgs_workspace` root. The runtime reads `protocol_snapshot/` from `{workspace}/protocol_snapshot/` and writes traces to `{workspace}/traces/`. |
 
 ### Environment Variables
@@ -89,46 +89,46 @@ Flags take precedence over environment variables when both are set.
 
 ```bash
 # Execute by workflow FQDN
-omnibachi run \
+pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
-  --payload ./scripts/payloads/register_actor.json \
-  --data-root ./data \
-  --workspace .
+  --payload ~/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json \
+  --data-root ~/pgs_workspace/data \
+  --workspace ~/pgs_workspace
 
 # Execute via intent (admission gate enforced)
-omnibachi run \
+pgs_runtime run \
   --intent blockchain::IN_ACTOR_REGISTERED_V0 \
-  --payload ./scripts/payloads/register_actor.json \
-  --data-root ./data \
-  --workspace .
+  --payload ~/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json \
+  --data-root ~/pgs_workspace/data \
+  --workspace ~/pgs_workspace
 
 # Run with debug logging and explicit mode
-omnibachi run \
+pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
-  --payload ./scripts/payloads/register_actor.json \
+  --payload ~/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json \
   --mode authoring \
   --debug \
-  --data-root ./data \
-  --workspace .
+  --data-root ~/pgs_workspace/data \
+  --workspace ~/pgs_workspace
 
 # Use environment variables instead of flags
-export PGS_DATA_ROOT=./data
-export PGS_WORKSPACE=.
-omnibachi run \
+export PGS_DATA_ROOT=~/pgs_workspace/data
+export PGS_WORKSPACE=~/pgs_workspace
+pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
-  --payload ./scripts/payloads/register_actor.json
+  --payload ~/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json
 ```
 
 * * *
 
-## `omnibachi examine`
+## `pgs_runtime examine`
 
-Inspects an execution trace produced by `omnibachi run`.
+Inspects an execution trace produced by `pgs_runtime run`.
 
 ### Synopsis
 
 ```
-omnibachi examine <trace_file>
+pgs_runtime examine <trace_file>
 ```
 
 ### Positional Arguments
@@ -160,10 +160,10 @@ The examiner prints to stdout. Output includes:
 
 ```bash
 # Examine a specific trace
-omnibachi examine ./traces/abc123/abc123.jsonl
+pgs_runtime examine ~/pgs_workspace/traces/abc123/abc123.jsonl
 
-# Examine after a run (capturing the trace ID from run output)
-omnibachi examine ./traces/$(ls -t traces/ | head -1)/$(ls -t traces/ | head -1).jsonl
+# Examine the most recent trace
+pgs_runtime examine ~/pgs_workspace/traces/$(ls -t ~/pgs_workspace/traces/ | head -1)/$(ls -t ~/pgs_workspace/traces/ | head -1).jsonl
 ```
 
 * * *
@@ -172,7 +172,7 @@ omnibachi examine ./traces/$(ls -t traces/ | head -1)/$(ls -t traces/ | head -1)
 
 **Snapshot is read-only.** The CLI reads from `protocol_snapshot/` but never writes to it. Any change to behavior requires recompiling the protocol source.
 
-**Data root must be absolute.** Relative paths for `--data-root` are not supported. Use `$(pwd)/data` if the script is in the workspace root.
+**Data root must be absolute.** Relative paths for `--data-root` are not supported. Use an absolute path or set `PGS_DATA_ROOT` to an absolute path.
 
 **Trace IDs are deterministic.** The same payload run twice under identical snapshot state produces the same trace structure. This is the basis of the idempotency guarantee: check for `ALREADY_EXISTS` outcomes in repeated runs.
 

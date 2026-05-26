@@ -1,0 +1,1526 @@
+{
+  "cs": {
+    "271": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "READ",
+            "WRITE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "READ": {
+              "handler": "read",
+              "idempotent": true,
+              "input": [
+                "name"
+              ],
+              "output": [
+                "result_status",
+                "resource_addresses"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Look up resource addresses for a given name"
+            },
+            "WRITE": {
+              "handler": "write",
+              "idempotent": true,
+              "input": [
+                "name",
+                "resource_addresses"
+              ],
+              "output": [
+                "result_status",
+                "success"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Register or update name to resource addresses mapping"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "NameRegistryRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
+      }
+    },
+    "46": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "APPEND",
+            "GET_ALL",
+            "GET_RANGE",
+            "GET_SINCE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "APPEND": {
+              "handler": "append",
+              "idempotent": false,
+              "input": [
+                "record",
+                "stream_id",
+                "actor_id"
+              ],
+              "output": [
+                "result_status",
+                "record_id",
+                "sequence_number"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Append a record to the end of the log"
+            },
+            "GET_ALL": {
+              "handler": "read_all",
+              "idempotent": true,
+              "input": [
+                "stream_id"
+              ],
+              "output": [
+                "result_status",
+                "entries"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Retrieve all records from the log"
+            },
+            "GET_RANGE": {
+              "handler": "read_range",
+              "idempotent": true,
+              "input": [
+                "start_sequence",
+                "end_sequence",
+                "stream_id"
+              ],
+              "output": [
+                "result_status",
+                "entries"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Retrieve records within a sequence range"
+            },
+            "GET_SINCE": {
+              "handler": "read_since",
+              "idempotent": true,
+              "input": [
+                "timestamp",
+                "stream_id"
+              ],
+              "output": [
+                "result_status",
+                "entries"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Retrieve all records after a given timestamp"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "AppendOnlyJsonlRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_APPENDONLY_JSONL_V0.runtime"
+      }
+    },
+    "47": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "GET",
+            "PUT",
+            "DELETE",
+            "EXISTS",
+            "LIST"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "DELETE": {
+              "handler": "delete",
+              "idempotent": true,
+              "input": [
+                "key"
+              ],
+              "output": [
+                "result_status"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Remove the given key and its value"
+            },
+            "EXISTS": {
+              "handler": "exists",
+              "idempotent": true,
+              "input": [
+                "key"
+              ],
+              "output": [
+                "result_status",
+                "exists"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Check if a key exists in storage"
+            },
+            "GET": {
+              "handler": "read",
+              "idempotent": true,
+              "input": [
+                "key"
+              ],
+              "output": [
+                "result_status",
+                "value"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Retrieve value for a given key"
+            },
+            "LIST": {
+              "handler": "list_keys",
+              "idempotent": true,
+              "input": [],
+              "output": [
+                "result_status",
+                "keys"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "BACKEND_ERROR"
+              ],
+              "summary": "List all keys in storage"
+            },
+            "PUT": {
+              "handler": "write",
+              "idempotent": true,
+              "input": [
+                "key",
+                "value"
+              ],
+              "output": [
+                "result_status"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Store or update a value at the given key"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "MutableJsonRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
+      }
+    },
+    "48": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "REGISTER",
+            "RESOLVE",
+            "EXISTS",
+            "DEREGISTER"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "DEREGISTER": {
+              "handler": "deregister",
+              "idempotent": true,
+              "input": [
+                "key_or_address"
+              ],
+              "output": [
+                "result_status"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Mark a key or address as deregistered via tombstone"
+            },
+            "EXISTS": {
+              "handler": "exists",
+              "idempotent": true,
+              "input": [
+                "key_or_address"
+              ],
+              "output": [
+                "result_status",
+                "exists"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Check if a key or address is registered"
+            },
+            "REGISTER": {
+              "handler": "register",
+              "idempotent": false,
+              "input": [
+                "key",
+                "target_cs",
+                "target_ref"
+              ],
+              "output": [
+                "result_status",
+                "address"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "ALREADY_EXISTS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Register a new key to address binding"
+            },
+            "RESOLVE": {
+              "handler": "resolve",
+              "idempotent": true,
+              "input": [
+                "key_or_address"
+              ],
+              "output": [
+                "result_status",
+                "target_cs",
+                "target_ref"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Resolve a key or address to its storage target"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "RegistryRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_REGISTRY_V0.runtime"
+      }
+    },
+    "49": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "SEND"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "SEND": {
+              "handler": "send",
+              "idempotent": false,
+              "input": [
+                "to",
+                "subject",
+                "body"
+              ],
+              "output": [
+                "result_status"
+              ],
+              "summary": "Send email via SMTP"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "SendEmailRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.external.CS_SEND_EMAIL_V0.runtime"
+      }
+    },
+    "50": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "EXECUTE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "EXECUTE": {
+              "handler": "execute",
+              "idempotent": false,
+              "input": [
+                "workflow_code",
+                "payload"
+              ],
+              "output": [
+                "result_status",
+                "execution_result"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Execute a workflow by code"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "WorkflowGatewayRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_GATEWAY_V0.runtime"
+      }
+    }
+  },
+  "ct": {
+    "20": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "numbers": "$.inputs.numbers"
+            },
+            "atom": "ai_governance::CT_PURE_COLLATZ_STEP_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_ai_governance.implementation.capability_transforms.atoms.ct_pure_collatz_step_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_COLLATZ_STEP_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "ai_governance::CT_PURE_COLLATZ_STEP_V0",
+        "inputs": {
+          "numbers": {
+            "description": "List of positive integers for which to compute sequences",
+            "required": true,
+            "type": "array"
+          }
+        },
+        "outputs": {
+          "sequences": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "21": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "sequences": "$.inputs.sequences"
+            },
+            "atom": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_ai_governance.implementation.capability_transforms.atoms.ct_pure_termination_check_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_TERMINATION_CHECK_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
+        "inputs": {
+          "sequences": {
+            "description": "Mapping from str(n) to Collatz sequence list",
+            "required": true,
+            "type": "object"
+          }
+        },
+        "outputs": {
+          "all_terminate": {
+            "from": "__atom_result__"
+          },
+          "non_terminating": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "51": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "value": "$.inputs.value"
+            },
+            "atom": "capability_transforms::CT_EXEC_EMIT_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_exec_emit_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_EXEC_EMIT_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+        "inputs": {
+          "value": {
+            "description": "The value to emit as the result",
+            "required": true,
+            "type": "any"
+          }
+        },
+        "outputs": {
+          "result": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "52": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "fields": "$.inputs.fields"
+            },
+            "atom": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_assemble_record_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_ASSEMBLE_RECORD_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+        "inputs": {
+          "fields": {
+            "description": "Key-value map of fields to include in the record",
+            "required": true,
+            "type": "object"
+          }
+        },
+        "outputs": {
+          "record": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "53": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "assigned_count": "$.inputs.assigned_count",
+              "quota": "$.inputs.quota"
+            },
+            "atom": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_quota_available_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+        "inputs": {
+          "assigned_count": {
+            "description": "Current count of assigned items",
+            "required": true,
+            "type": "integer"
+          },
+          "quota": {
+            "description": "Maximum allowed count (quota)",
+            "required": true,
+            "type": "integer"
+          }
+        },
+        "outputs": {
+          "quota_available": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "54": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "training_completed": "$.inputs.training_completed"
+            },
+            "atom": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+        "inputs": {
+          "training_completed": {
+            "description": "True if training is finished",
+            "required": true,
+            "type": "boolean"
+          }
+        },
+        "outputs": {
+          "is_eligible": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "55": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "index": "$.inputs.index",
+              "parent_chain_code_bytes": "$.inputs.parent_chain_code_bytes",
+              "parent_private_key_bytes": "$.inputs.parent_private_key_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_child_key_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_DERIVE_CHILD_KEY_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+        "inputs": {
+          "index": {
+            "description": "32-bit index. Values >= 2147483648 (0x80000000) denote hardened derivation.",
+            "required": true,
+            "type": "integer"
+          },
+          "parent_chain_code_bytes": {
+            "description": "32-byte parent chain code as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          },
+          "parent_private_key_bytes": {
+            "description": "32-byte parent private key as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "child_chain_code_bytes": {
+            "from": "__atom_result__"
+          },
+          "child_private_key_bytes": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "56": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "seed_bytes": "$.inputs.seed_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_master_key_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_DERIVE_MASTER_KEY_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+        "inputs": {
+          "seed_bytes": {
+            "description": "Seed bytes as hex string with '0x' prefix (e.g., from mnemonic) at least 128 bits long",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "master_chain_code_bytes": {
+            "from": "__atom_result__"
+          },
+          "master_private_key_bytes": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "57": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "curve": "$.inputs.curve",
+              "message_hash": "$.inputs.message_hash",
+              "private_key_bytes": "$.inputs.private_key_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_ecdsa_sign_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_ECDSA_SIGN_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+        "inputs": {
+          "curve": {
+            "default": "secp256k1",
+            "description": "Elliptic curve to use for signing",
+            "required": false,
+            "type": "string"
+          },
+          "message_hash": {
+            "description": "32-byte message hash to sign as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          },
+          "private_key_bytes": {
+            "description": "32-byte ECDSA private key as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "r": {
+            "from": "__atom_result__"
+          },
+          "s": {
+            "from": "__atom_result__"
+          },
+          "signed_bytes": {
+            "from": "__atom_result__"
+          },
+          "v": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "58": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "entropy_bytes": "$.inputs.entropy_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_entropy_to_mnemonic_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+        "inputs": {
+          "entropy_bytes": {
+            "description": "Cryptographically secure entropy as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "mnemonic": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "59": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "current_date": "$.inputs.current_date",
+              "last_active_date": "$.inputs.last_active_date",
+              "threshold_days": "$.inputs.threshold_days"
+            },
+            "atom": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_evaluate_inactivity_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_EVALUATE_INACTIVITY_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+        "inputs": {
+          "current_date": {
+            "description": "ISO 8601 timestamp of current evaluation time",
+            "format": "date-time",
+            "required": true,
+            "type": "string"
+          },
+          "last_active_date": {
+            "description": "ISO 8601 timestamp of last activity",
+            "format": "date-time",
+            "required": true,
+            "type": "string"
+          },
+          "threshold_days": {
+            "description": "Number of days before considering a holder inactive",
+            "required": true,
+            "type": "integer"
+          }
+        },
+        "outputs": {
+          "days_inactive": {
+            "from": "__atom_result__"
+          },
+          "is_inactive": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "60": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "from": "$.inputs.from",
+              "path": "$.inputs.path",
+              "type": "$.inputs.type"
+            },
+            "atom": "capability_transforms::CT_PURE_EXTRACT_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_extract_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_EXTRACT_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_EXTRACT_V0",
+        "inputs": {
+          "from": {
+            "description": "Context symbol or object to extract from",
+            "required": true,
+            "type": "any"
+          },
+          "path": {
+            "description": "JSONPath expression selector",
+            "required": true,
+            "type": "string"
+          },
+          "type": {
+            "description": "Expected output type for validation",
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "result": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "61": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "entropy_bits": "$.inputs.entropy_bits"
+            },
+            "atom": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_entropy_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_GENERATE_ENTROPY_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+        "inputs": {
+          "entropy_bits": {
+            "allowed_values": [
+              128,
+              160,
+              192,
+              224,
+              256
+            ],
+            "description": "Strength of entropy in bits",
+            "required": true,
+            "type": "integer"
+          }
+        },
+        "outputs": {
+          "entropy_bytes": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "62": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "data": "$.inputs.data",
+              "prefix": "$.inputs.prefix"
+            },
+            "atom": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_generate_id_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_GENERATE_ID_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "inputs": {
+          "data": {
+            "description": "Input data to hash for ID generation",
+            "required": true,
+            "type": "any"
+          },
+          "prefix": {
+            "description": "Identifier prefix (e.g., AC, WF, IN)",
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "id": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "63": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "input_bytes": "$.inputs.input_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_keccak256_hash_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_KECCAK256_HASH_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+        "inputs": {
+          "input_bytes": {
+            "description": "Hex-encoded byte string (with or without 0x prefix)",
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "hash_hex": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "64": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "key": "$.inputs.key",
+              "map": "$.inputs.map"
+            },
+            "atom": "capability_transforms::CT_PURE_LOOKUP_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_lookup_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_LOOKUP_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+        "inputs": {
+          "key": {
+            "description": "The key to look for",
+            "required": true,
+            "type": "string"
+          },
+          "map": {
+            "description": "The mapping object to search in",
+            "required": true,
+            "type": "object"
+          }
+        },
+        "outputs": {
+          "result": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "65": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "execution_result": "$.inputs.execution_result",
+              "mapping": "$.inputs.mapping"
+            },
+            "atom": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_map_result_to_http_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_MAP_RESULT_TO_HTTP_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+        "inputs": {
+          "execution_result": {
+            "description": "The workflow execution result object",
+            "required": true,
+            "type": "object"
+          },
+          "mapping": {
+            "description": "Status code mapping (e.g., SUCCESS -> 200)",
+            "required": true,
+            "type": "object"
+          }
+        },
+        "outputs": {
+          "http_status": {
+            "from": "__atom_result__"
+          },
+          "response_body": {
+            "from": "__atom_result__"
+          },
+          "result_status": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "66": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "mnemonic": "$.inputs.mnemonic"
+            },
+            "atom": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_mnemonic_to_seed_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_MNEMONIC_TO_SEED_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+        "inputs": {
+          "mnemonic": {
+            "description": "BIP-39 mnemonic phrase",
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "seed_bytes": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "67": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "value": "$.inputs.value"
+            },
+            "atom": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_passthrough_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_PASSTHROUGH_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+        "inputs": {
+          "value": {
+            "description": "Value to pass through",
+            "required": true,
+            "type": "any"
+          }
+        },
+        "outputs": {
+          "value": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "68": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "curve": "$.inputs.curve",
+              "private_key_bytes": "$.inputs.private_key_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_private_key_to_public_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+        "inputs": {
+          "curve": {
+            "description": "The elliptic curve to use for derivation.",
+            "enum": [
+              "secp256k1",
+              "secp256r1"
+            ],
+            "required": true,
+            "type": "string"
+          },
+          "private_key_bytes": {
+            "description": "Private key scalar as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "public_key_uncompressed_bytes": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "69": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "public_key_uncompressed_bytes": "$.inputs.public_key_uncompressed_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_pubkey_to_eth_address_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+        "inputs": {
+          "public_key_uncompressed_bytes": {
+            "description": "Uncompressed public key (65 bytes, starting with 0x04) as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "eth_address_hex": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "70": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "parameters": "$.inputs.parameters",
+              "rules": "$.inputs.rules"
+            },
+            "atom": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_parameter_rules_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+        "inputs": {
+          "parameters": {
+            "description": "Parameter key-value map to validate",
+            "required": true,
+            "type": "object"
+          },
+          "rules": {
+            "description": "List of constraint rule objects",
+            "required": true,
+            "type": "array"
+          }
+        },
+        "outputs": {
+          "failed_rule": {
+            "from": "__atom_result__"
+          },
+          "valid": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "71": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "record": "$.inputs.record",
+              "schema": "$.inputs.schema"
+            },
+            "atom": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_record_structure_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+        "inputs": {
+          "record": {
+            "description": "The record to validate",
+            "required": true,
+            "type": "object"
+          },
+          "schema": {
+            "description": "Validation rules keyed by field name",
+            "required": true,
+            "type": "object"
+          }
+        },
+        "outputs": {
+          "violations": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "72": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "allowed_set": "$.inputs.allowed_set",
+              "value": "$.inputs.value"
+            },
+            "atom": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_validate_set_membership_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+        "inputs": {
+          "allowed_set": {
+            "description": "The list of permitted values",
+            "required": true,
+            "type": "array"
+          },
+          "value": {
+            "description": "The value to check",
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "is_member": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    }
+  },
+  "projection_class": "machine_projection",
+  "rb_policy": {
+    "276": {
+      "271": {
+        "config": {
+          "path": "{{module_data_root}}/name_registry.json"
+        },
+        "type": "CS"
+      }
+    },
+    "36": {
+      "46": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/ai_governance/agent_governance/governance_audit.jsonl",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                },
+                "summary": "Agent governance domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "version": "v0"
+            }
+          },
+          "strict": true
+        }
+      },
+      "47": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                },
+                "summary": "Agent governance domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      },
+      "48": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/ai_governance/agent_governance/governance_actions.json",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                },
+                "summary": "Agent governance domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "version": "v0"
+            }
+          },
+          "strict": true
+        }
+      }
+    },
+    "37": {
+      "47": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "COLLATZ_RESULTS": {
+                    "description": "Mutable store for Collatz sequences and conjecture verdict (last-write-wins)",
+                    "path": "ai_governance/collatz_conjecture/collatz_results.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "COLLATZ_RESULTS is read-write \u2014 idempotent, last-write-wins",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/collatz_conjecture/collatz_results.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all Collatz storage (resolved at runtime)"
+                },
+                "summary": "Collatz conjecture domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_COLLATZ_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      }
+    },
+    "38": {
+      "46": {
+        "host": "AppendOnlyJsonlRuntime",
+        "operation": "APPEND",
+        "policy": {
+          "path": "{{module_data_root}}/ai_governance/ai_licensing/audit_log.jsonl",
+          "strict": true
+        },
+        "type": "CS"
+      },
+      "48": {
+        "host": "RegistryRuntime",
+        "operation": "READ_WRITE",
+        "policy": {
+          "path": "{{module_data_root}}/ai_governance/ai_licensing/license_registry.json",
+          "strict": true
+        },
+        "type": "CS"
+      }
+    }
+  }
+}

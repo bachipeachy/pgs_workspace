@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_BINDING_INTEGRITY_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_BINDING_INTEGRITY_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_BINDING_INTEGRITY_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_BINDING_INTEGRITY_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_binding_integrity_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that all RB (Runtime Binding) artifacts declare bindings only via FQDNs that resolve to existing artifacts in the compiled graph. Reads pre-computed binding analysis from the compiler.\n\n## Enforcement\n\n- **Phase**: 4 (GOVERN)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All RB artifacts\n\n## Handler Behavior\n\nThe compiler pre-computes RB binding analysis and provides it as `compilation_context[\"rb_binding_integrity\"]`. The handler translates structural violations to standardized governance violations.\n\n## Error Messages\n\n### Short Name Binding Key\n```\nASSERT_BINDING_INTEGRITY_V0: Non-FQDN binding key\n   RB: blockchain::RB_EXAMPLE_V0\n   Key: CT_GENERATE_ID_V0\n   Violation: RB binding key must be FQDN\n   Fix: Use fully-qualified name (e.g. capability_transforms::CT_GENERATE_ID_V0)\n```\n\n### Dangling Binding\n```\nASSERT_BINDING_INTEGRITY_V0: Binding target not found\n   RB: blockchain::RB_EXAMPLE_V0\n   Key: blockchain::CT_NONEXISTENT_V0\n   Violation: RB references non-existent artifact\n   Fix: Add artifact or fix binding reference\n```\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-21) - Extracted from compiler S4 GOVERN\n",
+  "content_hash": "f02c8a440c5c5d9ed54118b497b38d6e0405d5f9a4d67d24f1ac854e678e3234",
+  "fqdn_id": "fb.topology::ASSERT_BINDING_INTEGRITY_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_BINDING_INTEGRITY_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_BINDING_INTEGRITY_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_binding_integrity_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

@@ -113,7 +113,7 @@ cp scripts/payloads/register_actor.json /tmp/my_payload.json
 # change the actor fields in my_payload.json
 
 # Run it
-omnibachi run \
+pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
   --payload /tmp/my_payload.json \
   --data-root $(pwd)/data \
@@ -123,7 +123,7 @@ omnibachi run \
 ### 4.3 Examine the trace
 
 ```bash
-omnibachi examine ./traces/<TRACE_ID>/<TRACE_ID>.jsonl
+pgs_runtime examine ./traces/<TRACE_ID>/<TRACE_ID>.jsonl
 ```
 
 Every node execution is recorded: which artifact ran, what inputs it received, what output it produced, what outcome it returned. This is the execution record — not a log, a proof.
@@ -131,7 +131,7 @@ Every node execution is recorded: which artifact ran, what inputs it received, w
 ### 4.4 Try a different workflow
 
 ```bash
-omnibachi run \
+pgs_runtime run \
   --wf blockchain::WF_CREATE_WALLET_V0 \
   --payload <path-to-wallet-payload.json> \
   --data-root $(pwd)/data \
@@ -215,7 +215,7 @@ compile → build → run
 |-------|-------------|-------|
 | **compile** | Protocol source artifacts are validated against invariants and assertions | `pgs_compiler` |
 | **build** | Validated artifacts are materialized into a closed execution snapshot | `pgs_compiler` → `pgs_workspace/protocol_snapshot/` |
-| **run** | Runtime reads the snapshot and executes against it | `pgs_workspace` (omnibachi CLI) |
+| **run** | Runtime reads the snapshot and executes against it | `pgs_workspace` (pgs_runtime CLI) |
 
 The snapshot is sealed at build time. The runtime consumes it unchanged. No behavior enters at execution time that was not present in the snapshot.
 

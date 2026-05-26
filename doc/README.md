@@ -16,7 +16,7 @@ If you are new to PGS, begin at the root of this repository:
 **techpaper_protocol-governed_systems_v2.pdf**
 The primary academic paper on PGS. Covers the formal model, dual-space architecture,
 execution semantics, security inversion, linear scalability analysis, and the Governance
-Dividend. Includes the OmniBachi reference implementation.
+Dividend. Includes the PGS reference implementation.
 Also available as: techpapers/techpaper_protocol-governed_systems_v2.docx
 
 
@@ -113,7 +113,7 @@ examination. Intended as a hands-on companion to the field manual.
 ## CLI Cheatsheet
 
 **pgs_cli_cheatsheet.txt**
-Quick reference for all omnibachi CLI commands and compiler build sequences. Covers
+Quick reference for all pgs_runtime CLI commands and compiler build sequences. Covers
 compile phases (Phase A per-structure, Phase B aggregation), snapshot sync, workflow
 execution, and trace examination. Keep this open during active development.
 

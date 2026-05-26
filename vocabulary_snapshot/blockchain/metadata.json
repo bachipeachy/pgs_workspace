@@ -1,0 +1,13 @@
+{
+  "address_count": 329,
+  "allocation_strategy": "deterministic_fqdn_order",
+  "compiler_version": "0.3.0",
+  "graph_address_hash": "d3f7350013fb6e41b652e0e45be3ba8bc15ded8f5025b6fcc0c188b187461b9f",
+  "graph_topology_hash": "",
+  "projection_class": "symbol_substrate",
+  "projection_hash": "23dee37234b30138d304cef71592b6d8c7ccd630b8a8cea099b654c105a79067",
+  "projection_schema_version": "v0",
+  "projection_type": "vocabulary",
+  "requires_fqdn_identity": false,
+  "structure_id": "blockchain"
+}

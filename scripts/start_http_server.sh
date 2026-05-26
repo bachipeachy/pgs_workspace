@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# start_http_server.sh — Start the OmniBachi HTTP transport with all registered domains.
+# start_http_server.sh — Start the PGS HTTP gateway with all registered domains.
 #
 # Usage:
 #   cd /Users/bp/pgs_workspace
@@ -22,13 +22,13 @@ BLOCKCHAIN_STATIC="$BASE_DIR/pgs_blockchain/pgs_blockchain/testbed/static"
 AGENT_GOV_STATIC="$BASE_DIR/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/static"
 COLLATZ_STATIC="$BASE_DIR/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/static"
 
-echo "OmniBachi HTTP Transport"
+echo "PGS HTTP Gateway"
 echo "  Workspace  : $WORKSPACE"
 echo "  Data root  : $DATA_ROOT"
 echo "  Port       : $PORT"
 echo ""
 
-python -m omnibachi.implementation.ingress.http.server \
+python -m pgs_runtime.server \
   --port "$PORT" \
   --workspace "$WORKSPACE" \
   --data-root "$DATA_ROOT" \

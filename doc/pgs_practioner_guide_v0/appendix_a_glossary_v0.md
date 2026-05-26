@@ -47,7 +47,7 @@ The lifecycle phase in which the compiled execution graph is traversed. The runt
 The lifecycle phase responsible for canonical identity and FQDN resolution. Every artifact has a unique, stable identity independent of its physical location.
 
 **Builder**  
-The tooling implementation of the Compiler Layer. In OmniBachi, the builder is `pgs_compiler`'s compilation pipeline. It discovers artifacts, validates them, materializes compiled output into `protocol_snapshot/`, and produces a build manifest.
+The tooling implementation of the Compiler Layer. In the PGS reference implementation, the builder is `pgs_compiler`'s compilation pipeline. It discovers artifacts, validates them, materializes compiled output into `protocol_snapshot/`, and produces a build manifest.
 
 **Protocol Snapshot**  
 The compiled, immutable output of the builder — a closed set of execution-ready artifacts. The runtime reads only the snapshot. The snapshot is read-only at runtime.

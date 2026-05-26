@@ -1,0 +1,743 @@
+{
+  "bindings": {
+    "41": {
+      "12": {
+        "employee_id": "$.payload.context.employee_id",
+        "last_active_date": "$.payload.context.last_active_date",
+        "license_id": "$.payload.license_id",
+        "threshold_days": "$.payload.threshold_days"
+      },
+      "5": {
+        "data": {
+          "days_inactive": "$.payload.context.days_inactive",
+          "license_id": "$.payload.license_id"
+        },
+        "decision": "RECLAIMED",
+        "employee_id": "$.payload.context.employee_id",
+        "event_type": "EV_LICENSE_REVOKED_V0",
+        "reason_code": "INACTIVITY"
+      }
+    },
+    "42": {
+      "16": {
+        "all_terminate": "$.results.19.all_terminate",
+        "non_terminating": "$.results.19.non_terminating",
+        "sequences": "$.results.8.sequences"
+      },
+      "19": {
+        "sequences": "$.results.8.sequences"
+      },
+      "8": {
+        "numbers": "$.payload.numbers"
+      }
+    },
+    "43": {
+      "5": {
+        "decision": "DENIED",
+        "employee_id": "$.payload.employee_id",
+        "event_type": "EV_PROVISION_DENIED_V0",
+        "reason_code": "$.payload.reason_code"
+      }
+    },
+    "44": {
+      "10": {
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "13": {
+        "denial_reason": "PARAMETER_VIOLATION",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "14": {
+        "domain_context": "$.payload.domain_context",
+        "intent_hash": "$.results.10.intent_hash",
+        "license_tier": "$.results.15.license_tier",
+        "parameters": "$.payload.parameters",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "15": {
+        "requesting_user_id": "$.payload.requesting_user_id"
+      },
+      "18": {
+        "parameters": "$.payload.parameters",
+        "tool_name": "$.payload.tool_name"
+      },
+      "6": {
+        "license_tier": "$.results.15.license_tier",
+        "tool_name": "$.payload.tool_name"
+      },
+      "7": {
+        "tool_name": "$.payload.tool_name"
+      }
+    },
+    "45": {
+      "11": {
+        "employee_id": "$.payload.employee_id",
+        "license_id": "$.payload.generated.license_id"
+      },
+      "17": {
+        "assigned_count": "$.payload.context.assigned_count",
+        "cap": "$.payload.context.cap",
+        "employee_id": "$.payload.employee_id",
+        "training_completed": "$.payload.context.training_completed"
+      },
+      "5": {
+        "data": {},
+        "decision": "DENIED",
+        "employee_id": "$.payload.employee_id",
+        "event_type": "EV_PROVISION_DENIED_V0",
+        "reason_code": "$.payload.context.reason_code"
+      }
+    }
+  },
+  "entry": {
+    "41": {
+      "rb": 38,
+      "start": 35
+    },
+    "42": {
+      "rb": 37,
+      "start": 32
+    },
+    "43": {
+      "rb": 38,
+      "start": 33
+    },
+    "44": {
+      "rb": 36,
+      "start": 31
+    },
+    "45": {
+      "rb": 38,
+      "start": 34
+    }
+  },
+  "pipeline": {
+    "10": [
+      {
+        "addr": 62,
+        "inputs": {
+          "data": {
+            "domain_context": "$.inputs.domain_context",
+            "requesting_user_id": "$.inputs.requesting_user_id",
+            "tool_name": "$.inputs.tool_name"
+          },
+          "prefix": "AREQ"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "intent_hash": "$.capability_result.id"
+        },
+        "step_id": "generate_intent_hash"
+      }
+    ],
+    "11": [
+      {
+        "addr": 48,
+        "inputs": {
+          "key": "$.inputs.employee_id",
+          "target_cs": "CS_REGISTRY_V0",
+          "target_ref": "$.inputs.license_id"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "exit",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "step_id": "register_license"
+      }
+    ],
+    "12": [
+      {
+        "addr": 59,
+        "inputs": {
+          "last_active_date": "$.inputs.last_active_date",
+          "threshold_days": "$.inputs.threshold_days"
+        },
+        "on_result": {
+          "ACTIVE": "exit",
+          "SUCCESS": "continue"
+        },
+        "op": null,
+        "outputs": {
+          "days_inactive": "$.capability_result.value.days_inactive",
+          "is_inactive": "$.capability_result.value.is_inactive"
+        },
+        "step_id": "evaluate_inactivity"
+      },
+      {
+        "addr": 48,
+        "inputs": {
+          "key_or_address": "$.inputs.employee_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit"
+        },
+        "op": "DEREGISTER",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "step_id": "deregister_license"
+      }
+    ],
+    "13": [
+      {
+        "addr": 62,
+        "inputs": {
+          "data": {
+            "domain_context": "$.inputs.domain_context",
+            "requesting_user_id": "$.inputs.requesting_user_id",
+            "tool_name": "$.inputs.tool_name"
+          },
+          "prefix": "AGOV"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "action_id": "$.capability_result.id"
+        },
+        "step_id": "generate_action_id"
+      },
+      {
+        "addr": 46,
+        "inputs": {
+          "record": {
+            "action_id": "$.results.generate_action_id.action_id",
+            "decision": "DENIED",
+            "denial_reason": "$.inputs.denial_reason",
+            "event_code": "EV_AGENT_ACTION_DENIED_V0",
+            "requesting_user_id": "$.inputs.requesting_user_id",
+            "timestamp": "{{timestamp}}",
+            "tool_name": "$.inputs.tool_name"
+          }
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "action_id": "$.results.generate_action_id.action_id",
+          "result_status": "$.capability_result.result_status"
+        },
+        "step_id": "append_denial_record"
+      }
+    ],
+    "14": [
+      {
+        "addr": 62,
+        "inputs": {
+          "data": {
+            "intent_hash": "$.inputs.intent_hash",
+            "requesting_user_id": "$.inputs.requesting_user_id",
+            "tool_name": "$.inputs.tool_name"
+          },
+          "prefix": "AGOV"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "action_id": "$.capability_result.id"
+        },
+        "step_id": "generate_action_id"
+      },
+      {
+        "addr": 48,
+        "inputs": {
+          "key": "$.results.generate_action_id.action_id",
+          "metadata": {
+            "decision": "AUTHORIZED",
+            "domain_context": "$.inputs.domain_context",
+            "intent_hash": "$.inputs.intent_hash",
+            "license_tier": "$.inputs.license_tier",
+            "parameters": "$.inputs.parameters",
+            "requesting_user_id": "$.inputs.requesting_user_id"
+          },
+          "target_ref": "$.inputs.tool_name"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "continue",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "step_id": "register_action"
+      },
+      {
+        "addr": 46,
+        "inputs": {
+          "record": {
+            "action_id": "$.results.generate_action_id.action_id",
+            "decision": "AUTHORIZED",
+            "event_code": "EV_AGENT_ACTION_AUTHORIZED_V0",
+            "license_tier": "$.inputs.license_tier",
+            "parameters": "$.inputs.parameters",
+            "requesting_user_id": "$.inputs.requesting_user_id",
+            "timestamp": "{{timestamp}}",
+            "tool_name": "$.inputs.tool_name"
+          }
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "action_id": "$.results.generate_action_id.action_id",
+          "result_status": "$.capability_result.result_status"
+        },
+        "step_id": "append_audit_record"
+      }
+    ],
+    "15": [
+      {
+        "addr": 47,
+        "inputs": {
+          "__store__": "LICENSE_FACTS",
+          "key": "$.inputs.requesting_user_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "READ",
+        "outputs": {
+          "license_status": "$.capability_result.value.license_status",
+          "license_tier": "$.capability_result.value.license_tier",
+          "org_unit": "$.capability_result.value.org_unit"
+        },
+        "step_id": "read_license_record"
+      },
+      {
+        "addr": 72,
+        "inputs": {
+          "allowed_set": [
+            "active"
+          ],
+          "value": "$.results.read_license_record.license_status"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "is_active": "$.capability_result.is_member",
+          "license_status": "$.results.read_license_record.license_status",
+          "license_tier": "$.results.read_license_record.license_tier",
+          "org_unit": "$.results.read_license_record.org_unit"
+        },
+        "step_id": "validate_active_status"
+      }
+    ],
+    "16": [
+      {
+        "addr": 47,
+        "inputs": {
+          "__store__": "COLLATZ_RESULTS",
+          "key": "collatz_results",
+          "value": {
+            "all_terminate": "$.inputs.all_terminate",
+            "non_terminating": "$.inputs.non_terminating",
+            "sequences": "$.inputs.sequences",
+            "timestamp": "{{timestamp}}"
+          }
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "step_id": "store_results"
+      }
+    ],
+    "17": [
+      {
+        "addr": 54,
+        "inputs": {
+          "training_completed": "$.inputs.training_completed"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "is_eligible": "$.training_eligible"
+        },
+        "step_id": "check_training_status"
+      },
+      {
+        "addr": 53,
+        "inputs": {
+          "assigned_count": "$.inputs.assigned_count",
+          "quota": "$.inputs.cap"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "quota_available": "$.quota_available"
+        },
+        "step_id": "check_quota_available"
+      }
+    ],
+    "18": [
+      {
+        "addr": 64,
+        "inputs": {
+          "key": "$.inputs.tool_name",
+          "map": {
+            "PROVISION_PREMIUM_LICENSE": [
+              {
+                "field": "tier",
+                "op": "eq",
+                "value": "premium"
+              },
+              {
+                "field": "quantity",
+                "op": "lte",
+                "value": 50
+              }
+            ],
+            "PROVISION_STANDARD_LICENSE": [
+              {
+                "field": "tier",
+                "op": "eq",
+                "value": "standard"
+              },
+              {
+                "field": "quantity",
+                "op": "lte",
+                "value": 100
+              }
+            ],
+            "READ_RECORD": [
+              {
+                "allowed": [
+                  "license_pool",
+                  "user_profile"
+                ],
+                "field": "record_type",
+                "op": "in"
+              },
+              {
+                "field": "id",
+                "op": "not_null"
+              }
+            ]
+          }
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "rules": "$.capability_result.result"
+        },
+        "step_id": "lookup_parameter_rules"
+      },
+      {
+        "addr": 70,
+        "inputs": {
+          "parameters": "$.inputs.parameters",
+          "rules": "$.results.lookup_parameter_rules.rules"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "rules": "$.results.lookup_parameter_rules.rules",
+          "validation_result": "$.capability_result.value"
+        },
+        "step_id": "validate_parameters"
+      }
+    ],
+    "19": [
+      {
+        "addr": 21,
+        "inputs": {
+          "sequences": "$.inputs.sequences"
+        },
+        "on_result": {
+          "SUCCESS": "evaluate_conjecture",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "all_terminate": "$.capability_result.all_terminate",
+          "non_terminating": "$.capability_result.non_terminating"
+        },
+        "step_id": "check_termination"
+      }
+    ],
+    "269": [
+      {
+        "addr": 271,
+        "inputs": {
+          "name": "$.inputs.name"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "READ",
+        "outputs": {
+          "resource_addresses": "$.capability_result.value.resource_addresses"
+        },
+        "step_id": "lookup"
+      }
+    ],
+    "270": [
+      {
+        "addr": 271,
+        "inputs": {
+          "name": "$.inputs.name",
+          "resource_addresses": "$.inputs.resource_addresses"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "success": "$.capability_result.value.success"
+        },
+        "step_id": "register"
+      }
+    ],
+    "5": [
+      {
+        "addr": 46,
+        "inputs": {
+          "record": {
+            "decision": "$.inputs.decision",
+            "employee_id": "$.inputs.employee_id",
+            "event_type": "$.inputs.event_type",
+            "license_id": "$.inputs.license_id",
+            "payload": "$.inputs.data",
+            "reason_code": "$.inputs.reason_code",
+            "timestamp": "{{timestamp}}"
+          }
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "step_id": "append_audit_event"
+      }
+    ],
+    "6": [
+      {
+        "addr": 64,
+        "inputs": {
+          "key": "$.inputs.license_tier",
+          "map": {
+            "enterprise": [
+              "READ_RECORD",
+              "PROVISION_STANDARD_LICENSE",
+              "PROVISION_PREMIUM_LICENSE"
+            ],
+            "none": [
+              "READ_RECORD"
+            ],
+            "standard": [
+              "READ_RECORD",
+              "PROVISION_STANDARD_LICENSE"
+            ]
+          }
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "allowed_tools": "$.capability_result.result"
+        },
+        "step_id": "lookup_tier_tools"
+      },
+      {
+        "addr": 72,
+        "inputs": {
+          "allowed_set": "$.results.lookup_tier_tools.allowed_tools",
+          "value": "$.inputs.tool_name"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "allowed_tools": "$.results.lookup_tier_tools.allowed_tools",
+          "is_authorized": "$.capability_result.is_member"
+        },
+        "step_id": "validate_tool_membership"
+      }
+    ],
+    "7": [
+      {
+        "addr": 72,
+        "inputs": {
+          "allowed_set": [
+            "READ_RECORD",
+            "PROVISION_STANDARD_LICENSE",
+            "PROVISION_PREMIUM_LICENSE"
+          ],
+          "value": "$.inputs.tool_name"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "is_declared": "$.capability_result.is_member"
+        },
+        "step_id": "check_tool_declared"
+      }
+    ],
+    "8": [
+      {
+        "addr": 20,
+        "inputs": {
+          "numbers": "$.inputs.numbers"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "sequences": "$.capability_result.sequences"
+        },
+        "step_id": "compute_sequences"
+      }
+    ],
+    "9": [
+      {
+        "addr": 48,
+        "inputs": {},
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "evaluate_cap"
+        },
+        "op": "COUNT",
+        "outputs": {
+          "count": "$.assigned_count"
+        },
+        "step_id": "count_licenses"
+      }
+    ]
+  },
+  "projection_class": "machine_projection",
+  "routing": {
+    "41": {
+      "12": {
+        "24582": 5
+      },
+      "35": {
+        "24576": 12
+      }
+    },
+    "42": {
+      "19": {
+        "24582": 16
+      },
+      "32": {
+        "24576": 8
+      },
+      "8": {
+        "24582": 19
+      }
+    },
+    "43": {
+      "33": {
+        "24576": 5
+      }
+    },
+    "44": {
+      "10": {
+        "24582": 7
+      },
+      "15": {
+        "24581": 13,
+        "24582": 6,
+        "24583": 13
+      },
+      "18": {
+        "24582": 14,
+        "24583": 13
+      },
+      "31": {
+        "24576": 10
+      },
+      "6": {
+        "24582": 18,
+        "24583": 13
+      },
+      "7": {
+        "24582": 15,
+        "24583": 13
+      }
+    },
+    "45": {
+      "11": {
+        "24582": 5
+      },
+      "17": {
+        "24582": 11,
+        "24583": 5
+      },
+      "34": {
+        "24576": 17
+      }
+    }
+  }
+}

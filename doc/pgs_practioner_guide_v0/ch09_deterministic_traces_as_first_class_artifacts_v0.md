@@ -458,8 +458,8 @@ Together with Chapter 8, this completes the observability model:
 - APM (Application Performance Monitoring) metrics and alerting systems
 - Performance instrumentation and profiling
 - Distributed trace correlation across federated domains (Chapter 11)
-- Builder trace emission (the builder produces its own trace events — a parallel concern not covered here)
 - Long-term trace storage, archival, and retention policies
+- **Compiler evidence graph** — the compiler emits its own governed observability artifact (`evidence_graph.json`) per structure during S7, applying the same constitutional obligations to compilation events that this chapter applies to execution events: typed events, hash integrity, append-only semantics, and a stable consumer contract. The compiler evidence graph is to compilation what the execution trace is to runtime. See Field Manual Section 6.5 for the Evidence Semantics Doctrine governing that artifact.
 
 This chapter proves trace integrity. It does not yet prove execution impossibility — that undeclared capabilities cannot be invoked at all. That proof belongs to Chapter 10.
 

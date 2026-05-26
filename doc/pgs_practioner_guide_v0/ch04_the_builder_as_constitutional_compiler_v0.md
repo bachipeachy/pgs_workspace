@@ -290,9 +290,93 @@ You authored YAML. The Builder compiled JSON. The two are structurally equivalen
 
 * * *
 
-## 4.9 — Boundary and Forward Pointer
+## 4.9 — Current Compiler Architecture Note
 
-This chapter proved that ratified governance artifacts are compiled deterministically into executable protocol artifacts through a constitutionally governed six-phase pipeline.
+The six-phase pipeline described in this chapter (Discover → Parse → Validate → Assert → Materialize → Snapshot) reflects the conceptual structure that remains accurate. The current compiler implementation names these phases as eight explicit stages:
+
+| Stage | Name | Corresponds To |
+|-------|------|---------------|
+| S1 | EXTRACT | Discover + Parse |
+| S2 | CANONICALIZE | Normalization + edge typing |
+| S3 | SEMANTIC_ADDRESSING | Address space closure |
+| S4 | GOVERN | Assert (all invariants) |
+| S5 | CONSTRUCT | Materialize (IR build + topology seal) |
+| S6 | PROJECT | Visualization projection |
+| S7 | MATERIALIZE | Snapshot write + evidence graph |
+| S8 | VERIFY | Post-write integrity verification |
+| S9 | ATTEST | Cryptographic attestation computed and written for each structure and the full snapshot |
+
+The **STRUCTURE_ artifact** is the current compiler's build constitution — analogous to the FQDN tree described in this chapter. It declares what exists, which registries contribute, and in what scope to compile. Phase Type B (cross-structure aggregation) handles federated governance products (vocabulary, transport, authority) that require output from multiple Phase Type A structure builds.
+
+The **PIR (Protocol Intermediate Representation)** is the internal typed structure produced by S1. All subsequent stages operate on PIR, not raw YAML. The PIR is never exposed outside the compiler.
+
+## 4.10 — The Compiler Evidence Graph
+
+The current compiler emits a second governed artifact during S7: `evidence_graph.json`. This is the compiler's own observability record — the compilation equivalent of the execution trace described in Chapter 9.
+
+**Why it exists:** The compiler performs hundreds of semantic operations across nine stages. Without a structured record of that work, the only way to answer "why was this artifact produced this way?" is to re-run the compiler with debug flags. The evidence graph makes that record permanent, inspectable, and consumer-accessible without compiler re-execution.
+
+**What it contains:**
+
+Every compiler trace event (S1–S7) becomes a node in the graph:
+
+```
+event_id  stage          operation             family        subject_fqdn
+1         S1_EXTRACT     discovery_complete    DISCOVERY     blockchain
+2         S1_EXTRACT     node_created          DISCOVERY     blockchain::CC_GENERATE_ACTOR_ID_V0
+3         S1_EXTRACT     node_created          DISCOVERY     blockchain::CC_REGISTER_ACTOR_KYC_V0
+...
+```
+
+Edges are typed and directed:
+
+| Edge Kind | Meaning |
+|-----------|---------|
+| `CAUSALITY` | Parent event caused/gated child event (e.g., `discovery_complete` → `node_created`) |
+| `STAGE_SEQUENCE` | Last event of stage N → first event of stage N+1 |
+
+The graph is sealed with a SHA-256 integrity hash covering the core content (events, edges, families, counts). S8 verifies it.
+
+**The consumer contract:**
+
+The `visualization/consumers/` package is the only sanctioned interface between `evidence_graph.json` and all downstream consumers:
+
+```
+load_evidence_graph(path)  →  EvidenceQuery
+EvidenceQuery              →  TraceEventDTO, EvidenceEdgeDTO
+EvidenceProjection         →  StageView, provenance, construction summary
+```
+
+Consumers — visualization, AI tooling, debugging, replay — never import from the compiler. The JSON schema is the contract. This means the compiler can be replaced, refactored, or versioned independently of every consumer.
+
+**Evidence Semantics Doctrine (the formal guarantees):**
+
+See Field Manual Section 6.5 for the full doctrine table. The critical guarantees:
+
+- Causality is inferred from two patterns: `discovery_complete` → `node_created` (S1), and IR build events → `construction_complete` (S5)
+- Stage sequencing produces exactly 7 STAGE_SEQUENCE edges (S1→S7); deterministic
+- The evidence graph covers S1–S7 only; S8's `verification_complete` is absent by design
+- Identical source artifacts always produce an identical evidence graph
+- The file is self-contained — no compiler state needed to read it
+
+**Structural parallel to the execution trace:**
+
+| | Execution Trace | Compiler Evidence Graph |
+|---|---|---|
+| Produced by | Runtime (S8+ equivalent) | Compiler (S7) |
+| Records | Workflow execution events | Compilation events |
+| Integrity | Hash chain (ADVANCED policy) | SHA-256 over core content (S8 Check 7) |
+| Consumer API | Trace Examiner | `EvidenceQuery` / `EvidenceProjection` |
+| Contract | `SCHEMA_TRACE_EVENT_V0` | `evidence_graph.json` schema |
+| Sovereignty | Append-only; immutable post-emission | READ-ONLY post-build; never edit by hand |
+
+Both artifacts embody the same principle: **observability is a governed constitutional obligation, not optional instrumentation**.
+
+* * *
+
+## 4.11 — Boundary and Forward Pointer
+
+This chapter proved that ratified governance artifacts are compiled deterministically into executable protocol artifacts through a constitutionally governed pipeline.
 
 **What this chapter did not cover:**
 
@@ -302,14 +386,15 @@ This chapter proved that ratified governance artifacts are compiled deterministi
 - Trace emission — what the engine records during execution (Chapter 9)
 - Capability transform internals — how CT_ steps compute their results (Chapter 6)
 - Capability side-effect internals — how CS_ steps interact with the world (Chapter 7)
+- Compiler evidence graph querying — the consumer API for inspecting compilation semantics (Field Manual Section 6.5)
 
-**What comes next:** The protocol artifacts are compiled. They sit in `protocol/artifacts/`, waiting. Chapter 5 picks them up. The execution engine loads the compiled DAG, resolves runtime bindings, and traverses the graph node by node. The reader will see the same user registration workflow — authored in Chapter 3, compiled in Chapter 4 — execute for the first time.
+**What comes next:** The protocol artifacts are compiled. They sit in `protocol_snapshot/artifacts/`, waiting. Chapter 5 picks them up. The execution engine loads the compiled DAG, resolves runtime bindings, and traverses the graph node by node. The reader will see the same user registration workflow — authored in Chapter 3, compiled in Chapter 4 — execute for the first time.
 
 We are crossing from the Governance/Execution boundary into the Execution layer.
 
 * * *
 
-## 4.10 — Review Questions
+## 4.12 — Review Questions
 
 1. **Why is compilation a separate constitutional phase from governance validation?**
 

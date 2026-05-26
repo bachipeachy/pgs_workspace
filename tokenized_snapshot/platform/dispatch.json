@@ -1,0 +1,46 @@
+{
+  "bindings": {},
+  "entry": {},
+  "pipeline": {
+    "245": [
+      {
+        "addr": 247,
+        "inputs": {
+          "name": "$.inputs.name"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "READ",
+        "outputs": {
+          "resource_addresses": "$.capability_result.value.resource_addresses"
+        },
+        "step_id": "lookup"
+      }
+    ],
+    "246": [
+      {
+        "addr": 247,
+        "inputs": {
+          "name": "$.inputs.name",
+          "resource_addresses": "$.inputs.resource_addresses"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "success": "$.capability_result.value.success"
+        },
+        "step_id": "register"
+      }
+    ]
+  },
+  "projection_class": "machine_projection",
+  "routing": {}
+}

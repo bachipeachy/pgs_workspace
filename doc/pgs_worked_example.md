@@ -569,14 +569,14 @@ python pgs_compiler/scripts/pgs_build.py --workspace pgs_workspace
 
 ```bash
 # Happy path — 10 numbers, all converge
-omnibachi run \
+pgs_runtime run \
   --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 \
   --payload pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/01_happy_path.json \
   --data-root pgs_workspace/data \
   --workspace pgs_workspace
 
 # NACK case — invalid input
-omnibachi run \
+pgs_runtime run \
   --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 \
   --payload pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/03_invalid_nack.json \
   --data-root pgs_workspace/data \
@@ -586,7 +586,7 @@ omnibachi run \
 ### 7.3 Examine the trace
 
 ```bash
-omnibachi examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
+pgs_runtime examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
 ```
 
 Each node appears in the trace with: artifact ID, inputs, outputs, outcome, timestamp. The trace for the happy path shows:
@@ -665,7 +665,7 @@ This is the most important section. Here is what we **did not** write:
 
 ## 9. What the Runtime Knows
 
-Here is exactly what the `omnibachi` runtime knows when it runs this workflow:
+Here is exactly what the `pgs_runtime` runtime knows when it runs this workflow:
 
 ```
 The runtime knows:

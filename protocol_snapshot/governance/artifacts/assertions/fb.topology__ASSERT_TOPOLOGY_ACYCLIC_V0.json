@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_TOPOLOGY_ACYCLIC_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_TOPOLOGY_ACYCLIC_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_TOPOLOGY_ACYCLIC_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_topology_acyclic_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that the compiled semantic topology graph contains no dependency cycles. The compiler pre-computes cycle analysis on the dependency-edge-filtered subgraph; this handler translates the result into standardized governance violations.\n\n## Enforcement\n\n- **Phase**: 4 (GOVERN)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: Entire compiled graph (all artifacts, dependency edges only)\n\n## Handler Behavior\n\n### Context Relay Pattern\n\nThe compiler pre-computes cycle detection via `Query.has_cycle()` on the dependency edge subgraph and provides the result as `compilation_context[\"topology_cycle_analysis\"]`.\n\nThe handler:\n1. Reads pre-computed cycle analysis from compilation context\n2. If cycle detected: emits violation with participating nodes\n3. If no cycle: reports PASSED\n\n### Dependency Edge Kinds\n\nOnly these edge kinds carry dependencies (and thus participate in cycle detection):\n- WF_CONTAINS_NODE, WF_START, NODE_NEXT\n- CC_BINDS_CT, CC_BINDS_CS\n- RB_MAPS, WF_ADMITS_VIA_IN, WF_BINDS_RB\n- MOLECULE_COMPOSES_ATOM\n\nGovernance edges (GOVERNED_BY, ASSERTED_BY) are excluded.\n\n## Error Messages\n\n### Cycle Detected\n```\nASSERT_TOPOLOGY_ACYCLIC_V0: Circular dependency detected\n   Graph contains cycle in dependency edges\n   Violation: Governed topology must be acyclic (DAG)\n   Fix: Remove circular dependency between artifacts\n```\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-21) - Extracted from compiler S4 GOVERN\n",
+  "content_hash": "4e6096d339e30480570bf67e41a37ee49b2b7aca73a2186fcef7fe68baa561af",
+  "fqdn_id": "fb.topology::ASSERT_TOPOLOGY_ACYCLIC_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_TOPOLOGY_ACYCLIC_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_topology_acyclic_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

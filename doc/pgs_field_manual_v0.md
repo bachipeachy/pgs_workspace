@@ -10,7 +10,7 @@
 
 **Canonical Repository Github:** [bachipeachy/pgs_workspace](https://github.com/bachipeachy/pgs_workspace)
 
-**Reference Implementation:** OmniBachi Runtime
+**Reference Implementation:** pgs_runtime
 
 **Audience:** Architects · Senior Engineers · Compiler Engineers · Runtime Engineers · AI Coding Agents · Technical Reviewers · System Maintainers
 
@@ -446,7 +446,7 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 | `pgs_governance` | Governance | Constitutional governance, federated boundaries, structural artifact definitions, invariant enforcement | nothing |
 | `pgs_compiler` | Compiler | Compiler pipeline, admissibility construction, validation, conformance generation, protocol tooling | pgs_governance |
 | `pgs_transport` | Transport | Transport realization boundary; ingress and egress adapters for HTTP and CLI surfaces | nothing |
-| `pgs_runtime` | Execution | Omnibachi CLI; deterministic DAG traversal; snapshot loading | pgs_compiler artifacts |
+| `pgs_runtime` | Execution | pgs_runtime CLI; deterministic DAG traversal; snapshot loading | pgs_compiler artifacts |
 | `pgs_capabilities` | Capability Substrate | Shared CT_ and CS_ implementations; reusable capability library | pgs_governance, pgs_compiler |
 | `pgs_blockchain` | Domain | Blockchain workflows: identity, wallet, transaction | pgs_capabilities, pgs_runtime |
 | `pgs_ai_governance` | Domain | AI governance workflows: licensing, agent action, reclaim | pgs_capabilities, pgs_runtime |
@@ -462,14 +462,19 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 
 ### 6.1 Phases (in order)
 
-| Phase | What Happens |
-|-------|-------------|
-| Discover | Artifact files located via STRUCTURE_ build config; no filesystem scanning |
-| Parse | YAML/JSON artifacts deserialized into typed structures |
-| Validate | Schema conformance checked against declared artifact type |
-| Assert | Invariants evaluated via registered assertion handlers; includes topology closure analysis, step identity validation, canonical surface verification, and graph completeness checks |
-| Materialize | Execution topology constructed; bindings resolved; step sequences sealed; snapshot produced — topology is immutable from this point |
-| Snapshot | Closed, sealed artifact set written to `protocol_snapshot/` |
+The compiler pipeline runs nine named stages (S1–S9). Each is a discrete, ordered phase with its own failure surface.
+
+| Stage | Name | What Happens |
+|-------|------|-------------|
+| S1 | EXTRACT | Artifact files located via STRUCTURE_ build config; deserialized into typed PIR structures; no filesystem scanning |
+| S2 | CANONICALIZE | Artifacts normalized; edge typing resolved; canonical representation established |
+| S3 | SEMANTIC_ADDRESSING | Semantic addresses allocated for all graph entities; address space closed |
+| S4 | GOVERN | Invariants evaluated via registered assertion handlers; topology closure, step identity, canonical surface, authority/transport orthogonality, and graph completeness all checked |
+| S5 | CONSTRUCT | Execution topology constructed; CT/CS IR built; CC projections assembled; bindings resolved; topology sealed |
+| S6 | PROJECT | Visualization projections generated (graph JSON, PNG rendering) |
+| S7 | MATERIALIZE | Compiled artifacts written to snapshot directories; evidence graph written to `evidence_snapshot/`; trace events flushed |
+| S8 | VERIFY | All materialized artifacts verified on disk; hash integrity checked; evidence graph integrity validated |
+| S9 | ATTEST | Cryptographic attestation computed and written for each structure and the full snapshot |
 
 ### 6.2 Compiler Constraints (Non-Negotiable)
 - No execution during compilation — compiler never runs CT/CS implementations
@@ -482,21 +487,56 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 ### 6.3 Build Commands
 
 ```bash
-# Build platform
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V0
+# Phase A — per-structure compilation (run in order)
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V0
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
 
-# Build domains
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
+# Phase B — cross-structure aggregation (run after all Phase A)
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0
 
-# Build federated governance products (Phase Type B — run after all domain builds)
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0
-
-# Sync snapshot to workspace
-python pgs_compiler/scripts/pgs_build.py --workspace pgs_workspace
+# Full build — compile + sync + conformance + attestation + snapshot validation
+python -m pgs_compiler.cli build --workspace /abs/path/to/pgs_workspace
 ```
 
-### 6.4 Two Compiler Phase Types
+### 6.4 Compiler Evidence Graph
+
+The compiler emits `evidence_graph.json` per structure during S7. This is the compiler's own governed observability artifact — a semantic causality graph over all S1–S7 trace events, analogous in role to the execution trace for the runtime.
+
+**What it contains:**
+
+| Field | Content |
+|-------|---------|
+| `events` | All compiler trace events (S1–S7), typed by operation, tagged by family |
+| `edges` | CAUSALITY edges + STAGE_SEQUENCE edges |
+| `families` | Events bucketed by semantic concern (DISCOVERY, TOPOLOGY, ADDRESSING, GOVERNANCE, CONSTRUCTION, PROJECTION, MATERIALIZATION) |
+| `evidence_graph_hash` | SHA-256 over core content; verified by S8 |
+| `structure_id`, `compiler_version` | Envelope metadata — excluded from hash |
+
+**Evidence Semantics Doctrine — the formal guarantees:**
+
+| Guarantee | Statement |
+|-----------|-----------|
+| Causality definition | Two inferred patterns: (1) S1 `discovery_complete` → all subsequent `node_created` events in the batch; (2) S5 all `ct_ir_built` + `cs_ir_built` + `cc_projection_built` events → `construction_complete` |
+| Stage ordering | Exactly 7 STAGE_SEQUENCE edges (S1→S2→S3→S4→S5→S6→S7); inferred from last event of stage N → first event of stage N+1; deterministic given same source |
+| Event identity | Auto-increment integer, monotonically increasing, immutable per compile run; identical inputs → identical event sequence |
+| Edge kind exhaustiveness | Exactly two edge kinds exist: `CAUSALITY` (parent → child event; event caused/gated target) and `STAGE_SEQUENCE` (last event of stage N → first event of stage N+1). No other edge kinds are permitted. Consumers may assert this. |
+| Edge stability | Edges inferred from operation ordering within the compiled trace batch; same source artifacts always produce the same edge set |
+| Graph determinism | Same source structure artifacts + same compiler version → bitwise-identical `events`, `edges`, `families` content; only envelope fields (`structure_id`, `compiler_version`, `evidence_graph_hash`) may differ between runs |
+| Projection completeness | All events from all stages S1–S7 are present in `evidence_graph.json`; no stage is selectively omitted; every event emitted during compilation appears in the `events` array; all families present in the run appear in the `families` index |
+| Hash contract | SHA-256 over `{event_count, edge_count, events, edges, families}` only; envelope fields (`structure_id`, `compiler_version`, `evidence_graph_hash`) excluded so transport metadata can evolve while graph semantics remain stable; verified by S8 Check 7 |
+| Consumer contract | `visualization/consumers/` is the ONLY sanctioned interface; consumers must NEVER import from `compiler/graph/*`; JSON schema is the contract; method signatures on `EvidenceQuery` and `EvidenceProjection` are frozen |
+| Replay guarantee | `evidence_graph.json` is self-contained; no compiler state, no compiler imports needed to parse or interpret it; all consumer operations work from the serialized file alone |
+| Ordering guarantee | `events` array in emission order (S1 first, S7 last, within-stage in emission order); `event_id` values monotonically increasing |
+| VERIFICATION absence | S8's `verification_complete` event is always absent from `evidence_graph.json` by design — S7 writes the file before S8 runs; 0 VERIFICATION-family events is correct, not a defect |
+
+**Location:** `evidence_snapshot/<domain>/evidence_graph.json` — written by S7, verified by S8.
+
+**Contract freeze:** The `EvidenceQuery` public surface is a protocol surface, not a utility library. Additions require explicit versioning. No compiler-internal fields may be exposed. No shortcuts that bypass DTO semantics.
+
+---
+
+### 6.5 Two Compiler Phase Types
 
 The compiler pipeline has two explicit phase types:
 
@@ -656,7 +696,7 @@ See `pgs_cli_cheatsheet.txt` for port overrides and manual invocation options.
 cd pgs_workspace
 cd scripts && ./bootstrap_pgs.sh
 source .venv/bin/activate
-omnibachi --help
+pgs_runtime --help
 ```
 
 ### 10.2 Run Demo End-to-End
@@ -669,11 +709,11 @@ cd scripts && ./demo_sample_workflow.sh
 ### 10.3 Run Workflow (CLI)
 
 ```bash
-omnibachi run \
+pgs_runtime run \
   --wf <domain>::<WF_CODE> \
   --payload <path-to-payload.json> \
   --data-root /absolute/path/to/pgs_workspace/data \
-  --workspace pgs_workspace
+  --workspace /absolute/path/to/pgs_workspace
 ```
 
 **Key flags:**
@@ -698,10 +738,7 @@ export PGS_WORKSPACE=/path/to/pgs_workspace
 ### 10.4 Examine a Trace
 
 ```bash
-omnibachi examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
-
-# Or using module directly:
-python -m omnibachi.cli examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
+pgs_runtime examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
 ```
 
 ### 10.5 Available Workflow Inventory
@@ -724,9 +761,10 @@ Payload files: `<repo>/testbed/<subdomain>/test_payloads/`
 
 **Pattern (applies to all workflows):**
 ```bash
-omnibachi run --wf <domain>::<WF_CODE> \
+pgs_runtime run --wf <domain>::<WF_CODE> \
   --payload <domain_repo>/testbed/<subdomain>/test_payloads/<payload>.json \
-  --data-root pgs_workspace/data --workspace pgs_workspace
+  --data-root /absolute/path/to/pgs_workspace/data \
+  --workspace /absolute/path/to/pgs_workspace
 ```
 
 ### 10.6 Unit Tests
@@ -754,10 +792,10 @@ pgs_compiler/scripts/clean_outputs_dir.sh
 pgs_compiler/scripts/clean_compiled_artifacts.sh
 
 # Recompile and sync
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V0
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
-python pgs_compiler/scripts/pgs_build.py --workspace pgs_workspace
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V0
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
+python -m pgs_compiler.cli build --workspace /abs/path/to/pgs_workspace
 ```
 
 ---
@@ -790,7 +828,7 @@ python pgs_compiler/scripts/pgs_build.py --workspace pgs_workspace
 ### 11.3 Trace Debugging
 ```bash
 # Full trace examination
-omnibachi examine ./traces/<TRACE_ID>/<TRACE_ID>.jsonl
+pgs_runtime examine ./traces/<TRACE_ID>/<TRACE_ID>.jsonl
 
 # Each event contains: artifact_id, inputs, outputs, outcome, timestamp
 # Read the .md summary for human-readable overview
@@ -828,6 +866,9 @@ These are hard constraints. Violation = operational failure or architectural cor
 | No Runtime Topology Synthesis | Execution topology may not be generated or inferred from payload, environment, or runtime state |
 | Topology Traversal Scope | Execution topology governs traversal structure only; may not encode authority or transport semantics |
 | Canonical Surface | Every step's `result_surface` must exactly match the `canonical_surface` declared in the governing SURFACE_CONTRACT |
+| Evidence Consumer Isolation | `visualization/consumers/` must never import from `compiler/graph/*` or any compiler internal; `evidence_graph.json` JSON schema is the only contract; violation collapses compiler replaceability |
+| Evidence Hash Contract | `evidence_graph_hash` covers only `{event_count, edge_count, events, edges, families}`; envelope fields are excluded; S8 verifies by recomputing over these exact keys |
+| VERIFICATION Family Absent | `evidence_graph.json` covers S1–S7 by design; S8 runs after the file is written; 0 VERIFICATION-family events is architecturally correct — this is not a gap, it is a boundary |
 
 ---
 
@@ -919,6 +960,8 @@ Understanding why the architecture looks as it does prevents re-introducing solv
 | Execution topology formalized as governed surface | Execution graph structure elevated from implementation convention to constitutional governance surface with 11 enforced invariants | Topology closure, step identity, canonical surface, authority/transport orthogonality, and runtime synthesis prohibition are now compile-time enforced — runtime is provably a traversal engine, not an orchestrator |
 | Governed declarative graph traversal | PGS execution is no longer adequately described as "workflow orchestration" — it is governed declarative graph traversal | Topology is compile-time declared, authority-orthogonal, transport-orthogonal, and immutable after compilation; these properties are now constitutional, not conventional |
 | Constitutional Federation | Governance registry organized as `registry/FB_*/` federation boundaries (9 boundaries); FQDN namespace is `fb.*::`; STRUCTURE_DISCOVERY_V0 drives all layer resolution; `CONSTITUTION_FEDERATION_BOUNDARY_V0` is the authoritative doctrine artifact; `load_bootstrap_artifact()` requires full FQDN — no fallback | Federation boundaries are first-class semantic constructs. Governance sovereignty is physically visible in the registry. `fb.*::` is the only valid namespace for governance artifacts. |
+| Compiler evidence graph (EG-1→EG-4) | Compiler gained a governed observability artifact: `evidence_graph.json` per structure; events as typed graph nodes (8 families, 19 operations); CAUSALITY + STAGE_SEQUENCE typed edges; SHA-256 hash integrity; verified by S8 Check 7; `visualization/consumers/` consumer contract isolates all downstream consumers from compiler internals | Compiler is now self-observable. The evidence graph enables visualization, AI tooling, replay, and debugging from a stable, compiler-agnostic JSON schema — without importing compiler internals. |
+| Governed Evidence System convergence | PGS architecture converges on three compounding properties: Protocol Compiler + Governed Evidence System + Deterministic Execution Fabric. Each property was independently designed; the convergence is emergent. Most systems solve one. | This combination is an unusual architectural category. The cost-of-change decreasing with system growth is now repeatedly demonstrated architectural behavior, not an aspirational claim. |
 
 ---
 
@@ -996,23 +1039,24 @@ Governance surfaces compound without runtime coupling. Execution remains semanti
 cd scripts && ./bootstrap_pgs.sh && source .venv/bin/activate
 
 # Run workflow
-omnibachi run --wf <domain>::<WF_CODE> --payload <file.json> \
-  --data-root pgs_workspace/data --workspace pgs_workspace
+pgs_runtime run --wf <domain>::<WF_CODE> --payload <file.json> \
+  --data-root /abs/path/to/pgs_workspace/data \
+  --workspace /abs/path/to/pgs_workspace
 
 # Examine trace
-omnibachi examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
+pgs_runtime examine pgs_workspace/traces/<TRACE_ID>/<TRACE_ID>.jsonl
 
 # HTTP server
 ~/pgs_workspace/scripts/start_http_server.sh
 
 # Build (all)
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V0
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
-python -m pgs_compiler.compiler.cli --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
-python pgs_compiler/scripts/pgs_build.py --workspace pgs_workspace
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V0
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
+python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
+python -m pgs_compiler.cli build --workspace /abs/path/to/pgs_workspace
 
 # Unit tests
-python pgs_runtime/testbed/run_tests.py -v
+python pgs_runtime/testbed/run_runtime_tests.py -v
 
 # Demo
 cd scripts && ./demo_sample_workflow.sh
@@ -1068,7 +1112,13 @@ protocol_snapshot/
   visualization/<WF_NAME>/
     <WF_NAME>.graph.json        ← machine-readable DAG
     <WF_NAME>.projection.png    ← visual graph
+
+evidence_snapshot/              ← compiler observability (written by S7, verified by S8)
+  <domain>/
+    evidence_graph.json         ← semantic causality graph; events + edges + families + hash
 ```
+
+**`evidence_snapshot/` is READ-ONLY post-build** — same sovereignty rule as `protocol_snapshot/`. Never edit by hand. To change the evidence graph, change the protocol source and recompile.
 
 **Filename convention:** FQDN uses `::` in code but `__` (double-underscore) as the filesystem separator in artifact filenames.
 ```

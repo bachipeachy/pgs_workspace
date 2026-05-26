@@ -1,0 +1,15 @@
+{
+  "allocation_strategy": "deterministic_fqdn_order",
+  "compiler_version": "0.3.0",
+  "edge_count": 195,
+  "graph_address_hash": "100e6e5d3f31a4c8af728531572f08776b8071bcbc968ba61041048c28ea679a",
+  "graph_topology_hash": "",
+  "node_count": 255,
+  "projection_class": "machine_projection",
+  "projection_hash": "1f1972717f3bb27bdfe9ba8b89efae80001a19c0b46397073f79c1a1d59ddf5d",
+  "projection_schema_version": "v0",
+  "projection_type": "tokenized",
+  "requires_fqdn_identity": false,
+  "structure_id": "platform",
+  "vocabulary_hash": "f4e6e06fa88ced37855562ea8b99b66fde284e246254c65af5e7f8a02c9d71ab"
+}

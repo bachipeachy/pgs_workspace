@@ -1,0 +1,25 @@
+{
+  "artifact_code": "ASSERT_IMPLEMENTATION_ADMISSIBLE_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_IMPLEMENTATION_ADMISSIBLE_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_IMPLEMENTATION_ADMISSIBLE_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_implementation_admissible_v0\n  callable: execute\n```\n\n## Summary\n\nValidates that all executable capability artifacts have structurally complete implementation declarations. CT atoms must declare `machine.implementation` with non-empty `module` and `callable`. CS artifacts must declare `implementation` with non-empty `module` and `callable`. CT molecules are exempt (they compose atoms via `atom_stream`).\n\n## Enforcement\n\n- **Phase**: 4 (GOVERN)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All CT (atom only) and CS artifacts\n\n## Handler Behavior\n\n### Context Relay Pattern\n\nThe compiler pre-computes implementation admissibility analysis for all CT atom and CS nodes and provides it as `compilation_context[\"implementation_admissibility\"]`.\n\nThe handler:\n1. Reads pre-computed analysis from compilation context\n2. Iterates CT and CS artifacts, looks up per-FQDN result\n3. Translates structural violations to standardized governance violations\n\n### CT Molecule Exemption\n\nCT molecules (`ct_kind: molecule`) do NOT require implementation declarations. They compose atoms via `atom_stream`, and the atoms provide the execution specification.\n\n## Error Messages\n\n### Missing Implementation (CT Atom)\n```\nASSERT_IMPLEMENTATION_ADMISSIBLE_V0: atom CT missing implementation\n   CT: capability_transforms::CT_EXAMPLE_V0\n   Violation: atom CT must declare machine.implementation\n   Fix: Add machine.implementation with module and callable\n```\n\n### Empty Module/Callable (CT Atom)\n```\nASSERT_IMPLEMENTATION_ADMISSIBLE_V0: atom CT implementation incomplete\n   CT: capability_transforms::CT_EXAMPLE_V0\n   Violation: atom CT machine.implementation.module or callable is empty\n   Fix: Provide non-empty module and callable in machine.implementation\n```\n\n### Missing Implementation (CS)\n```\nASSERT_IMPLEMENTATION_ADMISSIBLE_V0: CS missing implementation\n   CS: capability_side_effects::CS_EXAMPLE_V0\n   Violation: CS must declare implementation\n   Fix: Add implementation with module and callable\n```\n\n### Empty Module/Callable (CS)\n```\nASSERT_IMPLEMENTATION_ADMISSIBLE_V0: CS implementation incomplete\n   CS: capability_side_effects::CS_EXAMPLE_V0\n   Violation: CS implementation.module or callable is empty\n   Fix: Provide non-empty module and callable in implementation\n```\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-21) - Extracted from compiler S4 GOVERN CT/CS validation\n",
+  "content_hash": "5aa4625313f0dc378f770c44b417b97cac2b166baf0208a2f0bcdb77ce3940a2",
+  "fqdn_id": "fb.topology::ASSERT_IMPLEMENTATION_ADMISSIBLE_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_IMPLEMENTATION_ADMISSIBLE_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_implementation_admissible_v0"
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

@@ -20,7 +20,7 @@ echo "[1] Running workflow (Run #1)..."
 
 OUT1=$(mktemp)
 
-omnibachi run \
+pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
   --payload "$PAYLOAD" \
   --data-root "$DATA_ROOT" \
@@ -33,7 +33,7 @@ echo "[2] Running workflow again (Run #2)..."
 
 OUT2=$(mktemp)
 
-omnibachi run \
+pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
   --payload "$PAYLOAD" \
   --data-root "$DATA_ROOT" \
@@ -42,7 +42,7 @@ omnibachi run \
 TRACE2=$(grep "Trace ID:" "$OUT2" | awk '{print $3}')
 
 TRACE2_PATH=$(find "$TRACE_ROOT" -name "$TRACE2.jsonl" 2>/dev/null | head -1)
-if [ -n "$TRACE2_PATH" ] && omnibachi examine "$TRACE2_PATH"; then
+if [ -n "$TRACE2_PATH" ] && pgs_runtime examine "$TRACE2_PATH"; then
   echo ""
 else
   echo ""

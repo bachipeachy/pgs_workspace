@@ -1,12 +1,12 @@
 [project]
 name = "pgs-workspace"
-version = "0.2.0"
+version = "0.3.0"
 description = "PGS Workspace — runnable entry point for Protocol-Governed Systems"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "Apache-2.0"
 authors = [{name = "Bhash Ganti aka Bachi"}]
 keywords = [
-  "protocol-governed-systems", "pgs", "omnibachi",
+  "protocol-governed-systems", "pgs", "pgs_runtime",
   "governance", "declarative", "execution-graph"
 ]
 classifiers = [
@@ -40,7 +40,9 @@ snapshot_root = "protocol_snapshot"
 # Optional: used by bootstrap script
 repos = [
   "../pgs_runtime",
-  "../pgs_protocol",
+  "../pgs_governance",
+  "../pgs_compiler",
+  "../pgs_transport",
   "../pgs_capabilities",
   "../pgs_blockchain",
   "../pgs_ai_governance"

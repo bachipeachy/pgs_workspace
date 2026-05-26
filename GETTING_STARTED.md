@@ -139,7 +139,7 @@ source .venv/bin/activate
 ## Examine what ran
 
 ```bash
-omnibachi examine traces/<TRACE_ID>/<TRACE_ID>.jsonl
+pgs_runtime examine traces/<TRACE_ID>/<TRACE_ID>.jsonl
 ```
 
 ---
@@ -147,7 +147,7 @@ omnibachi examine traces/<TRACE_ID>/<TRACE_ID>.jsonl
 ## Run any workflow
 
 ```bash
-omnibachi run \
+pgs_runtime run \
   --wf <domain::WORKFLOW> \
   --payload <payload.json> \
   --data-root $(pwd)/data \

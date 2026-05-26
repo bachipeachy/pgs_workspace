@@ -1,0 +1,6149 @@
+{
+  "edges": [
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 0,
+      "source_fqdn": "blockchain::AC_ENDUSER_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 1,
+      "source_fqdn": "blockchain::AC_SYSTEM_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_VERIFY_ACTOR_V0"
+      },
+      "source_address": 3,
+      "source_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0",
+      "target_address": 16,
+      "target_fqdn": "blockchain::CC_PERSIST_VERIFIED_ACTOR_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "actor_id": "$.inputs.actor_id",
+          "record": {
+            "actor_id": "$.inputs.actor_id",
+            "event_code": "$.inputs.event_type",
+            "payload": "$.inputs.data",
+            "timestamp": "2025-01-01T00:00:00Z"
+          },
+          "stream_id": "$.inputs.actor_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "append_actor_event",
+        "store": "ACTOR_EVENTS"
+      },
+      "source_address": 3,
+      "source_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 3,
+      "source_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "actor_id": "$.inputs.actor_id",
+          "record": "$.inputs.record",
+          "stream_id": "$.inputs.stream_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "record_id": "$.capability_result.record_id",
+          "result_status": "$.result_status",
+          "sequence_number": "$.capability_result.sequence_number"
+        },
+        "pipeline_index": 0,
+        "step_id": "append_record",
+        "store": ""
+      },
+      "source_address": 4,
+      "source_fqdn": "blockchain::CC_APPEND_RECORD_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 4,
+      "source_fqdn": "blockchain::CC_APPEND_RECORD_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "actor_id": "$.inputs.actor_id",
+          "record": {
+            "event_code": "$.inputs.event_type",
+            "payload": "$.inputs.data",
+            "timestamp": "{{timestamp}}",
+            "tx_hash": "$.inputs.tx_hash",
+            "tx_id": "$.inputs.tx_id",
+            "wallet_id": "$.inputs.wallet_id"
+          },
+          "stream_id": "$.inputs.tx_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "append_tx_event",
+        "store": "TRANSACTION_EVENTS"
+      },
+      "source_address": 5,
+      "source_fqdn": "blockchain::CC_APPEND_TX_EVENT_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 5,
+      "source_fqdn": "blockchain::CC_APPEND_TX_EVENT_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 6,
+      "source_fqdn": "blockchain::CC_APPEND_WALLET_EVENT_V0",
+      "target_address": 14,
+      "target_fqdn": "blockchain::CC_NOTIFY_WALLET_CREATED_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "actor_id": "$.inputs.actor_id",
+          "record": "$.inputs.record",
+          "stream_id": "$.inputs.wallet_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "append_wallet_event",
+        "store": "WALLET_EVENTS"
+      },
+      "source_address": 6,
+      "source_fqdn": "blockchain::CC_APPEND_WALLET_EVENT_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 6,
+      "source_fqdn": "blockchain::CC_APPEND_WALLET_EVENT_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 7,
+      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "target_address": 21,
+      "target_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 7,
+      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "target_address": 24,
+      "target_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "chain_id": "$.inputs.chain_id",
+          "data": "$.inputs.data",
+          "gas_limit": "$.inputs.gas_limit",
+          "max_fee_per_gas": "$.inputs.max_fee_per_gas",
+          "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
+          "nonce": "$.inputs.nonce",
+          "to": "$.inputs.to_address",
+          "value": "$.inputs.value"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "tx_id": "$.results.generate_tx_id.tx_id",
+          "unsigned_tx_bytes": "$.capability_result.unsigned_tx_bytes"
+        },
+        "pipeline_index": 1,
+        "step_id": "build_eth_transaction"
+      },
+      "source_address": 7,
+      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "target_address": 24,
+      "target_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 7,
+      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "data": {
+            "chain_id": "$.inputs.chain_id",
+            "from_address": "$.inputs.from_address",
+            "nonce": "$.inputs.nonce",
+            "to_address": "$.inputs.to_address",
+            "value": "$.inputs.value"
+          },
+          "prefix": "TX"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "tx_id": "$.capability_result.id"
+        },
+        "pipeline_index": 0,
+        "step_id": "generate_tx_id"
+      },
+      "source_address": 7,
+      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 7,
+      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "NOT_FOUND",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 8,
+      "source_fqdn": "blockchain::CC_CHECK_WALLET_EXISTS_V0",
+      "target_address": 10,
+      "target_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key_or_address": "$.inputs.wallet_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "RESOLVE",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "check_wallet_exists",
+        "store": "WALLET"
+      },
+      "source_address": 8,
+      "source_fqdn": "blockchain::CC_CHECK_WALLET_EXISTS_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 8,
+      "source_fqdn": "blockchain::CC_CHECK_WALLET_EXISTS_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 9,
+      "source_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0",
+      "target_address": 6,
+      "target_fqdn": "blockchain::CC_APPEND_WALLET_EVENT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.inputs.wallet_id",
+          "value": {
+            "account_model": "hybrid",
+            "actor_id": "$.inputs.actor_id",
+            "addresses": {
+              "eoa": [
+                {
+                  "address": "$.inputs.eoa_address",
+                  "derivation_path": "$.inputs.eoa_derivation_path",
+                  "format": "hex",
+                  "public_key": "$.inputs.eoa_public_key_hex"
+                }
+              ],
+              "utxo": [
+                {
+                  "address": "$.inputs.utxo_address",
+                  "derivation_path": "$.inputs.utxo_derivation_path",
+                  "format": "hex",
+                  "public_key": "$.inputs.utxo_public_key_hex"
+                }
+              ]
+            },
+            "currency": "$.inputs.currency",
+            "metadata": {},
+            "network": "$.inputs.network",
+            "network_config": {
+              "chain_id": 66,
+              "rpc_endpoint": "http://localhost:8545"
+            },
+            "security": {
+              "coin_type": 66,
+              "derivation_standard": "bip44",
+              "key_scheme": "secp256k1",
+              "master_fingerprint": "$.inputs.master_fingerprint",
+              "security_type": "$.inputs.security_type",
+              "signing": {
+                "address_index_start": 0,
+                "derivation_root": "m/44'/66'/0'"
+              }
+            },
+            "state": {
+              "eoa": {
+                "balance": 0,
+                "nonce": 0
+              },
+              "utxo": {
+                "balance": 0,
+                "utxo_count": 0
+              }
+            },
+            "status": "active",
+            "wallet_id": "$.inputs.wallet_id",
+            "wallet_type": "$.inputs.wallet_type"
+          }
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "write_wallet_state",
+        "store": "WALLET"
+      },
+      "source_address": 9,
+      "source_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.inputs.wallet_id",
+          "target_cs": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "target_ref": "$.inputs.wallet_id"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "exit",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {
+          "address": "$.capability_result.address",
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 1,
+        "step_id": "register_wallet_index",
+        "store": ""
+      },
+      "source_address": 9,
+      "source_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 9,
+      "source_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 10,
+      "source_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+      "target_address": 9,
+      "target_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 10,
+      "source_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+      "target_address": 25,
+      "target_fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "curve": "secp256k1",
+          "entropy_bits": 128,
+          "eoa_child_indices": [
+            0,
+            0
+          ],
+          "passphrase": "",
+          "root_path_indices": [
+            2147483692,
+            2147483714,
+            2147483648
+          ],
+          "utxo_child_indices": [
+            1,
+            0
+          ]
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "eoa_address": "$.capability_result.eoa_address",
+          "eoa_derivation_path": "$.capability_result.eoa_derivation_path",
+          "eoa_public_key_hex": "$.capability_result.eoa_public_key_hex",
+          "master_fingerprint": "$.capability_result.master_fingerprint",
+          "utxo_address": "$.capability_result.utxo_address",
+          "utxo_derivation_path": "$.capability_result.utxo_derivation_path",
+          "utxo_public_key_hex": "$.capability_result.utxo_public_key_hex"
+        },
+        "pipeline_index": 0,
+        "step_id": "derive_wallet_keypairs"
+      },
+      "source_address": 10,
+      "source_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+      "target_address": 25,
+      "target_fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 10,
+      "source_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+      },
+      "source_address": 11,
+      "source_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
+      "target_address": 18,
+      "target_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 11,
+      "source_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "data": "$.inputs.actor_record",
+          "prefix": "AC"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "actor_id": "$.capability_result.id"
+        },
+        "pipeline_index": 0,
+        "step_id": "generate_actor_id"
+      },
+      "source_address": 11,
+      "source_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 11,
+      "source_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 12,
+      "source_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0",
+      "target_address": 8,
+      "target_fqdn": "blockchain::CC_CHECK_WALLET_EXISTS_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 12,
+      "source_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "data": "$.inputs.seed_record",
+          "prefix": "W"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "wallet_id": "$.capability_result.id"
+        },
+        "pipeline_index": 0,
+        "step_id": "generate_wallet_id"
+      },
+      "source_address": 12,
+      "source_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 12,
+      "source_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 13,
+      "source_fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
+      "target_address": 15,
+      "target_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 13,
+      "source_fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
+      "target_address": 73,
+      "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "input_bytes": "$.inputs.signed_tx_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "tx_hash": "$.capability_result.hash_hex"
+        },
+        "pipeline_index": 0,
+        "step_id": "hash_transaction"
+      },
+      "source_address": 13,
+      "source_fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
+      "target_address": 73,
+      "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 13,
+      "source_fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "body": "Your wallet has been created successfully.",
+          "recipient": "$.inputs.recipient_email",
+          "subject": "Wallet Created"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "SEND",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "send_wallet_notification",
+        "store": ""
+      },
+      "source_address": 14,
+      "source_fqdn": "blockchain::CC_NOTIFY_WALLET_CREATED_V0",
+      "target_address": 59,
+      "target_fqdn": "capability_side_effects::CS_SEND_EMAIL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 14,
+      "source_fqdn": "blockchain::CC_NOTIFY_WALLET_CREATED_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 5,
+      "target_fqdn": "blockchain::CC_APPEND_TX_EVENT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "actor_id": "$.inputs.actor_id",
+          "record": {
+            "actor_id": "$.inputs.actor_id",
+            "chain_id": "$.inputs.chain_id",
+            "created_at": "{{timestamp}}",
+            "data": "$.inputs.data",
+            "from_address": "$.inputs.from_address",
+            "gas_limit": "$.inputs.gas_limit",
+            "max_fee_per_gas": "$.inputs.max_fee_per_gas",
+            "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
+            "nonce": "$.inputs.nonce",
+            "signature": "$.inputs.signature",
+            "status": "PENDING",
+            "to_address": "$.inputs.to_address",
+            "tx_hash": "$.inputs.tx_hash",
+            "tx_id": "$.inputs.tx_id",
+            "tx_type": "$.inputs.tx_type",
+            "value": "$.inputs.value",
+            "wallet_id": "$.inputs.wallet_id"
+          },
+          "stream_id": "$.inputs.tx_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "pipeline_index": 2,
+        "step_id": "append_mempool_tx",
+        "store": "TRANSACTION_EVENTS"
+      },
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.results.generate_nonce_key.nonce_key",
+          "metadata": {
+            "nonce": "$.inputs.nonce",
+            "wallet_id": "$.inputs.wallet_id"
+          },
+          "target_cs": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "target_ref": "$.inputs.from_address"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "exit",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "pipeline_index": 1,
+        "step_id": "register_nonce",
+        "store": ""
+      },
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.inputs.tx_id",
+          "metadata": {
+            "status": "PENDING",
+            "tx_type": "$.inputs.tx_type",
+            "wallet_id": "$.inputs.wallet_id"
+          },
+          "target_cs": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "target_ref": "$.inputs.tx_hash"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "exit",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {
+          "result_status": "$.result_status"
+        },
+        "pipeline_index": 3,
+        "step_id": "register_tx_hash",
+        "store": ""
+      },
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "data": {
+            "from_address": "$.inputs.from_address",
+            "nonce": "$.inputs.nonce"
+          },
+          "prefix": "NONCE"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "nonce_key": "$.capability_result.id"
+        },
+        "pipeline_index": 0,
+        "step_id": "generate_nonce_key"
+      },
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 15,
+      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.inputs.actor_id",
+          "target_cs": "$.inputs.target_cs",
+          "target_ref": "$.inputs.target_ref"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "exit",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {
+          "address": "$.capability_result.address",
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "register_verified_actor",
+        "store": "ACTOR"
+      },
+      "source_address": 16,
+      "source_fqdn": "blockchain::CC_PERSIST_VERIFIED_ACTOR_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 16,
+      "source_fqdn": "blockchain::CC_PERSIST_VERIFIED_ACTOR_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_VERIFY_ACTOR_V0"
+      },
+      "source_address": 17,
+      "source_fqdn": "blockchain::CC_RECORD_ACTOR_STATE_V0",
+      "target_address": 3,
+      "target_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "actor_id": "$.inputs.actor_id",
+          "record": {
+            "actor_id": "$.inputs.actor_id",
+            "new_state": "$.inputs.new_state",
+            "old_state": "$.inputs.old_state",
+            "reason": "$.inputs.reason",
+            "timestamp": "$.inputs.timestamp"
+          },
+          "stream_id": "$.inputs.actor_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "APPEND",
+        "outputs": {
+          "result_status": "$.capability_result.result_status"
+        },
+        "pipeline_index": 0,
+        "step_id": "record_state_transition",
+        "store": "ACTOR_EVENTS"
+      },
+      "source_address": 17,
+      "source_fqdn": "blockchain::CC_RECORD_ACTOR_STATE_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 17,
+      "source_fqdn": "blockchain::CC_RECORD_ACTOR_STATE_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+      },
+      "source_address": 18,
+      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "target_address": 3,
+      "target_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "ALREADY_EXISTS",
+        "wf_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+      },
+      "source_address": 18,
+      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "target_address": 3,
+      "target_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.results.generate_kyc_key.kyc_key",
+          "stream_id": "$.inputs.actor_id",
+          "target_cs": "CS_APPENDONLY_JSONL_V0",
+          "target_ref": "$.inputs.actor_id"
+        },
+        "on_result": {
+          "ALREADY_EXISTS": "exit",
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "REGISTER",
+        "outputs": {},
+        "pipeline_index": 1,
+        "step_id": "register_kyc_mapping",
+        "store": "ACTOR"
+      },
+      "source_address": 18,
+      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 18,
+      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "data": {
+            "email": "$.inputs.actor_record.email_registration",
+            "first_name": "$.inputs.actor_record.first_name",
+            "last_name": "$.inputs.actor_record.last_name"
+          },
+          "prefix": "KYC"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "kyc_key": "$.capability_result.id"
+        },
+        "pipeline_index": 0,
+        "step_id": "generate_kyc_key"
+      },
+      "source_address": 18,
+      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 18,
+      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 19,
+      "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
+      "target_address": 7,
+      "target_fqdn": "blockchain::CC_BUILD_ETH_TX_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 19,
+      "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
+      "target_address": 27,
+      "target_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "wallet_record": "$.inputs.wallet_record"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "nonce": "$.capability_result.nonce",
+          "updated_wallet_record": "$.capability_result.updated_wallet_record"
+        },
+        "pipeline_index": 0,
+        "step_id": "increment_wallet_nonce"
+      },
+      "source_address": 19,
+      "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
+      "target_address": 27,
+      "target_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.inputs.wallet_id",
+          "value": "$.results.increment_wallet_nonce.updated_wallet_record"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "nonce": "$.results.increment_wallet_nonce.nonce"
+        },
+        "pipeline_index": 1,
+        "step_id": "write_updated_wallet",
+        "store": "WALLET"
+      },
+      "source_address": 19,
+      "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 19,
+      "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 12,
+      "target_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_VERIFY_ACTOR_V0"
+      },
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 17,
+      "target_fqdn": "blockchain::CC_RECORD_ACTOR_STATE_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 23,
+      "target_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key_or_address": "$.results.generate_kyc_key.kyc_key"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "RESOLVE",
+        "outputs": {
+          "actor_id": "$.capability_result.target_ref"
+        },
+        "pipeline_index": 1,
+        "step_id": "resolve_actor_from_kyc",
+        "store": "ACTOR"
+      },
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "data": {
+            "email": "$.inputs.actor_record.email_registration",
+            "first_name": "$.inputs.actor_record.first_name",
+            "last_name": "$.inputs.actor_record.last_name"
+          },
+          "prefix": "KYC"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "kyc_key": "$.capability_result.id"
+        },
+        "pipeline_index": 0,
+        "step_id": "generate_kyc_key"
+      },
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 72,
+      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 20,
+      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 13,
+      "target_fqdn": "blockchain::CC_HASH_TRANSACTION_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 65,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "index": 2147483692,
+          "parent_chain_code_bytes": "$.results.derive_master_key.master_chain_code_bytes",
+          "parent_private_key_bytes": "$.results.derive_master_key.master_private_key_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+          "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+        },
+        "pipeline_index": 2,
+        "step_id": "derive_44h"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 65,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "index": 2147483714,
+          "parent_chain_code_bytes": "$.results.derive_44h.child_chain_code_bytes",
+          "parent_private_key_bytes": "$.results.derive_44h.child_private_key_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+          "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+        },
+        "pipeline_index": 3,
+        "step_id": "derive_66h"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 65,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "index": 2147483648,
+          "parent_chain_code_bytes": "$.results.derive_66h.child_chain_code_bytes",
+          "parent_private_key_bytes": "$.results.derive_66h.child_private_key_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+          "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+        },
+        "pipeline_index": 4,
+        "step_id": "derive_0h"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 65,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "index": 0,
+          "parent_chain_code_bytes": "$.results.derive_0h.child_chain_code_bytes",
+          "parent_private_key_bytes": "$.results.derive_0h.child_private_key_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "child_chain_code_bytes": "$.capability_result.child_chain_code_bytes",
+          "child_private_key_bytes": "$.capability_result.child_private_key_bytes"
+        },
+        "pipeline_index": 5,
+        "step_id": "derive_0_change"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 65,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "index": 0,
+          "parent_chain_code_bytes": "$.results.derive_0_change.child_chain_code_bytes",
+          "parent_private_key_bytes": "$.results.derive_0_change.child_private_key_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "eoa_private_key_bytes": "$.capability_result.child_private_key_bytes"
+        },
+        "pipeline_index": 6,
+        "step_id": "derive_0_address"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 65,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 66,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "seed_bytes": "$.results.mnemonic_to_seed.seed_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "master_chain_code_bytes": "$.capability_result.master_chain_code_bytes",
+          "master_private_key_bytes": "$.capability_result.master_private_key_bytes"
+        },
+        "pipeline_index": 1,
+        "step_id": "derive_master_key"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 66,
+      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 67,
+      "target_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "curve": "secp256k1",
+          "message_hash": "$.results.hash_unsigned_tx.message_hash",
+          "private_key_bytes": "$.results.derive_0_address.eoa_private_key_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "signature": {
+            "r": "$.capability_result.r",
+            "s": "$.capability_result.s",
+            "v": "$.capability_result.v"
+          },
+          "signed_tx_bytes": "$.capability_result.signed_bytes"
+        },
+        "pipeline_index": 8,
+        "step_id": "sign_tx_hash"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 67,
+      "target_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 73,
+      "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "input_bytes": "$.inputs.unsigned_tx_bytes"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "message_hash": "$.capability_result.hash_hex"
+        },
+        "pipeline_index": 7,
+        "step_id": "hash_unsigned_tx"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 73,
+      "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 76,
+      "target_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "mnemonic": "$.inputs.mnemonic"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "seed_bytes": "$.capability_result.seed_bytes"
+        },
+        "pipeline_index": 0,
+        "step_id": "mnemonic_to_seed"
+      },
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 76,
+      "target_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 21,
+      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 22,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "target_address": 19,
+      "target_fqdn": "blockchain::CC_RESERVE_NONCE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 22,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "target_address": 26,
+      "target_fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "wallet_record": "$.results.read_wallet_record.wallet_data"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "current_nonce": "$.capability_result.current_nonce",
+          "from_address": "$.capability_result.from_address",
+          "wallet_record": "$.results.read_wallet_record.capability_result.value"
+        },
+        "pipeline_index": 2,
+        "step_id": "extract_wallet_tx_fields"
+      },
+      "source_address": 22,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "target_address": 26,
+      "target_fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key": "$.inputs.wallet_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "READ",
+        "outputs": {
+          "wallet_data": "$.capability_result.value"
+        },
+        "pipeline_index": 1,
+        "step_id": "read_wallet_record",
+        "store": "WALLET"
+      },
+      "source_address": 22,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "key_or_address": "$.inputs.wallet_id"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": "RESOLVE",
+        "outputs": {
+          "wallet_ref": "$.capability_result.target_ref"
+        },
+        "pipeline_index": 0,
+        "step_id": "resolve_wallet_registry",
+        "store": ""
+      },
+      "source_address": 22,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 22,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "SUCCESS",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 23,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
+      "target_address": 22,
+      "target_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {},
+      "source_address": 23,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
+      "target_address": 81,
+      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CT",
+      "kind_address": 16386,
+      "metadata": {
+        "inputs": {
+          "record": {
+            "data": "$.inputs.data",
+            "gas_limit": "$.inputs.gas_limit",
+            "max_fee_per_gas": "$.inputs.max_fee_per_gas",
+            "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
+            "to_address": "$.inputs.to_address",
+            "value": "$.inputs.value"
+          },
+          "schema": {
+            "data": {
+              "type": "hex_string"
+            },
+            "gas_limit": {
+              "min_value": 1,
+              "type": "integer"
+            },
+            "max_fee_per_gas": {
+              "min_value": 0,
+              "type": "integer_string"
+            },
+            "max_priority_fee_per_gas": {
+              "lte_field": "max_fee_per_gas",
+              "min_value": 0,
+              "type": "integer_string"
+            },
+            "to_address": {
+              "pattern": "^0x[0-9a-fA-F]{40}$",
+              "required": true,
+              "type": "hex_string"
+            },
+            "value": {
+              "min_value": 0,
+              "required": true,
+              "type": "integer_string"
+            }
+          }
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "outputs": {
+          "result_status": "$.capability_result.result_status",
+          "violations": "$.capability_result.violations"
+        },
+        "pipeline_index": 0,
+        "step_id": "validate_tx_structure"
+      },
+      "source_address": 23,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
+      "target_address": 81,
+      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 23,
+      "source_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 24,
+      "source_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 25,
+      "source_fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 26,
+      "source_fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 27,
+      "source_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 28,
+      "source_fqdn": "blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 29,
+      "source_fqdn": "blockchain::EV_ACTOR_REJECTED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 30,
+      "source_fqdn": "blockchain::EV_ACTOR_VERIFIED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 31,
+      "source_fqdn": "blockchain::EV_TRANSACTION_REJECTED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 32,
+      "source_fqdn": "blockchain::EV_TRANSACTION_SUBMITTED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 33,
+      "source_fqdn": "blockchain::EV_WALLET_CREATION_REQUESTED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 34,
+      "source_fqdn": "blockchain::INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0",
+      "target_address": 225,
+      "target_fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "ACK",
+        "wf_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+      },
+      "source_address": 35,
+      "source_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0",
+      "target_address": 11,
+      "target_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 35,
+      "source_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "ACK",
+        "wf_fqdn": "blockchain::WF_VERIFY_ACTOR_V0"
+      },
+      "source_address": 36,
+      "source_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0",
+      "target_address": 20,
+      "target_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 36,
+      "source_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "ACK",
+        "wf_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+      },
+      "source_address": 37,
+      "source_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0",
+      "target_address": 20,
+      "target_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 37,
+      "source_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "NODE_NEXT",
+      "kind_address": 16391,
+      "metadata": {
+        "condition": "ACK",
+        "wf_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+      },
+      "source_address": 38,
+      "source_fqdn": "blockchain::IN_WALLET_CREATED_V0",
+      "target_address": 20,
+      "target_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 38,
+      "source_fqdn": "blockchain::IN_WALLET_CREATED_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 59,
+      "target_fqdn": "capability_side_effects::CS_SEND_EMAIL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 59,
+      "target_fqdn": "capability_side_effects::CS_SEND_EMAIL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 39,
+      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 40,
+      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 40,
+      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 40,
+      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 40,
+      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 40,
+      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 57,
+      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 41,
+      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 42,
+      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 42,
+      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
+      "target_address": 56,
+      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 42,
+      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 42,
+      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
+      "target_address": 58,
+      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 42,
+      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 43,
+      "source_fqdn": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 44,
+      "source_fqdn": "blockchain::TEST_DATA_CT_PURE_BUILD_ETH_TRANSACTION_V0",
+      "target_address": 107,
+      "target_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 45,
+      "source_fqdn": "blockchain::TEST_DATA_CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+      "target_address": 107,
+      "target_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 46,
+      "source_fqdn": "blockchain::TEST_DATA_CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+      "target_address": 107,
+      "target_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 47,
+      "source_fqdn": "blockchain::TEST_DATA_CT_PURE_INCREMENT_WALLET_NONCE_V0",
+      "target_address": 107,
+      "target_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 6,
+      "target_fqdn": "blockchain::CC_APPEND_WALLET_EVENT_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 8,
+      "target_fqdn": "blockchain::CC_CHECK_WALLET_EXISTS_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 9,
+      "target_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 10,
+      "target_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 12,
+      "target_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 14,
+      "target_fqdn": "blockchain::CC_NOTIFY_WALLET_CREATED_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 20,
+      "target_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 38,
+      "target_fqdn": "blockchain::IN_WALLET_CREATED_V0"
+    },
+    {
+      "kind": "WF_START",
+      "kind_address": 16397,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 38,
+      "target_fqdn": "blockchain::IN_WALLET_CREATED_V0"
+    },
+    {
+      "kind": "WF_BINDS_RB",
+      "kind_address": 16395,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 39,
+      "target_fqdn": "blockchain::RB_CREATE_WALLET_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 212,
+      "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 3,
+      "target_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 11,
+      "target_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 18,
+      "target_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 35,
+      "target_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0"
+    },
+    {
+      "kind": "WF_START",
+      "kind_address": 16397,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 35,
+      "target_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0"
+    },
+    {
+      "kind": "WF_BINDS_RB",
+      "kind_address": 16395,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 40,
+      "target_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 53,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 212,
+      "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 5,
+      "target_fqdn": "blockchain::CC_APPEND_TX_EVENT_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 7,
+      "target_fqdn": "blockchain::CC_BUILD_ETH_TX_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 13,
+      "target_fqdn": "blockchain::CC_HASH_TRANSACTION_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 15,
+      "target_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 19,
+      "target_fqdn": "blockchain::CC_RESERVE_NONCE_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 20,
+      "target_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 21,
+      "target_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 22,
+      "target_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 23,
+      "target_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 37,
+      "target_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0"
+    },
+    {
+      "kind": "WF_START",
+      "kind_address": 16397,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 37,
+      "target_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0"
+    },
+    {
+      "kind": "WF_BINDS_RB",
+      "kind_address": 16395,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 41,
+      "target_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 54,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 212,
+      "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 3,
+      "target_fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 16,
+      "target_fqdn": "blockchain::CC_PERSIST_VERIFIED_ACTOR_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 17,
+      "target_fqdn": "blockchain::CC_RECORD_ACTOR_STATE_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 20,
+      "target_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 36,
+      "target_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0"
+    },
+    {
+      "kind": "WF_START",
+      "kind_address": 16397,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 36,
+      "target_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0"
+    },
+    {
+      "kind": "WF_BINDS_RB",
+      "kind_address": 16395,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 42,
+      "target_fqdn": "blockchain::RB_VERIFY_ACTOR_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 55,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 212,
+      "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 56,
+      "source_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 57,
+      "source_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 58,
+      "source_fqdn": "capability_side_effects::CS_REGISTRY_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 59,
+      "source_fqdn": "capability_side_effects::CS_SEND_EMAIL_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 60,
+      "source_fqdn": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 61,
+      "source_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 62,
+      "source_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 63,
+      "source_fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 64,
+      "source_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 65,
+      "source_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 66,
+      "source_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 67,
+      "source_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 68,
+      "source_fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 69,
+      "source_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 70,
+      "source_fqdn": "capability_transforms::CT_PURE_EXTRACT_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 71,
+      "source_fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 72,
+      "source_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 73,
+      "source_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 74,
+      "source_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 75,
+      "source_fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 76,
+      "source_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 77,
+      "source_fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 78,
+      "source_fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 79,
+      "source_fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 80,
+      "source_fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 81,
+      "source_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 82,
+      "source_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+      "target_address": 205,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 83,
+      "source_fqdn": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 84,
+      "source_fqdn": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 85,
+      "source_fqdn": "fb.ai_governance::STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 93,
+      "source_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 94,
+      "source_fqdn": "fb.authority::INVARIANT_ACTOR_AUTHORITY_SEPARATION_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 95,
+      "source_fqdn": "fb.authority::INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 96,
+      "source_fqdn": "fb.authority::INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 97,
+      "source_fqdn": "fb.authority::INVARIANT_NO_AMBIENT_AUTHORITY_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 98,
+      "source_fqdn": "fb.authority::INVARIANT_NO_RUNTIME_AUTHORIZATION_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 99,
+      "source_fqdn": "fb.authority::INVARIANT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 100,
+      "source_fqdn": "fb.authority::INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+      "target_address": 93,
+      "target_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 101,
+      "source_fqdn": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 102,
+      "source_fqdn": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 103,
+      "source_fqdn": "fb.blockchain::STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 107,
+      "source_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 108,
+      "source_fqdn": "fb.conformance::INVARIANT_ASSERT_PARITY_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 109,
+      "source_fqdn": "fb.conformance::INVARIANT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+      "target_address": 107,
+      "target_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 110,
+      "source_fqdn": "fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 111,
+      "source_fqdn": "fb.conformance::STRUCTURE_CONFORMANCE_POLICY_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 122,
+      "source_fqdn": "fb.constitution::CONSTITUTION_ASSERT_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 123,
+      "source_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 124,
+      "source_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 125,
+      "source_fqdn": "fb.constitution::CONSTITUTION_FEDERATION_BOUNDARY_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 126,
+      "source_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 127,
+      "source_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 128,
+      "source_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 129,
+      "source_fqdn": "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+      "target_address": 123,
+      "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 130,
+      "source_fqdn": "fb.constitution::INVARIANT_COMPILER_GOVERNANCE_DECLARED_V0",
+      "target_address": 123,
+      "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 131,
+      "source_fqdn": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0",
+      "target_address": 123,
+      "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 132,
+      "source_fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 133,
+      "source_fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 134,
+      "source_fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 135,
+      "source_fqdn": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
+      "target_address": 123,
+      "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 136,
+      "source_fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 137,
+      "source_fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 138,
+      "source_fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 139,
+      "source_fqdn": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 140,
+      "source_fqdn": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 141,
+      "source_fqdn": "fb.constitution::STRUCTURE_DISCOVERY_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 142,
+      "source_fqdn": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 143,
+      "source_fqdn": "fb.constitution::STRUCTURE_IDENTITY_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 144,
+      "source_fqdn": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 145,
+      "source_fqdn": "fb.constitution::STRUCTURE_REGISTRY_LOCATION_GOVERNANCE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 147,
+      "source_fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 148,
+      "source_fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 149,
+      "source_fqdn": "fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
+      "target_address": 147,
+      "target_fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 151,
+      "source_fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 152,
+      "source_fqdn": "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 153,
+      "source_fqdn": "fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
+      "target_address": 151,
+      "target_fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 155,
+      "source_fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 156,
+      "source_fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 157,
+      "source_fqdn": "fb.execution_scheduling::STRUCTURE_EXECUTION_SCHEDULING_SERIAL_SINGLE_WORKER_V0",
+      "target_address": 155,
+      "target_fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 159,
+      "source_fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 160,
+      "source_fqdn": "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
+      "target_address": 159,
+      "target_fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 162,
+      "source_fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 163,
+      "source_fqdn": "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 164,
+      "source_fqdn": "fb.security_domain::STRUCTURE_SECURITY_DOMAIN_UNCLASSIFIED_LOCAL_V0",
+      "target_address": 162,
+      "target_fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 203,
+      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 204,
+      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 205,
+      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 206,
+      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
+      "target_address": 208,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 207,
+      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+      "target_address": 203,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 208,
+      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 209,
+      "source_fqdn": "fb.topology::CONSTITUTION_INTENT_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 210,
+      "source_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 211,
+      "source_fqdn": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
+      "target_address": 208,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 212,
+      "source_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 214,
+      "source_fqdn": "fb.topology::INVARIANT_BINDING_INTEGRITY_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 215,
+      "source_fqdn": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 216,
+      "source_fqdn": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 217,
+      "source_fqdn": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 218,
+      "source_fqdn": "fb.topology::INVARIANT_CC_NO_IMPLICIT_CHAINING_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 219,
+      "source_fqdn": "fb.topology::INVARIANT_CC_NO_MISSING_DEPENDENCIES_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 220,
+      "source_fqdn": "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 221,
+      "source_fqdn": "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 222,
+      "source_fqdn": "fb.topology::INVARIANT_CS_SURFACE_CLOSED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 223,
+      "source_fqdn": "fb.topology::INVARIANT_CS_TRACEABLE_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 224,
+      "source_fqdn": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 225,
+      "source_fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 226,
+      "source_fqdn": "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 227,
+      "source_fqdn": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 228,
+      "source_fqdn": "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 229,
+      "source_fqdn": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 230,
+      "source_fqdn": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 231,
+      "source_fqdn": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 232,
+      "source_fqdn": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 233,
+      "source_fqdn": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 234,
+      "source_fqdn": "fb.topology::INVARIANT_RB_CS_ONLY_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 235,
+      "source_fqdn": "fb.topology::INVARIANT_RB_NO_LOGIC_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 236,
+      "source_fqdn": "fb.topology::INVARIANT_SCHEMA_CONFORMANCE_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 237,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 238,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 239,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 240,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 241,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 242,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 243,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 244,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 245,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 246,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 247,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 248,
+      "source_fqdn": "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 249,
+      "source_fqdn": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 250,
+      "source_fqdn": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 251,
+      "source_fqdn": "fb.topology::STRUCTURE_CT_IR_CONTRACT_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 252,
+      "source_fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_SIDE_EFFECTS_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 253,
+      "source_fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 254,
+      "source_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 255,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_CT_PURE_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 256,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_COUNT_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 257,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 258,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_REGISTER_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 259,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 260,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 261,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_READ_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 262,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_WRITE_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 267,
+      "source_fqdn": "fb.transport::CONSTITUTION_ADMISSION_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 268,
+      "source_fqdn": "fb.transport::CONSTITUTION_TRANSPORT_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 269,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 270,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 271,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 272,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0",
+      "target_address": 127,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 273,
+      "source_fqdn": "fb.transport::SURFACE_CONTRACT_TRANSPORT_SEND_V0",
+      "target_address": 207,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 275,
+      "source_fqdn": "fb.vocabulary::STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 276,
+      "source_fqdn": "fb.vocabulary::VOCAB_EXECUTION_STATES_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 277,
+      "source_fqdn": "fb.vocabulary::VOCAB_LANGUAGE_CONSTRAINTS_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 278,
+      "source_fqdn": "fb.vocabulary::VOCAB_PROTOCOL_KINDS_V0",
+      "target_address": 274,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 279,
+      "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "name": "$.inputs.name"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "READ",
+        "outputs": {
+          "resource_addresses": "$.capability_result.value.resource_addresses"
+        },
+        "pipeline_index": 0,
+        "step_id": "lookup",
+        "store": ""
+      },
+      "source_address": 279,
+      "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
+      "target_address": 281,
+      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 280,
+      "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "CC_BINDS_CS",
+      "kind_address": 16385,
+      "metadata": {
+        "inputs": {
+          "name": "$.inputs.name",
+          "resource_addresses": "$.inputs.resource_addresses"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "success": "$.capability_result.value.success"
+        },
+        "pipeline_index": 0,
+        "step_id": "register",
+        "store": ""
+      },
+      "source_address": 280,
+      "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
+      "target_address": 281,
+      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 281,
+      "source_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+      "target_address": 204,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 282,
+      "source_fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 283,
+      "source_fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
+      "target_address": 124,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 284,
+      "source_fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_LOOKEDUP_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 285,
+      "source_fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_REGISTERED_V0",
+      "target_address": 209,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 286,
+      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {},
+      "source_address": 286,
+      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+      "target_address": 281,
+      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
+    },
+    {
+      "kind": "RB_MAPS",
+      "kind_address": 16392,
+      "metadata": {
+        "handler_ref": ""
+      },
+      "source_address": 286,
+      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+      "target_address": 281,
+      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 287,
+      "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
+      "target_address": 212,
+      "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 287,
+      "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
+      "target_address": 279,
+      "target_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0"
+    },
+    {
+      "kind": "WF_BINDS_RB",
+      "kind_address": 16395,
+      "metadata": {},
+      "source_address": 287,
+      "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
+      "target_address": 286,
+      "target_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 288,
+      "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
+      "target_address": 212,
+      "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
+    },
+    {
+      "kind": "WF_CONTAINS_NODE",
+      "kind_address": 16396,
+      "metadata": {},
+      "source_address": 288,
+      "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
+      "target_address": 280,
+      "target_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0"
+    },
+    {
+      "kind": "WF_BINDS_RB",
+      "kind_address": 16395,
+      "metadata": {},
+      "source_address": 288,
+      "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
+      "target_address": 286,
+      "target_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0"
+    }
+  ],
+  "event_catalog": [
+    {
+      "address": 28,
+      "fqdn": "blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "registration_data": {
+          "required": true,
+          "type": "object"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 29,
+      "fqdn": "blockchain::EV_ACTOR_REJECTED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "rejection_reason": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "verifier_id": {
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 30,
+      "fqdn": "blockchain::EV_ACTOR_VERIFIED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "verification_notes": {
+          "type": "string"
+        },
+        "verifier_id": {
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 31,
+      "fqdn": "blockchain::EV_TRANSACTION_REJECTED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "error_code": {
+          "required": true,
+          "type": "string"
+        },
+        "reason": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "tx_id": {
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 32,
+      "fqdn": "blockchain::EV_TRANSACTION_SUBMITTED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "from_address": {
+          "required": true,
+          "type": "string"
+        },
+        "status": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "to_address": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_id": {
+          "required": true,
+          "type": "string"
+        },
+        "value": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 33,
+      "fqdn": "blockchain::EV_WALLET_CREATION_REQUESTED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "request_id": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 282,
+      "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "found": {
+          "description": "Whether the name was found in registry",
+          "required": true,
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Human-readable name that was looked up",
+          "required": true,
+          "type": "string"
+        },
+        "resource_addresses": {
+          "description": "Resource addresses if name was found",
+          "required": false,
+          "type": "array"
+        },
+        "timestamp": {
+          "description": "When lookup occurred",
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      }
+    },
+    {
+      "address": 283,
+      "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
+      "kind": "EV",
+      "kind_address": 16645,
+      "schema": {
+        "name": {
+          "description": "Human-readable name that was registered",
+          "required": true,
+          "type": "string"
+        },
+        "resource_addresses": {
+          "description": "Resource addresses associated with the name",
+          "required": true,
+          "type": "array"
+        },
+        "success": {
+          "description": "Whether registration succeeded",
+          "required": true,
+          "type": "boolean"
+        },
+        "timestamp": {
+          "description": "When registration occurred",
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "address": 0,
+      "fqdn": "blockchain::AC_ENDUSER_V0",
+      "kind": "AC",
+      "kind_address": 16640
+    },
+    {
+      "address": 1,
+      "fqdn": "blockchain::AC_SYSTEM_V0",
+      "kind": "AC",
+      "kind_address": 16640
+    },
+    {
+      "address": 2,
+      "fqdn": "blockchain::ASSERT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 3,
+      "fqdn": "blockchain::CC_APPEND_ACTOR_EVENT_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 4,
+      "fqdn": "blockchain::CC_APPEND_RECORD_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 5,
+      "fqdn": "blockchain::CC_APPEND_TX_EVENT_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 6,
+      "fqdn": "blockchain::CC_APPEND_WALLET_EVENT_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 7,
+      "fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 8,
+      "fqdn": "blockchain::CC_CHECK_WALLET_EXISTS_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 9,
+      "fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 10,
+      "fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 11,
+      "fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 12,
+      "fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 13,
+      "fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 14,
+      "fqdn": "blockchain::CC_NOTIFY_WALLET_CREATED_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 15,
+      "fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 16,
+      "fqdn": "blockchain::CC_PERSIST_VERIFIED_ACTOR_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 17,
+      "fqdn": "blockchain::CC_RECORD_ACTOR_STATE_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 18,
+      "fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 19,
+      "fqdn": "blockchain::CC_RESERVE_NONCE_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 20,
+      "fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 21,
+      "fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 22,
+      "fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 23,
+      "fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 24,
+      "fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 25,
+      "fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 26,
+      "fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 27,
+      "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 28,
+      "fqdn": "blockchain::EV_ACTOR_REGISTERED_UNVERIFIED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 29,
+      "fqdn": "blockchain::EV_ACTOR_REJECTED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 30,
+      "fqdn": "blockchain::EV_ACTOR_VERIFIED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 31,
+      "fqdn": "blockchain::EV_TRANSACTION_REJECTED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 32,
+      "fqdn": "blockchain::EV_TRANSACTION_SUBMITTED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 33,
+      "fqdn": "blockchain::EV_WALLET_CREATION_REQUESTED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 34,
+      "fqdn": "blockchain::INVARIANT_CT_SURFACE_CLOSED_BLOCKCHAIN_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 35,
+      "fqdn": "blockchain::IN_ACTOR_REGISTERED_V0",
+      "kind": "IN",
+      "kind_address": 16647
+    },
+    {
+      "address": 36,
+      "fqdn": "blockchain::IN_ACTOR_VERIFIED_V0",
+      "kind": "IN",
+      "kind_address": 16647
+    },
+    {
+      "address": 37,
+      "fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0",
+      "kind": "IN",
+      "kind_address": 16647
+    },
+    {
+      "address": 38,
+      "fqdn": "blockchain::IN_WALLET_CREATED_V0",
+      "kind": "IN",
+      "kind_address": 16647
+    },
+    {
+      "address": 39,
+      "fqdn": "blockchain::RB_CREATE_WALLET_V0",
+      "kind": "RB",
+      "kind_address": 16648
+    },
+    {
+      "address": 40,
+      "fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+      "kind": "RB",
+      "kind_address": 16648
+    },
+    {
+      "address": 41,
+      "fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
+      "kind": "RB",
+      "kind_address": 16648
+    },
+    {
+      "address": 42,
+      "fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
+      "kind": "RB",
+      "kind_address": 16648
+    },
+    {
+      "address": 43,
+      "fqdn": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 44,
+      "fqdn": "blockchain::TEST_DATA_CT_PURE_BUILD_ETH_TRANSACTION_V0",
+      "kind": "TEST_DATA",
+      "kind_address": 16650
+    },
+    {
+      "address": 45,
+      "fqdn": "blockchain::TEST_DATA_CT_PURE_DERIVE_WALLET_KEYPAIRS_V0",
+      "kind": "TEST_DATA",
+      "kind_address": 16650
+    },
+    {
+      "address": 46,
+      "fqdn": "blockchain::TEST_DATA_CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+      "kind": "TEST_DATA",
+      "kind_address": 16650
+    },
+    {
+      "address": 47,
+      "fqdn": "blockchain::TEST_DATA_CT_PURE_INCREMENT_WALLET_NONCE_V0",
+      "kind": "TEST_DATA",
+      "kind_address": 16650
+    },
+    {
+      "address": 48,
+      "fqdn": "blockchain::TI_HTTP_CREATE_WALLET_V0",
+      "kind": "TI",
+      "kind_address": 16651
+    },
+    {
+      "address": 49,
+      "fqdn": "blockchain::TI_HTTP_REGISTER_ACTOR_V0",
+      "kind": "TI",
+      "kind_address": 16651
+    },
+    {
+      "address": 50,
+      "fqdn": "blockchain::TI_HTTP_SUBMIT_TRANSACTION_V0",
+      "kind": "TI",
+      "kind_address": 16651
+    },
+    {
+      "address": 51,
+      "fqdn": "blockchain::TI_HTTP_VERIFY_ACTOR_V0",
+      "kind": "TI",
+      "kind_address": 16651
+    },
+    {
+      "address": 52,
+      "fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "kind": "WF",
+      "kind_address": 16652
+    },
+    {
+      "address": 53,
+      "fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "kind": "WF",
+      "kind_address": 16652
+    },
+    {
+      "address": 54,
+      "fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "kind": "WF",
+      "kind_address": 16652
+    },
+    {
+      "address": 55,
+      "fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "kind": "WF",
+      "kind_address": 16652
+    },
+    {
+      "address": 56,
+      "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "kind": "CS",
+      "kind_address": 16643
+    },
+    {
+      "address": 57,
+      "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "kind": "CS",
+      "kind_address": 16643
+    },
+    {
+      "address": 58,
+      "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+      "kind": "CS",
+      "kind_address": 16643
+    },
+    {
+      "address": 59,
+      "fqdn": "capability_side_effects::CS_SEND_EMAIL_V0",
+      "kind": "CS",
+      "kind_address": 16643
+    },
+    {
+      "address": 60,
+      "fqdn": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+      "kind": "CS",
+      "kind_address": 16643
+    },
+    {
+      "address": 61,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 62,
+      "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 63,
+      "fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 64,
+      "fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 65,
+      "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 66,
+      "fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 67,
+      "fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 68,
+      "fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 69,
+      "fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 70,
+      "fqdn": "capability_transforms::CT_PURE_EXTRACT_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 71,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 72,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 73,
+      "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 74,
+      "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 75,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 76,
+      "fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 77,
+      "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 78,
+      "fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 79,
+      "fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 80,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 81,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 82,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
+      "kind": "CT",
+      "kind_address": 16644
+    },
+    {
+      "address": 83,
+      "fqdn": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 84,
+      "fqdn": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 85,
+      "fqdn": "fb.ai_governance::STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 86,
+      "fqdn": "fb.authority::ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 87,
+      "fqdn": "fb.authority::ASSERT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 88,
+      "fqdn": "fb.authority::ASSERT_AUTHORITY_STATE_WELL_FORMED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 89,
+      "fqdn": "fb.authority::ASSERT_NO_AMBIENT_AUTHORITY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 90,
+      "fqdn": "fb.authority::ASSERT_NO_RUNTIME_AUTHORIZATION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 91,
+      "fqdn": "fb.authority::ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 92,
+      "fqdn": "fb.authority::ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 93,
+      "fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 94,
+      "fqdn": "fb.authority::INVARIANT_ACTOR_AUTHORITY_SEPARATION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 95,
+      "fqdn": "fb.authority::INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 96,
+      "fqdn": "fb.authority::INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 97,
+      "fqdn": "fb.authority::INVARIANT_NO_AMBIENT_AUTHORITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 98,
+      "fqdn": "fb.authority::INVARIANT_NO_RUNTIME_AUTHORIZATION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 99,
+      "fqdn": "fb.authority::INVARIANT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 100,
+      "fqdn": "fb.authority::INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 101,
+      "fqdn": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 102,
+      "fqdn": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 103,
+      "fqdn": "fb.blockchain::STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 104,
+      "fqdn": "fb.conformance::ASSERT_ASSERT_PARITY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 105,
+      "fqdn": "fb.conformance::ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 106,
+      "fqdn": "fb.conformance::ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 107,
+      "fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 108,
+      "fqdn": "fb.conformance::INVARIANT_ASSERT_PARITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 109,
+      "fqdn": "fb.conformance::INVARIANT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 110,
+      "fqdn": "fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 111,
+      "fqdn": "fb.conformance::STRUCTURE_CONFORMANCE_POLICY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 112,
+      "fqdn": "fb.constitution::ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 113,
+      "fqdn": "fb.constitution::ASSERT_COMPILER_GOVERNANCE_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 114,
+      "fqdn": "fb.constitution::ASSERT_COMPILER_NO_EXECUTION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 115,
+      "fqdn": "fb.constitution::ASSERT_EV_APPEND_ONLY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 116,
+      "fqdn": "fb.constitution::ASSERT_EV_SCHEMA_REQUIRED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 117,
+      "fqdn": "fb.constitution::ASSERT_FQDN_ONLY_REFERENCES_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 118,
+      "fqdn": "fb.constitution::ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 119,
+      "fqdn": "fb.constitution::ASSERT_IDENTITY_FQDN_CONSISTENCY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 120,
+      "fqdn": "fb.constitution::ASSERT_NO_SHORT_NAME_REFERENCE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 121,
+      "fqdn": "fb.constitution::ASSERT_UNIQUE_ARTIFACT_ID_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 122,
+      "fqdn": "fb.constitution::CONSTITUTION_ASSERT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 123,
+      "fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 124,
+      "fqdn": "fb.constitution::CONSTITUTION_EVENT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 125,
+      "fqdn": "fb.constitution::CONSTITUTION_FEDERATION_BOUNDARY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 126,
+      "fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 127,
+      "fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 128,
+      "fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 129,
+      "fqdn": "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 130,
+      "fqdn": "fb.constitution::INVARIANT_COMPILER_GOVERNANCE_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 131,
+      "fqdn": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 132,
+      "fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 133,
+      "fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 134,
+      "fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 135,
+      "fqdn": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 136,
+      "fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 137,
+      "fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 138,
+      "fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 139,
+      "fqdn": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 140,
+      "fqdn": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 141,
+      "fqdn": "fb.constitution::STRUCTURE_DISCOVERY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 142,
+      "fqdn": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 143,
+      "fqdn": "fb.constitution::STRUCTURE_IDENTITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 144,
+      "fqdn": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 145,
+      "fqdn": "fb.constitution::STRUCTURE_REGISTRY_LOCATION_GOVERNANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 146,
+      "fqdn": "fb.cryptographic_trust::ASSERT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 147,
+      "fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 148,
+      "fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 149,
+      "fqdn": "fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 150,
+      "fqdn": "fb.execution_placement::ASSERT_EXECUTION_PLACEMENT_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 151,
+      "fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 152,
+      "fqdn": "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 153,
+      "fqdn": "fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 154,
+      "fqdn": "fb.execution_scheduling::ASSERT_EXECUTION_SCHEDULING_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 155,
+      "fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 156,
+      "fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 157,
+      "fqdn": "fb.execution_scheduling::STRUCTURE_EXECUTION_SCHEDULING_SERIAL_SINGLE_WORKER_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 158,
+      "fqdn": "fb.identity::ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 159,
+      "fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 160,
+      "fqdn": "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 161,
+      "fqdn": "fb.security_domain::ASSERT_SECURITY_DOMAIN_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 162,
+      "fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 163,
+      "fqdn": "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 164,
+      "fqdn": "fb.security_domain::STRUCTURE_SECURITY_DOMAIN_UNCLASSIFIED_LOCAL_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 165,
+      "fqdn": "fb.topology::ASSERT_ATOM_OUTPUT_PURITY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 166,
+      "fqdn": "fb.topology::ASSERT_BINDING_INTEGRITY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 167,
+      "fqdn": "fb.topology::ASSERT_BINDING_SURFACE_CLOSED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 168,
+      "fqdn": "fb.topology::ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 169,
+      "fqdn": "fb.topology::ASSERT_CC_INPUTS_SATISFIED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 170,
+      "fqdn": "fb.topology::ASSERT_CC_NO_IMPLICIT_CHAINING_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 171,
+      "fqdn": "fb.topology::ASSERT_CC_NO_MISSING_DEPENDENCIES_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 172,
+      "fqdn": "fb.topology::ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 173,
+      "fqdn": "fb.topology::ASSERT_CS_ISOLATED_EXECUTION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 174,
+      "fqdn": "fb.topology::ASSERT_CS_SURFACE_CLOSED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 175,
+      "fqdn": "fb.topology::ASSERT_CS_TRACEABLE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 176,
+      "fqdn": "fb.topology::ASSERT_CT_OUTPUT_CONTRACT_MATCH_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 177,
+      "fqdn": "fb.topology::ASSERT_CT_SURFACE_CLOSED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 178,
+      "fqdn": "fb.topology::ASSERT_IMPLEMENTATION_ADMISSIBLE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 179,
+      "fqdn": "fb.topology::ASSERT_IN_NO_EXECUTION_LOGIC_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 180,
+      "fqdn": "fb.topology::ASSERT_IN_SCHEMA_REQUIRED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 181,
+      "fqdn": "fb.topology::ASSERT_IN_WORKFLOW_BINDING_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 182,
+      "fqdn": "fb.topology::ASSERT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 183,
+      "fqdn": "fb.topology::ASSERT_NO_SMART_EXECUTION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 184,
+      "fqdn": "fb.topology::ASSERT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 185,
+      "fqdn": "fb.topology::ASSERT_PROTOCOL_SURFACE_CLOSED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 186,
+      "fqdn": "fb.topology::ASSERT_RB_CS_ONLY_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 187,
+      "fqdn": "fb.topology::ASSERT_RB_NO_LOGIC_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 188,
+      "fqdn": "fb.topology::ASSERT_SCHEMA_CONFORMANCE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 189,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_ACYCLIC_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 190,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 191,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 192,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 193,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 194,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 195,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 196,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_STEP_DECLARED_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 197,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 198,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 199,
+      "fqdn": "fb.topology::ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 200,
+      "fqdn": "fb.topology::ASSERT_WF_CC_ONLY_NODES_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 201,
+      "fqdn": "fb.topology::ASSERT_WF_ENTRY_INTENT_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 202,
+      "fqdn": "fb.topology::ASSERT_WF_EXECUTION_PATH_VALID_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 203,
+      "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 204,
+      "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 205,
+      "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 206,
+      "fqdn": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 207,
+      "fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 208,
+      "fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 209,
+      "fqdn": "fb.topology::CONSTITUTION_INTENT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 210,
+      "fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 211,
+      "fqdn": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 212,
+      "fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 213,
+      "fqdn": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 214,
+      "fqdn": "fb.topology::INVARIANT_BINDING_INTEGRITY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 215,
+      "fqdn": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 216,
+      "fqdn": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 217,
+      "fqdn": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 218,
+      "fqdn": "fb.topology::INVARIANT_CC_NO_IMPLICIT_CHAINING_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 219,
+      "fqdn": "fb.topology::INVARIANT_CC_NO_MISSING_DEPENDENCIES_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 220,
+      "fqdn": "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 221,
+      "fqdn": "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 222,
+      "fqdn": "fb.topology::INVARIANT_CS_SURFACE_CLOSED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 223,
+      "fqdn": "fb.topology::INVARIANT_CS_TRACEABLE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 224,
+      "fqdn": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 225,
+      "fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 226,
+      "fqdn": "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 227,
+      "fqdn": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 228,
+      "fqdn": "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 229,
+      "fqdn": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 230,
+      "fqdn": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 231,
+      "fqdn": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 232,
+      "fqdn": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 233,
+      "fqdn": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 234,
+      "fqdn": "fb.topology::INVARIANT_RB_CS_ONLY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 235,
+      "fqdn": "fb.topology::INVARIANT_RB_NO_LOGIC_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 236,
+      "fqdn": "fb.topology::INVARIANT_SCHEMA_CONFORMANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 237,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 238,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 239,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 240,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 241,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 242,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 243,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 244,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 245,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 246,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 247,
+      "fqdn": "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 248,
+      "fqdn": "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 249,
+      "fqdn": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 250,
+      "fqdn": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 251,
+      "fqdn": "fb.topology::STRUCTURE_CT_IR_CONTRACT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 252,
+      "fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_SIDE_EFFECTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 253,
+      "fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 254,
+      "fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 255,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_CT_PURE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 256,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_COUNT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 257,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 258,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_REGISTER_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 259,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 260,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 261,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_READ_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 262,
+      "fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_WRITE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 263,
+      "fqdn": "fb.transport::ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 264,
+      "fqdn": "fb.transport::ASSERT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 265,
+      "fqdn": "fb.transport::ASSERT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 266,
+      "fqdn": "fb.transport::ASSERT_TRANSPORT_TARGET_EXISTS_V0",
+      "kind": "ASSERT",
+      "kind_address": 16641
+    },
+    {
+      "address": 267,
+      "fqdn": "fb.transport::CONSTITUTION_ADMISSION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 268,
+      "fqdn": "fb.transport::CONSTITUTION_TRANSPORT_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 269,
+      "fqdn": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 270,
+      "fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 271,
+      "fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 272,
+      "fqdn": "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 273,
+      "fqdn": "fb.transport::SURFACE_CONTRACT_TRANSPORT_SEND_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 274,
+      "fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 275,
+      "fqdn": "fb.vocabulary::STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 276,
+      "fqdn": "fb.vocabulary::VOCAB_EXECUTION_STATES_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 277,
+      "fqdn": "fb.vocabulary::VOCAB_LANGUAGE_CONSTRAINTS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 278,
+      "fqdn": "fb.vocabulary::VOCAB_PROTOCOL_KINDS_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 279,
+      "fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 280,
+      "fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
+      "kind": "CC",
+      "kind_address": 16642
+    },
+    {
+      "address": 281,
+      "fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
+      "kind": "CS",
+      "kind_address": 16643
+    },
+    {
+      "address": 282,
+      "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 283,
+      "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
+      "kind": "EV",
+      "kind_address": 16645
+    },
+    {
+      "address": 284,
+      "fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_LOOKEDUP_V0",
+      "kind": "IN",
+      "kind_address": 16647
+    },
+    {
+      "address": 285,
+      "fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_REGISTERED_V0",
+      "kind": "IN",
+      "kind_address": 16647
+    },
+    {
+      "address": 286,
+      "fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+      "kind": "RB",
+      "kind_address": 16648
+    },
+    {
+      "address": 287,
+      "fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
+      "kind": "WF",
+      "kind_address": 16652
+    },
+    {
+      "address": 288,
+      "fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
+      "kind": "WF",
+      "kind_address": 16652
+    }
+  ],
+  "projection_class": "evidence_substrate"
+}

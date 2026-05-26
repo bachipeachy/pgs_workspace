@@ -1,15 +1,33 @@
 {
-  "version": "0.1.0",
+  "version": "0.3.0",
+
+  "workspace_type": "pgs_workspace",
+
+  "runtime_generation": "projection-native",
+
+  "snapshot_layout": {
+    "protocol_snapshot": "compiled protocol artifacts (canonical projection)",
+    "tokenized_snapshot": "tokenized runtime projections (machine-oriented topology)",
+    "evidence_snapshot": "compiler evidence projections (causality graph + views)",
+    "vocabulary_snapshot": "aggregate semantic vocabulary (address space)",
+    "trust_snapshot": "attestation and trust boundary projections"
+  },
 
   "required_packages": [
+    "pgs_runtime",
     "pgs_capabilities",
     "pgs_blockchain",
     "pgs_ai_governance"
   ],
 
-  "optional_packages": {
-    "trace_examiner": ["pgs_protocol"]
-  },
+  "workspace_outputs": [
+    "protocol_snapshot/",
+    "tokenized_snapshot/",
+    "evidence_snapshot/",
+    "vocabulary_snapshot/",
+    "trust_snapshot/",
+    "traces/"
+  ],
 
   "seed_data": [
     "seeds/license_facts.json",

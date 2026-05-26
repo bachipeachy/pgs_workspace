@@ -78,6 +78,12 @@ CLAUDE.md
 data/
 traces/
 
+# Trust snapshot attestations — regenerated on every build, never stable
+trust_snapshot/ai_governance/structure_attestation.json
+trust_snapshot/blockchain/structure_attestation.json
+trust_snapshot/platform/structure_attestation.json
+trust_snapshot/snapshot_attestation.json
+
 # Local script state
 scripts/.env
 scripts/.cache
