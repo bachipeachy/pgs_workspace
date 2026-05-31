@@ -16,9 +16,7 @@
             "kind": "CS",
             "ops": [
               "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
+              "GET_ALL"
             ],
             "outputs": [
               "result_status"
@@ -164,7 +162,8 @@
               "REGISTER",
               "RESOLVE",
               "EXISTS",
-              "DEREGISTER"
+              "DEREGISTER",
+              "COUNT"
             ],
             "outputs": [
               "result_status"
@@ -176,9 +175,7 @@
             "kind": "CS",
             "ops": [
               "APPEND",
-              "GET_ALL",
-              "GET_RANGE",
-              "GET_SINCE"
+              "GET_ALL"
             ],
             "outputs": [
               "result_status"
@@ -235,8 +232,8 @@
             "id": "CS_MUTABLE_JSON_V0",
             "kind": "CS",
             "ops": [
-              "GET",
-              "PUT",
+              "READ",
+              "WRITE",
               "DELETE",
               "EXISTS",
               "LIST"
@@ -284,7 +281,8 @@
               "REGISTER",
               "RESOLVE",
               "EXISTS",
-              "DEREGISTER"
+              "DEREGISTER",
+              "COUNT"
             ],
             "outputs": [
               "result_status"
@@ -414,7 +412,8 @@
               "REGISTER",
               "RESOLVE",
               "EXISTS",
-              "DEREGISTER"
+              "DEREGISTER",
+              "COUNT"
             ],
             "outputs": [
               "result_status"
@@ -425,8 +424,8 @@
             "id": "CS_MUTABLE_JSON_V0",
             "kind": "CS",
             "ops": [
-              "GET",
-              "PUT",
+              "READ",
+              "WRITE",
               "DELETE",
               "EXISTS",
               "LIST"

@@ -7,7 +7,7 @@
 
 set -euo pipefail
 
-GUIDE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GUIDE_DIR="$(pwd)"
 OUTPUT="$GUIDE_DIR/pgs_practioner_guide_all_chapters.md"
 
 echo "Assembling practitioner guide..."

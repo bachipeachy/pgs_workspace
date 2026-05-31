@@ -1,6 +1,6 @@
 {
   "cs": {
-    "281": {
+    "293": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -54,14 +54,12 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
       }
     },
-    "56": {
+    "64": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
             "APPEND",
-            "GET_ALL",
-            "GET_RANGE",
-            "GET_SINCE"
+            "GET_ALL"
           ]
         },
         "operations": {
@@ -101,43 +99,6 @@
                 "BACKEND_ERROR"
               ],
               "summary": "Retrieve all records from the log"
-            },
-            "GET_RANGE": {
-              "handler": "read_range",
-              "idempotent": true,
-              "input": [
-                "start_sequence",
-                "end_sequence",
-                "stream_id"
-              ],
-              "output": [
-                "result_status",
-                "entries"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Retrieve records within a sequence range"
-            },
-            "GET_SINCE": {
-              "handler": "read_since",
-              "idempotent": true,
-              "input": [
-                "timestamp",
-                "stream_id"
-              ],
-              "output": [
-                "result_status",
-                "entries"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Retrieve all records after a given timestamp"
             }
           }
         }
@@ -147,12 +108,12 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_APPENDONLY_JSONL_V0.runtime"
       }
     },
-    "57": {
+    "65": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
-            "GET",
-            "PUT",
+            "READ",
+            "WRITE",
             "DELETE",
             "EXISTS",
             "LIST"
@@ -194,7 +155,21 @@
               ],
               "summary": "Check if a key exists in storage"
             },
-            "GET": {
+            "LIST": {
+              "handler": "list_keys",
+              "idempotent": true,
+              "input": [],
+              "output": [
+                "result_status",
+                "keys"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "BACKEND_ERROR"
+              ],
+              "summary": "List all keys in storage"
+            },
+            "READ": {
               "handler": "read",
               "idempotent": true,
               "input": [
@@ -212,21 +187,7 @@
               ],
               "summary": "Retrieve value for a given key"
             },
-            "LIST": {
-              "handler": "list_keys",
-              "idempotent": true,
-              "input": [],
-              "output": [
-                "result_status",
-                "keys"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "BACKEND_ERROR"
-              ],
-              "summary": "List all keys in storage"
-            },
-            "PUT": {
+            "WRITE": {
               "handler": "write",
               "idempotent": true,
               "input": [
@@ -251,18 +212,33 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
       }
     },
-    "58": {
+    "66": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
             "REGISTER",
             "RESOLVE",
             "EXISTS",
-            "DEREGISTER"
+            "DEREGISTER",
+            "COUNT"
           ]
         },
         "operations": {
           "operations": {
+            "COUNT": {
+              "handler": "count",
+              "idempotent": true,
+              "input": [],
+              "output": [
+                "result_status",
+                "count"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Count active (non-tombstoned) registry entries"
+            },
             "DEREGISTER": {
               "handler": "deregister",
               "idempotent": true,
@@ -344,7 +320,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_REGISTRY_V0.runtime"
       }
     },
-    "59": {
+    "67": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -374,7 +350,7 @@
         "module": "pgs_side_effects.implementation.side_effects.external.CS_SEND_EMAIL_V0.runtime"
       }
     },
-    "60": {
+    "68": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -411,7 +387,7 @@
     }
   },
   "ct": {
-    "24": {
+    "28": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -489,7 +465,7 @@
         }
       }
     },
-    "25": {
+    "29": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -585,7 +561,7 @@
         }
       }
     },
-    "26": {
+    "30": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -622,7 +598,7 @@
         }
       }
     },
-    "27": {
+    "31": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -656,7 +632,7 @@
         }
       }
     },
-    "61": {
+    "69": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -688,7 +664,7 @@
         }
       }
     },
-    "62": {
+    "70": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -720,7 +696,7 @@
         }
       }
     },
-    "63": {
+    "71": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -758,7 +734,7 @@
         }
       }
     },
-    "64": {
+    "72": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -790,7 +766,7 @@
         }
       }
     },
-    "65": {
+    "73": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -837,7 +813,7 @@
         }
       }
     },
-    "66": {
+    "74": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -872,7 +848,7 @@
         }
       }
     },
-    "67": {
+    "75": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -926,7 +902,7 @@
         }
       }
     },
-    "68": {
+    "76": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -958,7 +934,7 @@
         }
       }
     },
-    "69": {
+    "77": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1007,7 +983,7 @@
         }
       }
     },
-    "70": {
+    "78": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1051,7 +1027,7 @@
         }
       }
     },
-    "71": {
+    "79": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1090,7 +1066,7 @@
         }
       }
     },
-    "72": {
+    "80": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1128,7 +1104,7 @@
         }
       }
     },
-    "73": {
+    "81": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1160,7 +1136,7 @@
         }
       }
     },
-    "74": {
+    "82": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1198,7 +1174,7 @@
         }
       }
     },
-    "75": {
+    "83": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1242,7 +1218,7 @@
         }
       }
     },
-    "76": {
+    "84": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1274,7 +1250,7 @@
         }
       }
     },
-    "77": {
+    "85": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1306,7 +1282,7 @@
         }
       }
     },
-    "78": {
+    "86": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1348,7 +1324,7 @@
         }
       }
     },
-    "79": {
+    "87": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1380,7 +1356,7 @@
         }
       }
     },
-    "80": {
+    "88": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1421,7 +1397,7 @@
         }
       }
     },
-    "81": {
+    "89": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1459,7 +1435,7 @@
         }
       }
     },
-    "82": {
+    "90": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1500,16 +1476,16 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "286": {
-      "281": {
+    "298": {
+      "293": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },
         "type": "CS"
       }
     },
-    "39": {
-      "56": {
+    "45": {
+      "64": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
           "path": "{{module_data_root}}/blockchain/wallet/events/wallet_events.jsonl",
@@ -1535,6 +1511,14 @@
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
                   },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
                     "path": "blockchain/wallet/state/wallets.json"
@@ -1580,7 +1564,7 @@
           }
         }
       },
-      "57": {
+      "65": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
           "storage_structure_artifact": {
@@ -1605,6 +1589,14 @@
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
                   },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
                     "path": "blockchain/wallet/state/wallets.json"
@@ -1650,7 +1642,7 @@
           }
         }
       },
-      "58": {
+      "66": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
           "path": "{{module_data_root}}/blockchain/identity/registry/actors.json",
@@ -1676,6 +1668,14 @@
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
                   },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
                     "path": "blockchain/wallet/state/wallets.json"
@@ -1721,7 +1721,7 @@
           }
         }
       },
-      "59": {
+      "67": {
         "policy": {
           "enabled": true,
           "module_data_root": "{{module_data_root}}",
@@ -1747,6 +1747,14 @@
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
                   },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
                     "path": "blockchain/wallet/state/wallets.json"
@@ -1793,23 +1801,23 @@
         }
       }
     },
-    "40": {
-      "56": {
+    "46": {
+      "64": {
         "policy": {
           "path": "{{module_data_root}}/blockchain/identity/events/identity_events.jsonl"
         }
       },
-      "58": {
+      "66": {
         "policy": {
           "path": "{{module_data_root}}/blockchain/identity/registry/actors.json"
         }
       }
     },
-    "41": {
-      "56": {
+    "47": {
+      "64": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
-          "path": "{{module_data_root}}/blockchain/transaction/events/transaction_events.jsonl",
+          "path": "{{module_data_root}}/blockchain/consensus_pos/events/validator_events.jsonl",
           "storage_structure_artifact": {
             "frontmatter": {
               "core": {
@@ -1831,6 +1839,14 @@
                   "TRANSACTION_EVENTS": {
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
+                  },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
                   },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
@@ -1877,9 +1893,10 @@
           }
         }
       },
-      "57": {
+      "65": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/blockchain/consensus_pos/registry/validators.json",
           "storage_structure_artifact": {
             "frontmatter": {
               "core": {
@@ -1901,6 +1918,14 @@
                   "TRANSACTION_EVENTS": {
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
+                  },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
                   },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
@@ -1947,7 +1972,7 @@
           }
         }
       },
-      "58": {
+      "66": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
           "path": "{{module_data_root}}/blockchain/identity/registry/actors.json",
@@ -1973,6 +1998,14 @@
                     "description": "Transaction lifecycle event journal",
                     "path": "blockchain/transaction/events/transaction_events.jsonl"
                   },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
                   "WALLET": {
                     "description": "Wallet state storage (wallet_id \u2192 wallet record)",
                     "path": "blockchain/wallet/state/wallets.json"
@@ -2019,13 +2052,251 @@
         }
       }
     },
-    "42": {
-      "56": {
+    "48": {
+      "64": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/blockchain/transaction/events/transaction_events.jsonl",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "blockchain",
+                "entity_stores": {
+                  "ACTOR": {
+                    "description": "Actor identity registry (KYC \u2192 actor_id resolution)",
+                    "path": "blockchain/identity/registry/actors.json"
+                  },
+                  "ACTOR_EVENTS": {
+                    "description": "Actor lifecycle event journal",
+                    "path": "blockchain/identity/events/identity_events.jsonl"
+                  },
+                  "TRANSACTION": {
+                    "description": "Transaction state storage (tx_id \u2192 transaction record)",
+                    "path": "blockchain/transaction/state/transactions.json"
+                  },
+                  "TRANSACTION_EVENTS": {
+                    "description": "Transaction lifecycle event journal",
+                    "path": "blockchain/transaction/events/transaction_events.jsonl"
+                  },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
+                  "WALLET": {
+                    "description": "Wallet state storage (wallet_id \u2192 wallet record)",
+                    "path": "blockchain/wallet/state/wallets.json"
+                  },
+                  "WALLET_EVENTS": {
+                    "description": "Wallet lifecycle event journal",
+                    "path": "blockchain/wallet/events/wallet_events.jsonl"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "Cross-entity queries forbidden (no joins)",
+                    "Entity reads must specify entity type explicitly",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "migration": {
+                  "description": "Storage migration policy",
+                  "rules": [
+                    "Path changes are STRUCTURE updates (versioned)",
+                    "CC artifacts remain unchanged during migration",
+                    "Runtime resolves paths from active STRUCTURE version"
+                  ]
+                },
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/blockchain/wallet/state/wallets.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all blockchain domain storage (resolved at runtime)"
+                },
+                "summary": "Blockchain domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      },
+      "65": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "blockchain",
+                "entity_stores": {
+                  "ACTOR": {
+                    "description": "Actor identity registry (KYC \u2192 actor_id resolution)",
+                    "path": "blockchain/identity/registry/actors.json"
+                  },
+                  "ACTOR_EVENTS": {
+                    "description": "Actor lifecycle event journal",
+                    "path": "blockchain/identity/events/identity_events.jsonl"
+                  },
+                  "TRANSACTION": {
+                    "description": "Transaction state storage (tx_id \u2192 transaction record)",
+                    "path": "blockchain/transaction/state/transactions.json"
+                  },
+                  "TRANSACTION_EVENTS": {
+                    "description": "Transaction lifecycle event journal",
+                    "path": "blockchain/transaction/events/transaction_events.jsonl"
+                  },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
+                  "WALLET": {
+                    "description": "Wallet state storage (wallet_id \u2192 wallet record)",
+                    "path": "blockchain/wallet/state/wallets.json"
+                  },
+                  "WALLET_EVENTS": {
+                    "description": "Wallet lifecycle event journal",
+                    "path": "blockchain/wallet/events/wallet_events.jsonl"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "Cross-entity queries forbidden (no joins)",
+                    "Entity reads must specify entity type explicitly",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "migration": {
+                  "description": "Storage migration policy",
+                  "rules": [
+                    "Path changes are STRUCTURE updates (versioned)",
+                    "CC artifacts remain unchanged during migration",
+                    "Runtime resolves paths from active STRUCTURE version"
+                  ]
+                },
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/blockchain/wallet/state/wallets.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all blockchain domain storage (resolved at runtime)"
+                },
+                "summary": "Blockchain domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      },
+      "66": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/blockchain/identity/registry/actors.json",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "blockchain",
+                "entity_stores": {
+                  "ACTOR": {
+                    "description": "Actor identity registry (KYC \u2192 actor_id resolution)",
+                    "path": "blockchain/identity/registry/actors.json"
+                  },
+                  "ACTOR_EVENTS": {
+                    "description": "Actor lifecycle event journal",
+                    "path": "blockchain/identity/events/identity_events.jsonl"
+                  },
+                  "TRANSACTION": {
+                    "description": "Transaction state storage (tx_id \u2192 transaction record)",
+                    "path": "blockchain/transaction/state/transactions.json"
+                  },
+                  "TRANSACTION_EVENTS": {
+                    "description": "Transaction lifecycle event journal",
+                    "path": "blockchain/transaction/events/transaction_events.jsonl"
+                  },
+                  "VALIDATOR": {
+                    "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+                    "path": "blockchain/consensus_pos/registry/validators.json"
+                  },
+                  "VALIDATOR_EVENTS": {
+                    "description": "Validator lifecycle event journal",
+                    "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+                  },
+                  "WALLET": {
+                    "description": "Wallet state storage (wallet_id \u2192 wallet record)",
+                    "path": "blockchain/wallet/state/wallets.json"
+                  },
+                  "WALLET_EVENTS": {
+                    "description": "Wallet lifecycle event journal",
+                    "path": "blockchain/wallet/events/wallet_events.jsonl"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "Cross-entity queries forbidden (no joins)",
+                    "Entity reads must specify entity type explicitly",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "migration": {
+                  "description": "Storage migration policy",
+                  "rules": [
+                    "Path changes are STRUCTURE updates (versioned)",
+                    "CC artifacts remain unchanged during migration",
+                    "Runtime resolves paths from active STRUCTURE version"
+                  ]
+                },
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/blockchain/wallet/state/wallets.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all blockchain domain storage (resolved at runtime)"
+                },
+                "summary": "Blockchain domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      }
+    },
+    "49": {
+      "64": {
         "policy": {
           "path": "{{module_data_root}}/blockchain/identity/events/identity_events.jsonl"
         }
       },
-      "58": {
+      "66": {
         "policy": {
           "path": "{{module_data_root}}/blockchain/identity/registry/actors.json"
         }

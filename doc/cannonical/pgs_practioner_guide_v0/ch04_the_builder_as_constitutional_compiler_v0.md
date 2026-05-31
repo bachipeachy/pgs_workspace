@@ -292,21 +292,48 @@ You authored YAML. The Builder compiled JSON. The two are structurally equivalen
 
 ## 4.9 — Current Compiler Architecture Note
 
-The six-phase pipeline described in this chapter (Discover → Parse → Validate → Assert → Materialize → Snapshot) reflects the conceptual structure that remains accurate. The current compiler implementation names these phases as eight explicit stages:
+The six-phase pipeline described in this chapter (Discover → Parse → Validate → Assert → Materialize → Snapshot) reflects the conceptual structure that remains accurate. The current compiler implementation names these phases as nine explicit stages:
 
 | Stage | Name | Corresponds To |
 |-------|------|---------------|
 | S1 | EXTRACT | Discover + Parse |
 | S2 | CANONICALIZE | Normalization + edge typing |
 | S3 | SEMANTIC_ADDRESSING | Address space closure |
-| S4 | GOVERN | Assert (all invariants) |
+| S4 | GOVERN | Assert (all invariants + conformance assertions) |
 | S5 | CONSTRUCT | Materialize (IR build + topology seal) |
 | S6 | PROJECT | Visualization projection |
 | S7 | MATERIALIZE | Snapshot write + evidence graph |
-| S8 | VERIFY | Post-write integrity verification |
+| S8 | VERIFY | Post-write integrity verification + snapshot admission |
 | S9 | ATTEST | Cryptographic attestation computed and written for each structure and the full snapshot |
 
-The **STRUCTURE_ artifact** is the current compiler's build constitution — analogous to the FQDN tree described in this chapter. It declares what exists, which registries contribute, and in what scope to compile. Phase Type B (cross-structure aggregation) handles federated governance products (vocabulary, transport, authority) that require output from multiple Phase Type A structure builds.
+The **STRUCTURE_ artifact** is the current compiler's build constitution — analogous to the FQDN tree described in this chapter. It declares what exists, which registries contribute, and in what scope to compile.
+
+**Two Phase Types.** Compilation runs in two phase types:
+
+| Phase Type | Name | Semantics |
+|------------|------|-----------|
+| **Phase Type A** | Per-Structure Local | S1–S9 within a single structure; self-contained semantic closure |
+| **Phase Type B** | Cross-Structure Aggregation | Consumes declared output surfaces from multiple Phase Type A builds; produces federated governance products (vocabulary, transport, authority) |
+
+Phase Type B is governed by an aggregation STRUCTURE_ artifact with an `aggregation_type` field. It must run after all contributing Phase Type A builds complete. Phase Type B may never introduce execution node types or alter workflow behavior — it synthesizes governance products only.
+
+**S4 GOVERN: Three categories of enforcement (v0.4.0).** The GOVERN stage runs all registered assertion handlers. As of v0.4.0, three assertion families run at this stage — each is a hard fail on violation:
+
+| Assertion | Scope | What It Enforces |
+|-----------|-------|-----------------|
+| **Constitutional invariants** | All artifacts | Schema closure, FQDN identity, vocabulary closure, topology completeness |
+| **CC Storage Op Conformance** (`ASSERT_CC_STORAGE_OP_CONFORMANCE_V0`) | All CC_ artifacts | Every storage operation declared in a CC_ must be bounded, enumerated, and expressible within the declared CS_ surface |
+| **RB Policy Conformance** (`ASSERT_RB_BINDING_POLICY_CONFORMANCE_V0`) | All RB_ artifacts | Every runtime binding must declare a policy-compliant mapping; undeclared or policy-violating bindings are rejected before materialization |
+
+**FQDN 100% compliance** is enforced as a hard invariant in S4. Every artifact reference anywhere in the compiled surface must use the full `domain::ARTIFACT_CODE_Vn` form. Short names — even in comments or metadata fields — produce a GOVERN-stage failure. There are no warnings; the pipeline halts.
+
+**Snapshot Admission Control (S8 gate).** After S7 writes the snapshot and evidence graph to disk, S8 runs `assert_snapshot_valid()` before allowing S9 to attest. This gate verifies:
+- All declared artifacts are present on disk and non-empty
+- Evidence graph integrity hash checks out
+- No unexpected files appear in snapshot directories
+- The snapshot is structurally complete for the declared structure scope
+
+If `assert_snapshot_valid()` fails, S9 does not run and the snapshot is never attested — the runtime will refuse to load an unattested snapshot. This gate is the final constitutional seal between compilation and attestation.
 
 The **PIR (Protocol Intermediate Representation)** is the internal typed structure produced by S1. All subsequent stages operate on PIR, not raw YAML. The PIR is never exposed outside the compiler.
 
@@ -351,7 +378,7 @@ Consumers — visualization, AI tooling, debugging, replay — never import from
 
 **Evidence Semantics Doctrine (the formal guarantees):**
 
-See Field Manual Section 6.5 for the full doctrine table. The critical guarantees:
+The full doctrine is in the companion paper `pgs_compiler_conceptual_model_v0.md`. The critical guarantees:
 
 - Causality is inferred from two patterns: `discovery_complete` → `node_created` (S1), and IR build events → `construction_complete` (S5)
 - Stage sequencing produces exactly 7 STAGE_SEQUENCE edges (S1→S7); deterministic
@@ -386,7 +413,7 @@ This chapter proved that ratified governance artifacts are compiled deterministi
 - Trace emission — what the engine records during execution (Chapter 9)
 - Capability transform internals — how CT_ steps compute their results (Chapter 6)
 - Capability side-effect internals — how CS_ steps interact with the world (Chapter 7)
-- Compiler evidence graph querying — the consumer API for inspecting compilation semantics (Field Manual Section 6.5)
+- Compiler evidence graph querying — the consumer API for inspecting compilation semantics (`pgs_compiler_conceptual_model_v0.md`)
 
 **What comes next:** The protocol artifacts are compiled. They sit in `protocol_snapshot/artifacts/`, waiting. Chapter 5 picks them up. The execution engine loads the compiled DAG, resolves runtime bindings, and traverses the graph node by node. The reader will see the same user registration workflow — authored in Chapter 3, compiled in Chapter 4 — execute for the first time.
 

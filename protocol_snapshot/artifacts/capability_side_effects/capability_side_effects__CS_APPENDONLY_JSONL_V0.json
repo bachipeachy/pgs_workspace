@@ -1,16 +1,14 @@
 {
   "artifact_code": "CS_APPENDONLY_JSONL_V0",
   "artifact_type": "CS",
-  "content": "# CS_APPENDONLY_JSONL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CS_APPENDONLY_JSONL_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nProvide an append-only JSONL persistence layer with ordered event history.\n\nThis capability allows:\n- Appending records to the end of a log\n- Reading all records in order\n- Reading records within a sequence range\n- Reading records since a given timestamp\n\n---\n\n## 2. Rationale\n\nSome workflows require state that:\n- Is immutable once written\n- Preserves complete history\n- Maintains strict ordering\n- Supports event sourcing patterns\n- Enables audit trails\n\nThis CS exists to explicitly permit append-only writes with clear ordering semantics.\n\n---\n\n## 3. Applicability & Non-Applicability\n\n### Valid Use Cases\n- Audit logs\n- Event sourcing\n- Transaction history\n- Activity streams\n- Ledger entries\n- Historical reconstruction\n\n### Invalid Use Cases\n- Mutable state (use CS_MUTABLE_JSON_V0)\n- Key-value lookups (use CS_MUTABLE_JSON_V0)\n- State snapshots requiring updates\n- Data that needs deletion\n- Random access patterns\n\n---\n\n## 4. Side-Effect Category\n\n- **Category:** Append-Only Log\n- **Side-Effect Type:** persistent\n- **Append Semantics:** YES (ordered, monotonic)\n- **Overwrite Semantics:** NO\n\n---\n\n## 5. Properties\n\n| Property | Value | Description |\n|----------|-------|-------------|\n| durability | persistent | State survives restarts |\n| idempotent | false | APPEND creates new entry each time |\n| replay_policy | append_once | Replays create duplicate entries |\n| transactional | false | No atomic batch support |\n| concurrent_safe | false | Single-writer model |\n\n---\n\n## 6. Guarantees\n\nThis CS guarantees:\n- `append_only` \u2014 records cannot be modified or deleted\n- `ordered` \u2014 records maintain strict append order\n- `jsonl_format` \u2014 records stored as JSON Lines\n- `durable_across_restarts` \u2014 persisted to storage\n\n---\n\n## 7. Non-Guarantees\n\nThis CS does NOT guarantee:\n- `mutation` \u2014 no updates to existing records\n- `overwrite` \u2014 no replacement of records\n- `random_access` \u2014 no direct key-based lookup\n- `deletion` \u2014 no removal of records\n- `key_addressability` \u2014 no key-value semantics\n- `exactly_once_delivery` \u2014 retries create duplicates\n\n---\n\n## 8. Constraints\n\n| Constraint | Value | Description |\n|------------|-------|-------------|\n| concurrency | single_writer | One writer at a time |\n| max_record_size_mb | 10 | Maximum record size in MB |\n\n---\n\n## 9. Operations\n\n### 9.1 APPEND\nAppend a record to the end of the log.\n\n- **Input:** `record` (object, required), `stream_id` (string, required), `actor_id` (string, required)\n- **Output:** `result_status`, `record_id`, `sequence_number`\n- **Idempotent:** false\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** NOT idempotent \u2014 each call creates a new entry\n\n### 9.2 GET_ALL\nRetrieve all records from the log.\n\n- **Input:** `stream_id` (string, required)\n- **Output:** `result_status`, `entries`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, BACKEND_ERROR\n- **Note:** Returns array of all entries in append order\n\n### 9.3 GET_RANGE\nRetrieve records within a sequence range.\n\n- **Input:** `start_sequence` (integer, required), `end_sequence` (integer, required), `stream_id` (string, required)\n- **Output:** `result_status`, `entries`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** Inclusive range [start, end]\n\n### 9.4 GET_SINCE\nRetrieve all records after a given timestamp.\n\n- **Input:** `timestamp` (string, required), `stream_id` (string, required)\n- **Output:** `result_status`, `entries`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** Useful for tailing logs and incremental reads\n\n---\n\n## 10. Failure Semantics\n\n### Failure Modes\n\n| Status | Condition | Error Type |\n|--------|-----------|------------|\n| VIOLATION | Record fails validation (type, format) | InvalidRecord |\n| VIOLATION | Range parameters invalid | InvalidRange |\n| BACKEND_ERROR | Storage unavailable or corrupt | StorageUnavailable, StorageCorrupt |\n\n### Behavior\n- All failures are **fail-loud** \u2014 no silent failures\n- All failures emit trace events\n- All failures return explicit `result_status`\n\n---\n\n## 11. Observability Guarantees\n\nThis CS MUST emit:\n- `cs_start` \u2014 operation invocation begins\n- `cs_success` \u2014 operation completed with SUCCESS\n- `cs_failure` \u2014 operation completed with non-SUCCESS status\n\n---\n\n## 12. Configuration Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| path | string | true | Filesystem path to JSONL storage file |\n\n**Note:** Configuration is provided via environment binding, not embedded in artifacts.\n\n---\n\n## 13. Structural Checklist\n\n- [x] No environment data embedded in artifacts\n- [x] All operations declared with inputs/outputs\n- [x] All result_status values declared\n- [x] Failure modes explicit\n- [x] Observability declared\n- [x] Configuration schema declared\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_APPENDONLY_JSONL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Append-only JSONL persistence layer with ordered event history\n  category: storage\n\n  policy:\n    operations: [APPEND, GET_ALL, GET_RANGE, GET_SINCE]\n\n  operations:\n    APPEND:\n      summary: Append a record to the end of the log\n      handler: append\n      input: [record, stream_id, actor_id]\n      output: [result_status, record_id, sequence_number]\n      idempotent: false\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    GET_ALL:\n      summary: Retrieve all records from the log\n      handler: read_all\n      input: [stream_id]\n      output: [result_status, entries]\n      idempotent: true\n      result_status_values: [SUCCESS, BACKEND_ERROR]\n\n    GET_RANGE:\n      summary: Retrieve records within a sequence range\n      handler: read_range\n      input: [start_sequence, end_sequence, stream_id]\n      output: [result_status, entries]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    GET_SINCE:\n      summary: Retrieve all records after a given timestamp\n      handler: read_since\n      input: [timestamp, stream_id]\n      output: [result_status, entries]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.persistent.CS_APPENDONLY_JSONL_V0.runtime\n  callable: AppendOnlyJsonlRuntime\n\nextensions:\n  cs_kind: append_only_log\n  side_effect_type: persistent\n\n  properties:\n    durability: persistent\n    idempotent: false\n    replay_policy: append_once\n    transactional: false\n    concurrent_safe: false\n\n  constraints:\n    concurrency: single_writer\n    max_record_size_mb: 10\n\n  vocabulary:\n    result_status: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    entry_validation_result: [VALID, INVALID]\n\n  configuration_schema:\n    path:\n      type: string\n      required: true\n      description: Filesystem path to JSONL storage file\n\n  failure_modes:\n    - \"VIOLATION: Invalid record (type, format)\"\n    - \"VIOLATION: Invalid range parameters\"\n    - \"BACKEND_ERROR: Storage unavailable or corrupt\"\n```\n",
-  "content_hash": "fa5596f969561afe63b0481cd0068912a27229636305d9d99f0185e6dae4dbe8",
+  "content": "# CS_APPENDONLY_JSONL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CS_APPENDONLY_JSONL_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nProvide an append-only JSONL persistence layer with ordered event history.\n\nThis capability allows:\n- Appending records to the end of a log\n- Reading all records in order\n\n---\n\n## 2. Rationale\n\nSome workflows require state that:\n- Is immutable once written\n- Preserves complete history\n- Maintains strict ordering\n- Supports event sourcing patterns\n- Enables audit trails\n\nThis CS exists to explicitly permit append-only writes with clear ordering semantics.\n\n---\n\n## 3. Applicability & Non-Applicability\n\n### Valid Use Cases\n- Audit logs\n- Event sourcing\n- Transaction history\n- Activity streams\n- Ledger entries\n- Historical reconstruction\n\n### Invalid Use Cases\n- Mutable state (use CS_MUTABLE_JSON_V0)\n- Key-value lookups (use CS_MUTABLE_JSON_V0)\n- State snapshots requiring updates\n- Data that needs deletion\n- Random access patterns\n\n---\n\n## 4. Side-Effect Category\n\n- **Category:** Append-Only Log\n- **Side-Effect Type:** persistent\n- **Append Semantics:** YES (ordered, monotonic)\n- **Overwrite Semantics:** NO\n\n---\n\n## 5. Properties\n\n| Property | Value | Description |\n|----------|-------|-------------|\n| durability | persistent | State survives restarts |\n| idempotent | false | APPEND creates new entry each time |\n| replay_policy | append_once | Replays create duplicate entries |\n| transactional | false | No atomic batch support |\n| concurrent_safe | false | Single-writer model |\n\n---\n\n## 6. Guarantees\n\nThis CS guarantees:\n- `append_only` \u2014 records cannot be modified or deleted\n- `ordered` \u2014 records maintain strict append order\n- `jsonl_format` \u2014 records stored as JSON Lines\n- `durable_across_restarts` \u2014 persisted to storage\n\n---\n\n## 7. Non-Guarantees\n\nThis CS does NOT guarantee:\n- `mutation` \u2014 no updates to existing records\n- `overwrite` \u2014 no replacement of records\n- `random_access` \u2014 no direct key-based lookup\n- `deletion` \u2014 no removal of records\n- `key_addressability` \u2014 no key-value semantics\n- `exactly_once_delivery` \u2014 retries create duplicates\n\n---\n\n## 8. Constraints\n\n| Constraint | Value | Description |\n|------------|-------|-------------|\n| concurrency | single_writer | One writer at a time |\n| max_record_size_mb | 10 | Maximum record size in MB |\n\n---\n\n## 9. Operations\n\n### 9.1 APPEND\nAppend a record to the end of the log.\n\n- **Input:** `record` (object, required), `stream_id` (string, required), `actor_id` (string, required)\n- **Output:** `result_status`, `record_id`, `sequence_number`\n- **Idempotent:** false\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** NOT idempotent \u2014 each call creates a new entry\n\n### 9.2 GET_ALL\nRetrieve all records from the log.\n\n- **Input:** `stream_id` (string, required)\n- **Output:** `result_status`, `entries`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, BACKEND_ERROR\n- **Note:** Returns array of all entries in append order\n\n---\n\n## 10. Failure Semantics\n\n### Failure Modes\n\n| Status | Condition | Error Type |\n|--------|-----------|------------|\n| VIOLATION | Record fails validation (type, format) | InvalidRecord |\n| BACKEND_ERROR | Storage unavailable or corrupt | StorageUnavailable, StorageCorrupt |\n\n### Behavior\n- All failures are **fail-loud** \u2014 no silent failures\n- All failures emit trace events\n- All failures return explicit `result_status`\n\n---\n\n## 11. Observability Guarantees\n\nThis CS MUST emit:\n- `cs_start` \u2014 operation invocation begins\n- `cs_success` \u2014 operation completed with SUCCESS\n- `cs_failure` \u2014 operation completed with non-SUCCESS status\n\n---\n\n## 12. Configuration Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| path | string | true | Filesystem path to JSONL storage file |\n\n**Note:** Configuration is provided via environment binding, not embedded in artifacts.\n\n---\n\n## 13. Structural Checklist\n\n- [x] No environment data embedded in artifacts\n- [x] All operations declared with inputs/outputs\n- [x] All result_status values declared\n- [x] Failure modes explicit\n- [x] Observability declared\n- [x] Configuration schema declared\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_APPENDONLY_JSONL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Append-only JSONL persistence layer with ordered event history\n  category: storage\n\n  policy:\n    operations: [APPEND, GET_ALL]\n\n  operations:\n    APPEND:\n      summary: Append a record to the end of the log\n      handler: append\n      input: [record, stream_id, actor_id]\n      output: [result_status, record_id, sequence_number]\n      idempotent: false\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    GET_ALL:\n      summary: Retrieve all records from the log\n      handler: read_all\n      input: [stream_id]\n      output: [result_status, entries]\n      idempotent: true\n      result_status_values: [SUCCESS, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.persistent.CS_APPENDONLY_JSONL_V0.runtime\n  callable: AppendOnlyJsonlRuntime\n\nextensions:\n  cs_kind: append_only_log\n  side_effect_type: persistent\n\n  properties:\n    durability: persistent\n    idempotent: false\n    replay_policy: append_once\n    transactional: false\n    concurrent_safe: false\n\n  constraints:\n    concurrency: single_writer\n    max_record_size_mb: 10\n\n  vocabulary:\n    result_status: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    entry_validation_result: [VALID, INVALID]\n\n  configuration_schema:\n    path:\n      type: string\n      required: true\n      description: Filesystem path to JSONL storage file\n\n  failure_modes:\n    - \"VIOLATION: Invalid record (type, format)\"\n    - \"BACKEND_ERROR: Storage unavailable or corrupt\"\n```\n",
+  "content_hash": "a235e74c26f2188c4e935004cdd907c0d47f411039b8136dba7a84016d6ba9f1",
   "cs_ir": {
     "cs_metadata": {
       "capability": {
         "supported_operation_specs": [
           "APPEND",
-          "GET_ALL",
-          "GET_RANGE",
-          "GET_SINCE"
+          "GET_ALL"
         ]
       },
       "operations": {
@@ -50,43 +48,6 @@
               "BACKEND_ERROR"
             ],
             "summary": "Retrieve all records from the log"
-          },
-          "GET_RANGE": {
-            "handler": "read_range",
-            "idempotent": true,
-            "input": [
-              "start_sequence",
-              "end_sequence",
-              "stream_id"
-            ],
-            "output": [
-              "result_status",
-              "entries"
-            ],
-            "result_status_values": [
-              "SUCCESS",
-              "VIOLATION",
-              "BACKEND_ERROR"
-            ],
-            "summary": "Retrieve records within a sequence range"
-          },
-          "GET_SINCE": {
-            "handler": "read_since",
-            "idempotent": true,
-            "input": [
-              "timestamp",
-              "stream_id"
-            ],
-            "output": [
-              "result_status",
-              "entries"
-            ],
-            "result_status_values": [
-              "SUCCESS",
-              "VIOLATION",
-              "BACKEND_ERROR"
-            ],
-            "summary": "Retrieve all records after a given timestamp"
           }
         }
       }
@@ -136,51 +97,12 @@
             "BACKEND_ERROR"
           ],
           "summary": "Retrieve all records from the log"
-        },
-        "GET_RANGE": {
-          "handler": "read_range",
-          "idempotent": true,
-          "input": [
-            "start_sequence",
-            "end_sequence",
-            "stream_id"
-          ],
-          "output": [
-            "result_status",
-            "entries"
-          ],
-          "result_status_values": [
-            "SUCCESS",
-            "VIOLATION",
-            "BACKEND_ERROR"
-          ],
-          "summary": "Retrieve records within a sequence range"
-        },
-        "GET_SINCE": {
-          "handler": "read_since",
-          "idempotent": true,
-          "input": [
-            "timestamp",
-            "stream_id"
-          ],
-          "output": [
-            "result_status",
-            "entries"
-          ],
-          "result_status_values": [
-            "SUCCESS",
-            "VIOLATION",
-            "BACKEND_ERROR"
-          ],
-          "summary": "Retrieve all records after a given timestamp"
         }
       },
       "policy": {
         "operations": [
           "APPEND",
-          "GET_ALL",
-          "GET_RANGE",
-          "GET_SINCE"
+          "GET_ALL"
         ]
       },
       "summary": "Append-only JSONL persistence layer with ordered event history"
@@ -201,7 +123,6 @@
       "cs_kind": "append_only_log",
       "failure_modes": [
         "VIOLATION: Invalid record (type, format)",
-        "VIOLATION: Invalid range parameters",
         "BACKEND_ERROR: Storage unavailable or corrupt"
       ],
       "properties": {

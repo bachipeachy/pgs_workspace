@@ -2,9 +2,9 @@
   "bindings": {},
   "entry": {},
   "pipeline": {
-    "245": [
+    "249": [
       {
-        "addr": 247,
+        "addr": 251,
         "inputs": {
           "name": "$.inputs.name"
         },
@@ -21,9 +21,9 @@
         "step_id": "lookup"
       }
     ],
-    "246": [
+    "250": [
       {
-        "addr": 247,
+        "addr": 251,
         "inputs": {
           "name": "$.inputs.name",
           "resource_addresses": "$.inputs.resource_addresses"

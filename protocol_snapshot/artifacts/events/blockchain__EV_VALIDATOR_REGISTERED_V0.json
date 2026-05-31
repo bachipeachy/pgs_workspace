@@ -1,0 +1,38 @@
+{
+  "artifact_code": "EV_VALIDATOR_REGISTERED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_VALIDATOR_REGISTERED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_VALIDATOR_REGISTERED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nAn actor has been successfully registered as a validator node in the consensus layer.\n\n---\n\n## 2. Rationale\n\nThis event marks the entry point of the validator lifecycle:\n- Records that validator registration occurred\n- Captures the full validator record at the moment of registration\n- Provides audit trail for validator onboarding and consensus participation history\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_REGISTER_VALIDATOR_V0 | CC_APPEND_VALIDATOR_EVENT_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_id | string | true | PGS actor ID of the registered validator |\n| validator_record | object | true | Full validator registration payload at time of registration |\n| timestamp | string (date-time) | true | When validator registration occurred |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_VALIDATOR_REGISTERED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Validator Registered\n  description: Emitted when an actor is successfully registered as a validator node\n\n  schema:\n    actor_id:\n      type: string\n      required: true\n    validator_record:\n      type: object\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "25368cc5eb9f1b126693519b7ada17b16b48e153a8c7a953469c9d2502830927",
+  "fqdn_id": "blockchain::EV_VALIDATOR_REGISTERED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when an actor is successfully registered as a validator node",
+      "schema": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "validator_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "summary": "Validator Registered"
+    },
+    "ev_code": "EV_VALIDATOR_REGISTERED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

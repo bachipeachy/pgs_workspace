@@ -181,6 +181,10 @@ mkdir -p "$WS_ROOT/data/ai_governance/ai_licensing"
 cp "$WS_ROOT/seeds/license_facts.json" "$WS_ROOT/data/ai_governance/ai_licensing/license_facts.json"
 echo "  [seed] license_facts.json → data/ai_governance/ai_licensing/"
 
+mkdir -p "$WS_ROOT/data/blockchain/consensus_pos/registry"
+cp "$WS_ROOT/seeds/validators.json" "$WS_ROOT/data/blockchain/consensus_pos/registry/validators.json"
+echo "  [seed] validators.json → data/blockchain/consensus_pos/registry/"
+
 echo ""
 echo "---------------------------------------"
 echo "PGS Bootstrap Complete (env: $PGS_ENV)"

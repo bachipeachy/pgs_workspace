@@ -1,0 +1,87 @@
+{
+  "artifact_code": "CC_CHECK_VALIDATOR_EXISTS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "EXISTS",
+          "LIST"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_CHECK_VALIDATOR_EXISTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CHECK_VALIDATOR_EXISTS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nCheck if an actor is already registered as a validator \u2014 gates the write step to prevent duplicate registration.\n\n---\n\n## 2. Rationale\n\nDuplicate detection for the VALIDATOR store:\n- VALIDATOR store uses CS_MUTABLE_JSON_V0 (mutable JSON, STRUCTURE-resolved path)\n- CS_MUTABLE_JSON_V0 GET returns NOT_FOUND when the key is absent, enabling direct workflow routing\n- NOT_FOUND is the happy path \u2014 actor is new to the validator set, proceed to write\n- SUCCESS means the actor is already registered \u2014 abort, duplicate request\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | READ |\n\nUses READ (not EXISTS) because the execution engine routes on `result_status`. READ returns `NOT_FOUND`\nwhen the key is absent, enabling direct workflow routing. EXISTS always returns `SUCCESS` with a\nboolean, which the engine cannot branch on.\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_id | string | true | Actor ID to check for existing validator registration |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | NOT_FOUND (new) or SUCCESS (already registered) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| NOT_FOUND | Actor not yet registered as validator \u2014 proceed to write |\n| SUCCESS | Actor already registered as validator \u2014 abort, duplicate |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND is the expected happy path \u2014 actor is new to the validator set\n- SUCCESS means already registered \u2014 duplicate; workflow exits without writing\n- Invalid actor_id results in VIOLATION\n- Storage failure results in BACKEND_ERROR\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CHECK_VALIDATOR_EXISTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Check if actor already has a validator record in the VALIDATOR store\n\n  inputs:\n    actor_id:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [NOT_FOUND, SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: check_validator_exists\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: VALIDATOR\n      op: READ\n      inputs:\n        key: $.inputs.actor_id\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "12d834759993af9c6d24d747e76d527ac45938869f2453c08444e4c6c240264b",
+  "fqdn_id": "blockchain::CC_CHECK_VALIDATOR_EXISTS_V0",
+  "frontmatter": {
+    "cc_code": "CC_CHECK_VALIDATOR_EXISTS_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.actor_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "check_validator_exists",
+          "store": "VALIDATOR"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "NOT_FOUND",
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Check if actor already has a validator record in the VALIDATOR store"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

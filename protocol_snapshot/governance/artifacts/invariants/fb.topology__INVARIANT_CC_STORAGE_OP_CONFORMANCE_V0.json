@@ -1,0 +1,45 @@
+{
+  "artifact_code": "INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    Each CC pipeline step that binds a CS (side_effect) must declare an `op`\n    that is a member of that CS's `core.policy.operations` list.\n\n    The CS artifact is the authoritative declaration of its supported operation\n    vocabulary. A CC may not invoke an operation the CS does not declare.\n    Unknown ops produce runtime BACKEND_ERROR \u2014 this invariant moves that\n    failure to compile time.\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - CAPABILITY_CONTRACTS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_CC_STORAGE_OP_CONFORMANCE_V0\n\n  anti_patterns:\n    - undeclared_op: \"CC pipeline step declares op not in CS.core.policy.operations\"\n    - missing_op: \"CC pipeline step with side_effect binding has no op declared\"\n\n  clarification:\n    single_vocabulary: >\n      The canonical operation vocabulary for each CS is declared in\n      CS.core.policy.operations. This is the protocol-layer source of truth.\n      CC authors must use ops from that list. The compiler enforces this;\n      the runtime never aliases or translates op names.\n    ct_steps_exempt: >\n      Pipeline steps that bind a CT (transform) are exempt \u2014 transforms have\n      no op field. Only CS-binding steps are subject to this invariant.\n```\n\n---\n\n## Purpose\n\nEnsure CC pipeline steps invoke only operations that the target CS explicitly declares.\n\n**Core Principle**: Operation vocabulary is declared in protocol, enforced by compiler, executed verbatim by runtime. No translation, no aliasing, no heuristics.\n\n---\n\n## Validation Rules\n\n### Rule 1: op \u2208 CS.core.policy.operations\n\nFor every CC pipeline step with a `side_effect` binding:\n- The step must declare an `op` field\n- The declared `op` must exist in the target CS's `core.policy.operations` list\n\n**Violation \u2014 Undeclared Op**:\n```yaml\n# \u274c FORBIDDEN \u2014 CS_MUTABLE_JSON_V0 declares READ not GET\npipeline:\n  - step: check_exists\n    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n    op: GET   # \u274c GET is not in CS_MUTABLE_JSON_V0.core.policy.operations\n```\n\n**Correct**:\n```yaml\n# \u2705 op matches CS declaration\npipeline:\n  - step: check_exists\n    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n    op: READ  # \u2713 READ is declared in CS_MUTABLE_JSON_V0.core.policy.operations\n```\n\n---\n\n## Rationale\n\nWithout this invariant, a CC can declare any string as `op`. The compiler accepts\nit. The runtime dispatches via `getattr(engine, op.lower(), None)`. If no handler\nmethod matches, the result is BACKEND_ERROR at execution time \u2014 a runtime failure\nthat was detectable at compile time.\n\nThis invariant closes the gap: **Governance declares \u2192 Compiler enforces \u2192 Runtime executes.**\n\n---\n\n## Version History\n\n- **V0**: Initial implementation (2026-05-29) \u2014 CC operation conformance enforcement\n",
+  "content_hash": "d79bb9c8c46858fd6c9a0c02a82aefcbd81fc48d79d5c52f68205e9fc58acfd1",
+  "fqdn_id": "fb.topology::INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "anti_patterns": [
+        {
+          "undeclared_op": "CC pipeline step declares op not in CS.core.policy.operations"
+        },
+        {
+          "missing_op": "CC pipeline step with side_effect binding has no op declared"
+        }
+      ],
+      "clarification": {
+        "ct_steps_exempt": "Pipeline steps that bind a CT (transform) are exempt \u2014 transforms have no op field. Only CS-binding steps are subject to this invariant.",
+        "single_vocabulary": "The canonical operation vocabulary for each CS is declared in CS.core.policy.operations. This is the protocol-layer source of truth. CC authors must use ops from that list. The compiler enforces this; the runtime never aliases or translates op names.\n"
+      },
+      "description": "Each CC pipeline step that binds a CS (side_effect) must declare an `op` that is a member of that CS's `core.policy.operations` list.\nThe CS artifact is the authoritative declaration of its supported operation vocabulary. A CC may not invoke an operation the CS does not declare. Unknown ops produce runtime BACKEND_ERROR \u2014 this invariant moves that failure to compile time.\n",
+      "enforced_by": [
+        "ASSERT_CC_STORAGE_OP_CONFORMANCE_V0"
+      ],
+      "enforcement_stage": [
+        "compiler_validation"
+      ],
+      "scope": [
+        "CAPABILITY_CONTRACTS"
+      ],
+      "violation_response": "FAIL_IMMEDIATELY"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+    "invariant_code": "INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+  ],
+  "version": "0"
+}

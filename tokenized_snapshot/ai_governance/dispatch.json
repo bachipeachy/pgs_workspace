@@ -509,9 +509,9 @@
         "step_id": "check_termination"
       }
     ],
-    "269": [
+    "273": [
       {
-        "addr": 271,
+        "addr": 275,
         "inputs": {
           "name": "$.inputs.name"
         },
@@ -528,9 +528,9 @@
         "step_id": "lookup"
       }
     ],
-    "270": [
+    "274": [
       {
-        "addr": 271,
+        "addr": 275,
         "inputs": {
           "name": "$.inputs.name",
           "resource_addresses": "$.inputs.resource_addresses"

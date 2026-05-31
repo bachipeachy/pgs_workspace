@@ -1,0 +1,79 @@
+{
+  "artifact_code": "CC_WRITE_VALIDATOR_RECORD_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "EXISTS",
+          "LIST"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_WRITE_VALIDATOR_RECORD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_WRITE_VALIDATOR_RECORD_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nWrite the validator record to the VALIDATOR store, keyed by actor_id.\n\n---\n\n## 2. Rationale\n\nValidator record persistence:\n- VALIDATOR store uses CS_MUTABLE_JSON_V0 (mutable JSON, STRUCTURE-resolved path)\n- PUT is idempotent \u2014 last-write-wins semantics apply, but execution only reaches this step after\n  CC_CHECK_VALIDATOR_EXISTS_V0 confirms NOT_FOUND, so no overwrite occurs in normal flow\n- actor_id is the sole primary key \u2014 no secondary key generation needed\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| validator_record | object | true | Full validator registration payload keyed by actor_id |\n\n---\n\n## 5. Outputs\n\nNo outputs. This CC writes to the store as a side effect; it does not return data to the caller.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Validator record written successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- BACKEND_ERROR propagates as a hard failure\n- VIOLATION on invalid input format\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_WRITE_VALIDATOR_RECORD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Write the validator record to the VALIDATOR store keyed by actor_id\n\n  inputs:\n    validator_record:\n      type: object\n      required: true\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: write_validator_record\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: VALIDATOR\n      op: WRITE\n      inputs:\n        key: $.inputs.validator_record.actor_id\n        value: $.inputs.validator_record\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "2f8f1ef231c7d3f23cc21a10680a75a28b7dbd640ef10710ee4dbfbfee55f221",
+  "fqdn_id": "blockchain::CC_WRITE_VALIDATOR_RECORD_V0",
+  "frontmatter": {
+    "cc_code": "CC_WRITE_VALIDATOR_RECORD_V0",
+    "core": {
+      "inputs": {
+        "validator_record": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {},
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.validator_record.actor_id",
+            "value": "$.inputs.validator_record"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_validator_record",
+          "store": "VALIDATOR"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Write the validator record to the VALIDATOR store keyed by actor_id"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -5,9 +5,7 @@
         "capability": {
           "supported_operation_specs": [
             "APPEND",
-            "GET_ALL",
-            "GET_RANGE",
-            "GET_SINCE"
+            "GET_ALL"
           ]
         },
         "operations": {
@@ -47,43 +45,6 @@
                 "BACKEND_ERROR"
               ],
               "summary": "Retrieve all records from the log"
-            },
-            "GET_RANGE": {
-              "handler": "read_range",
-              "idempotent": true,
-              "input": [
-                "start_sequence",
-                "end_sequence",
-                "stream_id"
-              ],
-              "output": [
-                "result_status",
-                "entries"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Retrieve records within a sequence range"
-            },
-            "GET_SINCE": {
-              "handler": "read_since",
-              "idempotent": true,
-              "input": [
-                "timestamp",
-                "stream_id"
-              ],
-              "output": [
-                "result_status",
-                "entries"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Retrieve all records after a given timestamp"
             }
           }
         }
@@ -97,8 +58,8 @@
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
-            "GET",
-            "PUT",
+            "READ",
+            "WRITE",
             "DELETE",
             "EXISTS",
             "LIST"
@@ -140,7 +101,21 @@
               ],
               "summary": "Check if a key exists in storage"
             },
-            "GET": {
+            "LIST": {
+              "handler": "list_keys",
+              "idempotent": true,
+              "input": [],
+              "output": [
+                "result_status",
+                "keys"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "BACKEND_ERROR"
+              ],
+              "summary": "List all keys in storage"
+            },
+            "READ": {
               "handler": "read",
               "idempotent": true,
               "input": [
@@ -158,21 +133,7 @@
               ],
               "summary": "Retrieve value for a given key"
             },
-            "LIST": {
-              "handler": "list_keys",
-              "idempotent": true,
-              "input": [],
-              "output": [
-                "result_status",
-                "keys"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "BACKEND_ERROR"
-              ],
-              "summary": "List all keys in storage"
-            },
-            "PUT": {
+            "WRITE": {
               "handler": "write",
               "idempotent": true,
               "input": [
@@ -204,11 +165,26 @@
             "REGISTER",
             "RESOLVE",
             "EXISTS",
-            "DEREGISTER"
+            "DEREGISTER",
+            "COUNT"
           ]
         },
         "operations": {
           "operations": {
+            "COUNT": {
+              "handler": "count",
+              "idempotent": true,
+              "input": [],
+              "output": [
+                "result_status",
+                "count"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Count active (non-tombstoned) registry entries"
+            },
             "DEREGISTER": {
               "handler": "deregister",
               "idempotent": true,
@@ -290,7 +266,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_REGISTRY_V0.runtime"
       }
     },
-    "247": {
+    "251": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -1255,8 +1231,8 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "252": {
-      "247": {
+    "256": {
+      "251": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

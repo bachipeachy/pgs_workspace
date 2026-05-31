@@ -141,16 +141,19 @@ Imagine a workflow that needs to check something. Your rule file would say that 
 
 **What this really means:** The builder tool does a few things in order: it discovers your new files, validates them (like in Act III), and then "materializes" them by creating new, clean, machine-readable versions in a special `protocol/artifacts/` folder. It also creates a `build_manifest.json` file, which is a receipt of everything it just built.
 
-**The Gate:** The builder successfully creates all the working parts and the manifest receipt.
+**The Gate:** The builder successfully creates all the working parts, the manifest receipt, and the snapshot passes admission control.
 
 **Checks at this gate:**
 *   **Matching Names:** The name of your rule file must match the name you wrote inside the file.
 *   **Complete Rules:** Every rule must be complete and follow the system's template.
 *   **Valid Connections:** If one rule mentions another, the builder checks to make sure that the other rule actually exists.
+*   **FQDN 100% compliance:** Every artifact reference must use the full `domain::ARTIFACT_CODE_Vn` form. Short names cause a hard failure at the GOVERN stage — there are no warnings.
+*   **Conformance assertions:** Two hard assertions run during the GOVERN stage: `ASSERT_CC_STORAGE_OP_CONFORMANCE_V0` (checks every storage operation declared in a CC_ is properly bounded) and `ASSERT_RB_BINDING_POLICY_CONFORMANCE_V0` (checks every runtime binding follows policy). Both fail the build if violated.
+*   **Snapshot admission:** After materialization, the builder runs `assert_snapshot_valid()`. This gate verifies the snapshot is structurally complete before the runtime is permitted to load it. If this check fails, the snapshot is never attested and the runtime will refuse to start.
 
 **The Main Rule for This Step:** The builder only builds what's in your official rule files. It doesn't just grab any file it finds on your computer.
 
-**How to Fix Mistakes:** If the build fails, it means there's a mistake in your rule files. For example, you might have a workflow that tries to use a capability contract that you forgot to create. You need to go back to your rule files (Act II) and fix the problem.
+**How to Fix Mistakes:** If the build fails, it means there's a mistake in your rule files. The error message from the GOVERN stage will identify the exact assertion that failed and which artifact caused it. Go back to your rule files (Act II) and fix the problem. If `assert_snapshot_valid()` fails, re-run the full build — do not attempt to patch the snapshot by hand.
 
 * * *
 
@@ -164,7 +167,7 @@ Imagine a workflow that needs to check something. Your rule file would say that 
 - For each **CT\_** code: the module path to the pure function implementation
 - For each **CS\_** code: the runtime host class (e.g., `RegistryRuntime`, `AppendOnlyJsonlRuntime`) and its storage policy (file path, connection config, etc.)
 
-**The Gate:** Every CT\_ and CS\_ capability used by your domain's workflows resolves through an RB\_ binding. The chain from protocol declaration to concrete implementation is complete.
+**The Gate:** Every CT\_ and CS\_ capability used by your domain's workflows resolves through an RB\_ binding. The chain from protocol declaration to concrete implementation is complete. The compiler enforces this in the GOVERN stage (S4) via `ASSERT_RB_BINDING_POLICY_CONFORMANCE_V0` — a missing or policy-violating binding is a compile failure, not a runtime failure.
 
 **Rules to Follow:**
 *   New CT atoms you create should be simple, pure, and reusable. They shouldn't embed domain-specific business logic that would limit reuse.

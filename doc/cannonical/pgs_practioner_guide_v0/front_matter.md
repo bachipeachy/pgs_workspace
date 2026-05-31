@@ -2,7 +2,7 @@
 ## A Constitutionally Constrained Architecture for Autonomous and AI-Generated Software
 ## A Practitioner's Guide
 
-**Version 0 — First Edition**
+**Version 0 — First Edition · Baseline: PGS v0.4.0**
 
 * * *
 
@@ -10,12 +10,8 @@
 
 Contact: bachipeachy@gmail.com
 
-Author's ORCID Profile: [0009-0007-3810-6520](https://orcid.org/0009-0007-3810-6520)
-
 © 2026 Bhash Ganti. All rights reserved.
 Released under the Apache-2.0 License.
-
-Summarized Technical Paper DOI: [10.5281/zenodo.20272695](https://zenodo.org/doi/10.5281/zenodo.20272695)
 
 Reference Implementation GitHub: [bachipeachy/pgs_workspace](https://github.com/bachipeachy/pgs_workspace)
 

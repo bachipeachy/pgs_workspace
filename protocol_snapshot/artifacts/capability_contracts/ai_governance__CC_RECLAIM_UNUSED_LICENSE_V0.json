@@ -29,7 +29,8 @@
           "REGISTER",
           "RESOLVE",
           "EXISTS",
-          "DEREGISTER"
+          "DEREGISTER",
+          "COUNT"
         ],
         "outputs": [
           "result_status"

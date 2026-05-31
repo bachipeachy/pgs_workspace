@@ -1,16 +1,16 @@
 {
   "compiler_version": "0.3.0",
-  "edge_count": 361,
-  "ev_schema_count": 8,
-  "graph_address_hash": "d3f7350013fb6e41b652e0e45be3ba8bc15ded8f5025b6fcc0c188b187461b9f",
+  "edge_count": 392,
+  "ev_schema_count": 9,
+  "graph_address_hash": "79c6583e64ace18389c22695fc1da4513cf3e3621a13029e4db003c50f54b688",
   "graph_topology_hash": "",
-  "node_count": 289,
+  "node_count": 301,
   "projection_class": "evidence_substrate",
-  "projection_hash": "7305cf9f230201a9dba5dfa6d3705751d4bbff660a9ecb2f12d329e01d158c95",
+  "projection_hash": "a0392840cee8bcb02dcc1d8ece9b0175c85a2273c9d3b4d02b2fb9397f59e18a",
   "projection_schema_version": "v0",
   "projection_type": "evidence",
   "requires_fqdn_identity": false,
   "structure_id": "blockchain",
-  "tokenized_hash": "247353e78c33fcddc79fe9436dd0e2a5a3cb6ec701a8bea2da0c26465b7e0a69",
-  "vocabulary_hash": "23dee37234b30138d304cef71592b6d8c7ccd630b8a8cea099b654c105a79067"
+  "tokenized_hash": "ee7afda483acb85960ade5af15fd09d6daffd5d8a074b65e162251100fab4975",
+  "vocabulary_hash": "19f281e20413bc73b48e64ba1152901def7472d8d359e0f9ae3c24ad3e8009b3"
 }

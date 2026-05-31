@@ -8,8 +8,8 @@
         "id": "CS_MUTABLE_JSON_V0",
         "kind": "CS",
         "ops": [
-          "GET",
-          "PUT",
+          "READ",
+          "WRITE",
           "DELETE",
           "EXISTS",
           "LIST"

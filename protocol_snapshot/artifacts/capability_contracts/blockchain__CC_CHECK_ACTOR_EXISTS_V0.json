@@ -1,0 +1,81 @@
+{
+  "artifact_code": "CC_CHECK_ACTOR_EXISTS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+        "id": "CS_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "REGISTER",
+          "RESOLVE",
+          "EXISTS",
+          "DEREGISTER",
+          "COUNT"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_CHECK_ACTOR_EXISTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CHECK_ACTOR_EXISTS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nVerify that an actor_id exists in the actor registry. Used as the actor prerequisite gate by\nsubdomains that require actor existence before granting domain authority.\n\n---\n\n## 2. Rationale\n\nActor existence must be verifiable without resolving KYC attributes. Existing capabilities\n(CC_RESOLVE_ACTOR_ID_V0) resolve actor_id from KYC data \u2014 wrong shape for a check-by-actor_id\ngate. CS_REGISTRY_V0 provides an EXISTS operation against any registered store; this CC wraps\nit for the actor store specifically.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_REGISTRY_V0 | CS | RESOLVE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_id | string | true | Actor ID to verify against the actor registry |\n\n---\n\n## 5. Outputs\n\nNo outputs. This CC answers existence only; downstream CCs receive actor_id from the original payload.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | actor_id exists in the actor registry |\n| NOT_FOUND | actor_id not present in the actor registry |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND is a terminal failure for any workflow that requires actor prerequisite\n- BACKEND_ERROR propagates as a hard failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CHECK_ACTOR_EXISTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Verify actor exists in the actor registry\n\n  inputs:\n    actor_id:\n      type: string\n      required: true\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: check_actor_exists\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      store: ACTOR\n      op: RESOLVE\n      inputs:\n        key_or_address: $.inputs.actor_id\n      outputs: {}\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "bb1ba8a2b47474271cbf174e3d5c7297e75a1a27868bc0f9a7225168c4af0070",
+  "fqdn_id": "blockchain::CC_CHECK_ACTOR_EXISTS_V0",
+  "frontmatter": {
+    "cc_code": "CC_CHECK_ACTOR_EXISTS_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {},
+      "pipeline": [
+        {
+          "inputs": {
+            "key_or_address": "$.inputs.actor_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "RESOLVE",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "step": "check_actor_exists",
+          "store": "ACTOR"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Verify actor exists in the actor registry"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.identity.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -24,7 +24,8 @@
           "REGISTER",
           "RESOLVE",
           "EXISTS",
-          "DEREGISTER"
+          "DEREGISTER",
+          "COUNT"
         ],
         "outputs": [
           "result_status"
@@ -36,9 +37,7 @@
         "kind": "CS",
         "ops": [
           "APPEND",
-          "GET_ALL",
-          "GET_RANGE",
-          "GET_SINCE"
+          "GET_ALL"
         ],
         "outputs": [
           "result_status"

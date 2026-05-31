@@ -1,14 +1,14 @@
 {
   "artifact_code": "CS_MUTABLE_JSON_V0",
   "artifact_type": "CS",
-  "content": "# CS_MUTABLE_JSON_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CS_MUTABLE_JSON_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nProvide a mutable key-addressable JSON state store with last-write-wins semantics.\n\nThis capability allows:\n- Reading values by key\n- Writing/overwriting values at keys\n- Deleting keys\n- Checking key existence\n- Listing all keys\n\n---\n\n## 2. Rationale\n\nSome workflows require state that:\n- Evolves over time\n- Reflects latest values only (not history)\n- Is not append-only\n- Supports idempotent operations\n\nThis CS exists to explicitly permit controlled mutation with clear semantics.\n\n---\n\n## 3. Applicability & Non-Applicability\n\n### Valid Use Cases\n- State snapshots\n- Current status records\n- Idempotent updates\n- Configuration storage\n- Session state\n\n### Invalid Use Cases\n- Audit logs (use CS_APPENDONLY_JSONL_V0)\n- Event sourcing (use CS_APPENDONLY_JSONL_V0)\n- Historical reconstruction\n- Concurrent multi-writer scenarios\n- Transactional batch operations\n\n---\n\n## 4. Side-Effect Category\n\n- **Category:** Mutable State\n- **Side-Effect Type:** persistent\n- **Append Semantics:** NO\n- **Overwrite Semantics:** YES (last-write-wins)\n\n---\n\n## 5. Properties\n\n| Property | Value | Description |\n|----------|-------|-------------|\n| durability | persistent | State survives restarts |\n| idempotent | true | All operations are idempotent |\n| replay_policy | safe_replay | Idempotent ops can be retried |\n| transactional | false | No atomic batch support |\n| concurrent_safe | false | Single-writer model |\n\n---\n\n## 6. Guarantees\n\nThis CS guarantees:\n- `mutable` \u2014 values can be changed\n- `last_write_wins` \u2014 no conflict resolution, latest write prevails\n- `json_format` \u2014 values stored as JSON\n- `durable_across_restarts` \u2014 persisted to storage\n- `key_addressable` \u2014 values accessed by string key\n- `idempotent_operations` \u2014 safe to retry\n\n---\n\n## 7. Non-Guarantees\n\nThis CS does NOT guarantee:\n- `ordering` \u2014 no ordering of writes\n- `history` \u2014 no historical versions\n- `audit` \u2014 no audit trail\n- `versioning` \u2014 no version tracking\n- `conflict_resolution` \u2014 no merge strategies\n- `multi_version_concurrency_control` \u2014 no MVCC\n- `atomic_batch_operations` \u2014 no transactions\n\n---\n\n## 8. Constraints\n\n| Constraint | Value | Description |\n|------------|-------|-------------|\n| concurrency | single_writer | One writer at a time |\n| max_key_length | 256 | Maximum key string length |\n| max_value_size_mb | 10 | Maximum value size in MB |\n\n---\n\n## 9. Operations\n\n### 9.1 GET\nRetrieve value for a given key.\n\n- **Input:** `key` (string, required)\n- **Output:** `result_status`, `value`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR\n\n### 9.2 PUT\nStore or update a value at the given key.\n\n- **Input:** `key` (string, required), `value` (object, required)\n- **Output:** `result_status`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** Last-write-wins \u2014 overwrites existing value\n\n### 9.3 DELETE\nRemove the given key and its value.\n\n- **Input:** `key` (string, required)\n- **Output:** `result_status`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR\n\n### 9.4 EXISTS\nCheck if a key exists in storage.\n\n- **Input:** `key` (string, required)\n- **Output:** `result_status`, `exists` (boolean)\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n\n### 9.5 LIST\nList all keys in storage.\n\n- **Input:** (none)\n- **Output:** `result_status`, `keys` (array of strings)\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, BACKEND_ERROR\n\n---\n\n## 10. Failure Semantics\n\n### Failure Modes\n\n| Status | Condition | Error Type |\n|--------|-----------|------------|\n| VIOLATION | Key fails validation (type, format, empty) | InvalidKey |\n| NOT_FOUND | Requested key does not exist | KeyNotFound |\n| BACKEND_ERROR | Storage unavailable or corrupt | StorageUnavailable, StorageCorrupt |\n\n### Behavior\n- All failures are **fail-loud** \u2014 no silent failures\n- All failures emit trace events\n- All failures return explicit `result_status`\n\n---\n\n## 11. Observability Guarantees\n\nThis CS MUST emit:\n- `cs_start` \u2014 operation invocation begins\n- `cs_success` \u2014 operation completed with SUCCESS\n- `cs_failure` \u2014 operation completed with non-SUCCESS status\n\n---\n\n## 12. Configuration Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| path | string | true | Filesystem path to JSON storage file |\n\n**Note:** Configuration is provided via environment binding, not embedded in artifacts.\n\n---\n\n## 13. Structural Checklist\n\n- [x] No environment data embedded in artifacts\n- [x] All operations declared with inputs/outputs\n- [x] All result_status values declared\n- [x] Failure modes explicit\n- [x] Observability declared\n- [x] Configuration schema declared\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_MUTABLE_JSON_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Mutable key-addressable JSON state store with last-write-wins semantics\n  category: storage\n\n  policy:\n    operations: [GET, PUT, DELETE, EXISTS, LIST]\n\n  operations:\n    GET:\n      summary: Retrieve value for a given key\n      handler: read\n      input: [key]\n      output: [result_status, value]\n      idempotent: true\n      result_status_values: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n    PUT:\n      summary: Store or update a value at the given key\n      handler: write\n      input: [key, value]\n      output: [result_status]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    DELETE:\n      summary: Remove the given key and its value\n      handler: delete\n      input: [key]\n      output: [result_status]\n      idempotent: true\n      result_status_values: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n    EXISTS:\n      summary: Check if a key exists in storage\n      handler: exists\n      input: [key]\n      output: [result_status, exists]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    LIST:\n      summary: List all keys in storage\n      handler: list_keys\n      input: []\n      output: [result_status, keys]\n      idempotent: true\n      result_status_values: [SUCCESS, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime\n  callable: MutableJsonRuntime\n\nextensions:\n  cs_kind: mutable_state\n  side_effect_type: persistent\n\n  properties:\n    durability: persistent\n    idempotent: true\n    replay_policy: safe_replay\n    transactional: false\n    concurrent_safe: false\n\n  constraints:\n    concurrency: single_writer\n    max_key_length: 256\n    max_value_size_mb: 10\n\n  vocabulary:\n    result_status: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n  configuration_schema:\n    path:\n      type: string\n      required: true\n      description: Filesystem path to JSON storage file\n\n  failure_modes:\n    - \"VIOLATION: Invalid key (type, format, empty)\"\n    - \"NOT_FOUND: Key does not exist\"\n    - \"BACKEND_ERROR: Storage unavailable or corrupt\"\n```\n",
-  "content_hash": "cb87625fed5687440b5efdfcffde113fecfd5d78a02a72c49d1bad6eb5fc16d9",
+  "content": "# CS_MUTABLE_JSON_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CS_MUTABLE_JSON_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nProvide a mutable key-addressable JSON state store with last-write-wins semantics.\n\nThis capability allows:\n- Reading values by key\n- Writing/overwriting values at keys\n- Deleting keys\n- Checking key existence\n- Listing all keys\n\n---\n\n## 2. Rationale\n\nSome workflows require state that:\n- Evolves over time\n- Reflects latest values only (not history)\n- Is not append-only\n- Supports idempotent operations\n\nThis CS exists to explicitly permit controlled mutation with clear semantics.\n\n---\n\n## 3. Applicability & Non-Applicability\n\n### Valid Use Cases\n- State snapshots\n- Current status records\n- Idempotent updates\n- Configuration storage\n- Session state\n\n### Invalid Use Cases\n- Audit logs (use CS_APPENDONLY_JSONL_V0)\n- Event sourcing (use CS_APPENDONLY_JSONL_V0)\n- Historical reconstruction\n- Concurrent multi-writer scenarios\n- Transactional batch operations\n\n---\n\n## 4. Side-Effect Category\n\n- **Category:** Mutable State\n- **Side-Effect Type:** persistent\n- **Append Semantics:** NO\n- **Overwrite Semantics:** YES (last-write-wins)\n\n---\n\n## 5. Properties\n\n| Property | Value | Description |\n|----------|-------|-------------|\n| durability | persistent | State survives restarts |\n| idempotent | true | All operations are idempotent |\n| replay_policy | safe_replay | Idempotent ops can be retried |\n| transactional | false | No atomic batch support |\n| concurrent_safe | false | Single-writer model |\n\n---\n\n## 6. Guarantees\n\nThis CS guarantees:\n- `mutable` \u2014 values can be changed\n- `last_write_wins` \u2014 no conflict resolution, latest write prevails\n- `json_format` \u2014 values stored as JSON\n- `durable_across_restarts` \u2014 persisted to storage\n- `key_addressable` \u2014 values accessed by string key\n- `idempotent_operations` \u2014 safe to retry\n\n---\n\n## 7. Non-Guarantees\n\nThis CS does NOT guarantee:\n- `ordering` \u2014 no ordering of writes\n- `history` \u2014 no historical versions\n- `audit` \u2014 no audit trail\n- `versioning` \u2014 no version tracking\n- `conflict_resolution` \u2014 no merge strategies\n- `multi_version_concurrency_control` \u2014 no MVCC\n- `atomic_batch_operations` \u2014 no transactions\n\n---\n\n## 8. Constraints\n\n| Constraint | Value | Description |\n|------------|-------|-------------|\n| concurrency | single_writer | One writer at a time |\n| max_key_length | 256 | Maximum key string length |\n| max_value_size_mb | 10 | Maximum value size in MB |\n\n---\n\n## 9. Operations\n\n### 9.1 READ\nRetrieve value for a given key.\n\n- **Input:** `key` (string, required)\n- **Output:** `result_status`, `value`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR\n\n### 9.2 WRITE\nStore or update a value at the given key.\n\n- **Input:** `key` (string, required), `value` (object, required)\n- **Output:** `result_status`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n- **Note:** Last-write-wins \u2014 overwrites existing value\n\n### 9.3 DELETE\nRemove the given key and its value.\n\n- **Input:** `key` (string, required)\n- **Output:** `result_status`\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR\n\n### 9.4 EXISTS\nCheck if a key exists in storage.\n\n- **Input:** `key` (string, required)\n- **Output:** `result_status`, `exists` (boolean)\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n\n### 9.5 LIST\nList all keys in storage.\n\n- **Input:** (none)\n- **Output:** `result_status`, `keys` (array of strings)\n- **Idempotent:** true\n- **Result Status Values:** SUCCESS, BACKEND_ERROR\n\n---\n\n## 10. Failure Semantics\n\n### Failure Modes\n\n| Status | Condition | Error Type |\n|--------|-----------|------------|\n| VIOLATION | Key fails validation (type, format, empty) | InvalidKey |\n| NOT_FOUND | Requested key does not exist | KeyNotFound |\n| BACKEND_ERROR | Storage unavailable or corrupt | StorageUnavailable, StorageCorrupt |\n\n### Behavior\n- All failures are **fail-loud** \u2014 no silent failures\n- All failures emit trace events\n- All failures return explicit `result_status`\n\n---\n\n## 11. Observability Guarantees\n\nThis CS MUST emit:\n- `cs_start` \u2014 operation invocation begins\n- `cs_success` \u2014 operation completed with SUCCESS\n- `cs_failure` \u2014 operation completed with non-SUCCESS status\n\n---\n\n## 12. Configuration Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| path | string | true | Filesystem path to JSON storage file |\n\n**Note:** Configuration is provided via environment binding, not embedded in artifacts.\n\n---\n\n## 13. Structural Checklist\n\n- [x] No environment data embedded in artifacts\n- [x] All operations declared with inputs/outputs\n- [x] All result_status values declared\n- [x] Failure modes explicit\n- [x] Observability declared\n- [x] Configuration schema declared\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_MUTABLE_JSON_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Mutable key-addressable JSON state store with last-write-wins semantics\n  category: storage\n\n  policy:\n    operations: [READ, WRITE, DELETE, EXISTS, LIST]\n\n  operations:\n    READ:\n      summary: Retrieve value for a given key\n      handler: read\n      input: [key]\n      output: [result_status, value]\n      idempotent: true\n      result_status_values: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n    WRITE:\n      summary: Store or update a value at the given key\n      handler: write\n      input: [key, value]\n      output: [result_status]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    DELETE:\n      summary: Remove the given key and its value\n      handler: delete\n      input: [key]\n      output: [result_status]\n      idempotent: true\n      result_status_values: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n    EXISTS:\n      summary: Check if a key exists in storage\n      handler: exists\n      input: [key]\n      output: [result_status, exists]\n      idempotent: true\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n    LIST:\n      summary: List all keys in storage\n      handler: list_keys\n      input: []\n      output: [result_status, keys]\n      idempotent: true\n      result_status_values: [SUCCESS, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime\n  callable: MutableJsonRuntime\n\nextensions:\n  cs_kind: mutable_state\n  side_effect_type: persistent\n\n  properties:\n    durability: persistent\n    idempotent: true\n    replay_policy: safe_replay\n    transactional: false\n    concurrent_safe: false\n\n  constraints:\n    concurrency: single_writer\n    max_key_length: 256\n    max_value_size_mb: 10\n\n  vocabulary:\n    result_status: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n\n  configuration_schema:\n    path:\n      type: string\n      required: true\n      description: Filesystem path to JSON storage file\n\n  failure_modes:\n    - \"VIOLATION: Invalid key (type, format, empty)\"\n    - \"NOT_FOUND: Key does not exist\"\n    - \"BACKEND_ERROR: Storage unavailable or corrupt\"\n```\n",
+  "content_hash": "affd5e2d281e84d6c0d34cbfdbe8c49e81b6ccd8d5250c68b9c7432c017e2c6a",
   "cs_ir": {
     "cs_metadata": {
       "capability": {
         "supported_operation_specs": [
-          "GET",
-          "PUT",
+          "READ",
+          "WRITE",
           "DELETE",
           "EXISTS",
           "LIST"
@@ -50,7 +50,21 @@
             ],
             "summary": "Check if a key exists in storage"
           },
-          "GET": {
+          "LIST": {
+            "handler": "list_keys",
+            "idempotent": true,
+            "input": [],
+            "output": [
+              "result_status",
+              "keys"
+            ],
+            "result_status_values": [
+              "SUCCESS",
+              "BACKEND_ERROR"
+            ],
+            "summary": "List all keys in storage"
+          },
+          "READ": {
             "handler": "read",
             "idempotent": true,
             "input": [
@@ -68,21 +82,7 @@
             ],
             "summary": "Retrieve value for a given key"
           },
-          "LIST": {
-            "handler": "list_keys",
-            "idempotent": true,
-            "input": [],
-            "output": [
-              "result_status",
-              "keys"
-            ],
-            "result_status_values": [
-              "SUCCESS",
-              "BACKEND_ERROR"
-            ],
-            "summary": "List all keys in storage"
-          },
-          "PUT": {
+          "WRITE": {
             "handler": "write",
             "idempotent": true,
             "input": [
@@ -146,7 +146,21 @@
           ],
           "summary": "Check if a key exists in storage"
         },
-        "GET": {
+        "LIST": {
+          "handler": "list_keys",
+          "idempotent": true,
+          "input": [],
+          "output": [
+            "result_status",
+            "keys"
+          ],
+          "result_status_values": [
+            "SUCCESS",
+            "BACKEND_ERROR"
+          ],
+          "summary": "List all keys in storage"
+        },
+        "READ": {
           "handler": "read",
           "idempotent": true,
           "input": [
@@ -164,21 +178,7 @@
           ],
           "summary": "Retrieve value for a given key"
         },
-        "LIST": {
-          "handler": "list_keys",
-          "idempotent": true,
-          "input": [],
-          "output": [
-            "result_status",
-            "keys"
-          ],
-          "result_status_values": [
-            "SUCCESS",
-            "BACKEND_ERROR"
-          ],
-          "summary": "List all keys in storage"
-        },
-        "PUT": {
+        "WRITE": {
           "handler": "write",
           "idempotent": true,
           "input": [
@@ -198,8 +198,8 @@
       },
       "policy": {
         "operations": [
-          "GET",
-          "PUT",
+          "READ",
+          "WRITE",
           "DELETE",
           "EXISTS",
           "LIST"

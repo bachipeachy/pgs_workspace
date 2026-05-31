@@ -1,0 +1,73 @@
+{
+  "artifact_code": "IN_VALIDATOR_REGISTERED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_VALIDATOR_REGISTERED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_VALIDATOR_REGISTERED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_REGISTER_VALIDATOR_V0\n\n---\n\n## 1. Intent\n\nRegister an existing actor as a validator node participant in the consensus layer.\n\n---\n\n## 2. Rationale\n\nValidator registration is the entry point for consensus participation:\n- Verifies the actor already exists in the identity registry before granting validator status\n- Captures the validator's cryptographic identity (BLS12-381 pubkey) and stake declaration\n- Records the registration event in the append-only validator lifecycle journal\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_REGISTER_VALIDATOR_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| validator_record | object | true | Proposed validator registration payload |\n| validator_record.actor_id | string | true | PGS actor ID \u2014 primary key; must exist in the actor registry |\n| validator_record.pubkey | string | true | BLS12-381 signing public key (hex-encoded, 0x-prefixed) |\n| validator_record.withdrawal_credentials | string | true | Withdrawal destination credential (hex-encoded, 0x-prefixed) |\n| validator_record.effective_balance | integer | true | Declared stake in Gwei \u2014 must be \u2265 32000000000 (32 ETH) |\n| validator_record.node_name | string | true | Human-readable validator node name |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Payload admitted \u2014 all required fields present, pubkey format valid, effective_balance meets minimum |\n| NACK | Payload rejected \u2014 missing required fields, invalid pubkey format, or effective_balance below minimum |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.consensus_pos.validator\n- **Notes:**\n  - Actor must already be registered in the identity registry (enforced by CC_CHECK_ACTOR_EXISTS_V0)\n  - One actor maps to at most one validator record (enforced by CC_CHECK_VALIDATOR_EXISTS_V0 duplicate gate)\n  - effective_balance minimum is 32 ETH (32000000000 Gwei) per ETH2 protocol specification\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_VALIDATOR_REGISTERED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Register an existing actor as a validator node\n  workflow: WF_REGISTER_VALIDATOR_V0\n\n  inputs:\n    validator_record:\n      type: object\n      required: true\n      description: Proposed validator registration payload\n      fields:\n        actor_id:\n          type: string\n          required: true\n        pubkey:\n          type: string\n          required: true\n          format: hex\n          prefix: \"0x\"\n        withdrawal_credentials:\n          type: string\n          required: true\n          format: hex\n          prefix: \"0x\"\n        effective_balance:\n          type: integer\n          required: true\n          minimum: 32000000000\n        node_name:\n          type: string\n          required: true\n\n  outcomes:\n    ACK:\n      description: Payload admitted \u2014 all required fields present, pubkey format valid, effective_balance meets minimum\n    NACK:\n      description: Payload rejected \u2014 missing required fields, invalid pubkey format, or effective_balance below minimum\n\nextensions:\n  domain: pgs.consensus_pos.validator\n  notes:\n    - Actor must already be registered in the identity registry (enforced by CC_CHECK_ACTOR_EXISTS_V0)\n    - One actor maps to at most one validator record (enforced by CC_CHECK_VALIDATOR_EXISTS_V0 + CC_WRITE_VALIDATOR_RECORD_V0)\n    - effective_balance minimum is 32000000000 Gwei (32 ETH)\n```\n",
+  "content_hash": "aa8ee0d01d36bdd3d35d35c5c1bbf4d74a2c4b478655e081016a4a4d7ca0d070",
+  "fqdn_id": "blockchain::IN_VALIDATOR_REGISTERED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "validator_record": {
+          "description": "Proposed validator registration payload",
+          "fields": {
+            "actor_id": {
+              "required": true,
+              "type": "string"
+            },
+            "effective_balance": {
+              "minimum": 32000000000,
+              "required": true,
+              "type": "integer"
+            },
+            "node_name": {
+              "required": true,
+              "type": "string"
+            },
+            "pubkey": {
+              "format": "hex",
+              "prefix": "0x",
+              "required": true,
+              "type": "string"
+            },
+            "withdrawal_credentials": {
+              "format": "hex",
+              "prefix": "0x",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Payload admitted \u2014 all required fields present, pubkey format valid, effective_balance meets minimum"
+        },
+        "NACK": {
+          "description": "Payload rejected \u2014 missing required fields, invalid pubkey format, or effective_balance below minimum"
+        }
+      },
+      "summary": "Register an existing actor as a validator node",
+      "workflow": "WF_REGISTER_VALIDATOR_V0"
+    },
+    "extensions": {
+      "domain": "pgs.consensus_pos.validator",
+      "notes": [
+        "Actor must already be registered in the identity registry (enforced by CC_CHECK_ACTOR_EXISTS_V0)",
+        "One actor maps to at most one validator record (enforced by CC_CHECK_VALIDATOR_EXISTS_V0 + CC_WRITE_VALIDATOR_RECORD_V0)",
+        "effective_balance minimum is 32000000000 Gwei (32 ETH)"
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_VALIDATOR_REGISTERED_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}
