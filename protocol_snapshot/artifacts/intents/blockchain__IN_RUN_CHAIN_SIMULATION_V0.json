@@ -1,0 +1,73 @@
+{
+  "artifact_code": "IN_RUN_CHAIN_SIMULATION_V0",
+  "artifact_type": "IN",
+  "content": "# IN_RUN_CHAIN_SIMULATION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_RUN_CHAIN_SIMULATION_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_RUN_CHAIN_SIMULATION_V0\n\n---\n\n## 1. Intent\n\nAdmit a chain simulation run request. Declares the simulation identity, slot schedule, TX workload, and all parameters needed to launch a fully governed simulation via `WF_RUN_CHAIN_SIMULATION_V0`.\n\n---\n\n## 2. Rationale\n\n`simulation_id` is the primary isolation boundary \u2014 every slot clock record and simulation summary is keyed by it. Declaring it at admission ensures the isolation invariant is established before any state is written.\n\n`tx_sequence` carries fully resolved TX payload objects. The intent validates structure at admission; individual TX field validity is enforced within each targeted TX workflow.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_RUN_CHAIN_SIMULATION_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Primary isolation key; must be non-empty; scopes all slot clock and simulation summary records |\n| `slot_duration_seconds` | integer | true | Duration of each slot in seconds; must be > 0 |\n| `max_slots` | integer | true | Total number of slots to execute; must be >= 1 |\n| `tx_interval_seconds` | integer | true | Interval between TX workload submissions in seconds; must be > 0 |\n| `max_transactions` | integer | true | Maximum number of transactions to submit; must be >= 1 |\n| `tx_sequence` | array | true | Non-empty; each item must carry `tx_type` and all required payload fields for the targeted TX workflow |\n| `triggered_by` | string | true | Actor ID or system trigger reference; must be non-empty |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Chain simulation intent accepted; proceed to WF_RUN_CHAIN_SIMULATION_V0 |\n| NACK | Intent rejected \u2014 invalid or missing required fields |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.orchestration\n- **Subdomain:** orchestration\n- **Authority:** SYSTEM\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_RUN_CHAIN_SIMULATION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Admit chain simulation run request\n  workflow: WF_RUN_CHAIN_SIMULATION_V0\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Primary isolation key; scopes all slot clock and simulation summary records\n    slot_duration_seconds:\n      type: integer\n      required: true\n      description: Duration of each slot in seconds; must be > 0\n    max_slots:\n      type: integer\n      required: true\n      description: Total number of slots to execute; must be >= 1\n    tx_interval_seconds:\n      type: integer\n      required: true\n      description: Interval between TX workload submissions in seconds; must be > 0\n    max_transactions:\n      type: integer\n      required: true\n      description: Maximum number of transactions to submit; must be >= 1\n    tx_sequence:\n      type: array\n      required: true\n      description: Non-empty list of TX specs; each item carries tx_type and all required payload fields for the targeted TX workflow\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outcomes:\n    ACK:\n      description: Chain simulation intent accepted\n    NACK:\n      description: Intent rejected \u2014 invalid or missing required fields\n\nextensions:\n  domain: pgs.blockchain.orchestration\n  subdomain: orchestration\n  authority: SYSTEM\n```\n",
+  "content_hash": "34a10eab33f4834dad68deaffcc39f68b0635b2e9b3dbd201f82db0da7bd5d7a",
+  "fqdn_id": "blockchain::IN_RUN_CHAIN_SIMULATION_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "max_slots": {
+          "description": "Total number of slots to execute; must be >= 1",
+          "required": true,
+          "type": "integer"
+        },
+        "max_transactions": {
+          "description": "Maximum number of transactions to submit; must be >= 1",
+          "required": true,
+          "type": "integer"
+        },
+        "simulation_id": {
+          "description": "Primary isolation key; scopes all slot clock and simulation summary records",
+          "required": true,
+          "type": "string"
+        },
+        "slot_duration_seconds": {
+          "description": "Duration of each slot in seconds; must be > 0",
+          "required": true,
+          "type": "integer"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        },
+        "tx_interval_seconds": {
+          "description": "Interval between TX workload submissions in seconds; must be > 0",
+          "required": true,
+          "type": "integer"
+        },
+        "tx_sequence": {
+          "description": "Non-empty list of TX specs; each item carries tx_type and all required payload fields for the targeted TX workflow",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Chain simulation intent accepted"
+        },
+        "NACK": {
+          "description": "Intent rejected \u2014 invalid or missing required fields"
+        }
+      },
+      "summary": "Admit chain simulation run request",
+      "workflow": "WF_RUN_CHAIN_SIMULATION_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.orchestration",
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_RUN_CHAIN_SIMULATION_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

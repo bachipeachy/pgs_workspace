@@ -1,0 +1,47 @@
+{
+  "artifact_code": "IN_POOL_V0",
+  "artifact_type": "IN",
+  "content": "# IN_POOL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_POOL_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_POOL_V0\n\n---\n\n## 1. Intent\n\nSubmit a POOL transaction \u2014 transfer BACHI from the MINT wallet to the POOL wallet to fund staking rewards.\n\n---\n\n## 2. Rationale\n\nPOOL is a SYSTEM operation. Both source (MINT) and destination (POOL) wallets are auto-resolved.\nOnly the amount and trigger reference are required.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_POOL_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| amount | number | true | Pool funding amount in BACHI |\n| triggered_by | string | true | System trigger reference |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Pool intent accepted |\n| NACK | Pool intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** SYSTEM\n- **Note:** from_address auto-resolved to MINT wallet; to_address auto-resolved to POOL wallet; no actor_record; no gas params\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_POOL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit POOL funding transaction (SYSTEM)\n  workflow: WF_POOL_V0\n\n  inputs:\n    amount:\n      type: number\n      required: true\n      description: Pool funding amount in BACHI\n    triggered_by:\n      type: string\n      required: true\n      description: System trigger reference\n\n  outcomes:\n    ACK:\n      description: Pool intent accepted\n    NACK:\n      description: Pool intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: SYSTEM\n```\n",
+  "content_hash": "8cbe3d21873c2b26f5317ff9dd5bba60898ff7097824ed42199046776999b66a",
+  "fqdn_id": "blockchain::IN_POOL_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "amount": {
+          "description": "Pool funding amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "triggered_by": {
+          "description": "System trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Pool intent accepted"
+        },
+        "NACK": {
+          "description": "Pool intent rejected"
+        }
+      },
+      "summary": "Submit POOL funding transaction (SYSTEM)",
+      "workflow": "WF_POOL_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_POOL_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

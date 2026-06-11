@@ -182,6 +182,7 @@ It is a governed execution substrate.
 - Protocol-first system evolution
 - FQDN-based artifact identity
 - Governance-constrained compiler behavior
+- Governed SDLC change management — Change Request to Authoring Mandate (`pgs_change_mgmt`, new in v0.5.0)
 
 ---
 
@@ -212,7 +213,7 @@ The full architectural model, governance system, compiler/runtime separation, an
 
 The practitioner's guide (18 chapters, ~102K words) covers PGS from first principles through advanced topics:
 
-- [Practitioner's Guide](doc/pgs_practioner_guide_all_chapters.pdf) — all chapters in a single document
+- [Practitioner's Guide](doc/pgs_practioner_guide_all_chapters.md) — all chapters in a single document
 
 **Author:** [ORCID 0009-0007-3810-6520](https://orcid.org/0009-0007-3810-6520) — public profile and full publication list
 ---
@@ -221,8 +222,9 @@ The practitioner's guide (18 chapters, ~102K words) covers PGS from first princi
 
 Explore what PGS makes possible beyond workflow governance:
 
-- [Protocol-Governed Transformer Runtime](doc/challenge_projects/pgs_governed_transformer_runtime.md) — declarative AI model topology as a governed execution substrate
-- [Protocol-Governed Autonomous Agent Runtime](doc/challenge_projects/pgs_governed_autonomous_agent_runtime.md) — structural governance for autonomous AI agents
+- [Protocol-Governed Blockchain Chain Runtime](doc/challenge_projects/1_protocol_governed_blockchain_chain_runtime.md) — build & close the blockchain/chain CR from its governed dossier (2/5)
+- [Protocol-Governed Autonomous Agent Runtime](doc/challenge_projects/2_pgs_governed_autonomous_agent_runtime.md) — structural governance for autonomous AI agents (3/5)
+- [Protocol-Governed Transformer Runtime](doc/challenge_projects/3_pgs_governed_transformer_runtime.md) — declarative AI model topology as a governed execution substrate (5/5)
 
 ---
 

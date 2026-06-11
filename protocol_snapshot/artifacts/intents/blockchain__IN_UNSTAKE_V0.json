@@ -1,0 +1,84 @@
+{
+  "artifact_code": "IN_UNSTAKE_V0",
+  "artifact_type": "IN",
+  "content": "# IN_UNSTAKE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_UNSTAKE_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_UNSTAKE_V0\n\n---\n\n## 1. Intent\n\nSubmit an UNSTAKE transaction \u2014 withdraw staked BACHI from the pool to an actor wallet.\n\n---\n\n## 2. Rationale\n\nUNSTAKE is an ENDUSER operation. The actor identifies their validator stake and target wallet.\nThe source (POOL wallet) is auto-resolved by the policy CC \u2014 not supplied by the caller.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_UNSTAKE_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Actor record for identity resolution |\n| actor_record.email_registration | string | true | Actor email (format: email) |\n| validator_index | integer | true | Validator index for the stake being withdrawn |\n| amount | number | true | Unstake amount in BACHI |\n| to_wallet_id | string | true | Destination wallet identifier |\n| gas_limit | integer | false | Gas limit (default 21000) |\n| max_fee_per_gas | string | false | Max fee per gas in wei (default \"20000000000\") |\n| max_priority_fee_per_gas | string | false | Max priority fee per gas in wei (default \"1000000000\") |\n| memo | string | false | Optional transaction memo |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Unstake intent accepted |\n| NACK | Unstake intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** ENDUSER\n- **Note:** from_address auto-resolved to POOL wallet by CC_VALIDATE_UNSTAKE_POLICY_V0\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_UNSTAKE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit UNSTAKE transaction (ENDUSER)\n  workflow: WF_UNSTAKE_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Actor record for identity resolution\n      fields:\n        email_registration:\n          type: string\n          required: true\n          format: email\n    validator_index:\n      type: integer\n      required: true\n      description: Validator index for the stake being withdrawn\n    amount:\n      type: number\n      required: true\n      description: Unstake amount in BACHI\n    to_wallet_id:\n      type: string\n      required: true\n      description: Destination wallet identifier\n    gas_limit:\n      type: integer\n      default: 21000\n      description: Gas limit\n    max_fee_per_gas:\n      type: string\n      default: \"20000000000\"\n      description: Max fee per gas in wei\n    max_priority_fee_per_gas:\n      type: string\n      default: \"1000000000\"\n      description: Max priority fee per gas in wei\n    memo:\n      type: string\n      required: false\n      description: Optional transaction memo\n\n  outcomes:\n    ACK:\n      description: Unstake intent accepted\n    NACK:\n      description: Unstake intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: ENDUSER\n```\n",
+  "content_hash": "97f2ecf204121c122fd999d93f7ac9d0618eca4954c10c0a3ece7fe197f11ae7",
+  "fqdn_id": "blockchain::IN_UNSTAKE_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "actor_record": {
+          "description": "Actor record for identity resolution",
+          "fields": {
+            "email_registration": {
+              "format": "email",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "required": true,
+          "type": "object"
+        },
+        "amount": {
+          "description": "Unstake amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "gas_limit": {
+          "default": 21000,
+          "description": "Gas limit",
+          "type": "integer"
+        },
+        "max_fee_per_gas": {
+          "default": "20000000000",
+          "description": "Max fee per gas in wei",
+          "type": "string"
+        },
+        "max_priority_fee_per_gas": {
+          "default": "1000000000",
+          "description": "Max priority fee per gas in wei",
+          "type": "string"
+        },
+        "memo": {
+          "description": "Optional transaction memo",
+          "required": false,
+          "type": "string"
+        },
+        "to_wallet_id": {
+          "description": "Destination wallet identifier",
+          "required": true,
+          "type": "string"
+        },
+        "validator_index": {
+          "description": "Validator index for the stake being withdrawn",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Unstake intent accepted"
+        },
+        "NACK": {
+          "description": "Unstake intent rejected"
+        }
+      },
+      "summary": "Submit UNSTAKE transaction (ENDUSER)",
+      "workflow": "WF_UNSTAKE_V0"
+    },
+    "extensions": {
+      "authority": "ENDUSER",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_UNSTAKE_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

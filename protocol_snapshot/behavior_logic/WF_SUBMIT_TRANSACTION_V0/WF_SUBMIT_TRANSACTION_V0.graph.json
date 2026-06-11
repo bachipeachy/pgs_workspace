@@ -1,0 +1,835 @@
+{
+  "wf_id": "WF_SUBMIT_TRANSACTION_V0",
+  "entry": "IN_TRANSACTION_SUBMITTED_V0",
+  "nodes": [
+    {
+      "id": "CC_APPEND_TX_EVENT_V0",
+      "type": "CC",
+      "cc_code": "CC_APPEND_TX_EVENT_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "data": {
+            "from_address": "$.results.CC_VALIDATE_TX_POLICY_V0.from_address",
+            "status": "PENDING",
+            "to_address": "$.payload.to_address",
+            "value": "$.payload.value"
+          },
+          "event_type": "EV_TRANSACTION_SUBMITTED_V0",
+          "tx_hash": "CC_HASH_TRANSACTION_V0.tx_hash",
+          "tx_id": "CC_BUILD_ETH_TX_V0.tx_id",
+          "wallet_id": "IN.wallet_id"
+        }
+      }
+    },
+    {
+      "id": "CC_BUILD_ETH_TX_V0",
+      "type": "CC",
+      "cc_code": "CC_BUILD_ETH_TX_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "bindings": {
+              "chain_id": "in.chain_id",
+              "gas_limit": "in.gas_limit",
+              "max_fee_per_gas": "in.max_fee_per_gas",
+              "max_priority_fee_per_gas": "in.max_priority_fee_per_gas",
+              "nonce": "in.nonce"
+            },
+            "fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0",
+            "id": "CT_PURE_BUILD_ETH_TRANSACTION_V0",
+            "inputs": [
+              "chain_id",
+              "nonce",
+              "max_priority_fee_per_gas",
+              "max_fee_per_gas",
+              "gas_limit"
+            ],
+            "inputs_truncated": true,
+            "kind": "CT",
+            "outputs": [
+              "unsigned_tx_bytes"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "chain_id": 66,
+          "data": "IN.data",
+          "from_address": "CC_VALIDATE_TX_POLICY_V0.from_address",
+          "gas_limit": "IN.gas_limit",
+          "max_fee_per_gas": "IN.max_fee_per_gas",
+          "max_priority_fee_per_gas": "IN.max_priority_fee_per_gas",
+          "nonce": "CC_RESERVE_NONCE_V0.nonce",
+          "to_address": "IN.to_address",
+          "value": "IN.value"
+        }
+      }
+    },
+    {
+      "id": "CC_HASH_TRANSACTION_V0",
+      "type": "CC",
+      "cc_code": "CC_HASH_TRANSACTION_V0",
+      "capability": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "input_bytes": "in.signed_tx_bytes"
+            },
+            "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+            "id": "CT_PURE_KECCAK256_HASH_V0",
+            "inputs": [
+              "input_bytes"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "hash_hex"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "signed_tx_bytes": "CC_SIGN_TRANSACTION_V0.signed_tx_bytes"
+        }
+      }
+    },
+    {
+      "id": "CC_RESERVE_NONCE_V0",
+      "type": "CC",
+      "cc_code": "CC_RESERVE_NONCE_V0",
+      "capability": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "wallet_record": "in.wallet_record"
+            },
+            "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0",
+            "id": "CT_PURE_INCREMENT_WALLET_NONCE_V0",
+            "inputs": [
+              "wallet_record"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "updated_wallet_record",
+              "nonce"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "wallet_id": "IN.wallet_id",
+          "wallet_record": "CC_VALIDATE_TX_POLICY_V0.wallet_record"
+        }
+      }
+    },
+    {
+      "id": "CC_RESOLVE_ACTOR_ID_V0",
+      "type": "CC",
+      "cc_code": "CC_RESOLVE_ACTOR_ID_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER",
+              "COUNT"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_record": "IN.actor_record"
+        }
+      }
+    },
+    {
+      "id": "CC_SIGN_TRANSACTION_V0",
+      "type": "CC",
+      "cc_code": "CC_SIGN_TRANSACTION_V0",
+      "capability": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "mnemonic": "in.mnemonic"
+            },
+            "fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
+            "id": "CT_PURE_MNEMONIC_TO_SEED_V0",
+            "inputs": [
+              "mnemonic"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "seed_bytes"
+            ]
+          },
+          {
+            "bindings": {
+              "seed_bytes": "mnemonic_to_seed.seed_bytes"
+            },
+            "fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
+            "id": "CT_PURE_DERIVE_MASTER_KEY_V0",
+            "inputs": [
+              "seed_bytes"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "master_private_key_bytes",
+              "master_chain_code_bytes"
+            ]
+          },
+          {
+            "bindings": {
+              "parent_chain_code_bytes": "derive_master_key.master_chain_code_bytes",
+              "parent_private_key_bytes": "derive_master_key.master_private_key_bytes"
+            },
+            "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+            "id": "CT_PURE_DERIVE_CHILD_KEY_V0",
+            "inputs": [
+              "parent_private_key_bytes",
+              "parent_chain_code_bytes",
+              "index"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "child_private_key_bytes",
+              "child_chain_code_bytes"
+            ]
+          },
+          {
+            "bindings": {
+              "input_bytes": "in.unsigned_tx_bytes"
+            },
+            "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
+            "id": "CT_PURE_KECCAK256_HASH_V0",
+            "inputs": [
+              "input_bytes"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "hash_hex"
+            ]
+          },
+          {
+            "bindings": {
+              "message_hash": "hash_unsigned_tx.message_hash",
+              "private_key_bytes": "derive_0_address.eoa_private_key_bytes"
+            },
+            "fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
+            "id": "CT_PURE_ECDSA_SIGN_V0",
+            "inputs": [
+              "private_key_bytes",
+              "message_hash",
+              "curve"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "v",
+              "r",
+              "s",
+              "signed_bytes"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "mnemonic": "IN.mnemonic",
+          "unsigned_tx_bytes": "CC_BUILD_ETH_TX_V0.unsigned_tx_bytes"
+        }
+      }
+    },
+    {
+      "id": "CC_VALIDATE_TX_POLICY_V0",
+      "type": "CC",
+      "cc_code": "CC_VALIDATE_TX_POLICY_V0",
+      "capability": "capability_side_effects::CS_REGISTRY_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER",
+              "COUNT"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "bindings": {
+              "wallet_record": "read_wallet_record.wallet_data"
+            },
+            "fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+            "id": "CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0",
+            "inputs": [
+              "wallet_record"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "from_address",
+              "current_nonce",
+              "actor_id"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "tx_type": "ETH",
+          "value": "IN.value",
+          "wallet_id": "IN.wallet_id"
+        }
+      }
+    },
+    {
+      "id": "CC_VALIDATE_TX_STRUCTURE_V0",
+      "type": "CC",
+      "cc_code": "CC_VALIDATE_TX_STRUCTURE_V0",
+      "capability": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+            "id": "CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
+            "inputs": [
+              "record",
+              "schema"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "violations"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "data": "IN.data",
+          "gas_limit": "IN.gas_limit",
+          "max_fee_per_gas": "IN.max_fee_per_gas",
+          "max_priority_fee_per_gas": "IN.max_priority_fee_per_gas",
+          "to_address": "IN.to_address",
+          "value": "IN.value"
+        }
+      }
+    },
+    {
+      "id": "CC_WRITE_MEMPOOL_TX_V0",
+      "type": "CC",
+      "cc_code": "CC_WRITE_MEMPOOL_TX_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER",
+              "COUNT"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "amount": "IN.value",
+          "chain_id": 66,
+          "created_at": "{{timestamp}}",
+          "data": "IN.data",
+          "from_wallet_id": "CC_VALIDATE_TX_POLICY_V0.from_address",
+          "gas_limit": "IN.gas_limit",
+          "max_fee_per_gas": "IN.max_fee_per_gas",
+          "max_priority_fee_per_gas": "IN.max_priority_fee_per_gas",
+          "nonce": "CC_RESERVE_NONCE_V0.nonce",
+          "signature": "CC_SIGN_TRANSACTION_V0.signature",
+          "to_wallet_id": "IN.to_address",
+          "tx_hash": "CC_HASH_TRANSACTION_V0.tx_hash",
+          "tx_id": "CC_BUILD_ETH_TX_V0.tx_id",
+          "tx_type": "ETH",
+          "wallet_id": "IN.wallet_id"
+        }
+      }
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_DUPLICATE",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_SUCCESS",
+      "type": "EXIT"
+    },
+    {
+      "id": "IN_TRANSACTION_SUBMITTED_V0",
+      "type": "IN"
+    }
+  ],
+  "edges": [
+    {
+      "from": "CC_APPEND_TX_EVENT_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_APPEND_TX_EVENT_V0",
+      "to": "EXIT_SUCCESS",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_APPEND_TX_EVENT_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_BUILD_ETH_TX_V0",
+      "to": "CC_SIGN_TRANSACTION_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_BUILD_ETH_TX_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_HASH_TRANSACTION_V0",
+      "to": "CC_WRITE_MEMPOOL_TX_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_HASH_TRANSACTION_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RESERVE_NONCE_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RESERVE_NONCE_V0",
+      "to": "CC_BUILD_ETH_TX_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RESERVE_NONCE_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "CC_VALIDATE_TX_STRUCTURE_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_SIGN_TRANSACTION_V0",
+      "to": "CC_HASH_TRANSACTION_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_SIGN_TRANSACTION_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_VALIDATE_TX_POLICY_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_VALIDATE_TX_POLICY_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_VALIDATE_TX_POLICY_V0",
+      "to": "CC_RESERVE_NONCE_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_TX_POLICY_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_VALIDATE_TX_STRUCTURE_V0",
+      "to": "CC_VALIDATE_TX_POLICY_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_TX_STRUCTURE_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "EXIT_DUPLICATE",
+      "condition": "ALREADY_EXISTS"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "CC_APPEND_TX_EVENT_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_TRANSACTION_SUBMITTED_V0",
+      "to": "CC_RESOLVE_ACTOR_ID_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_TRANSACTION_SUBMITTED_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "EXIT_DUPLICATE"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "CC_APPEND_TX_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "CC_APPEND_TX_EVENT_V0",
+      "EXIT_SUCCESS"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "CC_APPEND_TX_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "CC_HASH_TRANSACTION_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "CC_SIGN_TRANSACTION_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "CC_BUILD_ETH_TX_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "CC_RESERVE_NONCE_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "CC_VALIDATE_TX_POLICY_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_TX_STRUCTURE_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_TRANSACTION_SUBMITTED_V0",
+      "EXIT"
+    ]
+  ]
+}

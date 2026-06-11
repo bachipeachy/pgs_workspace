@@ -1,0 +1,636 @@
+{
+  "wf_id": "WF_PROPOSE_BLOCK_V0",
+  "entry": "IN_BLOCK_PROPOSED_V0",
+  "nodes": [
+    {
+      "id": "CC_CLAIM_MEMPOOL_TXS_V0",
+      "type": "CC",
+      "cc_code": "CC_CLAIM_MEMPOOL_TXS_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "proposer_id": "CC_SELECT_PROPOSER_V0.proposer_id"
+        }
+      }
+    },
+    {
+      "id": "CC_DRAIN_MEMPOOL_V0",
+      "type": "CC",
+      "cc_code": "CC_DRAIN_MEMPOOL_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "block_id": "CC_FORM_BLOCK_V0.block_id",
+          "tx_ids": "CC_CLAIM_MEMPOOL_TXS_V0.tx_ids"
+        }
+      }
+    },
+    {
+      "id": "CC_FORM_BLOCK_V0",
+      "type": "CC",
+      "cc_code": "CC_FORM_BLOCK_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "data": "in.round_id"
+            },
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+            "id": "CT_PURE_ASSEMBLE_RECORD_V0",
+            "inputs": [
+              "fields"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "record"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "epoch": "IN.epoch",
+          "proposer_id": "CC_SELECT_PROPOSER_V0.proposer_id",
+          "round_id": "IN.round_number",
+          "slot": "IN.slot",
+          "timestamp": "IN.timestamp",
+          "tx_ids": "CC_CLAIM_MEMPOOL_TXS_V0.tx_ids"
+        }
+      }
+    },
+    {
+      "id": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "type": "CC",
+      "cc_code": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "bindings": {
+              "source": "list_validators.validator_list"
+            },
+            "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+            "id": "CT_PURE_FILTER_RECORDS_V0",
+            "inputs": [
+              "source",
+              "filter"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "extracted"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CC_RECORD_CONSENSUS_ROUND_V0",
+      "type": "CC",
+      "cc_code": "CC_RECORD_CONSENSUS_ROUND_V0",
+      "capability": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+            "id": "CT_PURE_ASSEMBLE_RECORD_V0",
+            "inputs": [
+              "fields"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "record"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "block_id": "CC_FORM_BLOCK_V0.block_id",
+          "proposer_id": "CC_SELECT_PROPOSER_V0.proposer_id",
+          "round_id": "IN.round_number",
+          "timestamp": "IN.timestamp"
+        }
+      }
+    },
+    {
+      "id": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "type": "CC",
+      "cc_code": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "proposer_id": "CC_SELECT_PROPOSER_V0.proposer_id"
+        }
+      }
+    },
+    {
+      "id": "CC_SELECT_PROPOSER_V0",
+      "type": "CC",
+      "cc_code": "CC_SELECT_PROPOSER_V0",
+      "capability": "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "eligible_validators": "in.eligible_validators",
+              "round_number": "in.round_number"
+            },
+            "fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+            "id": "CT_PURE_SELECT_PROPOSER_V0",
+            "inputs": [
+              "eligible_validators",
+              "round_number"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "proposer_id"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "eligible_validators": "CC_QUERY_ELIGIBLE_VALIDATORS_V0.eligible_validators",
+          "round_number": "IN.round_number"
+        }
+      }
+    },
+    {
+      "id": "CC_SKIP_ROUND_V0",
+      "type": "CC",
+      "cc_code": "CC_SKIP_ROUND_V0",
+      "capability": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+            "id": "CT_PURE_ASSEMBLE_RECORD_V0",
+            "inputs": [
+              "fields"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "record"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "proposer_id": "CC_SELECT_PROPOSER_V0.proposer_id",
+          "round_id": "IN.round_number",
+          "timestamp": "IN.timestamp"
+        }
+      }
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    },
+    {
+      "id": "IN_BLOCK_PROPOSED_V0",
+      "type": "IN"
+    }
+  ],
+  "edges": [
+    {
+      "from": "CC_CLAIM_MEMPOOL_TXS_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_CLAIM_MEMPOOL_TXS_V0",
+      "to": "CC_FORM_BLOCK_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_CLAIM_MEMPOOL_TXS_V0",
+      "to": "CC_SKIP_ROUND_V0",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_DRAIN_MEMPOOL_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_DRAIN_MEMPOOL_V0",
+      "to": "CC_RECORD_CONSENSUS_ROUND_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_DRAIN_MEMPOOL_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_FORM_BLOCK_V0",
+      "to": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_FORM_BLOCK_V0",
+      "to": "CC_DRAIN_MEMPOOL_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_FORM_BLOCK_V0",
+      "to": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "to": "CC_SELECT_PROPOSER_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RECORD_CONSENSUS_ROUND_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RECORD_CONSENSUS_ROUND_V0",
+      "to": "EXIT",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RECORD_CONSENSUS_ROUND_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "to": "EXIT",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_SELECT_PROPOSER_V0",
+      "to": "CC_CLAIM_MEMPOOL_TXS_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_SELECT_PROPOSER_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_SKIP_ROUND_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_SKIP_ROUND_V0",
+      "to": "EXIT",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_SKIP_ROUND_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_BLOCK_PROPOSED_V0",
+      "to": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_BLOCK_PROPOSED_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_DRAIN_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_DRAIN_MEMPOOL_V0",
+      "CC_RECORD_CONSENSUS_ROUND_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_DRAIN_MEMPOOL_V0",
+      "CC_RECORD_CONSENSUS_ROUND_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_DRAIN_MEMPOOL_V0",
+      "CC_RECORD_CONSENSUS_ROUND_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_DRAIN_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_FORM_BLOCK_V0",
+      "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_SKIP_ROUND_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_SKIP_ROUND_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "CC_CLAIM_MEMPOOL_TXS_V0",
+      "CC_SKIP_ROUND_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "CC_SELECT_PROPOSER_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_BLOCK_PROPOSED_V0",
+      "EXIT"
+    ]
+  ]
+}

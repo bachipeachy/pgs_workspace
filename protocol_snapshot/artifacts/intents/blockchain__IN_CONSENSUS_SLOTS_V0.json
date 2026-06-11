@@ -1,0 +1,89 @@
+{
+  "artifact_code": "IN_CONSENSUS_SLOTS_V0",
+  "artifact_type": "IN",
+  "content": "# IN_CONSENSUS_SLOTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_CONSENSUS_SLOTS_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_RUN_CONSENSUS_SLOTS_V0\n\n---\n\n## 1. Intent\n\nInitiate a finite ordered consensus slot run. Validates that the slot schedule is a non-empty array of slot descriptors and that a triggering actor is identified.\n\n---\n\n## 2. Rationale\n\nWF_RUN_CONSENSUS_SLOTS_V0 requires a non-empty, ordered list of slot descriptors \u2014 each containing the transaction workload and block proposal parameters for one slot. The intent enforces this precondition at the boundary before any CC executes. The slot_schedule must be non-empty because CC_EXECUTE_SLOT_SEQUENCE_V0 (Collatz pattern) guarantees termination only for finite, non-empty arrays. An empty array at admission is a caller error, not a runtime condition.\n\nEach slot descriptor carries: slot number, epoch, round number, timestamp, and a transactions array. Deep validation of individual transaction descriptor fields occurs within the typed WF intents invoked per transaction during slot execution, not at this intent.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_RUN_CONSENSUS_SLOTS_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| slot_schedule | array | true | Non-empty ordered list of slot descriptors; each describes one slot's workload |\n| triggered_by | string | true | actor_id of the system actor initiating the slot run |\n\n**Slot descriptor shape** (each element of slot_schedule):\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| slot | integer | true | Slot number within epoch (\u2265 0) |\n| epoch | integer | true | Epoch number (\u2265 0) |\n| round_number | integer | true | Global consensus round number (\u2265 0) |\n| timestamp | string | true | ISO 8601 timestamp for this slot |\n| transactions | array | true | Ordered list of transaction descriptors for this slot (may be empty) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Payload admitted \u2014 slot_schedule is a non-empty array; triggered_by is present |\n| NACK | Payload rejected \u2014 slot_schedule missing, empty, or not an array; triggered_by missing |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.consensus_pos.slot_execution\n- **Notes:**\n  - slot_schedule must be non-empty (minItems: 1) \u2014 empty array is caller error\n  - triggered_by must be a non-empty string; actor existence not validated at intent admission\n  - Per-slot transaction descriptor field validation occurs in typed WF intents at execution time\n  - Termination guarantee for CC_EXECUTE_SLOT_SEQUENCE_V0 depends on finite non-empty slot_schedule\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_CONSENSUS_SLOTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Initiate a finite consensus slot run\n  workflow: WF_RUN_CONSENSUS_SLOTS_V0\n\n  inputs:\n    slot_schedule:\n      type: array\n      required: true\n      minItems: 1\n      description: Non-empty ordered list of slot descriptors\n      items:\n        type: object\n        required: [slot, epoch, round_number, timestamp, transactions]\n        properties:\n          slot:\n            type: integer\n            minimum: 0\n          epoch:\n            type: integer\n            minimum: 0\n          round_number:\n            type: integer\n            minimum: 0\n          timestamp:\n            type: string\n            format: date-time\n          transactions:\n            type: array\n    triggered_by:\n      type: string\n      required: true\n      description: actor_id of the system actor initiating the slot run\n\n  outcomes:\n    ACK:\n      description: Payload admitted \u2014 slot_schedule is non-empty array; triggered_by present\n    NACK:\n      description: Payload rejected \u2014 slot_schedule missing/empty/non-array or triggered_by missing\n\nextensions:\n  domain: pgs.consensus_pos.slot_execution\n  notes:\n    - slot_schedule minItems: 1 \u2014 empty array is caller error; enforced at admission\n    - Termination guarantee for CC_EXECUTE_SLOT_SEQUENCE_V0 (Collatz) depends on finite non-empty slot_schedule\n    - triggered_by actor existence not validated at intent admission\n    - Per-transaction field validation occurs in typed WF intents (WF_SUBMIT_TRANSFER_V0, etc.) at execution time\n    - transactions array within each slot descriptor may be empty (valid: slot with no transactions \u2192 only WF_PROPOSE_BLOCK_V0 invoked for that slot)\n```\n",
+  "content_hash": "08588f957c09bde453e9b1fd513856356800da10a5b151a2ec1ee3e176cdc35b",
+  "fqdn_id": "blockchain::IN_CONSENSUS_SLOTS_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "slot_schedule": {
+          "description": "Non-empty ordered list of slot descriptors",
+          "items": {
+            "properties": {
+              "epoch": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "round_number": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "slot": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "timestamp": {
+                "format": "date-time",
+                "type": "string"
+              },
+              "transactions": {
+                "type": "array"
+              }
+            },
+            "required": [
+              "slot",
+              "epoch",
+              "round_number",
+              "timestamp",
+              "transactions"
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "required": true,
+          "type": "array"
+        },
+        "triggered_by": {
+          "description": "actor_id of the system actor initiating the slot run",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Payload admitted \u2014 slot_schedule is non-empty array; triggered_by present"
+        },
+        "NACK": {
+          "description": "Payload rejected \u2014 slot_schedule missing/empty/non-array or triggered_by missing"
+        }
+      },
+      "summary": "Initiate a finite consensus slot run",
+      "workflow": "WF_RUN_CONSENSUS_SLOTS_V0"
+    },
+    "extensions": {
+      "domain": "pgs.consensus_pos.slot_execution",
+      "notes": [
+        {
+          "slot_schedule minItems": "1 \u2014 empty array is caller error; enforced at admission"
+        },
+        "Termination guarantee for CC_EXECUTE_SLOT_SEQUENCE_V0 (Collatz) depends on finite non-empty slot_schedule",
+        "triggered_by actor existence not validated at intent admission",
+        "Per-transaction field validation occurs in typed WF intents (WF_SUBMIT_TRANSFER_V0, etc.) at execution time",
+        {
+          "transactions array within each slot descriptor may be empty (valid": "slot with no transactions \u2192 only WF_PROPOSE_BLOCK_V0 invoked for that slot)"
+        }
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_CONSENSUS_SLOTS_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

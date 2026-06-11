@@ -1,0 +1,124 @@
+{
+  "artifact_code": "CC_VERIFY_SLOT_RESULTS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "source": "list_blocks.block_list"
+        },
+        "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "id": "CT_PURE_FILTER_RECORDS_V0",
+        "inputs": [
+          "source",
+          "filter"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "extracted"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_VERIFY_SLOT_RESULTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_VERIFY_SLOT_RESULTS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_FILTER_RECORDS_V0\n\n---\n\n## 1. Intent\n\nPost-run assertion CC. Verify that at least one block was proposed (status=PROPOSED in BLOCKS). Assertion is batch-size-agnostic: passes as long as one PROPOSED block exists. Read-only \u2014 no writes of any kind.\n\n---\n\n## 2. Rationale\n\nAfter CC_EXECUTE_SLOT_SEQUENCE_V0 completes, the BLOCKS store must reflect a successful slot run: at least one block proposed. The assertion is intentionally batch-size-agnostic \u2014 it does not require a specific number of slots to have produced blocks.\n\nCT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no records match the status=PROPOSED filter, making it the count \u2265 1 assertion for proposed blocks.\n\nCS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for an empty store (substrate invariant \u2014 empty is not NOT_FOUND). After a slot run, BLOCKS must be non-empty; if the CT filter finds no PROPOSED blocks, the CC exits VIOLATION.\n\nCross-subdomain read rule: BLOCKS is block-subdomain-owned \u2014 accessed read-only.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | LIST BLOCKS store \u2192 raw block list |\n| 2 | CT_PURE_FILTER_RECORDS_V0 | CT | Filter: status=PROPOSED \u2192 proposed_blocks (VIOLATION if none) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| slots_executed | integer | true | Number of slots executed by CC_EXECUTE_SLOT_SEQUENCE_V0 (bound from WF) |\n\n---\n\n## 5. Outputs\n\nNo data outputs. This CC is assertion-only \u2014 the result is the outcome code.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | At least one PROPOSED block found in BLOCKS store |\n| VIOLATION | No PROPOSED blocks found |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION from any filter step propagates as CC VIOLATION\n- BACKEND_ERROR on store unavailability propagates as hard failure\n- Read-only \u2014 no partial writes possible\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_VERIFY_SLOT_RESULTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Post-run assertion \u2014 verify at least one PROPOSED block in BLOCKS store (batch-size-agnostic)\n\n  inputs:\n    slots_executed:\n      type: integer\n      required: true\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: list_blocks\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: BLOCKS\n      op: LIST\n      inputs: {}\n      outputs:\n        block_list: $.capability_result.records\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: filter_proposed_blocks\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: filter_proposed_blocks\n      transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0\n      inputs:\n        source: $.results.list_blocks.block_list\n        filter:\n          status: PROPOSED\n      outputs:\n        proposed_blocks: $.capability_result.extracted\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  subdomain: consensus_pos\n  notes:\n    - Read-only CC \u2014 no writes to any store\n    - CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant); CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when source is empty or filter matches nothing \u2014 used as count \u2265 1 assertion\n    - BLOCKS is block-subdomain-owned \u2014 accessed read-only\n```\n",
+  "content_hash": "d4eb37ed757d104dfbb08bf690a3fadaff5d6d738ff4d70973c558e4f4c87172",
+  "fqdn_id": "blockchain::CC_VERIFY_SLOT_RESULTS_V0",
+  "frontmatter": {
+    "cc_code": "CC_VERIFY_SLOT_RESULTS_V0",
+    "core": {
+      "inputs": {
+        "slots_executed": {
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {},
+      "pipeline": [
+        {
+          "inputs": {},
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "filter_proposed_blocks",
+            "VIOLATION": "exit"
+          },
+          "op": "LIST",
+          "outputs": {
+            "block_list": "$.capability_result.records"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "list_blocks",
+          "store": "BLOCKS"
+        },
+        {
+          "inputs": {
+            "filter": {
+              "status": "PROPOSED"
+            },
+            "source": "$.results.list_blocks.block_list"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "proposed_blocks": "$.capability_result.extracted"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "filter_proposed_blocks",
+          "transform": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Post-run assertion \u2014 verify at least one PROPOSED block in BLOCKS store (batch-size-agnostic)"
+    },
+    "extensions": {
+      "notes": [
+        "Read-only CC \u2014 no writes to any store",
+        "CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant); CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when source is empty or filter matches nothing \u2014 used as count \u2265 1 assertion",
+        "BLOCKS is block-subdomain-owned \u2014 accessed read-only"
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

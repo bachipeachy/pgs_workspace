@@ -1,16 +1,14 @@
 {
   "artifact_code": "RB_REGISTER_ACTOR_UNVERIFIED_V0",
   "artifact_type": "RB",
-  "content": "# RB_REGISTER_ACTOR_UNVERIFIED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_REGISTER_ACTOR_UNVERIFIED_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nProvide runtime bindings required to execute the actor registration workflow for unverified actors.\n\n---\n\n## 2. Scope\n\nSupports:\n\n- Registry binding for KYC lookup\n- Append-only event logging\n\nNo additional capabilities permitted.\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_REGISTER_ACTOR_UNVERIFIED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for actor registration workflow\n  description: Binds capability side effects to concrete runtime implementations for actor registration.\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/events/identity_events.jsonl\"\n```",
-  "content_hash": "58a93d62c44c10ead65a468833ba4cdb407f590d3c62aa64be568512d77dc388",
+  "content": "# RB_REGISTER_ACTOR_UNVERIFIED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_REGISTER_ACTOR_UNVERIFIED_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nProvide runtime bindings required to execute the actor registration workflow for unverified actors.\n\n---\n\n## 2. Scope\n\nSupports:\n\n- Registry binding for KYC lookup\n- Append-only event logging\n\nNo additional capabilities permitted.\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_REGISTER_ACTOR_UNVERIFIED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for actor registration workflow\n  description: Binds capability side effects to concrete runtime implementations for actor registration.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy: {}\n```",
+  "content_hash": "ce4968f1bb611dcd3ba70a58e4885f58a5523bcfac361df3c047b763b1da2a2d",
   "fqdn_id": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
   "frontmatter": {
     "core": {
       "bindings": {
         "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
-          "policy": {
-            "path": "{{module_data_root}}/blockchain/identity/events/identity_events.jsonl"
-          }
+          "policy": {}
         },
         "capability_side_effects::CS_REGISTRY_V0": {
           "policy": {
@@ -19,6 +17,7 @@
         }
       },
       "description": "Binds capability side effects to concrete runtime implementations for actor registration.",
+      "storage_structure": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
       "summary": "Runtime binding for actor registration workflow"
     },
     "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",

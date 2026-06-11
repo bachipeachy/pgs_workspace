@@ -1,8 +1,8 @@
 {
   "artifact_code": "IN_ACTOR_REGISTERED_V0",
   "artifact_type": "IN",
-  "content": "# IN_ACTOR_REGISTERED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_ACTOR_REGISTERED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_REGISTER_ACTOR_UNVERIFIED_V0\n\n---\n\n## 1. Intent\n\nRegister a new actor in an unverified state, initiating the actor onboarding process.\n\n---\n\n## 2. Rationale\n\nActor registration is the entry point for identity management:\n- Captures proposed actor data\n- Creates an unverified actor record\n- Triggers subsequent verification workflow via event\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_REGISTER_ACTOR_UNVERIFIED_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Proposed actor registration payload |\n| actor_record.first_name | string | true | Actor first name |\n| actor_record.last_name | string | true | Actor last name |\n| actor_record.email_registration | string | true | Actor email (format: email) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Actor record accepted for verification |\n| NACK | Actor record rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.identity.actor\n- **Notes:**\n  - Initiates the actor onboarding process\n  - Result is an unverified actor record\n  - Triggers verification workflow via event\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_ACTOR_REGISTERED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Register a new actor (Unverified)\n  workflow: WF_REGISTER_ACTOR_UNVERIFIED_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Proposed actor registration payload\n      fields:\n        first_name:\n          type: string\n          required: true\n        last_name:\n          type: string\n          required: true\n        email_registration:\n          type: string\n          required: true\n          format: email\n\n  outcomes:\n    ACK:\n      description: Actor record accepted for verification\n    NACK:\n      description: Actor record rejected\n\nextensions:\n  domain: pgs.identity.actor\n  notes:\n    - Initiates the actor onboarding process\n    - Result is an unverified actor record\n    - Triggers verification workflow via event\n```\n",
-  "content_hash": "669395535ee1fc8cd4f977bcb0dd75366a524010550aa400c962e96cd04edf93",
+  "content": "# IN_ACTOR_REGISTERED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_ACTOR_REGISTERED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_REGISTER_ACTOR_UNVERIFIED_V0\n\n---\n\n## 1. Intent\n\nRegister a new actor in an unverified state, initiating the actor onboarding process.\n\n---\n\n## 2. Rationale\n\nActor registration is the entry point for identity management:\n- Captures proposed actor data\n- Creates an unverified actor record\n- Triggers subsequent verification workflow via event\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_REGISTER_ACTOR_UNVERIFIED_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Proposed actor registration payload |\n| actor_record.first_name | string | true | Actor first name |\n| actor_record.last_name | string | true | Actor last name |\n| actor_record.email_registration | string | true | Actor email (format: email) |\n| actor_record.currency_preference | string | false | Preferred currency (default: BACHI) |\n| actor_record.language | string | false | Preferred language code (default: en) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Actor record accepted for verification |\n| NACK | Actor record rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.identity.actor\n- **Notes:**\n  - Initiates the actor onboarding process\n  - Result is an unverified actor record\n  - Triggers verification workflow via event\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_ACTOR_REGISTERED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Register a new actor (Unverified)\n  workflow: WF_REGISTER_ACTOR_UNVERIFIED_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Proposed actor registration payload\n      fields:\n        first_name:\n          type: string\n          required: true\n        last_name:\n          type: string\n          required: true\n        email_registration:\n          type: string\n          required: true\n          format: email\n        currency_preference:\n          type: string\n          required: false\n          default: BACHI\n          description: Preferred currency\n        language:\n          type: string\n          required: false\n          default: en\n          description: Preferred language code\n\n  outcomes:\n    ACK:\n      description: Actor record accepted for verification\n    NACK:\n      description: Actor record rejected\n\nextensions:\n  domain: pgs.identity.actor\n  notes:\n    - Initiates the actor onboarding process\n    - Result is an unverified actor record\n    - Triggers verification workflow via event\n```\n",
+  "content_hash": "c74bb892a36c5bf60e0d68cd726ce46ef8bb38f0e6f871e3e734341a2596518a",
   "fqdn_id": "blockchain::IN_ACTOR_REGISTERED_V0",
   "frontmatter": {
     "core": {
@@ -10,6 +10,12 @@
         "actor_record": {
           "description": "Proposed actor registration payload",
           "fields": {
+            "currency_preference": {
+              "default": "BACHI",
+              "description": "Preferred currency",
+              "required": false,
+              "type": "string"
+            },
             "email_registration": {
               "format": "email",
               "required": true,
@@ -17,6 +23,12 @@
             },
             "first_name": {
               "required": true,
+              "type": "string"
+            },
+            "language": {
+              "default": "en",
+              "description": "Preferred language code",
+              "required": false,
               "type": "string"
             },
             "last_name": {

@@ -1,1 +1,15 @@
-{}
+{
+  "A_dc6e2a7ae93b8bae": {
+    "actor_id": "A_dc6e2a7ae93b8bae",
+    "pubkey": "0xb301803f8b5ac4a1133581fc676dfedc60d891dd5fa99028805e5ea5b08d3491af75d0707adab3b70c6a6a580217bf81",
+    "withdrawal_credentials": "0x00fc3109a5e43640f80c82734e71c18d08c81f4bfdff2c9f4a5aeaa5e26e12c7",
+    "status": "ACTIVE_ONGOING",
+    "slashed": false,
+    "effective_balance": 32000000000,
+    "balance": 32000000000,
+    "activation_eligibility_epoch": 0,
+    "activation_epoch": 0,
+    "exit_epoch": null,
+    "withdrawable_epoch": null
+  }
+}

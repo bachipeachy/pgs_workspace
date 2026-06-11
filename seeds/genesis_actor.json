@@ -1,0 +1,13 @@
+{
+  "actor_id": "A_7a77a0461083f938",
+  "user_type": "GENESIS",
+  "status": "ACTIVE",
+  "kyc_verified": true,
+  "currency_preference": "BACHI",
+  "language": "en",
+  "first_name": "Genesis",
+  "last_name": "Actor",
+  "email_registration": "genesis@bachi.internal",
+  "created_at": "2026-01-01T00:00:00Z",
+  "last_modified": "2026-01-01T00:00:00Z"
+}

@@ -1,0 +1,291 @@
+{
+  "artifact_code": "CC_WRITE_MEMPOOL_TX_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "id": "CT_PURE_GENERATE_ID_V0",
+        "inputs": [
+          "prefix",
+          "data"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "id"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+        "id": "CS_REGISTRY_V0",
+        "kind": "CS",
+        "ops": [
+          "REGISTER",
+          "RESOLVE",
+          "EXISTS",
+          "DEREGISTER",
+          "COUNT"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_WRITE_MEMPOOL_TX_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_WRITE_MEMPOOL_TX_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** CC_PERSIST_MEMPOOL_TX_V0\n- **Dependencies:** CT_PURE_GENERATE_ID_V0, CS_REGISTRY_V0, CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nWrite a signed transaction to the MEMPOOL staging buffer and register its identity keys in MEMPOOL_INDEX to enforce tx_id and tx_hash uniqueness.\n\n---\n\n## 2. Rationale\n\nMempool persistence is now scoped to the `mempool` subdomain \u2014 all reads and writes target MEMPOOL and MEMPOOL_INDEX stores exclusively, not the TRANSACTION store. This decouples pending transaction staging from the settled transaction ledger.\n\nDeduplication is enforced by attempting to REGISTER both a composite mempool key (derived from tx_id + tx_type) and the tx_hash in MEMPOOL_INDEX before writing. REGISTER returns ALREADY_EXISTS directly, which routes the CC pipeline cleanly without a separate EXISTS check.\n\nETH-specific metadata fields (nonce, gas_limit, signature, etc.) are stored alongside the core record in MEMPOOL for downstream use during block formation.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID \u2014 derive composite mempool key from tx_id + tx_type |\n| 2 | CS_REGISTRY_V0 | CS | REGISTER mempool_key \u2192 MEMPOOL_INDEX (tx_id dedup guard) |\n| 3 | CS_MUTABLE_JSON_V0 | CS | WRITE full record keyed by tx_id \u2192 MEMPOOL store |\n| 4 | CS_REGISTRY_V0 | CS | REGISTER tx_hash \u2192 MEMPOOL_INDEX (hash dedup guard) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_id | string | true | Transaction identifier (TX-prefixed, generated upstream) |\n| tx_hash | string | true | Transaction hash (TX_HASH-prefixed, generated upstream) |\n| tx_type | string | true | Transaction type \u2014 injected as wf_literal by each typed WF |\n| actor_id | string | false | Submitting actor (null for SYSTEM transactions) |\n| from_wallet_id | string | false | Source wallet address (null for MINT, REWARD) |\n| to_wallet_id | string | false | Destination wallet address (null for BURN, POOL) |\n| amount | number | true | Transaction amount in BACHI |\n| created_at | string | true | Transaction creation timestamp (ISO 8601) |\n| wallet_id | string | false | Internal wallet identifier |\n| nonce | integer | false | Reserved transaction nonce (ETH-specific) |\n| gas_limit | integer | false | Gas limit (ETH-specific) |\n| max_fee_per_gas | string | false | Max fee per gas (ETH EIP-1559) |\n| max_priority_fee_per_gas | string | false | Max priority fee per gas (ETH EIP-1559) |\n| data | string | false | Calldata payload (ETH-specific) |\n| chain_id | integer | false | Chain identifier (ETH-specific) |\n| signature | string | false | ECDSA signature bytes (ETH-specific) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | SUCCESS, VIOLATION, ALREADY_EXISTS, or BACKEND_ERROR |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Record written to MEMPOOL; both keys registered in MEMPOOL_INDEX |\n| ALREADY_EXISTS | Duplicate tx_id or tx_hash (mempool dedup guard fired) |\n| VIOLATION | Key generation failed or registry key validation failed |\n| BACKEND_ERROR | Storage write or registry write failure |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_WRITE_MEMPOOL_TX_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Write signed transaction to MEMPOOL and register identity keys in MEMPOOL_INDEX\n\n  inputs:\n    tx_id:\n      type: string\n      required: true\n      description: Transaction identifier (TX-prefixed)\n    tx_hash:\n      type: string\n      required: true\n      description: Transaction hash (TX_HASH-prefixed)\n    tx_type:\n      type: string\n      required: true\n      description: Transaction type; injected as wf_literal by each typed WF\n    actor_id:\n      type: string\n      required: false\n      description: Submitting actor (null for SYSTEM transactions)\n    from_wallet_id:\n      type: string\n      required: false\n      description: Source wallet address (null for MINT, REWARD)\n    to_wallet_id:\n      type: string\n      required: false\n      description: Destination wallet address (null for BURN, POOL)\n    amount:\n      type: number\n      required: true\n      description: Transaction amount in BACHI\n    created_at:\n      type: string\n      required: true\n      description: Transaction creation timestamp (ISO 8601)\n    wallet_id:\n      type: string\n      required: false\n    nonce:\n      type: integer\n      required: false\n    gas_limit:\n      type: integer\n      required: false\n    max_fee_per_gas:\n      type: string\n      required: false\n    max_priority_fee_per_gas:\n      type: string\n      required: false\n    data:\n      type: string\n      required: false\n    chain_id:\n      type: integer\n      required: false\n    signature:\n      type: string\n      required: false\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_mempool_key\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: M_KEY\n        data:\n          tx_id: $.inputs.tx_id\n          tx_type: $.inputs.tx_type\n      outputs:\n        mempool_key: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: register_tx_id\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      store: MEMPOOL_INDEX\n      op: REGISTER\n      inputs:\n        key: $.results.generate_mempool_key.mempool_key\n        target_cs: capability_side_effects::CS_MUTABLE_JSON_V0\n        target_ref: $.inputs.tx_id\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: write_pending_tx\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: MEMPOOL\n      op: WRITE\n      inputs:\n        key: $.inputs.tx_id\n        value:\n          tx_id: $.inputs.tx_id\n          tx_hash: $.inputs.tx_hash\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          to_wallet_id: $.inputs.to_wallet_id\n          amount: $.inputs.amount\n          actor_id: $.inputs.actor_id\n          wallet_id: $.inputs.wallet_id\n          status: PENDING\n          created_at: $.inputs.created_at\n          arrived_at: \"{{timestamp}}\"\n          nonce: $.inputs.nonce\n          gas_limit: $.inputs.gas_limit\n          max_fee_per_gas: $.inputs.max_fee_per_gas\n          max_priority_fee_per_gas: $.inputs.max_priority_fee_per_gas\n          data: $.inputs.data\n          chain_id: $.inputs.chain_id\n          signature: $.inputs.signature\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: register_tx_hash\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      store: MEMPOOL_INDEX\n      op: REGISTER\n      inputs:\n        key: $.inputs.tx_hash\n        target_cs: capability_side_effects::CS_MUTABLE_JSON_V0\n        target_ref: $.inputs.tx_id\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n  error_codes:\n    ALREADY_EXISTS: TX_MEMPOOL_DUPLICATE\n    VIOLATION: TX_MEMPOOL_WRITE_FAILED\n    BACKEND_ERROR: TX_MEMPOOL_WRITE_FAILED\n\nextensions:\n  subdomain: mempool\n  notes:\n    - Supersedes CC_PERSIST_MEMPOOL_TX_V0; all writes go to MEMPOOL store, not TRANSACTION store\n    - MEMPOOL_INDEX stores both mempool_key (tx_id+tx_type composite) and tx_hash as registry keys\n    - REGISTER used for dedup \u2014 returns ALREADY_EXISTS directly without a separate EXISTS check\n    - ETH metadata fields (nonce, gas_limit, signature, etc.) stored in MEMPOOL record for block formation use\n    - arrived_at is the mempool ingestion timestamp; created_at is the transaction creation time from upstream\n```\n",
+  "content_hash": "9365936dd6a87851c2a88f9a6d633a96c7291a34a133354391711b6a67db5fec",
+  "fqdn_id": "blockchain::CC_WRITE_MEMPOOL_TX_V0",
+  "frontmatter": {
+    "cc_code": "CC_WRITE_MEMPOOL_TX_V0",
+    "core": {
+      "error_codes": {
+        "ALREADY_EXISTS": "TX_MEMPOOL_DUPLICATE",
+        "BACKEND_ERROR": "TX_MEMPOOL_WRITE_FAILED",
+        "VIOLATION": "TX_MEMPOOL_WRITE_FAILED"
+      },
+      "inputs": {
+        "actor_id": {
+          "description": "Submitting actor (null for SYSTEM transactions)",
+          "required": false,
+          "type": "string"
+        },
+        "amount": {
+          "description": "Transaction amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "chain_id": {
+          "required": false,
+          "type": "integer"
+        },
+        "created_at": {
+          "description": "Transaction creation timestamp (ISO 8601)",
+          "required": true,
+          "type": "string"
+        },
+        "data": {
+          "required": false,
+          "type": "string"
+        },
+        "from_wallet_id": {
+          "description": "Source wallet address (null for MINT, REWARD)",
+          "required": false,
+          "type": "string"
+        },
+        "gas_limit": {
+          "required": false,
+          "type": "integer"
+        },
+        "max_fee_per_gas": {
+          "required": false,
+          "type": "string"
+        },
+        "max_priority_fee_per_gas": {
+          "required": false,
+          "type": "string"
+        },
+        "nonce": {
+          "required": false,
+          "type": "integer"
+        },
+        "signature": {
+          "required": false,
+          "type": "string"
+        },
+        "to_wallet_id": {
+          "description": "Destination wallet address (null for BURN, POOL)",
+          "required": false,
+          "type": "string"
+        },
+        "tx_hash": {
+          "description": "Transaction hash (TX_HASH-prefixed)",
+          "required": true,
+          "type": "string"
+        },
+        "tx_id": {
+          "description": "Transaction identifier (TX-prefixed)",
+          "required": true,
+          "type": "string"
+        },
+        "tx_type": {
+          "description": "Transaction type; injected as wf_literal by each typed WF",
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": false,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "data": {
+              "tx_id": "$.inputs.tx_id",
+              "tx_type": "$.inputs.tx_type"
+            },
+            "prefix": "M_KEY"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "GENERATE_ID",
+          "outputs": {
+            "mempool_key": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_mempool_key",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        },
+        {
+          "inputs": {
+            "key": "$.results.generate_mempool_key.mempool_key",
+            "target_cs": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "target_ref": "$.inputs.tx_id"
+          },
+          "on_result": {
+            "ALREADY_EXISTS": "exit",
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "REGISTER",
+          "outputs": {
+            "result_status": "$.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "ALREADY_EXISTS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "step": "register_tx_id",
+          "store": "MEMPOOL_INDEX"
+        },
+        {
+          "inputs": {
+            "key": "$.inputs.tx_id",
+            "value": {
+              "actor_id": "$.inputs.actor_id",
+              "amount": "$.inputs.amount",
+              "arrived_at": "{{timestamp}}",
+              "chain_id": "$.inputs.chain_id",
+              "created_at": "$.inputs.created_at",
+              "data": "$.inputs.data",
+              "from_wallet_id": "$.inputs.from_wallet_id",
+              "gas_limit": "$.inputs.gas_limit",
+              "max_fee_per_gas": "$.inputs.max_fee_per_gas",
+              "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
+              "nonce": "$.inputs.nonce",
+              "signature": "$.inputs.signature",
+              "status": "PENDING",
+              "to_wallet_id": "$.inputs.to_wallet_id",
+              "tx_hash": "$.inputs.tx_hash",
+              "tx_id": "$.inputs.tx_id",
+              "tx_type": "$.inputs.tx_type",
+              "wallet_id": "$.inputs.wallet_id"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_pending_tx",
+          "store": "MEMPOOL"
+        },
+        {
+          "inputs": {
+            "key": "$.inputs.tx_hash",
+            "target_cs": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "target_ref": "$.inputs.tx_id"
+          },
+          "on_result": {
+            "ALREADY_EXISTS": "exit",
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "REGISTER",
+          "outputs": {
+            "result_status": "$.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "ALREADY_EXISTS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "step": "register_tx_hash",
+          "store": "MEMPOOL_INDEX"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "ALREADY_EXISTS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Write signed transaction to MEMPOOL and register identity keys in MEMPOOL_INDEX"
+    },
+    "extensions": {
+      "notes": [
+        "Supersedes CC_PERSIST_MEMPOOL_TX_V0; all writes go to MEMPOOL store, not TRANSACTION store",
+        "MEMPOOL_INDEX stores both mempool_key (tx_id+tx_type composite) and tx_hash as registry keys",
+        "REGISTER used for dedup \u2014 returns ALREADY_EXISTS directly without a separate EXISTS check",
+        "ETH metadata fields (nonce, gas_limit, signature, etc.) stored in MEMPOOL record for block formation use",
+        "arrived_at is the mempool ingestion timestamp; created_at is the transaction creation time from upstream"
+      ],
+      "subdomain": "mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.mempool.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

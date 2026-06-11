@@ -1,0 +1,62 @@
+{
+  "WAL_67ac742cc0930491": {
+    "actor_id": "ACT_7a77a0461083f938",
+    "address": "0x67ac742cc0930491000000000000000000000000",
+    "balance": 1000000,
+    "created_at": "2026-01-01T00:00:00Z",
+    "currency": "BACHI",
+    "last_modified": "2026-01-01T00:00:00Z",
+    "status": "ACTIVE",
+    "wallet_id": "WAL_67ac742cc0930491",
+    "wallet_type": "MINT",
+    "state": {"eoa": {"nonce": 0}}
+  },
+  "WAL_28344959edf3c402": {
+    "actor_id": "ACT_7a77a0461083f938",
+    "address": "0x28344959edf3c402000000000000000000000000",
+    "balance": 0,
+    "created_at": "2026-01-01T00:00:00Z",
+    "currency": "BACHI",
+    "last_modified": "2026-01-01T00:00:00Z",
+    "status": "ACTIVE",
+    "wallet_id": "WAL_28344959edf3c402",
+    "wallet_type": "BURN",
+    "state": {"eoa": {"nonce": 0}}
+  },
+  "WAL_c97b4e66dc1d4a16": {
+    "actor_id": "ACT_7a77a0461083f938",
+    "address": "0xc97b4e66dc1d4a16000000000000000000000000",
+    "balance": 0,
+    "created_at": "2026-01-01T00:00:00Z",
+    "currency": "BACHI",
+    "last_modified": "2026-01-01T00:00:00Z",
+    "status": "ACTIVE",
+    "wallet_id": "WAL_c97b4e66dc1d4a16",
+    "wallet_type": "POOL",
+    "state": {"eoa": {"nonce": 0}}
+  },
+  "POOL": {
+    "actor_id": "ACT_7a77a0461083f938",
+    "address": "0xc97b4e66dc1d4a16000000000000000000000000",
+    "balance": 0,
+    "created_at": "2026-01-01T00:00:00Z",
+    "currency": "BACHI",
+    "last_modified": "2026-01-01T00:00:00Z",
+    "status": "ACTIVE",
+    "wallet_id": "WAL_c97b4e66dc1d4a16",
+    "wallet_type": "POOL",
+    "state": {"eoa": {"nonce": 0}}
+  },
+  "W_ac87270edc92163d": {
+    "actor_id": "AC_dc6e2a7ae93b8bae",
+    "address": null,
+    "balance": 0,
+    "created_at": "2026-01-01T00:00:00Z",
+    "currency": "BACHI",
+    "last_modified": "2026-01-01T00:00:00Z",
+    "status": "ACTIVE",
+    "wallet_id": "W_ac87270edc92163d",
+    "wallet_type": "business",
+    "state": {"eoa": {"nonce": 0}}
+  }
+}

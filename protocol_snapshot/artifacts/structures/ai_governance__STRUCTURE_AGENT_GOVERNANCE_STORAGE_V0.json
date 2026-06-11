@@ -1,14 +1,22 @@
 {
   "artifact_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
   "artifact_type": "STRUCTURE",
-  "content": "# STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare storage topology for agent governance domain entities. Maps entity types to storage implementations and paths.\n\n---\n\n## 2. Rationale\n\nStorage paths are a governance concern, not a runtime implementation detail. This STRUCTURE artifact:\n- Centralizes storage topology (single source of truth)\n- Decouples CC artifacts from filesystem layout\n- Enforces entity-level isolation\n\n---\n\n## 3. Storage Model\n\n**Principle:** One store per domain entity type.\n\n**Entity Types:**\n- LICENSE_FACTS: Read-only license tier and status feed\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Agent governance domain storage topology\n  description: Maps entity types to storage implementations and paths\n\n  layer: DOMAINS\n  domain: ai_governance\n\n  storage_roots:\n    base_path: \"{{module_data_root}}\"\n    description: \"Root path for all agent governance storage (resolved at runtime)\"\n\n  entity_stores:\n    LICENSE_FACTS:\n      description: \"Read-only license tier and status fact feed (user_id \u2192 license record)\"\n      path: \"ai_governance/ai_licensing/license_facts.json\"\n\n  resolution:\n    description: \"Runtime path resolution strategy\"\n    algorithm: \"base_path / entity_stores[entity_type].path\"\n    example: \"{{module_data_root}}/ai_governance/ai_licensing/license_facts.json\"\n\n  isolation:\n    description: \"Entity storage isolation constraints\"\n    rules:\n      - \"Each entity type has dedicated storage\"\n      - \"LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts\"\n      - \"Storage paths resolved via STRUCTURE only\"\n```\n",
-  "content_hash": "ee1b07dee0e950ccfa17ca4bf4a24531e8ff1685dc84d505f13e45a0ebbca72e",
+  "content": "# STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare storage topology for agent governance domain entities. Maps entity types to storage implementations and paths.\n\n---\n\n## 2. Rationale\n\nStorage paths are a governance concern, not a runtime implementation detail. This STRUCTURE artifact:\n- Centralizes storage topology (single source of truth)\n- Decouples CC artifacts from filesystem layout\n- Enforces entity-level isolation\n\n---\n\n## 3. Storage Model\n\n**Principle:** One store per domain entity type.\n\n**Entity Types:**\n- LICENSE_FACTS: Read-only license tier and status feed\n- GOVERNANCE_AUDIT: Append-only agent governance decision audit trail\n- LICENSE_AUDIT: Append-only license lifecycle audit trail\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Agent governance domain storage topology\n  description: Maps entity types to storage implementations and paths\n\n  layer: DOMAINS\n  domain: ai_governance\n\n  storage_roots:\n    base_path: \"{{module_data_root}}\"\n    description: \"Root path for all agent governance storage (resolved at runtime)\"\n\n  entity_stores:\n    LICENSE_FACTS:\n      description: \"Read-only license tier and status fact feed (user_id \u2192 license record)\"\n      path: \"ai_governance/ai_licensing/license_facts.json\"\n    GOVERNANCE_AUDIT:\n      description: \"Append-only audit trail for agent governance authorization and denial decisions\"\n      path: \"ai_governance/agent_governance/governance_audit.jsonl\"\n    LICENSE_AUDIT:\n      description: \"Append-only audit trail for license provisioning, denial, and reclaim decisions\"\n      path: \"ai_governance/ai_licensing/audit_log.jsonl\"\n\n  resolution:\n    description: \"Runtime path resolution strategy\"\n    algorithm: \"base_path / entity_stores[entity_type].path\"\n    example: \"{{module_data_root}}/ai_governance/ai_licensing/license_facts.json\"\n\n  isolation:\n    description: \"Entity storage isolation constraints\"\n    rules:\n      - \"Each entity type has dedicated storage\"\n      - \"LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts\"\n      - \"GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable\"\n      - \"LICENSE_AUDIT is append-only \u2014 license audit records are immutable\"\n      - \"Storage paths resolved via STRUCTURE only\"\n```\n",
+  "content_hash": "f502407463e63450e7b189beaa7f16ef8de217b02504be25e0271652dcc4497b",
   "fqdn_id": "ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
   "frontmatter": {
     "core": {
       "description": "Maps entity types to storage implementations and paths",
       "domain": "ai_governance",
       "entity_stores": {
+        "GOVERNANCE_AUDIT": {
+          "description": "Append-only audit trail for agent governance authorization and denial decisions",
+          "path": "ai_governance/agent_governance/governance_audit.jsonl"
+        },
+        "LICENSE_AUDIT": {
+          "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+          "path": "ai_governance/ai_licensing/audit_log.jsonl"
+        },
         "LICENSE_FACTS": {
           "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
           "path": "ai_governance/ai_licensing/license_facts.json"
@@ -19,6 +27,8 @@
         "rules": [
           "Each entity type has dedicated storage",
           "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+          "GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable",
+          "LICENSE_AUDIT is append-only \u2014 license audit records are immutable",
           "Storage paths resolved via STRUCTURE only"
         ]
       },

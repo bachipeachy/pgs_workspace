@@ -39,6 +39,7 @@
   "expected": {
     "result": "active"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0::lookup_string_value",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_LOOKUP_V0"
 }

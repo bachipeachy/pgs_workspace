@@ -43,6 +43,7 @@
     "days_inactive": 45,
     "is_inactive": true
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0::user_inactive",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_EVALUATE_INACTIVITY_V0"
 }

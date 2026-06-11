@@ -1,0 +1,55 @@
+{
+  "artifact_code": "RB_AGENT_ADMISSION_BINDINGS_V0",
+  "artifact_type": "RB",
+  "content": "# RB_AGENT_ADMISSION_BINDINGS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_AGENT_ADMISSION_BINDINGS_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CS_REGISTRY_V0, CS_APPENDONLY_JSONL_V0, STRUCTURE_AGENT_ADMISSION_STORAGE_V0\n\n---\n\n## 1. Purpose\n\nBind capability side effects to concrete host implementations for agent admission workflow execution.\n\n---\n\n## 2. Rationale\n\nRuntime bindings provide environment-specific execution wiring:\n- Maps CS artifacts to host classes\n- Configures storage paths via parameters\n- Keeps protocol artifacts environment-agnostic\n- GOVERNANCE_ACTIONS path is scoped to agent_admission \u2014 separate from agent_governance\n- CS_APPENDONLY_JSONL_V0 uses entity-based policy: entity store path resolved from STRUCTURE at runtime\n\n---\n\n## 3. Bindings\n\n| CS Artifact | Host | Purpose |\n|-------------|------|---------|\n| CS_MUTABLE_JSON_V0 | MutableJsonRuntime | Read-only license fact feed (LICENSE_FACTS) |\n| CS_REGISTRY_V0 | RegistryRuntime | Governance action registry (GOVERNANCE_ACTIONS) |\n| CS_APPENDONLY_JSONL_V0 | AppendOnlyJsonlRuntime | Immutable admission audit trail (GOVERNANCE_AUDIT) |\n\n---\n\n## 4. Parameters\n\n| Parameter | Description |\n|-----------|-------------|\n| module_data_root | Base path for module runtime data (resolved from env_facts) |\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_AGENT_ADMISSION_BINDINGS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\nparameters:\n  - module_data_root\n\ncore:\n  summary: Runtime bindings for agent admission workflow\n  storage_structure: ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      type: CS\n      host: MutableJsonRuntime\n      operation: READ_WRITE\n      policy: {}\n\n    capability_side_effects::CS_REGISTRY_V0:\n      type: CS\n      host: RegistryRuntime\n      operation: READ_WRITE\n      policy:\n        path: \"{{module_data_root}}/ai_governance/agent_admission/governance_actions.json\"\n        strict: true\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy: {}\n\nextensions:\n  notes:\n    - CS_MUTABLE_JSON_V0 (license_facts.json) is READ-ONLY \u2014 agent_admission may not mutate license facts\n    - GOVERNANCE_ACTIONS path is scoped to agent_admission \u2014 separate from agent_governance\n```\n",
+  "content_hash": "139de8e36694a141c129935d33cf62c80b81bc47fa42de24f42fe5032d2b454c",
+  "fqdn_id": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
+          "policy": {}
+        },
+        "capability_side_effects::CS_MUTABLE_JSON_V0": {
+          "host": "MutableJsonRuntime",
+          "operation": "READ_WRITE",
+          "policy": {},
+          "type": "CS"
+        },
+        "capability_side_effects::CS_REGISTRY_V0": {
+          "host": "RegistryRuntime",
+          "operation": "READ_WRITE",
+          "policy": {
+            "path": "{{module_data_root}}/ai_governance/agent_admission/governance_actions.json",
+            "strict": true
+          },
+          "type": "CS"
+        }
+      },
+      "storage_structure": "ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+      "summary": "Runtime bindings for agent admission workflow"
+    },
+    "extensions": {
+      "notes": [
+        "CS_MUTABLE_JSON_V0 (license_facts.json) is READ-ONLY \u2014 agent_admission may not mutate license facts",
+        "GOVERNANCE_ACTIONS path is scoped to agent_admission \u2014 separate from agent_governance"
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "parameters": [
+      "module_data_root"
+    ],
+    "rb_code": "RB_AGENT_ADMISSION_BINDINGS_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_admission.runtime_bindings",
+  "namespace": "ai_governance",
+  "references": [
+    "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+    "capability_side_effects::CS_MUTABLE_JSON_V0",
+    "capability_side_effects::CS_REGISTRY_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

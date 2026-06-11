@@ -1,0 +1,84 @@
+{
+  "artifact_code": "IN_TRANSFER_V0",
+  "artifact_type": "IN",
+  "content": "# IN_TRANSFER_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_TRANSFER_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_TRANSFER_V0\n\n---\n\n## 1. Intent\n\nSubmit a TRANSFER transaction \u2014 send BACHI from one wallet to another.\n\n---\n\n## 2. Rationale\n\nTyped transaction admission replaces the generic IN_TRANSACTION_SUBMITTED_V0.\nEach transaction type carries its own schema, authority class, and auto-resolution rules.\nTRANSFER is an ENDUSER operation: actor identity is required, from/to wallets are explicit.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_TRANSFER_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| actor_record | object | true | Actor record for identity resolution |\n| actor_record.email_registration | string | true | Actor email (format: email) |\n| from_wallet_id | string | true | Source wallet identifier |\n| to_address | string | true | Destination wallet address (0x-prefixed) |\n| amount | number | true | Transfer amount in BACHI |\n| gas_limit | integer | false | Gas limit (default 21000) |\n| max_fee_per_gas | string | false | Max fee per gas in wei (default \"20000000000\") |\n| max_priority_fee_per_gas | string | false | Max priority fee per gas in wei (default \"1000000000\") |\n| memo | string | false | Optional transaction memo |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Transfer intent accepted |\n| NACK | Transfer intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** ENDUSER\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_TRANSFER_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit TRANSFER transaction (ENDUSER)\n  workflow: WF_TRANSFER_V0\n\n  inputs:\n    actor_record:\n      type: object\n      required: true\n      description: Actor record for identity resolution\n      fields:\n        email_registration:\n          type: string\n          required: true\n          format: email\n    from_wallet_id:\n      type: string\n      required: true\n      description: Source wallet identifier\n    to_address:\n      type: string\n      required: true\n      description: Destination wallet address (0x-prefixed)\n    amount:\n      type: number\n      required: true\n      description: Transfer amount in BACHI\n    gas_limit:\n      type: integer\n      default: 21000\n      description: Gas limit\n    max_fee_per_gas:\n      type: string\n      default: \"20000000000\"\n      description: Max fee per gas in wei\n    max_priority_fee_per_gas:\n      type: string\n      default: \"1000000000\"\n      description: Max priority fee per gas in wei\n    memo:\n      type: string\n      required: false\n      description: Optional transaction memo\n\n  outcomes:\n    ACK:\n      description: Transfer intent accepted\n    NACK:\n      description: Transfer intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: ENDUSER\n```\n",
+  "content_hash": "18d85ebfe3673c55d8fba41dbdb0f6f0cdf892ade280e44761353485dd15cde2",
+  "fqdn_id": "blockchain::IN_TRANSFER_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "actor_record": {
+          "description": "Actor record for identity resolution",
+          "fields": {
+            "email_registration": {
+              "format": "email",
+              "required": true,
+              "type": "string"
+            }
+          },
+          "required": true,
+          "type": "object"
+        },
+        "amount": {
+          "description": "Transfer amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "from_wallet_id": {
+          "description": "Source wallet identifier",
+          "required": true,
+          "type": "string"
+        },
+        "gas_limit": {
+          "default": 21000,
+          "description": "Gas limit",
+          "type": "integer"
+        },
+        "max_fee_per_gas": {
+          "default": "20000000000",
+          "description": "Max fee per gas in wei",
+          "type": "string"
+        },
+        "max_priority_fee_per_gas": {
+          "default": "1000000000",
+          "description": "Max priority fee per gas in wei",
+          "type": "string"
+        },
+        "memo": {
+          "description": "Optional transaction memo",
+          "required": false,
+          "type": "string"
+        },
+        "to_address": {
+          "description": "Destination wallet address (0x-prefixed)",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Transfer intent accepted"
+        },
+        "NACK": {
+          "description": "Transfer intent rejected"
+        }
+      },
+      "summary": "Submit TRANSFER transaction (ENDUSER)",
+      "workflow": "WF_TRANSFER_V0"
+    },
+    "extensions": {
+      "authority": "ENDUSER",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_TRANSFER_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

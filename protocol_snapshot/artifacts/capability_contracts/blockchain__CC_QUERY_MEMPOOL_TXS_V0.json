@@ -1,0 +1,128 @@
+{
+  "artifact_code": "CC_QUERY_MEMPOOL_TXS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "source": "list_mempool_entries.mempool_records"
+        },
+        "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "id": "CT_PURE_FILTER_RECORDS_V0",
+        "inputs": [
+          "source",
+          "filter"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "extracted"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_QUERY_MEMPOOL_TXS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_QUERY_MEMPOOL_TXS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_FILTER_RECORDS_V0\n\n---\n\n## 1. Intent\n\nQuery the MEMPOOL store for all pending transactions, returning their IDs for block assembly.\n\n---\n\n## 2. Rationale\n\nBlock proposal requires a list of pending transaction IDs to include. This CC is owned by the `mempool` subdomain \u2014 it reads from mempool-owned storage and exposes a clean cross-subdomain interface. The `consensus_pos` subdomain calls this CC but does not own or access the MEMPOOL store directly.\n\nCS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for an empty store (substrate invariant). CT_PURE_FILTER_RECORDS_V0 detects the empty case (no records with status=PENDING) and exits VIOLATION. WF_PROPOSE_BLOCK_V0 routes CC VIOLATION \u2192 CC_SKIP_ROUND_V0 \u2014 an empty mempool is a valid round-skip condition, not a protocol error.\n\nReplaces CC_QUERY_PENDING_TRANSACTIONS_V0 (which queried the TRANSACTION store and leaked mempool state into the settled ledger domain).\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | LIST MEMPOOL store \u2192 all records and keys |\n| 2 | CT_PURE_FILTER_RECORDS_V0 | CT | Assert status=PENDING present (VIOLATION if none) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| (none) | \u2014 | \u2014 | No inputs required; queries full MEMPOOL store |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| tx_ids | array | List of pending transaction IDs (store keys from MEMPOOL) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | One or more pending transactions found; tx_ids populated |\n| VIOLATION | No pending transactions in MEMPOOL (empty or no PENDING records) |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION (empty mempool) is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0 (valid skip condition)\n- BACKEND_ERROR propagates as a hard failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_QUERY_MEMPOOL_TXS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Query MEMPOOL store for pending transactions; return tx_ids for block assembly\n\n  inputs: {}\n\n  outputs:\n    tx_ids:\n      type: array\n      items:\n        type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: list_mempool_entries\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: MEMPOOL\n      op: LIST\n      inputs: {}\n      outputs:\n        mempool_records: $.capability_result.records\n        tx_ids: $.capability_result.keys\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: assert_mempool_non_empty\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: assert_mempool_non_empty\n      transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0\n      inputs:\n        source: $.results.list_mempool_entries.mempool_records\n        filter:\n          status: PENDING\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  subdomain: mempool\n  notes:\n    - Owned by blockchain::mempool; called cross-subdomain by WF_PROPOSE_BLOCK_V0 (consensus_pos)\n    - Replaces CC_QUERY_PENDING_TRANSACTIONS_V0 \u2014 MEMPOOL store is the canonical pending tx source\n    - CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant); NOT_FOUND not used for list\n    - CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no PENDING records found \u2014 covers empty mempool case\n    - VIOLATION from this CC is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0 (no pending txs = valid skip)\n    - tx_ids bound from list_mempool_entries.tx_ids (store keys = tx IDs); assert step validates non-empty\n```\n",
+  "content_hash": "4011530028a164835f512d81861c5574331cc17391186516414ca564d5c1d098",
+  "fqdn_id": "blockchain::CC_QUERY_MEMPOOL_TXS_V0",
+  "frontmatter": {
+    "cc_code": "CC_QUERY_MEMPOOL_TXS_V0",
+    "core": {
+      "inputs": {},
+      "outputs": {
+        "tx_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {},
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "assert_mempool_non_empty",
+            "VIOLATION": "exit"
+          },
+          "op": "LIST",
+          "outputs": {
+            "mempool_records": "$.capability_result.records",
+            "tx_ids": "$.capability_result.keys"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "list_mempool_entries",
+          "store": "MEMPOOL"
+        },
+        {
+          "inputs": {
+            "filter": {
+              "status": "PENDING"
+            },
+            "source": "$.results.list_mempool_entries.mempool_records"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "assert_mempool_non_empty",
+          "transform": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Query MEMPOOL store for pending transactions; return tx_ids for block assembly"
+    },
+    "extensions": {
+      "notes": [
+        "Owned by blockchain::mempool; called cross-subdomain by WF_PROPOSE_BLOCK_V0 (consensus_pos)",
+        "Replaces CC_QUERY_PENDING_TRANSACTIONS_V0 \u2014 MEMPOOL store is the canonical pending tx source",
+        "CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant); NOT_FOUND not used for list",
+        "CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no PENDING records found \u2014 covers empty mempool case",
+        "VIOLATION from this CC is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0 (no pending txs = valid skip)",
+        "tx_ids bound from list_mempool_entries.tx_ids (store keys = tx IDs); assert step validates non-empty"
+      ],
+      "subdomain": "mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.mempool.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

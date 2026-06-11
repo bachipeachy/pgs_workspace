@@ -58,11 +58,48 @@
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
+            "EXECUTE_CONCURRENT"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "EXECUTE_CONCURRENT": {
+              "handler": "execute",
+              "idempotent": false,
+              "input": [
+                "workflows",
+                "triggered_by"
+              ],
+              "output": [
+                "results",
+                "all_succeeded"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "PARTIAL_FAILURE",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Invoke all declared workflows concurrently; collect results correlated by code"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "ConcurrentWorkflowsRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.internal.CS_CONCURRENT_WORKFLOWS_V0.runtime"
+      }
+    },
+    "2": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
             "READ",
             "WRITE",
             "DELETE",
+            "DELETE_MANY",
             "EXISTS",
-            "LIST"
+            "LIST",
+            "UPDATE_WHERE"
           ]
         },
         "operations": {
@@ -83,6 +120,23 @@
                 "BACKEND_ERROR"
               ],
               "summary": "Remove the given key and its value"
+            },
+            "DELETE_MANY": {
+              "handler": "delete_many",
+              "idempotent": true,
+              "input": [
+                "keys"
+              ],
+              "output": [
+                "result_status",
+                "drained_count"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Delete a list of keys; idempotent per key (NOT_FOUND treated as already deleted)"
             },
             "EXISTS": {
               "handler": "exists",
@@ -133,6 +187,26 @@
               ],
               "summary": "Retrieve value for a given key"
             },
+            "UPDATE_WHERE": {
+              "handler": "update_where",
+              "idempotent": false,
+              "input": [
+                "filter",
+                "updates"
+              ],
+              "notes": "filter={field:value,...} AND semantics; updates={field:value,...} applied to all matched records; null value removes field; VIOLATION when no records match; load+filter+update+save serialized under per-file threading lock",
+              "output": [
+                "result_status",
+                "matched_keys",
+                "updated_count"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Atomically update all records matching ALL filter conditions; serialized per file"
+            },
             "WRITE": {
               "handler": "write",
               "idempotent": true,
@@ -158,7 +232,61 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
       }
     },
-    "2": {
+    "260": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "READ",
+            "WRITE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "READ": {
+              "handler": "read",
+              "idempotent": true,
+              "input": [
+                "name"
+              ],
+              "output": [
+                "result_status",
+                "resource_addresses"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Look up resource addresses for a given name"
+            },
+            "WRITE": {
+              "handler": "write",
+              "idempotent": true,
+              "input": [
+                "name",
+                "resource_addresses"
+              ],
+              "output": [
+                "result_status",
+                "success"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Register or update name to resource addresses mapping"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "NameRegistryRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
+      }
+    },
+    "3": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -266,61 +394,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_REGISTRY_V0.runtime"
       }
     },
-    "251": {
-      "cs_metadata": {
-        "capability": {
-          "supported_operation_specs": [
-            "READ",
-            "WRITE"
-          ]
-        },
-        "operations": {
-          "operations": {
-            "READ": {
-              "handler": "read",
-              "idempotent": true,
-              "input": [
-                "name"
-              ],
-              "output": [
-                "result_status",
-                "resource_addresses"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "NOT_FOUND",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Look up resource addresses for a given name"
-            },
-            "WRITE": {
-              "handler": "write",
-              "idempotent": true,
-              "input": [
-                "name",
-                "resource_addresses"
-              ],
-              "output": [
-                "result_status",
-                "success"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Register or update name to resource addresses mapping"
-            }
-          }
-        }
-      },
-      "handler_ref": {
-        "callable": "NameRegistryRuntime",
-        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
-      }
-    },
-    "3": {
+    "4": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -350,7 +424,7 @@
         "module": "pgs_side_effects.implementation.side_effects.external.CS_SEND_EMAIL_V0.runtime"
       }
     },
-    "4": {
+    "5": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -384,10 +458,127 @@
         "callable": "WorkflowGatewayRuntime",
         "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_GATEWAY_V0.runtime"
       }
+    },
+    "6": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "EXECUTE_SEQUENCE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "EXECUTE_SEQUENCE": {
+              "handler": "execute",
+              "idempotent": false,
+              "input": [
+                "sequence",
+                "triggered_by",
+                "item_wf",
+                "item_sub_sequence"
+              ],
+              "output": [
+                "result_status",
+                "items_processed",
+                "sub_items_processed"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Iterate sequence; invoke item_wf per item and dispatch sub-items by key-field mapping"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "WorkflowLoopRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_LOOP_V0.runtime"
+      }
     }
   },
   "ct": {
     "10": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "training_completed": "$.inputs.training_completed"
+            },
+            "atom": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
+        "inputs": {
+          "training_completed": {
+            "description": "True if training is finished",
+            "required": true,
+            "type": "boolean"
+          }
+        },
+        "outputs": {
+          "is_eligible": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "11": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "index": "$.inputs.index",
+              "parent_chain_code_bytes": "$.inputs.parent_chain_code_bytes",
+              "parent_private_key_bytes": "$.inputs.parent_private_key_bytes"
+            },
+            "atom": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_child_key_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_DERIVE_CHILD_KEY_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
+        "inputs": {
+          "index": {
+            "description": "32-bit index. Values >= 2147483648 (0x80000000) denote hardened derivation.",
+            "required": true,
+            "type": "integer"
+          },
+          "parent_chain_code_bytes": {
+            "description": "32-byte parent chain code as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          },
+          "parent_private_key_bytes": {
+            "description": "32-byte parent private key as hex string with '0x' prefix",
+            "required": true,
+            "type": "hex_string"
+          }
+        },
+        "outputs": {
+          "child_chain_code_bytes": {
+            "from": "__atom_result__"
+          },
+          "child_private_key_bytes": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "12": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -422,7 +613,7 @@
         }
       }
     },
-    "11": {
+    "13": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -476,7 +667,7 @@
         }
       }
     },
-    "12": {
+    "14": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -508,7 +699,7 @@
         }
       }
     },
-    "13": {
+    "15": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -557,7 +748,7 @@
         }
       }
     },
-    "14": {
+    "16": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -601,7 +792,45 @@
         }
       }
     },
-    "15": {
+    "17": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "filter": "$.inputs.filter",
+              "source": "$.inputs.source"
+            },
+            "atom": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_filter_records_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_FILTER_RECORDS_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "inputs": {
+          "filter": {
+            "description": "Field criteria dict. Values are exact match or \"present\" for existence check.",
+            "required": true,
+            "type": "object"
+          },
+          "source": {
+            "description": "Array of record objects to filter",
+            "required": true,
+            "type": "array"
+          }
+        },
+        "outputs": {
+          "extracted": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "18": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -640,7 +869,7 @@
         }
       }
     },
-    "16": {
+    "19": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -678,7 +907,7 @@
         }
       }
     },
-    "17": {
+    "20": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -710,7 +939,7 @@
         }
       }
     },
-    "18": {
+    "21": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -748,7 +977,7 @@
         }
       }
     },
-    "19": {
+    "22": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -792,7 +1021,7 @@
         }
       }
     },
-    "20": {
+    "23": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -824,7 +1053,7 @@
         }
       }
     },
-    "21": {
+    "24": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -856,7 +1085,7 @@
         }
       }
     },
-    "22": {
+    "25": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -898,7 +1127,7 @@
         }
       }
     },
-    "23": {
+    "26": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -930,7 +1159,7 @@
         }
       }
     },
-    "24": {
+    "27": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -971,7 +1200,7 @@
         }
       }
     },
-    "25": {
+    "28": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1009,7 +1238,7 @@
         }
       }
     },
-    "26": {
+    "29": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1047,7 +1276,7 @@
         }
       }
     },
-    "5": {
+    "7": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1079,7 +1308,7 @@
         }
       }
     },
-    "6": {
+    "8": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1111,7 +1340,7 @@
         }
       }
     },
-    "7": {
+    "9": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1148,91 +1377,12 @@
           }
         }
       }
-    },
-    "8": {
-      "ct_ir": {
-        "atom_stream": [
-          {
-            "args": {
-              "training_completed": "$.inputs.training_completed"
-            },
-            "atom": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
-            "handler_ref": {
-              "callable": "execute",
-              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_check_training_status_v0"
-            },
-            "out": "__atom_result__"
-          }
-        ],
-        "ct_code": "CT_PURE_CHECK_TRAINING_STATUS_V0",
-        "ct_composition_version": "V0",
-        "ct_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
-        "inputs": {
-          "training_completed": {
-            "description": "True if training is finished",
-            "required": true,
-            "type": "boolean"
-          }
-        },
-        "outputs": {
-          "is_eligible": {
-            "from": "__atom_result__"
-          }
-        }
-      }
-    },
-    "9": {
-      "ct_ir": {
-        "atom_stream": [
-          {
-            "args": {
-              "index": "$.inputs.index",
-              "parent_chain_code_bytes": "$.inputs.parent_chain_code_bytes",
-              "parent_private_key_bytes": "$.inputs.parent_private_key_bytes"
-            },
-            "atom": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
-            "handler_ref": {
-              "callable": "execute",
-              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_derive_child_key_v0"
-            },
-            "out": "__atom_result__"
-          }
-        ],
-        "ct_code": "CT_PURE_DERIVE_CHILD_KEY_V0",
-        "ct_composition_version": "V0",
-        "ct_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
-        "inputs": {
-          "index": {
-            "description": "32-bit index. Values >= 2147483648 (0x80000000) denote hardened derivation.",
-            "required": true,
-            "type": "integer"
-          },
-          "parent_chain_code_bytes": {
-            "description": "32-byte parent chain code as hex string with '0x' prefix",
-            "required": true,
-            "type": "hex_string"
-          },
-          "parent_private_key_bytes": {
-            "description": "32-byte parent private key as hex string with '0x' prefix",
-            "required": true,
-            "type": "hex_string"
-          }
-        },
-        "outputs": {
-          "child_chain_code_bytes": {
-            "from": "__atom_result__"
-          },
-          "child_private_key_bytes": {
-            "from": "__atom_result__"
-          }
-        }
-      }
     }
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "256": {
-      "251": {
+    "265": {
+      "260": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

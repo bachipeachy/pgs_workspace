@@ -44,6 +44,7 @@
   "expected": {
     "result": "admin"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_EXTRACT_V0::extract_nested_field",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_EXTRACT_V0"
 }

@@ -1,0 +1,133 @@
+{
+  "artifact_code": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+        "id": "CS_WORKFLOW_GATEWAY_V0",
+        "kind": "CS",
+        "ops": [
+          "EXECUTE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_INVOKE_BLOCK_PROPOSAL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_INVOKE_BLOCK_PROPOSAL_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_WORKFLOW_GATEWAY_V0\n\n---\n\n## 1. Intent\n\nInvoke `WF_PROPOSE_BLOCK_V0` via the workflow gateway for the current slot execution context. Maps slot context fields into the block proposal payload: `slot_index` \u2192 `slot`, `epoch_number` \u2192 `epoch`.\n\n---\n\n## 2. Rationale\n\nBlock proposal is the terminal action for each slot in the consensus loop. This CC bridges the orchestration subdomain to the block subdomain by invoking `WF_PROPOSE_BLOCK_V0` as a governed sub-workflow. Field mapping (`slot_index` \u2192 `slot`, `epoch_number` \u2192 `epoch`) is declared explicitly here \u2014 this is the single point of truth for the payload contract translation.\n\nNOT_FOUND from the gateway means the target workflow is not registered in the snapshot \u2014 this is a hard BACKEND_ERROR, not a recoverable condition.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_WORKFLOW_GATEWAY_V0 | CS | EXECUTE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `slot_index` | integer | true | Intra-epoch slot position; maps to `slot` in WF_PROPOSE_BLOCK_V0 payload |\n| `epoch_number` | integer | true | Monotonically increasing epoch counter; maps to `epoch` in WF_PROPOSE_BLOCK_V0 payload |\n| `round_number` | integer | true | Pass-through of global slot counter; maps to `round_number` in WF_PROPOSE_BLOCK_V0 payload |\n| `timestamp` | string | true | Slot start timestamp; maps to `timestamp` in WF_PROPOSE_BLOCK_V0 payload |\n| `triggered_by` | string | true | Actor ID or system trigger reference; injected into WF_PROPOSE_BLOCK_V0 payload |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n| `execution_result` | object | Full result from WF_PROPOSE_BLOCK_V0 execution |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | WF_PROPOSE_BLOCK_V0 executed and returned SUCCESS |\n| VIOLATION | WF_PROPOSE_BLOCK_V0 returned VIOLATION or NACK |\n| NOT_FOUND | WF_PROPOSE_BLOCK_V0 not registered in snapshot \u2014 surfaced as BACKEND_ERROR |\n| BACKEND_ERROR | Gateway or execution infrastructure unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- SUCCESS from gateway \u2192 propagate as SUCCESS\n- NOT_FOUND from gateway \u2192 exits as BACKEND_ERROR \u2014 missing WF is a configuration failure, not a domain error\n- BACKEND_ERROR from gateway \u2192 exits as BACKEND_ERROR\n- Non-SUCCESS from WF_PROPOSE_BLOCK_V0 execution_result \u2192 exits as VIOLATION\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_INVOKE_BLOCK_PROPOSAL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Invoke WF_PROPOSE_BLOCK_V0 via workflow gateway with slot context payload\n\n  inputs:\n    slot_index:\n      type: integer\n      required: true\n      description: Intra-epoch slot position; maps to 'slot' in block proposal payload\n    epoch_number:\n      type: integer\n      required: true\n      description: Epoch counter; maps to 'epoch' in block proposal payload\n    round_number:\n      type: integer\n      required: true\n      description: Global slot counter pass-through; maps to 'round_number' in block proposal payload\n    timestamp:\n      type: string\n      required: true\n      description: Slot start timestamp; maps to 'timestamp' in block proposal payload\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference; injected into WF_PROPOSE_BLOCK_V0 payload\n\n  outputs:\n    result_status:\n      type: string\n    execution_result:\n      type: object\n      description: Full result from WF_PROPOSE_BLOCK_V0\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: invoke_block_proposal\n      side_effect: capability_side_effects::CS_WORKFLOW_GATEWAY_V0\n      op: EXECUTE\n      inputs:\n        workflow_code: blockchain::WF_PROPOSE_BLOCK_V0\n        payload:\n          slot: $.inputs.slot_index\n          epoch: $.inputs.epoch_number\n          round_number: $.inputs.round_number\n          timestamp: $.inputs.timestamp\n          triggered_by: $.inputs.triggered_by\n      outputs:\n        result_status: $.capability_result.result_status\n        execution_result: $.capability_result.execution_result\n      result_surface: [SUCCESS, NOT_FOUND, BACKEND_ERROR]\n      on_result:\n        SUCCESS: evaluate_execution_result\n        NOT_FOUND: remap_to_backend_error\n        BACKEND_ERROR: exit\n\n  evaluation:\n    evaluate_execution_result:\n      condition: $.execution_result.status == \"SUCCESS\"\n      on_true: SUCCESS\n      on_false: VIOLATION\n    remap_to_backend_error:\n      condition: $.capability_result.result_status == \"NOT_FOUND\"\n      on_true: BACKEND_ERROR\n      on_false: BACKEND_ERROR\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - Field mapping \u2014 slot_index \u2192 slot, epoch_number \u2192 epoch; declared explicitly here\n    - NOT_FOUND routes to exit as BACKEND_ERROR \u2014 missing WF is a snapshot configuration failure\n    - execution_result carries the full WF_PROPOSE_BLOCK_V0 output for downstream inspection\n    - WF_PROPOSE_BLOCK_V0 payload contract governed by IN_BLOCK_PROPOSED_V0\n```\n",
+  "content_hash": "84345de37264d7446eab006caa405db5b4ddc1b8ca08855662eabff7afa6ef7a",
+  "fqdn_id": "blockchain::CC_INVOKE_BLOCK_PROPOSAL_V0",
+  "frontmatter": {
+    "cc_code": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+    "core": {
+      "evaluation": {
+        "evaluate_execution_result": {
+          "condition": "$.execution_result.status == \"SUCCESS\"",
+          "on_false": "VIOLATION",
+          "on_true": "SUCCESS"
+        },
+        "remap_to_backend_error": {
+          "condition": "$.capability_result.result_status == \"NOT_FOUND\"",
+          "on_false": "BACKEND_ERROR",
+          "on_true": "BACKEND_ERROR"
+        }
+      },
+      "inputs": {
+        "epoch_number": {
+          "description": "Epoch counter; maps to 'epoch' in block proposal payload",
+          "required": true,
+          "type": "integer"
+        },
+        "round_number": {
+          "description": "Global slot counter pass-through; maps to 'round_number' in block proposal payload",
+          "required": true,
+          "type": "integer"
+        },
+        "slot_index": {
+          "description": "Intra-epoch slot position; maps to 'slot' in block proposal payload",
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "Slot start timestamp; maps to 'timestamp' in block proposal payload",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference; injected into WF_PROPOSE_BLOCK_V0 payload",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "execution_result": {
+          "description": "Full result from WF_PROPOSE_BLOCK_V0",
+          "type": "object"
+        },
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "payload": {
+              "epoch": "$.inputs.epoch_number",
+              "round_number": "$.inputs.round_number",
+              "slot": "$.inputs.slot_index",
+              "timestamp": "$.inputs.timestamp",
+              "triggered_by": "$.inputs.triggered_by"
+            },
+            "workflow_code": "blockchain::WF_PROPOSE_BLOCK_V0"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "remap_to_backend_error",
+            "SUCCESS": "evaluate_execution_result"
+          },
+          "op": "EXECUTE",
+          "outputs": {
+            "execution_result": "$.capability_result.execution_result",
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+          "step": "invoke_block_proposal"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Invoke WF_PROPOSE_BLOCK_V0 via workflow gateway with slot context payload"
+    },
+    "extensions": {
+      "notes": [
+        "Field mapping \u2014 slot_index \u2192 slot, epoch_number \u2192 epoch; declared explicitly here",
+        "NOT_FOUND routes to exit as BACKEND_ERROR \u2014 missing WF is a snapshot configuration failure",
+        "execution_result carries the full WF_PROPOSE_BLOCK_V0 output for downstream inspection",
+        "WF_PROPOSE_BLOCK_V0 payload contract governed by IN_BLOCK_PROPOSED_V0"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

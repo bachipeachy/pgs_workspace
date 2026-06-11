@@ -11,23 +11,87 @@
           "READ",
           "WRITE",
           "DELETE",
-          "EXISTS",
-          "LIST"
+          "DELETE_MANY",
+          "EXISTS"
         ],
+        "ops_truncated": true,
         "outputs": [
           "result_status"
         ]
       }
     ]
   },
-  "content": "# CC_WRITE_VALIDATOR_RECORD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_WRITE_VALIDATOR_RECORD_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nWrite the validator record to the VALIDATOR store, keyed by actor_id.\n\n---\n\n## 2. Rationale\n\nValidator record persistence:\n- VALIDATOR store uses CS_MUTABLE_JSON_V0 (mutable JSON, STRUCTURE-resolved path)\n- PUT is idempotent \u2014 last-write-wins semantics apply, but execution only reaches this step after\n  CC_CHECK_VALIDATOR_EXISTS_V0 confirms NOT_FOUND, so no overwrite occurs in normal flow\n- actor_id is the sole primary key \u2014 no secondary key generation needed\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| validator_record | object | true | Full validator registration payload keyed by actor_id |\n\n---\n\n## 5. Outputs\n\nNo outputs. This CC writes to the store as a side effect; it does not return data to the caller.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Validator record written successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- BACKEND_ERROR propagates as a hard failure\n- VIOLATION on invalid input format\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_WRITE_VALIDATOR_RECORD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Write the validator record to the VALIDATOR store keyed by actor_id\n\n  inputs:\n    validator_record:\n      type: object\n      required: true\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: write_validator_record\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: VALIDATOR\n      op: WRITE\n      inputs:\n        key: $.inputs.validator_record.actor_id\n        value: $.inputs.validator_record\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
-  "content_hash": "2f8f1ef231c7d3f23cc21a10680a75a28b7dbd640ef10710ee4dbfbfee55f221",
+  "content": "# CC_WRITE_VALIDATOR_RECORD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_WRITE_VALIDATOR_RECORD_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nWrite the validator record to the VALIDATOR store, keyed by actor_id.\n\n---\n\n## 2. Rationale\n\nValidator record persistence:\n- VALIDATOR store uses CS_MUTABLE_JSON_V0 (mutable JSON, STRUCTURE-resolved path)\n- PUT is idempotent \u2014 last-write-wins semantics apply, but execution only reaches this step after\n  CC_CHECK_VALIDATOR_EXISTS_V0 confirms NOT_FOUND, so no overwrite occurs in normal flow\n- actor_id is the sole primary key \u2014 no secondary key generation needed\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| validator_record | object | true | Full validator registration payload keyed by actor_id |\n| validator_record.actor_id | string | true | PGS actor ID \u2014 store key |\n| validator_record.pubkey | string | true | BLS12-381 signing public key (hex, 0x-prefixed) |\n| validator_record.withdrawal_credentials | string | true | Withdrawal credential (hex, 0x-prefixed) |\n| validator_record.effective_balance | integer | true | Declared stake in Gwei (\u2265 32000000000) |\n| validator_record.balance | integer | true | Current balance in Gwei (initial = effective_balance) |\n| validator_record.slashed | boolean | true | Whether validator has been slashed (initial: false) |\n| validator_record.status | string | true | Validator lifecycle status (initial: PENDING_INITIALIZED) |\n| validator_record.activation_eligibility_epoch | integer | false | Epoch when eligible for activation (null until set) |\n| validator_record.activation_epoch | integer | false | Epoch when activated (null until set) |\n| validator_record.exit_epoch | integer | false | Epoch when exited (null until set) |\n| validator_record.withdrawable_epoch | integer | false | Epoch when withdrawable (null until set) |\n| validator_record.registered_at | string | true | ISO 8601 timestamp of registration |\n\n---\n\n## 5. Outputs\n\nNo outputs. This CC writes to the store as a side effect; it does not return data to the caller.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Validator record written successfully |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- BACKEND_ERROR propagates as a hard failure\n- VIOLATION on invalid input format\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_WRITE_VALIDATOR_RECORD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Write the validator record to the VALIDATOR store keyed by actor_id\n\n  inputs:\n    validator_record:\n      type: object\n      required: true\n      fields:\n        actor_id:\n          type: string\n          required: true\n        pubkey:\n          type: string\n          required: true\n        withdrawal_credentials:\n          type: string\n          required: true\n        effective_balance:\n          type: integer\n          required: true\n          minimum: 32000000000\n        balance:\n          type: integer\n          required: true\n        slashed:\n          type: boolean\n          required: true\n        status:\n          type: string\n          required: true\n          enum: [PENDING_INITIALIZED, PENDING_QUEUED, ACTIVE_ONGOING, ACTIVE_EXITING, ACTIVE_SLASHED, EXITED_UNSLASHED, EXITED_SLASHED, WITHDRAWAL_POSSIBLE, WITHDRAWAL_DONE]\n        activation_eligibility_epoch:\n          type: integer\n          required: false\n        activation_epoch:\n          type: integer\n          required: false\n        exit_epoch:\n          type: integer\n          required: false\n        withdrawable_epoch:\n          type: integer\n          required: false\n        registered_at:\n          type: string\n          required: true\n          format: date-time\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: write_validator_record\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: VALIDATOR\n      op: WRITE\n      inputs:\n        key: $.inputs.validator_record.actor_id\n        value: $.inputs.validator_record\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "6d3e4ac1df4b93f1f883642a834646c0b55948fc1712666052a307d792c3e435",
   "fqdn_id": "blockchain::CC_WRITE_VALIDATOR_RECORD_V0",
   "frontmatter": {
     "cc_code": "CC_WRITE_VALIDATOR_RECORD_V0",
     "core": {
       "inputs": {
         "validator_record": {
+          "fields": {
+            "activation_eligibility_epoch": {
+              "required": false,
+              "type": "integer"
+            },
+            "activation_epoch": {
+              "required": false,
+              "type": "integer"
+            },
+            "actor_id": {
+              "required": true,
+              "type": "string"
+            },
+            "balance": {
+              "required": true,
+              "type": "integer"
+            },
+            "effective_balance": {
+              "minimum": 32000000000,
+              "required": true,
+              "type": "integer"
+            },
+            "exit_epoch": {
+              "required": false,
+              "type": "integer"
+            },
+            "pubkey": {
+              "required": true,
+              "type": "string"
+            },
+            "registered_at": {
+              "format": "date-time",
+              "required": true,
+              "type": "string"
+            },
+            "slashed": {
+              "required": true,
+              "type": "boolean"
+            },
+            "status": {
+              "enum": [
+                "PENDING_INITIALIZED",
+                "PENDING_QUEUED",
+                "ACTIVE_ONGOING",
+                "ACTIVE_EXITING",
+                "ACTIVE_SLASHED",
+                "EXITED_UNSLASHED",
+                "EXITED_SLASHED",
+                "WITHDRAWAL_POSSIBLE",
+                "WITHDRAWAL_DONE"
+              ],
+              "required": true,
+              "type": "string"
+            },
+            "withdrawable_epoch": {
+              "required": false,
+              "type": "integer"
+            },
+            "withdrawal_credentials": {
+              "required": true,
+              "type": "string"
+            }
+          },
           "required": true,
           "type": "object"
         }

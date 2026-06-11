@@ -1,0 +1,133 @@
+{
+  "artifact_code": "CC_RECORD_CONSENSUS_ROUND_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+        "id": "CT_PURE_ASSEMBLE_RECORD_V0",
+        "inputs": [
+          "fields"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "record"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RECORD_CONSENSUS_ROUND_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RECORD_CONSENSUS_ROUND_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_ASSEMBLE_RECORD_V0, CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nRecord the PROPOSED outcome for a consensus round to the CONSENSUS_ROUNDS store after a block has been successfully formed.\n\n---\n\n## 2. Rationale\n\nEvery consensus round that produces a block must be recorded with its outcome and block reference. This CC closes the round journal entry for the PROPOSED path. It is the symmetric counterpart to CC_SKIP_ROUND_V0 for the round skip path.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_ASSEMBLE_RECORD_V0 | CT | Assemble round_record |\n| 2 | CS_APPENDONLY_JSONL_V0 | CS | APPEND to CONSENSUS_ROUNDS |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| round_id | integer | true | Consensus round number |\n| proposer_id | string | true | actor_id of the proposing validator |\n| block_id | string | true | block_id produced by CC_FORM_BLOCK_V0 |\n| timestamp | string | true | ISO 8601 timestamp of round completion |\n\n---\n\n## 5. Outputs\n\nNo outputs. This CC records state as a side effect only.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Round record appended to CONSENSUS_ROUNDS |\n| VIOLATION | Invalid input |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION on missing or invalid required inputs\n- BACKEND_ERROR propagates as a hard failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RECORD_CONSENSUS_ROUND_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Record PROPOSED consensus round outcome to CONSENSUS_ROUNDS\n\n  inputs:\n    round_id:\n      type: integer\n      required: true\n    proposer_id:\n      type: string\n      required: true\n    block_id:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      required: true\n      format: date-time\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: assemble_round_record\n      transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0\n      inputs:\n        fields:\n          round_id: $.inputs.round_id\n          proposer_id: $.inputs.proposer_id\n          block_id: $.inputs.block_id\n          outcome: PROPOSED\n          timestamp: $.inputs.timestamp\n      outputs:\n        round_record: $.capability_result.record\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: append_round_record\n        VIOLATION: exit\n\n    - step: append_round_record\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: CONSENSUS_ROUNDS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.round_id\n        record: $.results.assemble_round_record.round_record\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: consensus_pos\n  notes:\n    - Only writes to CONSENSUS_ROUNDS (no CONSENSUS_EVENTS entry for PROPOSED path \u2014 event is in BLOCK_EVENTS via CC_FORM_BLOCK_V0)\n    - Symmetric to CC_SKIP_ROUND_V0 for the propose path\n```\n",
+  "content_hash": "e5aca9ae8cfed3383808b3a1365f8dd517eaf2c0173587adae2da93080d97572",
+  "fqdn_id": "blockchain::CC_RECORD_CONSENSUS_ROUND_V0",
+  "frontmatter": {
+    "cc_code": "CC_RECORD_CONSENSUS_ROUND_V0",
+    "core": {
+      "inputs": {
+        "block_id": {
+          "required": true,
+          "type": "string"
+        },
+        "proposer_id": {
+          "required": true,
+          "type": "string"
+        },
+        "round_id": {
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {},
+      "pipeline": [
+        {
+          "inputs": {
+            "fields": {
+              "block_id": "$.inputs.block_id",
+              "outcome": "PROPOSED",
+              "proposer_id": "$.inputs.proposer_id",
+              "round_id": "$.inputs.round_id",
+              "timestamp": "$.inputs.timestamp"
+            }
+          },
+          "on_result": {
+            "SUCCESS": "append_round_record",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "round_record": "$.capability_result.record"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "assemble_round_record",
+          "transform": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
+        },
+        {
+          "inputs": {
+            "record": "$.results.assemble_round_record.round_record",
+            "stream_id": "$.inputs.round_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_round_record",
+          "store": "CONSENSUS_ROUNDS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Record PROPOSED consensus round outcome to CONSENSUS_ROUNDS"
+    },
+    "extensions": {
+      "notes": [
+        "Only writes to CONSENSUS_ROUNDS (no CONSENSUS_EVENTS entry for PROPOSED path \u2014 event is in BLOCK_EVENTS via CC_FORM_BLOCK_V0)",
+        "Symmetric to CC_SKIP_ROUND_V0 for the propose path"
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

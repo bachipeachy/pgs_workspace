@@ -1,0 +1,61 @@
+{
+  "artifact_code": "IN_AGENT_ADMISSION_REQUESTED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_AGENT_ADMISSION_REQUESTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_AGENT_ADMISSION_REQUESTED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_GOVERN_AGENT_ADMISSION_V0\n\n---\n\n## 1. Intent\n\nRequest governance admission of an autonomous agent tool proposal.\n\n---\n\n## 2. Rationale\n\nAll autonomous agent tool proposals must pass structural governance before any tool executes:\n- No ambient authority \u2014 agents cannot invoke tools directly\n- Every tool proposal enters the governance pipeline through this intent\n- The intent declares the full input surface required for admission evaluation\n- Schema is identical to IN_AGENT_ACTION_REQUESTED_V0; the only difference is the workflow binding\n- 1:1 IN_\u2192WF_ binding is a governance invariant \u2014 a new workflow always requires a new intent\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_GOVERN_AGENT_ADMISSION_V0 | Admission workflow that governs this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tool_name | string | true | Requested tool identifier from closed agent tool registry |\n| parameters | object | true | Tool-specific parameter key-value map |\n| requesting_user_id | string | true | Identity of the user on whose behalf the agent acts |\n| domain_context | string | true | Domain context for the request |\n| request_id | string | false | Client-provided request correlation ID |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Admission request accepted for governance evaluation |\n| NACK | Admission request rejected at intent gate |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.governance.agent.admission\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_AGENT_ADMISSION_REQUESTED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Request governance admission of an autonomous agent tool proposal\n  workflow: WF_GOVERN_AGENT_ADMISSION_V0\n\n  inputs:\n    tool_name:\n      type: string\n      required: true\n      description: Requested tool identifier from closed agent tool registry\n    parameters:\n      type: object\n      required: true\n      description: Tool-specific parameter key-value map\n    requesting_user_id:\n      type: string\n      required: true\n      description: Identity of the user on whose behalf the agent acts\n    domain_context:\n      type: string\n      required: true\n      description: Domain context for the request\n    request_id:\n      type: string\n      required: false\n      description: Client-provided request correlation ID\n\n  outcomes:\n    ACK:\n      description: Admission request accepted for governance evaluation\n    NACK:\n      description: Admission request rejected at intent gate\n\nextensions:\n  domain: pgs.governance.agent.admission\n```\n",
+  "content_hash": "75de28481dfcf85c772ce8c840688dda1294725ee69c73470e60bfe3c148ea7f",
+  "fqdn_id": "ai_governance::IN_AGENT_ADMISSION_REQUESTED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "domain_context": {
+          "description": "Domain context for the request",
+          "required": true,
+          "type": "string"
+        },
+        "parameters": {
+          "description": "Tool-specific parameter key-value map",
+          "required": true,
+          "type": "object"
+        },
+        "request_id": {
+          "description": "Client-provided request correlation ID",
+          "required": false,
+          "type": "string"
+        },
+        "requesting_user_id": {
+          "description": "Identity of the user on whose behalf the agent acts",
+          "required": true,
+          "type": "string"
+        },
+        "tool_name": {
+          "description": "Requested tool identifier from closed agent tool registry",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Admission request accepted for governance evaluation"
+        },
+        "NACK": {
+          "description": "Admission request rejected at intent gate"
+        }
+      },
+      "summary": "Request governance admission of an autonomous agent tool proposal",
+      "workflow": "WF_GOVERN_AGENT_ADMISSION_V0"
+    },
+    "extensions": {
+      "domain": "pgs.governance.agent.admission"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_AGENT_ADMISSION_REQUESTED_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_admission.intents",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

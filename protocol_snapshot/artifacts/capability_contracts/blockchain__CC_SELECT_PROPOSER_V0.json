@@ -1,0 +1,92 @@
+{
+  "artifact_code": "CC_SELECT_PROPOSER_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "eligible_validators": "in.eligible_validators",
+          "round_number": "in.round_number"
+        },
+        "fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+        "id": "CT_PURE_SELECT_PROPOSER_V0",
+        "inputs": [
+          "eligible_validators",
+          "round_number"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "proposer_id"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_SELECT_PROPOSER_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_SELECT_PROPOSER_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_SELECT_PROPOSER_V0\n\n---\n\n## 1. Intent\n\nSelect the block proposer for a given consensus round from the set of eligible validators using deterministic round-robin selection.\n\n---\n\n## 2. Rationale\n\nProposer selection is a pure deterministic function. Wrapping CT_PURE_SELECT_PROPOSER_V0 in a CC gives it a named outcome surface (SUCCESS / VIOLATION) and positions it as a routable DAG node within WF_PROPOSE_BLOCK_V0.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_SELECT_PROPOSER_V0 | CT | Select proposer by round_number modulo |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| eligible_validators | array | true | Array of active validator records (each must have actor_id) |\n| round_number | integer | true | Non-negative consensus round number |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| proposer_id | string | actor_id of the selected proposer |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Proposer selected; proposer_id populated |\n| VIOLATION | eligible_validators empty or round_number negative |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION propagates from CT_PURE_SELECT_PROPOSER_V0 hard-fail conditions\n- No BACKEND_ERROR \u2014 pure transform; no storage access\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_SELECT_PROPOSER_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Select block proposer for a consensus round via deterministic round-robin\n\n  inputs:\n    eligible_validators:\n      type: array\n      required: true\n      items:\n        type: object\n    round_number:\n      type: integer\n      required: true\n\n  outputs:\n    proposer_id:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: select_proposer\n      transform: blockchain::CT_PURE_SELECT_PROPOSER_V0\n      inputs:\n        eligible_validators: $.inputs.eligible_validators\n        round_number: $.inputs.round_number\n      outputs:\n        proposer_id: $.capability_result.proposer_id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  subdomain: consensus_pos\n```\n",
+  "content_hash": "2c761c47b91ede54d87b29f1b202989bc3b8d2d82aa95745021db08a9e8d58e1",
+  "fqdn_id": "blockchain::CC_SELECT_PROPOSER_V0",
+  "frontmatter": {
+    "cc_code": "CC_SELECT_PROPOSER_V0",
+    "core": {
+      "inputs": {
+        "eligible_validators": {
+          "items": {
+            "type": "object"
+          },
+          "required": true,
+          "type": "array"
+        },
+        "round_number": {
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "proposer_id": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "eligible_validators": "$.inputs.eligible_validators",
+            "round_number": "$.inputs.round_number"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "proposer_id": "$.capability_result.proposer_id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "select_proposer",
+          "transform": "blockchain::CT_PURE_SELECT_PROPOSER_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Select block proposer for a consensus round via deterministic round-robin"
+    },
+    "extensions": {
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

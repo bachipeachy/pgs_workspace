@@ -1,0 +1,34 @@
+{
+  "artifact_code": "RB_PROPOSE_BLOCK_V0",
+  "artifact_type": "RB",
+  "content": "# RB_PROPOSE_BLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_PROPOSE_BLOCK_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nProvide runtime bindings required to execute the block proposal workflow, covering multi-store mutable JSON access (VALIDATOR, MEMPOOL, and BLOCKS stores) and append-only journal writes (CONSENSUS_ROUNDS, CONSENSUS_EVENTS, and BLOCK_EVENTS stores).\n\n---\n\n## 2. Scope\n\nSupports:\n\n- Mutable JSON binding for VALIDATOR, MEMPOOL, and BLOCKS stores (store-resolved via STRUCTURE_BLOCKCHAIN_STORAGE_V0)\n- Append-only journal binding for CONSENSUS_ROUNDS, CONSENSUS_EVENTS, and BLOCK_EVENTS stores (store-resolved via STRUCTURE_BLOCKCHAIN_STORAGE_V0)\n\nAll store paths are declared in STRUCTURE_BLOCKCHAIN_STORAGE_V0 and resolved at runtime via the `store:` field in each CC step. No additional capabilities permitted.\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_PROPOSE_BLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for block proposal workflow\n  description: Binds capability side effects to concrete runtime implementations for block proposal. Covers MEMPOOL store access (CC_QUERY_MEMPOOL_TXS_V0, CC_DRAIN_MEMPOOL_V0) and settled storage (VALIDATOR, BLOCKS, CONSENSUS_ROUNDS, CONSENSUS_EVENTS, BLOCK_EVENTS). All store paths resolved from STRUCTURE_BLOCKCHAIN_STORAGE_V0.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy: {}\n```\n",
+  "content_hash": "9dd62ff7550afaed7c20d37c7d1d72b3632685f7de165fbe4b8ba34a09e53b5a",
+  "fqdn_id": "blockchain::RB_PROPOSE_BLOCK_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
+          "policy": {}
+        },
+        "capability_side_effects::CS_MUTABLE_JSON_V0": {
+          "policy": {}
+        }
+      },
+      "description": "Binds capability side effects to concrete runtime implementations for block proposal. Covers MEMPOOL store access (CC_QUERY_MEMPOOL_TXS_V0, CC_DRAIN_MEMPOOL_V0) and settled storage (VALIDATOR, BLOCKS, CONSENSUS_ROUNDS, CONSENSUS_EVENTS, BLOCK_EVENTS). All store paths resolved from STRUCTURE_BLOCKCHAIN_STORAGE_V0.",
+      "storage_structure": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+      "summary": "Runtime binding for block proposal workflow"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "rb_code": "RB_PROPOSE_BLOCK_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.runtime_bindings",
+  "namespace": "blockchain",
+  "references": [
+    "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+    "capability_side_effects::CS_MUTABLE_JSON_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

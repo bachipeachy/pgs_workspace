@@ -37,6 +37,7 @@
     "master_chain_code_bytes": "0x7923408dadd3c7b56eed15567707ae5e5dca089de972e07f3b860450e2a3b70e",
     "master_private_key_bytes": "0x1837c1be8e2995ec11cda2b066151be2cfb48adf9e47b151d46adab3a21cdf67"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0::derive_master_key_from_seed",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_DERIVE_MASTER_KEY_V0"
 }

@@ -45,14 +45,8 @@
       }
     }
   },
-  "expected": {
-    "failed_rule": {
-      "field": "amount",
-      "op": "gt",
-      "value": 0
-    },
-    "valid": false
-  },
+  "expected": {},
+  "expected_outcome": "VIOLATION",
   "fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0::rule_fails",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_VALIDATE_PARAMETER_RULES_V0"
 }

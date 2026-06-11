@@ -1,0 +1,46 @@
+{
+  "artifact_code": "EV_BLOCK_ATTESTED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_BLOCK_ATTESTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_BLOCK_ATTESTED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA block has received attestations from validators in the consensus committee.\n\n---\n\n## 2. Rationale\n\nAttestation events are the observable signal of consensus progress:\n- Links attestation aggregate to the block and epoch\n- Records the number of committee attestations received\n- Enables finality tracking and fork-choice accounting\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| (consensus finalization CR \u2014 next CR) | (to be declared) |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| block_hash | string | true | Block identifier (BLK-prefixed) |\n| slot | integer | true | Slot number within the epoch |\n| epoch | integer | true | Epoch number |\n| attestation_count | integer | true | Number of committee attestations received |\n| timestamp | string (date-time) | true | When attestation aggregate was recorded |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_BLOCK_ATTESTED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Block received validator attestations\n  description: Emitted when a block accumulates attestations; signals consensus progress toward finality\n\n  schema:\n    block_hash:\n      type: string\n      required: true\n    slot:\n      type: integer\n      required: true\n    epoch:\n      type: integer\n      required: true\n    attestation_count:\n      type: integer\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "e59901495fef29e93504093a3fb84b3dff95ed78fbb4d1130edc68f6dd6fa144",
+  "fqdn_id": "blockchain::EV_BLOCK_ATTESTED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a block accumulates attestations; signals consensus progress toward finality",
+      "schema": {
+        "attestation_count": {
+          "required": true,
+          "type": "integer"
+        },
+        "block_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "epoch": {
+          "required": true,
+          "type": "integer"
+        },
+        "slot": {
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Block received validator attestations"
+    },
+    "ev_code": "EV_BLOCK_ATTESTED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.block.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

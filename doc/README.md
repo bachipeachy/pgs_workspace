@@ -125,9 +125,11 @@ Experimental project proposals exploring PGS as a governance substrate for intel
 systems. Each document describes an ambitious prototyping challenge for developers
 interested in extending PGS beyond workflow governance.
 
-  1. pgs_governed_transformer_runtime.md     -- Protocol-governed Transformer inference topology (5/5 difficulty)
+  1. 1_protocol_governed_blockchain_chain_runtime.md -- Build & close the blockchain/chain CR from its dossier (2/5 difficulty)
 
-  2. pgs_governed_autonomous_agent_runtime.md -- Structural governance for autonomous AI agents (3/5 difficulty)
+  2. 2_pgs_governed_autonomous_agent_runtime.md       -- Structural governance for autonomous AI agents (3/5 difficulty)
+
+  3. 3_pgs_governed_transformer_runtime.md            -- Protocol-governed Transformer inference topology (5/5 difficulty)
 
 
 ## Assets

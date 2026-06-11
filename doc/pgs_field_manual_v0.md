@@ -6,7 +6,7 @@
 
 **© 2026 Bhash Ganti. All rights reserved. Released under the Apache-2.0 License.**
 
-**Status:** Public Reference Artifact — v0 · Baseline: PGS v0.4.0
+**Status:** Public Reference Artifact — v0 · Baseline: PGS v0.5.0
 
 **Canonical Repository:** [bachipeachy/pgs_workspace](https://github.com/bachipeachy/pgs_workspace)
 
@@ -42,8 +42,9 @@ no short-name artifacts    compile-time governance    strict layer separation
 | Compiler work | §5 Compiler Model · §3 Governance Model |
 | Runtime modification | §6 Runtime Model · §7 Execution Model · §11 Anti-Patterns |
 | Transport changes | §9 Transport Governance |
-| AI agent onboarding | This section · Executive Doctrine · §11 Anti-Patterns |
+| AI agent onboarding | This section · Executive Doctrine · §4 Authoring Model · §11 Anti-Patterns |
 | Governance extension | §3 Governance Model · §10 Federated Governance |
+| Protocol change (new CR / governed evolution) | §4 Authoring Model |
 | Debugging | Appendix D · §6 Runtime Model |
 | New domain integration | Appendix E · §3 Governance Model |
 
@@ -359,6 +360,7 @@ The governance registry is organized into **federation boundaries** — named se
 | `FB_EXECUTION_PLACEMENT` | Delegated | Execution locality, substrate placement, runtime deployment admissibility |
 | `FB_SECURITY_DOMAIN` | Delegated | Classification domains, compartmentalization, secure information-flow legality |
 | `FB_CRYPTOGRAPHIC_TRUST` | Delegated | Snapshot signing, attestation, encryption, trust admissibility |
+| `FB_CHANGE_MGMT` | Delegated | Governed evolution — the change-management pipeline, dossier lifecycle, stage purity, gates (§4) |
 
 **FQDN namespace:** All governance artifacts use `fb.<boundary_lower>::ARTIFACT_CODE` format.
 
@@ -378,15 +380,82 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 
 ---
 
-## 4. Authoring Model
+## 4. Authoring Model — Governed Evolution (Change Management)
 
-> **Reserved.** The governed authoring pipeline — BI→GI→CA construction, protocol authoring workflows, and the `pgs_agent` conversational authoring surface — will be documented here in the next revision of this manual.
+**One-line summary:** Evolution is itself a governed protocol concern — every protocol change travels a staged pipeline from Change Request to Authoring Mandate, leaving a complete evidence chain (the dossier).
+
+**Governing boundary:** `FB_CHANGE_MGMT` (delegated, in `pgs_governance/registry/`). **Implementation:** `pgs_change_mgmt` repo — stage templates in `change_mgmt/templates/`, dossiers in `change_mgmt/dossiers/<domain>/<subdomain>/`.
+
+**The closing of the loop:** PGS governs construction (compiler) and execution (runtime). The change pipeline governs change itself. If the Protocol Snapshot does not change, the system is invariant by definition — the pipeline is complete only when a new snapshot is compiled, attested, and valid.
+
+### 4.1 The Pipeline (one CR = one dossier)
+
+| Stage | Artifact | Answers | Key Rule |
+|-------|----------|---------|----------|
+| 1 | `change_request_<sub>_v0.md` | Classification + Problem · Outcome · Known Facts · Deferrals | Business language only; baseline claims verified against snapshot, never memory |
+| 2 | `domain_model_<sub>_v0.md` | Entities · Processes · Baseline fit · Gaps | Record what was *searched*, not only what was found |
+| 3 | `analysis_loop_<sub>_v0.md` | Gap resolutions, iterated to Discovery Saturation | Every answer carries evidence; overturned answers are marked, never erased |
+| 4 | `business_model_<sub>_v0.md` | Canonical consolidation (all downstream stages project from this) | Consolidation, not re-litigation |
+| 4b | (Section 7 of BM) | Authoring Scope: IN this CR vs deferred | Not listed = not built |
+| 5 | `business_intent_<sub>_v0.md` | WHAT — behavior, objects, identity, invariants, actions | Provisional capability names OK; no bindings/paths |
+| 6 | `governance_intent_<sub>_v0.md` | WHERE — domain/subdomain, ownership, dependencies | No new artifact codes; cross-subdomain writes forbidden |
+| 6b | `design_intent_<sub>_v0.md` | HOW — FQDNs, topology, schemas, stores, module paths, RBs | **Gate 1 — Design Approval** (full dossier reviewed as a body) |
+| 7 | `authoring_mandate_<sub>_v0.md` | IN WHAT ORDER — topologically sorted build waves | Mechanical derivation; must reconcile with 6b exactly. **Gate 2 — Mandate Approval** (dossier locked) |
+| 8 | `authoring_manifest_<sub>_v0.md` | Evidence closure: deviations, discoveries, conformance, lessons | Baseline created at Gate 2; populated with actual execution data only |
+| 9 | (manifest status → APPROVED) | CR Closure | Completion criterion met, never aspirational |
+
+**Discovery Saturation (Stage 3 stop condition)** — all three simultaneously: no unresolved CRITICAL gaps · no open analyst questions · no dependency expansion in the last pass.
+
+### 4.2 Purity Ladder
+
+Each stage admits exactly one more vocabulary class. Exception at every rung: artifacts that already exist in the baseline may be cited by exact FQDN as evidence — citing the baseline is observation, not design.
+
+```
+Stages 1–4   business language only (nothing new gets a code)
+Stage 5      + provisional capability names (IN/WF/CC vocabulary, unbound)
+Stage 6      + placement (WHERE) — still no new codes
+Stage 6b     + binding FQDNs, topology, schemas, stores
+Stage 7      + build order
+```
+
+### 4.3 Elicitation Contract + Stage Execution Rules
+
+Every stage template opens with **questions for the human, each paired with declared intent** (how the answer will be used). Unanswered question = open gap, never license to assume. The human supplies governed knowledge; the agent structures, verifies, and projects it.
+
+Every stage carries **execution rules** — accumulated failure knowledge folded back from completed CRs:
+
+| Rule | Origin |
+|------|--------|
+| Verify every baseline claim by reading the snapshot — never from memory | Agents trust recall; recall is stale |
+| Search the inventory before authoring any new EV_/CT_/CC_ | Needed artifacts often already exist (e.g., an event reserved for exactly the CR at hand) |
+| EV_ records facts; it never triggers execution — workflow chaining is a gateway CC | Event-subscription designs cannot compile or run |
+| WF nodes are IN / CC / EXIT only — a WF never appears inside a WF | Sub-workflow invocation = `CC_INVOKE_*` on `CS_WORKFLOW_GATEWAY_V0` |
+| A store is written only by its owning subdomain's CCs | Peer-store writes = dependency-gap CC owned by the peer, triggered by the CR |
+| All codes carry `_V<n>`; counts reconcile across 6b/7 | Unversioned codes and drifting counts are defects |
+
+### 4.4 Canonical Documentation Set (the change agent's oracle)
+
+Complete, implementation-free context for any change agent — human or automated:
+
+```
+1. Protocol Snapshot   what the system currently does (runtime-executable)
+2. PPS Snapshot        full compiled inventory (pps_snapshot/index.json) — check before authoring
+3. Field Manual        this document — operational doctrine
+4. Concept Papers      architectural rationale (why)
++ the dossier built so far
+```
+
+Agent context is declared in `pgs_change_mgmt/change_mgmt/templates/0_agent_context_template_v0.md` — the reading assignment loaded at CR start alongside `1_change_request_template_v0.md`; extend awareness by adding rows, not code.
+
+### 4.5 Governance Dividend in Practice
+
+Each cycle's manifest carries methodology lessons forward into the stage templates. Templates are the accumulation vehicle: every future CR (and agent) inherits prior failures as enforced rules, not folklore. Seven CRs executed to date (consensus_pos · block · data_model · consensus_propose · mempool · orchestration · chain) — the conceptual model is documented in the change-management concept paper (fifth in the series).
 
 ---
 
 ## 5. Compiler Model
 
-### 4.1 Pipeline Stages (in order)
+### 5.1 Pipeline Stages (in order)
 
 | Stage | Name | What Happens |
 |-------|------|-------------|
@@ -400,7 +469,7 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 | S8 | VERIFY | All materialized artifacts verified on disk; hash integrity checked; evidence graph integrity validated |
 | S9 | ATTEST | Cryptographic attestation computed and written for each structure and the full snapshot |
 
-### 4.2 Compiler Constraints (Non-Negotiable)
+### 5.2 Compiler Constraints (Non-Negotiable)
 - No execution during compilation — compiler never runs CT/CS implementations
 - Static imports only — no dynamic module loading
 - Deterministic output — same source → same snapshot, always
@@ -408,7 +477,7 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 - Handler registry must be fully populated before compile starts
 - Compiler validates and rejects — it never repairs malformed protocol state
 
-### 4.3 Two Phase Types
+### 5.3 Two Phase Types
 
 | Phase Type | Name | Semantics |
 |------------|------|-----------|
@@ -432,7 +501,7 @@ Phase Type B is governed by an aggregation STRUCTURE_ artifact with an `aggregat
 | Authority | `AUTHORITY` | Planned |
 | Conformance | `CONFORMANCE` | Future |
 
-### 4.4 Compiler Evidence Graph
+### 5.4 Compiler Evidence Graph
 
 The compiler emits `evidence_graph.json` per structure during S7. This is the compiler's governed observability artifact — a semantic causality graph over all S1–S7 trace events, analogous in role to the execution trace for the runtime.
 
@@ -466,19 +535,19 @@ The compiler emits `evidence_graph.json` per structure during S7. This is the co
 
 ## 6. Runtime Model
 
-### 5.1 Runtime Constraints (Non-Negotiable)
+### 6.1 Runtime Constraints (Non-Negotiable)
 - Snapshot-only: runtime reads `protocol_snapshot/` exclusively; never touches protocol source
 - No discovery: artifact locations come from the snapshot manifest, not filesystem scanning
 - No inference: missing binding → hard failure; no fallback implementations
 - No domain logic: runtime is semantically blind to what it executes
 - Deterministic traversal: graph edges are followed exactly as declared
 
-### 5.2 Runtime Bindings
+### 6.2 Runtime Bindings
 - `RB_` maps protocol capability declarations to concrete implementations
 - Both CT_ and CS_ resolved via the same binding mechanism
 - RB_ resolves implementation location only — behavioral authority originates exclusively from protocol declarations
 
-### 5.3 Trace Lifecycle
+### 6.3 Trace Lifecycle
 
 ```
 execution start → trace file created at traces/<domain>/<subdomain>/<TRACE_ID>/<TRACE_ID>.jsonl
@@ -488,22 +557,26 @@ execution end  → trace sealed; .md summary + .png visualization written
 
 Trace files are OUTPUT only. Never use as input to compiler, runtime, or other components. Trace IDs are deterministic — same inputs produce the same trace ID. Exit codes: `0` for completed execution (including NACK/VIOLATION), `1` for infrastructure failures.
 
-### 5.4 CS Runtime Types
+### 6.4 CS Substrate Inventory
 
-| Runtime Type | Semantics |
+All CS_ artifacts live in the `capability_side_effects` domain (owned by `pgs_capabilities`). The side-effect surface is finite and enumerable — this is the entire mutation/IO vocabulary:
+
+| CS Substrate | Semantics |
 |-------------|-----------|
-| `RegistryRuntime` | Deduplicated key-value store; ops: REGISTER, RESOLVE, EXISTS, DEREGISTER |
-| `MutableJsonRuntime` | Read-write JSON state; ops: WRITE, READ, DELETE, EXISTS, LIST_KEYS |
-| `AppendOnlyJsonlRuntime` | Immutable event stream; append only; never truncated |
-| `SendEmailRuntime` | Email delivery side effect |
-| `WorkflowGatewayRuntime` | Workflow-to-workflow invocation |
-| `NameRegistryRuntime` | Name-scoped registry variant |
+| `CS_REGISTRY_V0` | Deduplicated key-value store; ops: REGISTER, RESOLVE, EXISTS, DEREGISTER |
+| `CS_MUTABLE_JSON_V0` | Read-write JSON state; ops: WRITE, READ, DELETE, EXISTS, LIST_KEYS |
+| `CS_APPENDONLY_JSONL_V0` | Immutable event stream; append only; never truncated |
+| `CS_SEND_EMAIL_V0` | Email delivery side effect |
+| `CS_WORKFLOW_GATEWAY_V0` | Governed sub-workflow invocation — the ONLY way one WF engages another (via a `CC_INVOKE_*` node) |
+| `CS_WORKFLOW_LOOP_V0` | Governed bounded iteration over sub-workflow invocations; dispatch mapping declared, never derived at runtime |
+| `CS_CONCURRENT_WORKFLOWS_V0` | Governed parallel WF dispatch; results correlated by WF FQDN (not array position); aggregate `all_succeeded` routing |
+| `CS_NAME_REGISTRY_V0` | Name-scoped registry variant |
 
 ---
 
 ## 7. Execution Model
 
-### 6.1 Governed Execution Topology
+### 7.1 Governed Execution Topology
 
 PGS execution is **governed declarative graph traversal**, not workflow orchestration. The execution topology is a compile-time governed graph — fully declared before runtime begins, immutable during execution.
 
@@ -521,23 +594,29 @@ TI → IN (admission check)
 - Outcomes declared in WF_ route traversal — no runtime branching logic
 - Runtime receives a fully closed topology graph; it does not discover, repair, or extend it
 
-### 6.2 CT Purity Invariant
+**Workflow composition rules:**
+- WF nodes are IN, CC, and EXIT/EXIT_SUCCESS only — a workflow NEVER appears as a node inside another workflow
+- Sub-workflow invocation is a gateway CC (`CC_INVOKE_*` bound to `CS_WORKFLOW_GATEWAY_V0`); iteration and parallelism use `CS_WORKFLOW_LOOP_V0` / `CS_CONCURRENT_WORKFLOWS_V0`
+- EV_ records facts; it never triggers execution — there is no event subscription in the runtime; workflow chaining is always a declared gateway step
+- A store is written only by CCs of its owning subdomain — cross-subdomain reads/calls are permitted and declared; cross-subdomain writes are forbidden without exception
+
+### 7.2 CT Purity Invariant
 - `Effect(CT) = ∅` — transforms have zero side effects
 - CT may call other CTs; may never call CS
 - CT correctness is the implementation's responsibility; PGS constrains invocation, not logic
 
-### 6.3 CS Side Effect Boundary
+### 7.3 CS Side Effect Boundary
 - CS is the only authorized channel for external state mutation
 - `MutationSurface = { s : s ∈ CS_ }`
 - No implicit write path exists anywhere else in the system
 
-### 6.4 Trace as Evidence
+### 7.4 Trace as Evidence
 - Every node execution emits a structured trace event: artifact identity, inputs, outputs, outcome
 - Trace is append-only, immutable once written
 - "If an action does not appear in the trace, it is architecturally prohibited"
 - Replay is deterministic: same trace → same proof
 
-### 6.5 Ownership Boundaries
+### 7.5 Ownership Boundaries
 
 | Owner | Owns |
 |-------|------|
@@ -547,7 +626,7 @@ TI → IN (admission check)
 | Runtime | Graph traversal + trace emission |
 | Compiler | Admissibility determination |
 
-### 6.6 System Boundary Model
+### 7.6 System Boundary Model
 
 ```
 External System
@@ -563,7 +642,7 @@ External System
 
 TI_ and TE_ are orthogonal boundary concerns — they do not participate in workflow authority or execution orchestration.
 
-### 6.7 Execution Topology Governance
+### 7.7 Execution Topology Governance
 
 **Doctrine:** Execution topology governs traversal structure only.
 
@@ -611,27 +690,27 @@ The PGS architecture produces eleven named properties. These are not design goal
 
 ## 9. Transport Governance
 
-### 7.1 TI / TE Doctrine
+### 9.1 TI / TE Doctrine
 - **TI (Transport Ingress):** Normalizes and validates all external input → canonical internal representation. No business logic.
 - **TE (Transport Egress):** Renders internal results for external systems. Boundary projection only. Does not participate in execution semantics.
 - Closed-loop invariant: all behavior follows `TI → G → TE`
 
-### 7.2 Transport Orthogonality
+### 9.2 Transport Orthogonality
 - Transport substrate (CLI, HTTP, queue, agent) is orthogonal to execution semantics
 - Changing from CLI to HTTP does not change the execution graph
 - No routing logic in TI/TE — routing lives in WF_ declarations
 
-### 7.3 Transport Does Not Route
+### 9.3 Transport Does Not Route
 - Transport artifacts normalize and project data only
 - Transport may not perform execution routing, orchestration, or behavioral selection
 - All routing lives in WF_ DAG outcome edges — never in TI/TE middleware
 
-### 7.4 Snapshot-Driven Route Loading
+### 9.4 Snapshot-Driven Route Loading
 - Routes loaded from snapshot; no hardcoded route tables
 - Route = (domain, workflow) pair declared in snapshot
 - No middleware intelligence — middleware is transport plumbing only
 
-### 7.5 Transport Federation Doctrine
+### 9.5 Transport Federation Doctrine
 
 Transport governance requires Phase Type B federated aggregation to synthesize: route indices · admission maps · projection schemas · transport boundary manifests.
 
@@ -647,7 +726,7 @@ Transport aggregation **may NEVER:** mutate execution semantics · alter workflo
 
 **Architectural transition:** PGS has evolved from *protocol-governed execution* to *federated governance compilation* — a substantially more powerful architecture class.
 
-### 8.1 Definition
+### 10.1 Definition
 
 A **Federated Governance Domain** is a cross-structure governance concern that:
 - cannot be semantically closed within a single domain structure
@@ -655,7 +734,7 @@ A **Federated Governance Domain** is a cross-structure governance concern that:
 - is compiled via Phase Type B aggregation
 - produces a governed artifact consumed by execution, transport, or runtime
 
-### 8.2 Canonical Domain Families
+### 10.2 Canonical Domain Families
 
 | Domain Type | Example | Product | What It Governs |
 |-------------|---------|---------|----------------|
@@ -665,7 +744,7 @@ A **Federated Governance Domain** is a cross-structure governance concern that:
 | Federated Correctness | Conformance (future) | global correctness assertions | Cross-structure invariant enforcement |
 | Federated Topology | Federation (future) | topology graph | Cross-runtime structure relationships |
 
-### 8.3 Invariants for All Federated Domains
+### 10.3 Invariants for All Federated Domains
 
 **Macro-invariant:** Federated governance domains may synthesize governance products but may not synthesize execution semantics.
 
@@ -677,13 +756,13 @@ Every federated governance domain must:
 - introduce no execution node types, runtime graph primitives, or middleware chains
 - preserve orthogonality with the execution layer
 
-### 8.4 Boundary Orthogonality
+### 10.4 Boundary Orthogonality
 
 Federated governance products may never: mutate execution semantics · alter declared workflow behavior · inject orchestration logic · infer behavioral routing dynamically · become smart runtime components.
 
 Authority governs whether execution may exist. Transport governs where boundaries are. Neither touches how the execution graph runs.
 
-### 8.5 Architectural Significance
+### 10.5 Architectural Significance
 
 | Before | After |
 |--------|-------|
@@ -712,6 +791,10 @@ Authority governs whether execution may exist. Transport governs where boundarie
 | Role-branching in topology steps | Embeds authority semantics in execution topology | Authority evaluation happens before topology traversal; topology assumes admissibility is resolved |
 | `result_surface` deviation from canonical | Workflow author redefines what a capability produces | Declare the exact `canonical_surface` from the governing SURFACE_CONTRACT — routing is permitted, redefinition is not |
 | Runtime step injection | Synthesizes topology from payload or environment | All steps declared at compile time; topology sealed before runtime begins |
+| Event-driven triggering | EV_ is observability/control plane; runtime has no subscription mechanism | Workflow chaining via gateway CC (`CC_INVOKE_*` on `CS_WORKFLOW_GATEWAY_V0`); events record the fact |
+| WF node inside a WF | Workflows are not node types; embedding breaks topology closure | Sub-workflow invocation via gateway CC; loop/concurrent variants via their CS substrates |
+| Cross-subdomain store write | Violates store ownership boundary | Dependency-gap CC owned by the store's subdomain, declared in the CR (§4.3) |
+| Authoring what already exists | Re-creates baseline capability under a new name; splits identity | Search the snapshot inventory (PPS index) before declaring any new artifact |
 | Environment-driven branching | Implicit behavior; breaks determinism | Explicit outcomes in protocol artifacts |
 | Short-name artifact references | Breaks FQDN identity; causes resolution failures | Always use `domain::ARTIFACT_CODE` |
 | Package install during operation | Execution environment must be pre-resolved | Resolve all dependencies at bootstrap time |
@@ -735,9 +818,12 @@ Understanding why the architecture looks as it does prevents re-introducing solv
 | Protocol-governed execution → federated governance compilation | Architecture class elevated: PGS now governs ontology, routing, and admissibility as compiled artifacts | Governance surfaces compound without runtime coupling; execution remains semantically blind while governance grows richer |
 | Execution topology formalized as governed surface | Execution graph structure elevated from convention to constitutional governance surface with 8 enforced invariants | Topology closure, step identity, canonical surface, authority/transport orthogonality, and runtime synthesis prohibition are now compile-time enforced |
 | Governed declarative graph traversal | PGS execution is no longer adequately described as "workflow orchestration" | Topology is compile-time declared, authority-orthogonal, transport-orthogonal, and immutable after compilation; these properties are now constitutional, not conventional |
-| Constitutional Federation | Governance registry organized as `registry/FB_*/` (13 boundaries); `fb.*::` is the only valid namespace for governance artifacts | Federation boundaries are first-class semantic constructs. Governance sovereignty is physically visible in the registry. |
+| Constitutional Federation | Governance registry organized as `registry/FB_*/` (14 boundaries); `fb.*::` is the only valid namespace for governance artifacts | Federation boundaries are first-class semantic constructs. Governance sovereignty is physically visible in the registry. |
 | Compiler evidence graph | Compiler gained a governed observability artifact: `evidence_graph.json` per structure; CAUSALITY + STAGE_SEQUENCE typed edges; SHA-256 hash integrity | Compiler is now self-observable; evidence graph enables visualization, AI tooling, replay, and debugging from a stable JSON schema without importing compiler internals |
 | Governed Evidence System convergence | PGS architecture converges on three compounding properties: Protocol Compiler + Governed Evidence System + Deterministic Execution Fabric | This combination is an unusual architectural category. Cost-of-change decreasing with system growth is repeatedly demonstrated architectural behavior, not an aspirational claim. |
+| Closed-loop governed evolution (v0.5.0) | Change management became a governed concern: `FB_CHANGE_MGMT` boundary, `pgs_change_mgmt` repo, staged CR→Mandate pipeline with dossiers, gates, and purity ladder (§4) | Construction and execution were governed; evolution was not. An ungoverned change process accumulates the same rationale decay PGS eliminates elsewhere — the pipeline closes the loop |
+| Orchestration substrate | Workflow composition gained governed primitives: `CS_WORKFLOW_GATEWAY_V0`, `CS_WORKFLOW_LOOP_V0`, `CS_CONCURRENT_WORKFLOWS_V0`; events confirmed as facts, never triggers | Workflow-to-workflow engagement, iteration, and parallelism are declared side effects — not runtime orchestration logic, not event subscriptions |
+| Subdomain store ownership | A store is written only by its owning subdomain's CCs; peer writes are dependency-gap CCs owned by the peer | Store ownership is a governance boundary; cross-subdomain writes were never legal — the doctrine is now explicit and template-enforced |
 
 ---
 
@@ -889,7 +975,7 @@ protocol_snapshot/
     intents/                         ← IN_ JSON
     events/                          ← EV_ JSON
     actors/                          ← AC_ JSON
-    layers/ invariants/ assertions/  ← governance (compiled from all 13 FB_* boundaries)
+    layers/ invariants/ assertions/  ← governance (compiled from all 14 FB_* boundaries)
   visualization/<WF_NAME>/
     <WF_NAME>.graph.json             ← machine-readable DAG
     <WF_NAME>.projection.png         ← visual graph
@@ -957,26 +1043,21 @@ BACKEND_ERROR    Infrastructure or implementation error at CS/CT boundary
 ### Data State Layout
 
 ```
-data/
+data/<domain>/<subdomain>/...        ← one subtree per FB-aligned subdomain
   blockchain/
-    identity/
-      registry/actors.json            ← deduplicated actor store
-      events/identity_events.jsonl    ← append-only; never truncated
-    transaction/events/transaction_events.jsonl
-    wallet/state/wallets.json
-    wallet/events/wallet_events.jsonl
-    collatz_conjecture/collatz_results.json
+    identity/        registry/actors.json · events/identity_events.jsonl
+    wallet/          state/wallets.json · events/wallet_events.jsonl
+    transaction/     state/transactions.json · events/transaction_events.jsonl
+    mempool/         state/mempool.json · registry/mempool_index.json
+    block/           blocks/blocks.json · events/block_events.jsonl
+    consensus_pos/   registry/validators.json · rounds/rounds.jsonl · events/*.jsonl
+    orchestration/   state/slot_clock.json · events/simulation_summary.jsonl
   ai_governance/
-    ai_licensing/
-      license_facts.json              ← read-only seed; never mutated at runtime
-      license_registry.json
-      audit_log.jsonl
-    agent_governance/
-      governance_actions.json
-      governance_audit.jsonl
+    ai_licensing/    license_facts.json (read-only seed) · license_registry.json · audit_log.jsonl
+    agent_governance/  governance_actions.json · governance_audit.jsonl
 ```
 
-Paths are declared in RB_ artifacts — never hardcode.
+Storage topology is declared in STRUCTURE artifacts (`entity_stores`) and resolved via RB_ — never hardcode paths. Registry stores are deduplicated; `events/` journals are append-only and never truncated; seeds in `seeds/` are source of truth, copied to `data/` by bootstrap.
 
 ---
 
@@ -984,17 +1065,30 @@ Paths are declared in RB_ artifacts — never hardcode.
 
 All available workflows: `ls protocol_snapshot/artifacts/workflows/`
 
-| Domain | Workflow Code | Purpose |
-|--------|--------------|---------|
-| blockchain | `WF_REGISTER_ACTOR_UNVERIFIED_V0` | Identity registration |
-| blockchain | `WF_VERIFY_ACTOR_V0` | Identity verification |
-| blockchain | `WF_CREATE_WALLET_V0` | Wallet provisioning |
-| blockchain | `WF_SUBMIT_TRANSACTION_V0` | Transaction submission |
-| blockchain | `WF_DEMO_COLLATZ_CONJECTURE_V0` | Domain-neutral execution proof |
-| ai_governance | `WF_PROVISION_AI_LICENSING_V0` | AI license provisioning |
-| ai_governance | `WF_DENY_PROVISION_V0` | License denial |
-| ai_governance | `WF_AUTO_RECLAIM_V0` | License auto-reclaim |
-| ai_governance | `WF_GOVERN_AGENT_ACTION_V0` | Agent action governance (7 scenarios) |
+| Domain | Subdomain | Workflow Code | Purpose |
+|--------|-----------|--------------|---------|
+| blockchain | identity | `WF_REGISTER_ACTOR_UNVERIFIED_V0` | Identity registration |
+| blockchain | identity | `WF_VERIFY_ACTOR_V0` | Identity verification |
+| blockchain | wallet | `WF_CREATE_WALLET_V0` | Wallet provisioning (HD keypair derivation) |
+| blockchain | transaction | `WF_SUBMIT_TRANSACTION_V0` | Generic transaction submission |
+| blockchain | transaction | `WF_MINT_V0` · `WF_BURN_V0` · `WF_TRANSFER_V0` | Typed supply/transfer transactions |
+| blockchain | transaction | `WF_STAKE_V0` · `WF_UNSTAKE_V0` · `WF_POOL_V0` · `WF_REWARD_V0` · `WF_SLASH_V0` | Typed staking-economy transactions |
+| blockchain | consensus_pos | `WF_REGISTER_VALIDATOR_V0` | Validator registration |
+| blockchain | consensus_pos | `WF_PROPOSE_BLOCK_V0` | Proposer selection → block formation → mempool drain → round record |
+| blockchain | orchestration | `WF_RUN_CHAIN_SIMULATION_V0` | Top-level simulation: concurrent consensus loop + TX workload |
+| blockchain | orchestration | `WF_RUN_CONSENSUS_LOOP_V0` | Governed slot-sequence iteration |
+| blockchain | orchestration | `WF_RUN_TX_WORKLOAD_V0` | Governed TX-sequence iteration (typed dispatch from seed) |
+| blockchain | orchestration | `WF_PROCESS_SLOT_V0` | One slot: read clock → context → invoke proposal → advance clock |
+| blockchain | — | `WF_RUN_CONSENSUS_SLOTS_V0` | RETIRED — superseded by `WF_RUN_CHAIN_SIMULATION_V0` |
+| ai_governance | ai_licensing | `WF_PROVISION_AI_LICENSING_V0` | AI license provisioning |
+| ai_governance | ai_licensing | `WF_DENY_PROVISION_V0` | License denial |
+| ai_governance | ai_licensing | `WF_AUTO_RECLAIM_V0` | License auto-reclaim |
+| ai_governance | agent_governance | `WF_GOVERN_AGENT_ACTION_V0` | Agent action governance (7 scenarios) |
+| ai_governance | agent_governance | `WF_GOVERN_AGENT_ADMISSION_V0` | Agent admission governance |
+| ai_governance | — | `WF_DEMO_COLLATZ_CONJECTURE_V0` | Domain-neutral execution proof (governed loop) |
+| name_service | — | `WF_REGISTER_NAME_V0` · `WF_LOOKUP_NAME_V0` | Capability-substrate name service |
+
+In flight (chain CR, at design approval): `WF_INITIALIZE_CHAIN_V0` (genesis bootstrap) · `WF_COMMIT_BLOCK_V0` (canonical block commitment).
 
 Payload files: `<repo>/testbed/<subdomain>/test_payloads/`
 
@@ -1121,11 +1215,13 @@ If runtime behavior diverges from expected: recompile and sync. Never patch `pro
 | `pgs_transport` | Transport | Ingress/egress adapters for HTTP and CLI surfaces |
 | `pgs_runtime` | Execution | pgs_runtime CLI; deterministic DAG traversal; snapshot loading |
 | `pgs_capabilities` | Capability Substrate | Shared CT_ and CS_ implementations; reusable capability library |
-| `pgs_blockchain` | Domain | Blockchain workflows: identity, wallet, transaction |
-| `pgs_ai_governance` | Domain | AI governance workflows: licensing, agent action, reclaim |
+| `pgs_blockchain` | Domain | Blockchain workflows: identity, wallet, transaction, mempool, consensus_pos, orchestration (chain in flight) |
+| `pgs_ai_governance` | Domain | AI governance workflows: licensing, agent action, agent admission, reclaim |
+| `pgs_change_mgmt` | Governed Evolution | Change-management pipeline (§4): stage templates, dossiers, agent context manifest |
 | `pgs_workspace` | Entry Point | Compiled snapshot + operational scripts; public developer entry |
 
 **Dependency direction:** `pgs_workspace` → domains → capabilities → runtime ← compiler ← governance
+**Change-management direction:** `pgs_change_mgmt` → `pgs_compiler` (validation) + `pgs_workspace` (PPS snapshot, read-only)
 
 ### Artifact Prefix Quick Reference
 

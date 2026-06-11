@@ -1,0 +1,42 @@
+{
+  "artifact_code": "EV_BLOCK_COMMITTED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_BLOCK_COMMITTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_BLOCK_COMMITTED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA block has been committed to the canonical chain with its is_canonical flag set.\n\n---\n\n## 2. Rationale\n\nCommitment is the canonical chain selection event:\n- Marks the block record as canonical (is_canonical: true)\n- Distinguishes canonical from orphaned blocks after fork resolution\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| (consensus finalization CR \u2014 next CR) | (to be declared) |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| block_hash | string | true | Block identifier (BLK-prefixed) |\n| height | integer | true | Block height |\n| is_canonical | boolean | true | Whether this block is on the canonical chain |\n| timestamp | string (date-time) | true | When commitment was recorded |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_BLOCK_COMMITTED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Block committed to canonical chain\n  description: Emitted when a block's canonical status is resolved; is_canonical true means the block is on the main chain\n\n  schema:\n    block_hash:\n      type: string\n      required: true\n    height:\n      type: integer\n      required: true\n    is_canonical:\n      type: boolean\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "910dc68ab2a73c1aef4e21c8782ccbd07479dae1d1fa5ee28fe165b4fae3e941",
+  "fqdn_id": "blockchain::EV_BLOCK_COMMITTED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a block's canonical status is resolved; is_canonical true means the block is on the main chain",
+      "schema": {
+        "block_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "height": {
+          "required": true,
+          "type": "integer"
+        },
+        "is_canonical": {
+          "required": true,
+          "type": "boolean"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Block committed to canonical chain"
+    },
+    "ev_code": "EV_BLOCK_COMMITTED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.block.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

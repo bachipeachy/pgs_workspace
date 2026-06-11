@@ -26,9 +26,10 @@
           "READ",
           "WRITE",
           "DELETE",
-          "EXISTS",
-          "LIST"
+          "DELETE_MANY",
+          "EXISTS"
         ],
+        "ops_truncated": true,
         "outputs": [
           "result_status"
         ]

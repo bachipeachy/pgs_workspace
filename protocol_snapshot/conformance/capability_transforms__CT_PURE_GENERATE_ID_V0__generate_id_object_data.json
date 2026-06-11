@@ -39,6 +39,7 @@
   "expected": {
     "id": "WF_75382b9a6ab93c66"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_object_data",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_GENERATE_ID_V0"
 }

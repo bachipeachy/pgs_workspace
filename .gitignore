@@ -19,6 +19,9 @@ venv/
 env/
 ENV/
 
+# Bootstrap-generated activation helper (machine-specific absolute paths)
+env.sh
+
 # =========================
 # Build / packaging
 # =========================

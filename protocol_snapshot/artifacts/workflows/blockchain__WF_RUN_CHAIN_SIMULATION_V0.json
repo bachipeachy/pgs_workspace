@@ -1,0 +1,105 @@
+{
+  "artifact_code": "WF_RUN_CHAIN_SIMULATION_V0",
+  "artifact_type": "WF",
+  "content": "# WF_RUN_CHAIN_SIMULATION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_RUN_CHAIN_SIMULATION_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** WF_RUN_CONSENSUS_SLOTS_V0\n- **Dependencies:** IN_RUN_CHAIN_SIMULATION_V0, CC_INITIALIZE_SLOT_CLOCK_V0, CC_DISPATCH_SIMULATION_WORKERS_V0, CC_RECORD_SIMULATION_SUMMARY_V0\n\n---\n\n## 1. Intent\n\nRun a complete governed chain simulation. Initializes the slot clock, concurrently dispatches the consensus loop and TX workload workers, and records the simulation summary. PARTIAL_FAILURE from dispatch is a recoverable outcome \u2014 summary is always recorded.\n\n---\n\n## 2. Rationale\n\n`simulation_id` is the primary isolation boundary established at initialization. All slot clock records and simulation summary records are keyed by it. Concurrent dispatch (CS_CONCURRENT_WORKFLOWS_V0) runs the consensus loop and TX workload as independent workers \u2014 neither halts the other on failure. The summary records both SUCCESS and PARTIAL_FAILURE outcomes; only BACKEND_ERROR exits without recording.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_RUN_CHAIN_SIMULATION_V0\n    \u251c\u2500 ACK \u2192 CC_INITIALIZE_SLOT_CLOCK_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 CC_DISPATCH_SIMULATION_WORKERS_V0\n    \u2502           \u2502               \u251c\u2500 SUCCESS \u2192 CC_RECORD_SIMULATION_SUMMARY_V0\n    \u2502           \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 EXIT\n    \u2502           \u2502               \u2502               \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u251c\u2500 PARTIAL_FAILURE \u2192 CC_RECORD_SIMULATION_SUMMARY_V0\n    \u2502           \u2502               \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2502           \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_RUN_CHAIN_SIMULATION_V0 | IN | Entry intent \u2014 validates simulation parameters |\n| CC_INITIALIZE_SLOT_CLOCK_V0 | CC | Initialize slot clock record keyed by simulation_id |\n| CC_DISPATCH_SIMULATION_WORKERS_V0 | CC | Concurrently run consensus loop + TX workload workers |\n| CC_RECORD_SIMULATION_SUMMARY_V0 | CC | Append simulation summary to SIMULATION_SUMMARY store |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_RUN_CHAIN_SIMULATION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: blockchain::RB_RUN_CHAIN_SIMULATION_V0\nsubdomain: orchestration\n\ncore:\n  summary: Run complete chain simulation \u2014 init clock, dispatch workers, record summary\n  start_node: IN_RUN_CHAIN_SIMULATION_V0\n\n  nodes:\n    IN_RUN_CHAIN_SIMULATION_V0:\n      type: IN\n      code: IN_RUN_CHAIN_SIMULATION_V0\n      next:\n        ACK: CC_INITIALIZE_SLOT_CLOCK_V0\n        NACK: EXIT\n\n    CC_INITIALIZE_SLOT_CLOCK_V0:\n      type: CC\n      code: CC_INITIALIZE_SLOT_CLOCK_V0\n      inputs:\n        simulation_id: $.payload.simulation_id\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: CC_DISPATCH_SIMULATION_WORKERS_V0\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_DISPATCH_SIMULATION_WORKERS_V0:\n      type: CC\n      code: CC_DISPATCH_SIMULATION_WORKERS_V0\n      inputs:\n        simulation_id: $.payload.simulation_id\n        slot_schedule: $.payload.slot_schedule\n        tx_interval_seconds: $.payload.tx_interval_seconds\n        tx_sequence: $.payload.tx_sequence\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: CC_RECORD_SIMULATION_SUMMARY_V0\n        PARTIAL_FAILURE: CC_RECORD_SIMULATION_SUMMARY_V0\n        BACKEND_ERROR: EXIT\n\n    CC_RECORD_SIMULATION_SUMMARY_V0:\n      type: CC\n      code: CC_RECORD_SIMULATION_SUMMARY_V0\n      inputs:\n        simulation_id: $.payload.simulation_id\n        simulation_outcome: $.results.CC_DISPATCH_SIMULATION_WORKERS_V0.result_status\n        results: $.results.CC_DISPATCH_SIMULATION_WORKERS_V0.results\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - 4-node topology \u2014 init clock \u2192 dispatch workers \u2192 record summary \u2192 exit\n    - slot_schedule is a pre-expanded array of integer slot numbers; sourced from payload (seed config or caller)\n    - PARTIAL_FAILURE from CC_DISPATCH routes to CC_RECORD \u2014 summary always recorded for partial failures\n    - BACKEND_ERROR from CC_DISPATCH exits without recording \u2014 infrastructure failure\n    - simulation_outcome in CC_RECORD is sourced from CC_DISPATCH result_status (SUCCESS or PARTIAL_FAILURE)\n    - simulation_id isolation invariant: all slot clock + summary records keyed by simulation_id\n    - Supersedes WF_RUN_CONSENSUS_SLOTS_V0 \u2014 that WF is RETIRED; this is the orchestration entry point\n    - authority: AC_SYSTEM_V0\n```\n",
+  "content_hash": "fdc5612303a0d7fcf6859c247637a3c583971b159f7aa3e202614b0803f18daf",
+  "fqdn_id": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_DISPATCH_SIMULATION_WORKERS_V0": {
+          "code": "CC_DISPATCH_SIMULATION_WORKERS_V0",
+          "fqdn_id": "blockchain::CC_DISPATCH_SIMULATION_WORKERS_V0",
+          "inputs": {
+            "simulation_id": "$.payload.simulation_id",
+            "slot_schedule": "$.payload.slot_schedule",
+            "triggered_by": "$.payload.triggered_by",
+            "tx_interval_seconds": "$.payload.tx_interval_seconds",
+            "tx_sequence": "$.payload.tx_sequence"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "PARTIAL_FAILURE": "CC_RECORD_SIMULATION_SUMMARY_V0",
+            "SUCCESS": "CC_RECORD_SIMULATION_SUMMARY_V0"
+          },
+          "type": "CC"
+        },
+        "CC_INITIALIZE_SLOT_CLOCK_V0": {
+          "code": "CC_INITIALIZE_SLOT_CLOCK_V0",
+          "fqdn_id": "blockchain::CC_INITIALIZE_SLOT_CLOCK_V0",
+          "inputs": {
+            "simulation_id": "$.payload.simulation_id",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_DISPATCH_SIMULATION_WORKERS_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_RECORD_SIMULATION_SUMMARY_V0": {
+          "code": "CC_RECORD_SIMULATION_SUMMARY_V0",
+          "fqdn_id": "blockchain::CC_RECORD_SIMULATION_SUMMARY_V0",
+          "inputs": {
+            "results": "$.results.CC_DISPATCH_SIMULATION_WORKERS_V0.results",
+            "simulation_id": "$.payload.simulation_id",
+            "simulation_outcome": "$.results.CC_DISPATCH_SIMULATION_WORKERS_V0.result_status",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_RUN_CHAIN_SIMULATION_V0": {
+          "code": "IN_RUN_CHAIN_SIMULATION_V0",
+          "fqdn_id": "blockchain::IN_RUN_CHAIN_SIMULATION_V0",
+          "next": {
+            "ACK": "CC_INITIALIZE_SLOT_CLOCK_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_RUN_CHAIN_SIMULATION_V0",
+      "summary": "Run complete chain simulation \u2014 init clock, dispatch workers, record summary"
+    },
+    "extensions": {
+      "notes": [
+        "4-node topology \u2014 init clock \u2192 dispatch workers \u2192 record summary \u2192 exit",
+        "slot_schedule is a pre-expanded array of integer slot numbers; sourced from payload (seed config or caller)",
+        "PARTIAL_FAILURE from CC_DISPATCH routes to CC_RECORD \u2014 summary always recorded for partial failures",
+        "BACKEND_ERROR from CC_DISPATCH exits without recording \u2014 infrastructure failure",
+        "simulation_outcome in CC_RECORD is sourced from CC_DISPATCH result_status (SUCCESS or PARTIAL_FAILURE)",
+        {
+          "simulation_id isolation invariant": "all slot clock + summary records keyed by simulation_id"
+        },
+        "Supersedes WF_RUN_CONSENSUS_SLOTS_V0 \u2014 that WF is RETIRED; this is the orchestration entry point",
+        {
+          "authority": "AC_SYSTEM_V0"
+        }
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
+    "subdomain": "orchestration",
+    "version": "v0",
+    "wf_code": "WF_RUN_CHAIN_SIMULATION_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

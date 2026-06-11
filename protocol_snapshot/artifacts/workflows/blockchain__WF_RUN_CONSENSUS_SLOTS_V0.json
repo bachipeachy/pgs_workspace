@@ -1,0 +1,82 @@
+{
+  "artifact_code": "WF_RUN_CONSENSUS_SLOTS_V0",
+  "artifact_type": "WF",
+  "content": "# WF_RUN_CONSENSUS_SLOTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_RUN_CONSENSUS_SLOTS_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_CONSENSUS_SLOTS_V0, CC_EXECUTE_SLOT_SEQUENCE_V0, CC_VERIFY_SLOT_RESULTS_V0\n\n---\n\n## 1. Intent\n\nExecute a finite ordered sequence of consensus slots and assert post-run invariants. The slot loop is absorbed inside CC_EXECUTE_SLOT_SEQUENCE_V0 (Collatz pattern) \u2014 this WF DAG is linear (3 nodes: IN \u2192 execute \u2192 verify \u2192 EXIT).\n\n---\n\n## 2. Rationale\n\nPGS WF DAGs have no loop construct \u2014 all iteration must be absorbed inside a CC (Collatz pattern). CC_EXECUTE_SLOT_SEQUENCE_V0 contains the slot loop and invokes all governed WFs per slot via CS_WORKFLOW_GATEWAY_V0. This WF remains linear: admit the payload, execute the sequence, assert the result.\n\nCC_VERIFY_SLOT_RESULTS_V0 is a post-run assertion that runs after CC_EXECUTE_SLOT_SEQUENCE_V0 returns SUCCESS. It verifies that at least one block was proposed and all eight typed transaction types are represented in the TRANSACTION store. The assertion runs unconditionally on the SUCCESS path \u2014 it is not optional.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_CONSENSUS_SLOTS_V0\n    \u251c\u2500 ACK \u2192 CC_EXECUTE_SLOT_SEQUENCE_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 CC_VERIFY_SLOT_RESULTS_V0\n    \u2502           \u2502               \u251c\u2500 SUCCESS \u2192 EXIT\n    \u2502           \u2502               \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2502               \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2502           \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_CONSENSUS_SLOTS_V0 | IN | Entry intent \u2014 validates slot_schedule is non-empty and triggered_by is present |\n| CC_EXECUTE_SLOT_SEQUENCE_V0 | CC | Collatz slot loop \u2014 executes all slots via governed WF invocations |\n| CC_VERIFY_SLOT_RESULTS_V0 | CC | Post-run assertion \u2014 verifies at least one PROPOSED block and all 8 tx_types present |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## 5. Admission\n\nslot_schedule must be a non-empty array of slot descriptors. triggered_by must be a non-empty string. Validated by IN_CONSENSUS_SLOTS_V0.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_RUN_CONSENSUS_SLOTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: blockchain::RB_RUN_CONSENSUS_SLOTS_V0\nsubdomain: consensus_pos\n\ncore:\n  summary: Execute a finite consensus slot sequence and assert post-run invariants\n  start_node: IN_CONSENSUS_SLOTS_V0\n\n  nodes:\n    IN_CONSENSUS_SLOTS_V0:\n      type: IN\n      code: IN_CONSENSUS_SLOTS_V0\n      next:\n        ACK: CC_EXECUTE_SLOT_SEQUENCE_V0\n        NACK: EXIT\n\n    CC_EXECUTE_SLOT_SEQUENCE_V0:\n      type: CC\n      code: CC_EXECUTE_SLOT_SEQUENCE_V0\n      inputs:\n        slot_schedule: $.payload.slot_schedule\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: CC_VERIFY_SLOT_RESULTS_V0\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_VERIFY_SLOT_RESULTS_V0:\n      type: CC\n      code: CC_VERIFY_SLOT_RESULTS_V0\n      inputs:\n        slots_executed: $.results.CC_EXECUTE_SLOT_SEQUENCE_V0.slots_executed\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n\nextensions:\n  subdomain: consensus_pos\n  lifecycle:\n    status: RETIRED\n    superseded_by: blockchain::WF_RUN_CHAIN_SIMULATION_V0\n  notes:\n    - Linear WF DAG (3 nodes) \u2014 loop absorbed inside CC_EXECUTE_SLOT_SEQUENCE_V0 (Collatz pattern)\n    - CC_VERIFY_SLOT_RESULTS_V0 runs unconditionally after SUCCESS \u2014 post-run assertion is mandatory\n    - VIOLATION from CC_EXECUTE_SLOT_SEQUENCE_V0 means a slot WF returned non-SUCCESS \u2014 slot run halted\n    - VIOLATION from CC_VERIFY_SLOT_RESULTS_V0 means invariants not met (no PROPOSED block or missing tx_type)\n    - All store writes occur through owned CCs invoked via CS_WORKFLOW_GATEWAY_V0 inside CC_EXECUTE_SLOT_SEQUENCE_V0\n```\n",
+  "content_hash": "773d02fd69b80574dcf4b933d86b063f8b39c3f8032295d27ff614b66981ca3a",
+  "fqdn_id": "blockchain::WF_RUN_CONSENSUS_SLOTS_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_EXECUTE_SLOT_SEQUENCE_V0": {
+          "code": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+          "fqdn_id": "blockchain::CC_EXECUTE_SLOT_SEQUENCE_V0",
+          "inputs": {
+            "slot_schedule": "$.payload.slot_schedule",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_VERIFY_SLOT_RESULTS_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_VERIFY_SLOT_RESULTS_V0": {
+          "code": "CC_VERIFY_SLOT_RESULTS_V0",
+          "fqdn_id": "blockchain::CC_VERIFY_SLOT_RESULTS_V0",
+          "inputs": {
+            "slots_executed": "$.results.CC_EXECUTE_SLOT_SEQUENCE_V0.slots_executed"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_CONSENSUS_SLOTS_V0": {
+          "code": "IN_CONSENSUS_SLOTS_V0",
+          "fqdn_id": "blockchain::IN_CONSENSUS_SLOTS_V0",
+          "next": {
+            "ACK": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_CONSENSUS_SLOTS_V0",
+      "summary": "Execute a finite consensus slot sequence and assert post-run invariants"
+    },
+    "extensions": {
+      "lifecycle": {
+        "status": "RETIRED",
+        "superseded_by": "blockchain::WF_RUN_CHAIN_SIMULATION_V0"
+      },
+      "notes": [
+        "Linear WF DAG (3 nodes) \u2014 loop absorbed inside CC_EXECUTE_SLOT_SEQUENCE_V0 (Collatz pattern)",
+        "CC_VERIFY_SLOT_RESULTS_V0 runs unconditionally after SUCCESS \u2014 post-run assertion is mandatory",
+        "VIOLATION from CC_EXECUTE_SLOT_SEQUENCE_V0 means a slot WF returned non-SUCCESS \u2014 slot run halted",
+        "VIOLATION from CC_VERIFY_SLOT_RESULTS_V0 means invariants not met (no PROPOSED block or missing tx_type)",
+        "All store writes occur through owned CCs invoked via CS_WORKFLOW_GATEWAY_V0 inside CC_EXECUTE_SLOT_SEQUENCE_V0"
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_RUN_CONSENSUS_SLOTS_V0",
+    "subdomain": "consensus_pos",
+    "version": "v0",
+    "wf_code": "WF_RUN_CONSENSUS_SLOTS_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_RUN_CONSENSUS_SLOTS_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

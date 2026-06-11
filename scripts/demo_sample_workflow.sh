@@ -24,8 +24,7 @@ pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
   --payload "$PAYLOAD" \
   --data-root "$DATA_ROOT" \
-  --workspace "$WS_ROOT" \
-  --visualize | tee "$OUT1"
+  --workspace "$WS_ROOT" | tee "$OUT1"
 
 TRACE1=$(grep "Trace ID:" "$OUT1" | awk '{print $3}')
 
@@ -38,8 +37,7 @@ pgs_runtime run \
   --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 \
   --payload "$PAYLOAD" \
   --data-root "$DATA_ROOT" \
-  --workspace "$WS_ROOT" \
-  --visualize | tee "$OUT2"
+  --workspace "$WS_ROOT" | tee "$OUT2"
 
 TRACE2=$(grep "Trace ID:" "$OUT2" | awk '{print $3}')
 
@@ -136,31 +134,6 @@ echo "[6] Key Observation"
 
 echo "  You did not write execution code."
 echo "  Behavior is governed by protocol + side-effect semantics."
-
-echo ""
-echo "[7] Execution Graph"
-
-echo ""
-echo "Compiled workflow DAG (static — full graph, all paths):"
-echo "  $WS_ROOT/protocol_snapshot/visualization/WF_REGISTER_ACTOR_UNVERIFIED_V0/WF_REGISTER_ACTOR_UNVERIFIED_V0.graph.json"
-echo "  $WS_ROOT/protocol_snapshot/visualization/WF_REGISTER_ACTOR_UNVERIFIED_V0/WF_REGISTER_ACTOR_UNVERIFIED_V0.projection.png"
-
-echo ""
-echo "Evidence projection PNGs (execution path highlighted in red):"
-
-TRACE1_PNG=$(find "$TRACE_ROOT" -path "*/$TRACE1/$TRACE1.png" 2>/dev/null | head -1)
-if [ -n "$TRACE1_PNG" ]; then
-  echo "  Run #1: $TRACE1_PNG"
-else
-  echo "  Run #1: (not found — graphviz may be unavailable)"
-fi
-
-TRACE2_PNG=$(find "$TRACE_ROOT" -path "*/$TRACE2/$TRACE2.png" 2>/dev/null | head -1)
-if [ -n "$TRACE2_PNG" ]; then
-  echo "  Run #2: $TRACE2_PNG"
-else
-  echo "  Run #2: (not found — graphviz may be unavailable)"
-fi
 
 echo ""
 echo "======================================="

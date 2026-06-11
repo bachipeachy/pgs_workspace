@@ -85,6 +85,7 @@
     "utxo_derivation_path": "m/44'/66'/0'/1/0",
     "utxo_public_key_hex": "046c494434265132b0ff8b152463b2ebd3fc39510681bf25c439b1ab19929b1ad958ae163406f8ca40a9fe1cb1f6ef086211cebe55007bfc85a27d054c33b9f06c"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0::derive_deterministic_v0",
   "test_data_source": "blockchain::TEST_DATA_CT_PURE_DERIVE_WALLET_KEYPAIRS_V0"
 }

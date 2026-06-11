@@ -1,0 +1,100 @@
+{
+  "artifact_code": "CC_VALIDATE_SLASH_POLICY_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_VALIDATE_SLASH_POLICY_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_VALIDATE_SLASH_POLICY_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nValidate SLASH transaction policy: from_wallet exists as a valid slash source.\n\n---\n\n## 2. Rationale\n\nPolicy enforcement for SLASH (SYSTEM authority):\n- SLASH is triggered by the consensus protocol for validator misbehavior\n- Validates from_wallet exists in the WALLET store (the validator's staking wallet)\n- validator_index must be provided to identify the slashed validator\n- No actor ownership check \u2014 SYSTEM authority only\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | READ (from_wallet) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| triggered_by | string | true | Protocol event or system process that triggered this slash |\n| from_wallet_id | string | true | Validator's staking wallet from which funds are slashed |\n| validator_index | string | true | Validator identifier being slashed |\n| amount | number | true | Slash amount in BACHI |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| from_wallet_record | object | Full from-wallet record |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | from_wallet found |\n| NOT_FOUND | from_wallet does not exist |\n| VIOLATION | Invalid input |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_VALIDATE_SLASH_POLICY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Validate SLASH policy \u2014 source wallet existence check (SYSTEM)\n\n  inputs:\n    triggered_by:\n      type: string\n      required: true\n    from_wallet_id:\n      type: string\n      required: true\n    validator_index:\n      type: string\n      required: true\n    amount:\n      type: number\n      required: true\n\n  outputs:\n    from_wallet_record:\n      type: object\n\n  result_status_contract:\n    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: read_from_wallet\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: WALLET\n      op: READ\n      inputs:\n        key: $.inputs.from_wallet_id\n      outputs:\n        from_wallet_record: $.capability_result.value\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "1c39c4e3e26845fa1ccf9a98405b9e507e81692f174a483c80d34e1dc0126f8e",
+  "fqdn_id": "blockchain::CC_VALIDATE_SLASH_POLICY_V0",
+  "frontmatter": {
+    "cc_code": "CC_VALIDATE_SLASH_POLICY_V0",
+    "core": {
+      "inputs": {
+        "amount": {
+          "required": true,
+          "type": "number"
+        },
+        "from_wallet_id": {
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "required": true,
+          "type": "string"
+        },
+        "validator_index": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "from_wallet_record": {
+          "type": "object"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.from_wallet_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "from_wallet_record": "$.capability_result.value"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "read_from_wallet",
+          "store": "WALLET"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Validate SLASH policy \u2014 source wallet existence check (SYSTEM)"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

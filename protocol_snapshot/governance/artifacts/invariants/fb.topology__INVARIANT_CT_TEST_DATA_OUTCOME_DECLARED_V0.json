@@ -1,0 +1,30 @@
+{
+  "artifact_code": "INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
+  "artifact_type": "INVARIANT",
+  "content": "# INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0\n\ncore:\n  summary: >\n    Every test case in a TEST_DATA artifact must declare an explicit expected_outcome.\n    The outcome is a contract between the test author and the CT implementation \u2014\n    it states whether the CT is expected to succeed or raise a VIOLATION.\n    Omitting it makes the test ambiguous: a silent default cannot be audited,\n    traced, or verified as intentional by a future compiler or reviewer.\n\n  rule: >\n    For every TEST_DATA artifact in the compiled graph: each test case declared\n    in the artifact body must include an explicit expected_outcome field.\n    Valid values are SUCCESS and VIOLATION. A test case without expected_outcome\n    is an undeclared behavioral contract \u2014 the compiler MUST NOT silently assume\n    SUCCESS. The test author must state the expected outcome explicitly so that\n    the conformance test runner can verify the CT behaves as contracted.\n\n  scope:\n    - TEST_DATA\n\n  enforced_by:\n    - ASSERT_CT_TEST_DATA_OUTCOME_DECLARED_V0\n```\n\n---\n\n## Summary\n\nThe `expected_outcome` field in a CT conformance test case is not optional metadata \u2014\nit is the contract assertion. When a CT is expected to raise a `VIOLATION` outcome\n(e.g., input fails validation), the test case must declare `expected_outcome: VIOLATION`.\nWhen the CT is expected to succeed, the test case must declare `expected_outcome: SUCCESS`.\n\nA compiler that silently defaults missing `expected_outcome` to `SUCCESS` produces\nconformance tests that never test the failure path \u2014 `VIOLATION` cases appear to pass\nbecause the runner treats them as success cases.\n\n## Rule\n\nFor every TEST_DATA artifact:\n\n1. Every `### Case N:` yaml block MUST include `expected_outcome` as an explicit field.\n2. Valid values are `SUCCESS` and `VIOLATION`.\n3. The compiler MUST NOT default `expected_outcome` when it is absent \u2014 absence is a violation.\n4. The test runner MUST use the declared `expected_outcome` to determine whether the\n   CT invocation is expected to raise an exception (VIOLATION) or return a result (SUCCESS).\n\n## Enforcement Scope\n\n- **Artifact Types**: TEST_DATA\n- **Validation Phase**: compile_time (S4 GOVERN)\n- **Enforced By**: ASSERT_CT_TEST_DATA_OUTCOME_DECLARED_V0\n\n## Rationale\n\nThis invariant exists because omitting `expected_outcome` is a silent ambiguity.\nA test case that expects VIOLATION but lacks the declaration will be compiled as\na SUCCESS test. The CT will raise an exception, the runner will report a conformance\nfailure \u2014 but the failure is not \"CT is wrong,\" it is \"test case is underspecified.\"\n\nWithout this invariant, a compiler implementation that encounters a missing\n`expected_outcome` has no governance signal telling it to reject the input.\nIt either defaults silently (Bug 2) or fails cryptically at test run time.\n\nWith this invariant, a missing `expected_outcome` is a named compile-time violation:\n`fb.topology::INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0` \u2014 findable, traceable,\ncorrectable at the source before any test is run.\n\n## Version History\n\n- **V0**: Initial invariant requiring explicit expected_outcome in all CT test cases (2026-06-03)\n",
+  "content_hash": "8618eecf09a883131cebfb006cd24fee9f0ca51c3d1f8c0bb4f77cd26e2f477d",
+  "fqdn_id": "fb.topology::INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
+  "frontmatter": {
+    "artifact_kind": "INVARIANT",
+    "core": {
+      "enforced_by": [
+        "ASSERT_CT_TEST_DATA_OUTCOME_DECLARED_V0"
+      ],
+      "rule": "For every TEST_DATA artifact in the compiled graph: each test case declared in the artifact body must include an explicit expected_outcome field. Valid values are SUCCESS and VIOLATION. A test case without expected_outcome is an undeclared behavioral contract \u2014 the compiler MUST NOT silently assume SUCCESS. The test author must state the expected outcome explicitly so that the conformance test runner can verify the CT behaves as contracted.\n",
+      "scope": [
+        "TEST_DATA"
+      ],
+      "summary": "Every test case in a TEST_DATA artifact must declare an explicit expected_outcome. The outcome is a contract between the test author and the CT implementation \u2014 it states whether the CT is expected to succeed or raise a VIOLATION. Omitting it makes the test ambiguous: a silent default cannot be audited, traced, or verified as intentional by a future compiler or reviewer.\n"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+    "invariant_code": "INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
+    "version": "V0"
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.invariants",
+  "namespace": "fb.topology",
+  "references": [
+    "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+  ],
+  "version": "0"
+}

@@ -39,6 +39,7 @@
       "key": "test"
     }
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0::passthrough_object",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_PASSTHROUGH_V0"
 }

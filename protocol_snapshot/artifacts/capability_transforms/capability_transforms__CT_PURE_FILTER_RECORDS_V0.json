@@ -1,0 +1,86 @@
+{
+  "artifact_code": "CT_PURE_FILTER_RECORDS_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_FILTER_RECORDS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_FILTER_RECORDS_V0\n- **Artifact Kind:** atom\n- **Governed By:** fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nFilter an array of record objects by declared field criteria, returning only those records that satisfy all criteria.\n\n---\n\n### 2. Rationale\n\nMany pipeline stages require selecting a subset of records from a list based on field conditions (exact-value match or field presence). This transform provides a reusable, declarative, domain-agnostic filtering primitive for use in CC pipelines that operate on arrays returned from CS store operations.\n\nWithout a canonical filter atom, filtering logic would be duplicated or embedded ad hoc in domain-specific transforms.\n\n---\n\n### 3. Naming Convention\n\n- **Artifact Code:** CT_PURE_FILTER_RECORDS_V0 (full versioned identifier)\n- **Operation:** FILTER_RECORDS (execution opcode used in molecules)\n\n---\n\n### 4. Applicability & Non-Applicability\n\n#### 4.1 Valid Use Cases\n- Filtering a CS store LIST result to eligible records by field conditions\n- Selecting records by exact field value or field presence\n- Preparing a filtered list for downstream CC steps\n\n#### 4.2 Invalid Use Cases\n- Filtering by complex expressions, ranges, or nested conditions\n- Sorting or ordering records\n- Reshaping or transforming record fields\n- Domain-specific eligibility logic (that belongs in domain CC)\n\n---\n\n### 5. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|--------|------|------|\n| Deterministic | YES | Same source and filter yield same output |\n| Purity Class | ct_pure | No side effects, no state |\n| Side Effects | NONE | Fully pure computation |\n| Replay Safe | YES | Identical inputs produce identical output |\n\n---\n\n### 6. Structural Checklist\n\nAuthor MUST confirm all items before writing YAML:\n\n- [x] Single responsibility\n- [x] No implicit state\n- [x] No domain semantics\n- [x] Inputs fully declared\n- [x] Outputs fully declared\n- [x] No hidden control flow\n- [x] Composition rules respected\n\n---\n\n### 7. Composition Rules (Atom-Specific)\n\nAs an **atom**, this CT:\n- MUST NOT invoke other CTs (atoms or molecules)\n- MUST perform exactly one atomic operation\n- MAY be composed by molecules\n\n---\n\n### 8. Filter Criterion Semantics\n\nThe `filter` input is a flat dict of field criteria applied with AND logic:\n\n| Criterion Value | Semantic |\n|----------------|---------|\n| `\"present\"` | Field must exist in record and not be None |\n| any other value | Field must equal that value exactly |\n\nAll criteria must be satisfied for a record to be included.\n\n---\n\n### 9. Validation Expectations\n\n**Runtime validation MUST fail if:**\n- `source` is not an array\n- `filter` is not an object\n- No records satisfy all filter criteria (raises CTExecutionError \u2192 VIOLATION at CC)\n\n---\n\n### 10. Observability\n\nThis atom does NOT emit traces.\n\n**Rationale:** Pure computation with no side effects or state changes.\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_FILTER_RECORDS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Filter an array of records by declared field criteria\n  description: Accepts a source array and a filter criteria object. Returns only records satisfying all criteria. Raises CTExecutionError if no records match.\n\n  inputs:\n    source:\n      type: array\n      required: true\n      description: Array of record objects to filter\n    filter:\n      type: object\n      required: true\n      description: Field criteria dict. Values are exact match or \"present\" for existence check.\n\n  outputs:\n    extracted:\n      type: array\n      description: Filtered records satisfying all criteria\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: FILTER_RECORDS\n  implementation:\n    module: pgs_transforms.implementation.transforms.atoms.ct_pure_filter_records_v0\n    callable: execute\n```",
+  "content_hash": "454e446ff75ee875190d10cf9c8b116fa3b593facdf25175783430c8532cb376",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "filter": "$.inputs.filter",
+          "source": "$.inputs.source"
+        },
+        "atom": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_filter_records_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_FILTER_RECORDS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+    "inputs": {
+      "filter": {
+        "description": "Field criteria dict. Values are exact match or \"present\" for existence check.",
+        "required": true,
+        "type": "object"
+      },
+      "source": {
+        "description": "Array of record objects to filter",
+        "required": true,
+        "type": "array"
+      }
+    },
+    "outputs": {
+      "extracted": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Accepts a source array and a filter criteria object. Returns only records satisfying all criteria. Raises CTExecutionError if no records match.",
+      "inputs": {
+        "filter": {
+          "description": "Field criteria dict. Values are exact match or \"present\" for existence check.",
+          "required": true,
+          "type": "object"
+        },
+        "source": {
+          "description": "Array of record objects to filter",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "extracted": {
+          "description": "Filtered records satisfying all criteria",
+          "type": "array"
+        }
+      },
+      "summary": "Filter an array of records by declared field criteria"
+    },
+    "ct_code": "CT_PURE_FILTER_RECORDS_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_filter_records_v0"
+      },
+      "operation": "FILTER_RECORDS"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_TRANSFORMS",
+  "module_path": "pgs_transforms.registry.capability_transforms",
+  "namespace": "capability_transforms",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

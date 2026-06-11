@@ -1,0 +1,67 @@
+{
+  "artifact_code": "WF_RUN_TX_WORKLOAD_V0",
+  "artifact_type": "WF",
+  "content": "# WF_RUN_TX_WORKLOAD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_RUN_TX_WORKLOAD_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_TX_WORKLOAD_STARTED_V0, CC_RUN_TX_SEQUENCE_V0\n\n---\n\n## 1. Intent\n\nExecute the ordered TX workload sequence. Absorbs the TX loop inside CC_RUN_TX_SEQUENCE_V0 (Collatz pattern) \u2014 this WF DAG is linear (2 nodes: IN \u2192 execute \u2192 EXIT).\n\n---\n\n## 2. Rationale\n\nPGS WF DAGs have no loop construct \u2014 all iteration is absorbed inside a CC (Collatz pattern). CC_RUN_TX_SEQUENCE_V0 contains the TX loop and dispatches each TX spec to the appropriate typed TX workflow by `tx_type`. This WF remains linear: admit the payload, execute the TX sequence, exit.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_TX_WORKLOAD_STARTED_V0\n    \u251c\u2500 ACK \u2192 CC_RUN_TX_SEQUENCE_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 EXIT\n    \u2502           \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_TX_WORKLOAD_STARTED_V0 | IN | Entry intent \u2014 validates tx_interval_seconds, tx_sequence, triggered_by |\n| CC_RUN_TX_SEQUENCE_V0 | CC | Collatz TX loop \u2014 iterates tx_sequence; dispatches by tx_type to typed TX WFs |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_RUN_TX_WORKLOAD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: blockchain::RB_RUN_TX_WORKLOAD_V0\nsubdomain: orchestration\n\ncore:\n  summary: Execute ordered TX workload sequence via Collatz-pattern CC_RUN_TX_SEQUENCE_V0\n  start_node: IN_TX_WORKLOAD_STARTED_V0\n\n  nodes:\n    IN_TX_WORKLOAD_STARTED_V0:\n      type: IN\n      code: IN_TX_WORKLOAD_STARTED_V0\n      next:\n        ACK: CC_RUN_TX_SEQUENCE_V0\n        NACK: EXIT\n\n    CC_RUN_TX_SEQUENCE_V0:\n      type: CC\n      code: CC_RUN_TX_SEQUENCE_V0\n      inputs:\n        tx_sequence: $.payload.tx_sequence\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - Linear 2-node topology \u2014 Collatz pattern absorbed in CC_RUN_TX_SEQUENCE_V0\n    - tx_sequence carries fully resolved TX spec objects; no payload construction inside this WF\n    - tx_interval_seconds is declared in IN but not passed to CC \u2014 CS_WORKFLOW_LOOP_V0 executes sequentially without delay (timing is a runtime infrastructure concern)\n    - VIOLATION from CC means at least one typed TX WF invocation failed \u2014 loop halted\n    - authority: AC_SYSTEM_V0\n```\n",
+  "content_hash": "58df2fd26f83707dd4c7ddb1519ade0a88816722ec073e4d4bdbb45a0bf13472",
+  "fqdn_id": "blockchain::WF_RUN_TX_WORKLOAD_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_RUN_TX_SEQUENCE_V0": {
+          "code": "CC_RUN_TX_SEQUENCE_V0",
+          "fqdn_id": "blockchain::CC_RUN_TX_SEQUENCE_V0",
+          "inputs": {
+            "triggered_by": "$.payload.triggered_by",
+            "tx_sequence": "$.payload.tx_sequence"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_TX_WORKLOAD_STARTED_V0": {
+          "code": "IN_TX_WORKLOAD_STARTED_V0",
+          "fqdn_id": "blockchain::IN_TX_WORKLOAD_STARTED_V0",
+          "next": {
+            "ACK": "CC_RUN_TX_SEQUENCE_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_TX_WORKLOAD_STARTED_V0",
+      "summary": "Execute ordered TX workload sequence via Collatz-pattern CC_RUN_TX_SEQUENCE_V0"
+    },
+    "extensions": {
+      "notes": [
+        "Linear 2-node topology \u2014 Collatz pattern absorbed in CC_RUN_TX_SEQUENCE_V0",
+        "tx_sequence carries fully resolved TX spec objects; no payload construction inside this WF",
+        "tx_interval_seconds is declared in IN but not passed to CC \u2014 CS_WORKFLOW_LOOP_V0 executes sequentially without delay (timing is a runtime infrastructure concern)",
+        "VIOLATION from CC means at least one typed TX WF invocation failed \u2014 loop halted",
+        {
+          "authority": "AC_SYSTEM_V0"
+        }
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_RUN_TX_WORKLOAD_V0",
+    "subdomain": "orchestration",
+    "version": "v0",
+    "wf_code": "WF_RUN_TX_WORKLOAD_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_RUN_TX_WORKLOAD_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

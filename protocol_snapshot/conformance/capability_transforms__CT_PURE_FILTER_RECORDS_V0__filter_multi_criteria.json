@@ -1,0 +1,67 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "filter": "$.inputs.filter",
+          "source": "$.inputs.source"
+        },
+        "atom": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_filter_records_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_FILTER_RECORDS_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+    "input_types": {
+      "filter": "object",
+      "source": "array"
+    },
+    "inputs": {
+      "filter": {
+        "enrollment_status": "ACTIVE",
+        "stake": "32000000000"
+      },
+      "source": [
+        {
+          "actor_id": "AC_aaa",
+          "enrollment_status": "ACTIVE",
+          "stake": "32000000000"
+        },
+        {
+          "actor_id": "AC_bbb",
+          "enrollment_status": "ACTIVE",
+          "stake": "16000000000"
+        },
+        {
+          "actor_id": "AC_ccc",
+          "enrollment_status": "INACTIVE",
+          "stake": "32000000000"
+        }
+      ]
+    },
+    "outputs": {
+      "extracted": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "extracted": [
+      {
+        "actor_id": "AC_aaa",
+        "enrollment_status": "ACTIVE",
+        "stake": "32000000000"
+      }
+    ]
+  },
+  "expected_outcome": "SUCCESS",
+  "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0::filter_multi_criteria",
+  "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_FILTER_RECORDS_V0"
+}

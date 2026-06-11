@@ -1,13 +1,7 @@
 {
   "bindings": {
-    "41": {
-      "12": {
-        "employee_id": "$.payload.context.employee_id",
-        "last_active_date": "$.payload.context.last_active_date",
-        "license_id": "$.payload.license_id",
-        "threshold_days": "$.payload.threshold_days"
-      },
-      "5": {
+    "47": {
+      "CC_APPEND_AUDIT_EVENT_RECLAIMED": {
         "data": {
           "days_inactive": "$.payload.context.days_inactive",
           "license_id": "$.payload.license_id"
@@ -16,110 +10,237 @@
         "employee_id": "$.payload.context.employee_id",
         "event_type": "EV_LICENSE_REVOKED_V0",
         "reason_code": "INACTIVITY"
+      },
+      "CC_RECLAIM_UNUSED_LICENSE_V0": {
+        "employee_id": "$.payload.context.employee_id",
+        "last_active_date": "$.payload.context.last_active_date",
+        "license_id": "$.payload.license_id",
+        "threshold_days": "$.payload.threshold_days"
       }
     },
-    "42": {
-      "16": {
-        "all_terminate": "$.results.19.all_terminate",
-        "non_terminating": "$.results.19.non_terminating",
-        "sequences": "$.results.8.sequences"
-      },
-      "19": {
-        "sequences": "$.results.8.sequences"
-      },
-      "8": {
+    "48": {
+      "CC_COMPUTE_SEQUENCES_V0": {
         "numbers": "$.payload.numbers"
+      },
+      "CC_STORE_RESULTS_V0": {
+        "all_terminate": "$.results.22.all_terminate",
+        "non_terminating": "$.results.22.non_terminating",
+        "sequences": "$.results.10.sequences"
+      },
+      "CC_VERIFY_TERMINATION_V0": {
+        "sequences": "$.results.10.sequences"
       }
     },
-    "43": {
-      "5": {
+    "49": {
+      "CC_APPEND_AUDIT_EVENT_V0": {
         "decision": "DENIED",
         "employee_id": "$.payload.employee_id",
         "event_type": "EV_PROVISION_DENIED_V0",
         "reason_code": "$.payload.reason_code"
       }
     },
-    "44": {
-      "10": {
-        "domain_context": "$.payload.domain_context",
-        "requesting_user_id": "$.payload.requesting_user_id",
-        "tool_name": "$.payload.tool_name"
-      },
-      "13": {
+    "50": {
+      "CC_AUDIT_PARAMETER_VIOLATION": {
         "denial_reason": "PARAMETER_VIOLATION",
         "domain_context": "$.payload.domain_context",
         "requesting_user_id": "$.payload.requesting_user_id",
         "tool_name": "$.payload.tool_name"
       },
-      "14": {
+      "CC_AUDIT_UNAUTHORIZED_ACTOR": {
+        "denial_reason": "UNAUTHORIZED_ACTOR",
         "domain_context": "$.payload.domain_context",
-        "intent_hash": "$.results.10.intent_hash",
-        "license_tier": "$.results.15.license_tier",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_AUDIT_UNAUTHORIZED_TOOL": {
+        "denial_reason": "UNAUTHORIZED_TOOL",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_AUDIT_UNDECLARED_TOOL": {
+        "denial_reason": "UNDECLARED_TOOL",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0": {
+        "license_tier": "$.results.17.license_tier",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_CHECK_TOOL_DECLARED_V0": {
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_NORMALIZE_AGENT_REQUEST_V0": {
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_RECORD_GOVERNED_ACTION_V0": {
+        "domain_context": "$.payload.domain_context",
+        "intent_hash": "$.results.12.intent_hash",
+        "license_tier": "$.results.17.license_tier",
         "parameters": "$.payload.parameters",
         "requesting_user_id": "$.payload.requesting_user_id",
         "tool_name": "$.payload.tool_name"
       },
-      "15": {
+      "CC_RESOLVE_LICENSE_TIER_V0": {
         "requesting_user_id": "$.payload.requesting_user_id"
       },
-      "18": {
+      "CC_VALIDATE_TOOL_PARAMETERS_V0": {
         "parameters": "$.payload.parameters",
-        "tool_name": "$.payload.tool_name"
-      },
-      "6": {
-        "license_tier": "$.results.15.license_tier",
-        "tool_name": "$.payload.tool_name"
-      },
-      "7": {
         "tool_name": "$.payload.tool_name"
       }
     },
-    "45": {
-      "11": {
-        "employee_id": "$.payload.employee_id",
-        "license_id": "$.payload.generated.license_id"
+    "51": {
+      "CC_AUDIT_PARAMETER_VIOLATION": {
+        "denial_reason": "PARAMETER_VIOLATION",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
       },
-      "17": {
-        "assigned_count": "$.payload.context.assigned_count",
-        "cap": "$.payload.context.cap",
-        "employee_id": "$.payload.employee_id",
-        "training_completed": "$.payload.context.training_completed"
+      "CC_AUDIT_UNAUTHORIZED_ACTOR": {
+        "denial_reason": "UNAUTHORIZED_ACTOR",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
       },
-      "5": {
+      "CC_AUDIT_UNAUTHORIZED_TOOL": {
+        "denial_reason": "UNAUTHORIZED_TOOL",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_AUDIT_UNDECLARED_TOOL": {
+        "denial_reason": "UNDECLARED_TOOL",
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_BIND_AGENT_LICENSE_TO_TOOL_SURFACE_V0": {
+        "license_tier": "$.results.17.license_tier",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_CHECK_AGENT_TOOL_DECLARED_V0": {
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_NORMALIZE_AGENT_REQUEST_V0": {
+        "domain_context": "$.payload.domain_context",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_RECORD_GOVERNED_ACTION_V0": {
+        "domain_context": "$.payload.domain_context",
+        "intent_hash": "$.results.12.intent_hash",
+        "license_tier": "$.results.17.license_tier",
+        "parameters": "$.payload.parameters",
+        "requesting_user_id": "$.payload.requesting_user_id",
+        "tool_name": "$.payload.tool_name"
+      },
+      "CC_RESOLVE_LICENSE_TIER_V0": {
+        "requesting_user_id": "$.payload.requesting_user_id"
+      },
+      "CC_VALIDATE_AGENT_TOOL_PARAMETERS_V0": {
+        "parameters": "$.payload.parameters",
+        "tool_name": "$.payload.tool_name"
+      }
+    },
+    "52": {
+      "CC_APPEND_AUDIT_EVENT_DENIED": {
         "data": {},
         "decision": "DENIED",
         "employee_id": "$.payload.employee_id",
         "event_type": "EV_PROVISION_DENIED_V0",
         "reason_code": "$.payload.context.reason_code"
+      },
+      "CC_APPEND_AUDIT_EVENT_SUCCESS": {
+        "data": {},
+        "decision": "PROVISIONED",
+        "employee_id": "$.payload.employee_id",
+        "event_type": "EV_LICENSE_PROVISIONED_V0",
+        "license_id": "$.payload.generated.license_id",
+        "reason_code": ""
+      },
+      "CC_PROVISION_LICENSE_V0": {
+        "employee_id": "$.payload.employee_id",
+        "license_id": "$.payload.generated.license_id"
+      },
+      "CC_VALIDATE_ELIGIBILITY_V0": {
+        "assigned_count": "$.payload.context.assigned_count",
+        "cap": "$.payload.context.cap",
+        "employee_id": "$.payload.employee_id",
+        "training_completed": "$.payload.context.training_completed"
       }
     }
   },
   "entry": {
-    "41": {
-      "rb": 38,
-      "start": 35
+    "47": {
+      "rb": 43,
+      "start": 39,
+      "start_key": "IN_RECLAIM_LICENSE_V0"
     },
-    "42": {
-      "rb": 37,
-      "start": 32
+    "48": {
+      "rb": 42,
+      "start": 36,
+      "start_key": "IN_COLLATZ_INPUT_VALIDATED_V0"
     },
-    "43": {
-      "rb": 38,
-      "start": 33
+    "49": {
+      "rb": 43,
+      "start": 37,
+      "start_key": "IN_DENY_PROVISION_V0"
     },
-    "44": {
-      "rb": 36,
-      "start": 31
+    "50": {
+      "rb": 41,
+      "start": 34,
+      "start_key": "IN_AGENT_ACTION_REQUESTED_V0"
     },
-    "45": {
-      "rb": 38,
-      "start": 34
+    "51": {
+      "rb": 40,
+      "start": 35,
+      "start_key": "IN_AGENT_ADMISSION_REQUESTED_V0"
+    },
+    "52": {
+      "rb": 43,
+      "start": 38,
+      "start_key": "IN_PROVISION_AI_LICENSE_V0"
     }
   },
   "pipeline": {
     "10": [
       {
-        "addr": 62,
+        "addr": 23,
+        "inputs": {
+          "numbers": "$.inputs.numbers"
+        },
+        "on_result": {
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "sequences": "$.capability_result.sequences"
+        },
+        "step_id": "compute_sequences"
+      }
+    ],
+    "11": [
+      {
+        "addr": 56,
+        "inputs": {},
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "evaluate_cap"
+        },
+        "op": "COUNT",
+        "outputs": {
+          "count": "$.assigned_count"
+        },
+        "step_id": "count_licenses"
+      }
+    ],
+    "12": [
+      {
+        "addr": 72,
         "inputs": {
           "data": {
             "domain_context": "$.inputs.domain_context",
@@ -139,9 +260,9 @@
         "step_id": "generate_intent_hash"
       }
     ],
-    "11": [
+    "13": [
       {
-        "addr": 48,
+        "addr": 56,
         "inputs": {
           "key": "$.inputs.employee_id",
           "target_cs": "CS_REGISTRY_V0",
@@ -160,9 +281,9 @@
         "step_id": "register_license"
       }
     ],
-    "12": [
+    "14": [
       {
-        "addr": 59,
+        "addr": 68,
         "inputs": {
           "last_active_date": "$.inputs.last_active_date",
           "threshold_days": "$.inputs.threshold_days"
@@ -179,7 +300,7 @@
         "step_id": "evaluate_inactivity"
       },
       {
-        "addr": 48,
+        "addr": 56,
         "inputs": {
           "key_or_address": "$.inputs.employee_id"
         },
@@ -195,9 +316,9 @@
         "step_id": "deregister_license"
       }
     ],
-    "13": [
+    "15": [
       {
-        "addr": 62,
+        "addr": 72,
         "inputs": {
           "data": {
             "domain_context": "$.inputs.domain_context",
@@ -217,8 +338,9 @@
         "step_id": "generate_action_id"
       },
       {
-        "addr": 46,
+        "addr": 53,
         "inputs": {
+          "__store__": "GOVERNANCE_AUDIT",
           "record": {
             "action_id": "$.results.generate_action_id.action_id",
             "decision": "DENIED",
@@ -242,9 +364,9 @@
         "step_id": "append_denial_record"
       }
     ],
-    "14": [
+    "16": [
       {
-        "addr": 62,
+        "addr": 72,
         "inputs": {
           "data": {
             "intent_hash": "$.inputs.intent_hash",
@@ -264,7 +386,7 @@
         "step_id": "generate_action_id"
       },
       {
-        "addr": 48,
+        "addr": 56,
         "inputs": {
           "key": "$.results.generate_action_id.action_id",
           "metadata": {
@@ -290,8 +412,9 @@
         "step_id": "register_action"
       },
       {
-        "addr": 46,
+        "addr": 53,
         "inputs": {
+          "__store__": "GOVERNANCE_AUDIT",
           "record": {
             "action_id": "$.results.generate_action_id.action_id",
             "decision": "AUTHORIZED",
@@ -316,9 +439,9 @@
         "step_id": "append_audit_record"
       }
     ],
-    "15": [
+    "17": [
       {
-        "addr": 47,
+        "addr": 55,
         "inputs": {
           "__store__": "LICENSE_FACTS",
           "key": "$.inputs.requesting_user_id"
@@ -338,7 +461,7 @@
         "step_id": "read_license_record"
       },
       {
-        "addr": 72,
+        "addr": 82,
         "inputs": {
           "allowed_set": [
             "active"
@@ -359,9 +482,9 @@
         "step_id": "validate_active_status"
       }
     ],
-    "16": [
+    "18": [
       {
-        "addr": 47,
+        "addr": 55,
         "inputs": {
           "__store__": "COLLATZ_RESULTS",
           "key": "collatz_results",
@@ -384,9 +507,67 @@
         "step_id": "store_results"
       }
     ],
-    "17": [
+    "19": [
       {
-        "addr": 54,
+        "addr": 74,
+        "inputs": {
+          "key": "$.inputs.tool_name",
+          "map": {
+            "read_file": [
+              {
+                "field": "path",
+                "op": "not_null"
+              }
+            ],
+            "web_search": [
+              {
+                "field": "query",
+                "op": "not_null"
+              }
+            ],
+            "write_file": [
+              {
+                "field": "path",
+                "op": "not_null"
+              },
+              {
+                "field": "content",
+                "op": "not_null"
+              }
+            ]
+          }
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "rules": "$.capability_result.result"
+        },
+        "step_id": "lookup_parameter_rules"
+      },
+      {
+        "addr": 80,
+        "inputs": {
+          "parameters": "$.inputs.parameters",
+          "rules": "$.results.lookup_parameter_rules.rules"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "rules": "$.results.lookup_parameter_rules.rules",
+          "validation_result": "$.capability_result.value"
+        },
+        "step_id": "validate_parameters"
+      }
+    ],
+    "20": [
+      {
+        "addr": 63,
         "inputs": {
           "training_completed": "$.inputs.training_completed"
         },
@@ -401,7 +582,7 @@
         "step_id": "check_training_status"
       },
       {
-        "addr": 53,
+        "addr": 62,
         "inputs": {
           "assigned_count": "$.inputs.assigned_count",
           "quota": "$.inputs.cap"
@@ -417,9 +598,9 @@
         "step_id": "check_quota_available"
       }
     ],
-    "18": [
+    "21": [
       {
-        "addr": 64,
+        "addr": 74,
         "inputs": {
           "key": "$.inputs.tool_name",
           "map": {
@@ -474,7 +655,7 @@
         "step_id": "lookup_parameter_rules"
       },
       {
-        "addr": 70,
+        "addr": 80,
         "inputs": {
           "parameters": "$.inputs.parameters",
           "rules": "$.results.lookup_parameter_rules.rules"
@@ -491,9 +672,9 @@
         "step_id": "validate_parameters"
       }
     ],
-    "19": [
+    "22": [
       {
-        "addr": 21,
+        "addr": 24,
         "inputs": {
           "sequences": "$.inputs.sequences"
         },
@@ -509,9 +690,9 @@
         "step_id": "check_termination"
       }
     ],
-    "273": [
+    "288": [
       {
-        "addr": 275,
+        "addr": 290,
         "inputs": {
           "name": "$.inputs.name"
         },
@@ -528,9 +709,9 @@
         "step_id": "lookup"
       }
     ],
-    "274": [
+    "289": [
       {
-        "addr": 275,
+        "addr": 290,
         "inputs": {
           "name": "$.inputs.name",
           "resource_addresses": "$.inputs.resource_addresses"
@@ -549,8 +730,9 @@
     ],
     "5": [
       {
-        "addr": 46,
+        "addr": 53,
         "inputs": {
+          "__store__": "LICENSE_AUDIT",
           "record": {
             "decision": "$.inputs.decision",
             "employee_id": "$.inputs.employee_id",
@@ -575,7 +757,52 @@
     ],
     "6": [
       {
-        "addr": 64,
+        "addr": 74,
+        "inputs": {
+          "key": "$.inputs.license_tier",
+          "map": {
+            "enterprise": [
+              "web_search",
+              "read_file",
+              "write_file"
+            ],
+            "standard": [
+              "web_search",
+              "read_file"
+            ]
+          }
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "allowed_tools": "$.capability_result.result"
+        },
+        "step_id": "lookup_tier_tools"
+      },
+      {
+        "addr": 82,
+        "inputs": {
+          "allowed_set": "$.results.lookup_tier_tools.allowed_tools",
+          "value": "$.inputs.tool_name"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "allowed_tools": "$.results.lookup_tier_tools.allowed_tools",
+          "is_authorized": "$.capability_result.is_member"
+        },
+        "step_id": "validate_tool_membership"
+      }
+    ],
+    "7": [
+      {
+        "addr": 74,
         "inputs": {
           "key": "$.inputs.license_tier",
           "map": {
@@ -604,7 +831,7 @@
         "step_id": "lookup_tier_tools"
       },
       {
-        "addr": 72,
+        "addr": 82,
         "inputs": {
           "allowed_set": "$.results.lookup_tier_tools.allowed_tools",
           "value": "$.inputs.tool_name"
@@ -621,9 +848,31 @@
         "step_id": "validate_tool_membership"
       }
     ],
-    "7": [
+    "8": [
       {
-        "addr": 72,
+        "addr": 82,
+        "inputs": {
+          "allowed_set": [
+            "web_search",
+            "read_file",
+            "write_file"
+          ],
+          "value": "$.inputs.tool_name"
+        },
+        "on_result": {
+          "SUCCESS": "continue",
+          "VIOLATION": "exit"
+        },
+        "op": null,
+        "outputs": {
+          "is_declared": "$.capability_result.is_member"
+        },
+        "step_id": "check_agent_tool_declared"
+      }
+    ],
+    "9": [
+      {
+        "addr": 82,
         "inputs": {
           "allowed_set": [
             "READ_RECORD",
@@ -642,101 +891,190 @@
         },
         "step_id": "check_tool_declared"
       }
-    ],
-    "8": [
-      {
-        "addr": 20,
-        "inputs": {
-          "numbers": "$.inputs.numbers"
-        },
-        "on_result": {
-          "SUCCESS": "exit",
-          "VIOLATION": "exit"
-        },
-        "op": null,
-        "outputs": {
-          "sequences": "$.capability_result.sequences"
-        },
-        "step_id": "compute_sequences"
-      }
-    ],
-    "9": [
-      {
-        "addr": 48,
-        "inputs": {},
-        "on_result": {
-          "BACKEND_ERROR": "exit",
-          "SUCCESS": "evaluate_cap"
-        },
-        "op": "COUNT",
-        "outputs": {
-          "count": "$.assigned_count"
-        },
-        "step_id": "count_licenses"
-      }
     ]
   },
   "projection_class": "machine_projection",
   "routing": {
-    "41": {
-      "12": {
-        "24582": 5
+    "47": {
+      "14": {
+        "24582": {
+          "addr": 5,
+          "key": "CC_APPEND_AUDIT_EVENT_RECLAIMED"
+        }
       },
-      "35": {
-        "24576": 12
+      "39": {
+        "24576": {
+          "addr": 14,
+          "key": "CC_RECLAIM_UNUSED_LICENSE_V0"
+        }
       }
     },
-    "42": {
-      "19": {
-        "24582": 16
-      },
-      "32": {
-        "24576": 8
-      },
-      "8": {
-        "24582": 19
-      }
-    },
-    "43": {
-      "33": {
-        "24576": 5
-      }
-    },
-    "44": {
+    "48": {
       "10": {
-        "24582": 7
+        "24582": {
+          "addr": 22,
+          "key": "CC_VERIFY_TERMINATION_V0"
+        }
       },
-      "15": {
-        "24581": 13,
-        "24582": 6,
-        "24583": 13
+      "22": {
+        "24582": {
+          "addr": 18,
+          "key": "CC_STORE_RESULTS_V0"
+        }
       },
-      "18": {
-        "24582": 14,
-        "24583": 13
-      },
-      "31": {
-        "24576": 10
-      },
-      "6": {
-        "24582": 18,
-        "24583": 13
-      },
-      "7": {
-        "24582": 15,
-        "24583": 13
+      "36": {
+        "24576": {
+          "addr": 10,
+          "key": "CC_COMPUTE_SEQUENCES_V0"
+        }
       }
     },
-    "45": {
-      "11": {
-        "24582": 5
+    "49": {
+      "37": {
+        "24576": {
+          "addr": 5,
+          "key": "CC_APPEND_AUDIT_EVENT_V0"
+        }
+      }
+    },
+    "50": {
+      "12": {
+        "24582": {
+          "addr": 9,
+          "key": "CC_CHECK_TOOL_DECLARED_V0"
+        }
       },
       "17": {
-        "24582": 11,
-        "24583": 5
+        "24581": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNAUTHORIZED_ACTOR"
+        },
+        "24582": {
+          "addr": 7,
+          "key": "CC_BIND_LICENSE_TO_TOOL_SURFACE_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNAUTHORIZED_ACTOR"
+        }
+      },
+      "21": {
+        "24582": {
+          "addr": 16,
+          "key": "CC_RECORD_GOVERNED_ACTION_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_PARAMETER_VIOLATION"
+        }
       },
       "34": {
-        "24576": 17
+        "24576": {
+          "addr": 12,
+          "key": "CC_NORMALIZE_AGENT_REQUEST_V0"
+        }
+      },
+      "7": {
+        "24582": {
+          "addr": 21,
+          "key": "CC_VALIDATE_TOOL_PARAMETERS_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNAUTHORIZED_TOOL"
+        }
+      },
+      "9": {
+        "24582": {
+          "addr": 17,
+          "key": "CC_RESOLVE_LICENSE_TIER_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNDECLARED_TOOL"
+        }
+      }
+    },
+    "51": {
+      "12": {
+        "24582": {
+          "addr": 8,
+          "key": "CC_CHECK_AGENT_TOOL_DECLARED_V0"
+        }
+      },
+      "17": {
+        "24581": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNAUTHORIZED_ACTOR"
+        },
+        "24582": {
+          "addr": 6,
+          "key": "CC_BIND_AGENT_LICENSE_TO_TOOL_SURFACE_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNAUTHORIZED_ACTOR"
+        }
+      },
+      "19": {
+        "24582": {
+          "addr": 16,
+          "key": "CC_RECORD_GOVERNED_ACTION_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_PARAMETER_VIOLATION"
+        }
+      },
+      "35": {
+        "24576": {
+          "addr": 12,
+          "key": "CC_NORMALIZE_AGENT_REQUEST_V0"
+        }
+      },
+      "6": {
+        "24582": {
+          "addr": 19,
+          "key": "CC_VALIDATE_AGENT_TOOL_PARAMETERS_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNAUTHORIZED_TOOL"
+        }
+      },
+      "8": {
+        "24582": {
+          "addr": 17,
+          "key": "CC_RESOLVE_LICENSE_TIER_V0"
+        },
+        "24583": {
+          "addr": 15,
+          "key": "CC_AUDIT_UNDECLARED_TOOL"
+        }
+      }
+    },
+    "52": {
+      "13": {
+        "24582": {
+          "addr": 5,
+          "key": "CC_APPEND_AUDIT_EVENT_SUCCESS"
+        }
+      },
+      "20": {
+        "24582": {
+          "addr": 13,
+          "key": "CC_PROVISION_LICENSE_V0"
+        },
+        "24583": {
+          "addr": 5,
+          "key": "CC_APPEND_AUDIT_EVENT_DENIED"
+        }
+      },
+      "38": {
+        "24576": {
+          "addr": 20,
+          "key": "CC_VALIDATE_ELIGIBILITY_V0"
+        }
       }
     }
   }

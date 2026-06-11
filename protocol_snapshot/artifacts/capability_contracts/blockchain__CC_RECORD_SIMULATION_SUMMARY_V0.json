@@ -1,0 +1,113 @@
+{
+  "artifact_code": "CC_RECORD_SIMULATION_SUMMARY_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RECORD_SIMULATION_SUMMARY_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RECORD_SIMULATION_SUMMARY_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nAppend a simulation summary record to the SIMULATION_SUMMARY store. Records the final outcome and per-worker results from a completed chain simulation run.\n\n---\n\n## 2. Rationale\n\nThe simulation summary is an append-only audit record. It captures `simulation_outcome` (passed by the calling WF based on dispatch routing) and `results` (the per-worker result array from CC_DISPATCH_SIMULATION_WORKERS_V0). This CC is invoked for both SUCCESS and PARTIAL_FAILURE dispatch outcomes \u2014 the summary is always recorded regardless of whether all workers succeeded.\n\n`simulation_id` is the stream key \u2014 all summary records for a simulation run are correlated by it.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; used as stream key |\n| `simulation_outcome` | string | true | Final simulation outcome \u2014 SUCCESS or PARTIAL_FAILURE; passed by WF routing from CC_DISPATCH_SIMULATION_WORKERS_V0 result_status |\n| `results` | array | true | Per-worker result array from CC_DISPATCH_SIMULATION_WORKERS_V0; each entry: `{code, result_status, outputs}` |\n| `triggered_by` | string | true | Actor ID or system trigger reference |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Summary record appended successfully |\n| VIOLATION | Invalid input (empty simulation_id, malformed results) |\n| BACKEND_ERROR | Storage write failure |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION on empty `simulation_id` or malformed `results` array\n- BACKEND_ERROR if the SIMULATION_SUMMARY store is unavailable\n- No ALREADY_EXISTS \u2014 CS_APPENDONLY_JSONL_V0 APPEND is unconditional\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RECORD_SIMULATION_SUMMARY_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Append simulation summary record to SIMULATION_SUMMARY store\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Simulation run identifier; stream key for the summary record\n    simulation_outcome:\n      type: string\n      required: true\n      description: Final outcome \u2014 SUCCESS or PARTIAL_FAILURE; sourced from CC_DISPATCH_SIMULATION_WORKERS_V0 result_status\n    results:\n      type: array\n      required: true\n      description: Per-worker result array; each entry carries code, result_status, outputs\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: append_simulation_summary\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: SIMULATION_SUMMARY\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.simulation_id\n        actor_id: $.inputs.triggered_by\n        record:\n          simulation_id: $.inputs.simulation_id\n          simulation_outcome: $.inputs.simulation_outcome\n          worker_results: $.inputs.results\n          completed_at: \"{{timestamp}}\"\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - SIMULATION_SUMMARY store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n    - Always invoked \u2014 summary recorded for both SUCCESS and PARTIAL_FAILURE dispatch outcomes\n    - simulation_outcome is passed by WF routing, not computed inside this CC\n    - results array correlated by code (workflow FQDN) per CS_CONCURRENT_WORKFLOWS_V0 contract\n```\n",
+  "content_hash": "d2bfb69d023e8bef087d9992ac5d5e44396132666d2a1c983bcf6a4469d3066d",
+  "fqdn_id": "blockchain::CC_RECORD_SIMULATION_SUMMARY_V0",
+  "frontmatter": {
+    "cc_code": "CC_RECORD_SIMULATION_SUMMARY_V0",
+    "core": {
+      "inputs": {
+        "results": {
+          "description": "Per-worker result array; each entry carries code, result_status, outputs",
+          "required": true,
+          "type": "array"
+        },
+        "simulation_id": {
+          "description": "Simulation run identifier; stream key for the summary record",
+          "required": true,
+          "type": "string"
+        },
+        "simulation_outcome": {
+          "description": "Final outcome \u2014 SUCCESS or PARTIAL_FAILURE; sourced from CC_DISPATCH_SIMULATION_WORKERS_V0 result_status",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "actor_id": "$.inputs.triggered_by",
+            "record": {
+              "completed_at": "{{timestamp}}",
+              "simulation_id": "$.inputs.simulation_id",
+              "simulation_outcome": "$.inputs.simulation_outcome",
+              "worker_results": "$.inputs.results"
+            },
+            "stream_id": "$.inputs.simulation_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_simulation_summary",
+          "store": "SIMULATION_SUMMARY"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Append simulation summary record to SIMULATION_SUMMARY store"
+    },
+    "extensions": {
+      "notes": [
+        "SIMULATION_SUMMARY store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+        "Always invoked \u2014 summary recorded for both SUCCESS and PARTIAL_FAILURE dispatch outcomes",
+        "simulation_outcome is passed by WF routing, not computed inside this CC",
+        "results array correlated by code (workflow FQDN) per CS_CONCURRENT_WORKFLOWS_V0 contract"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -1,16 +1,14 @@
 {
   "artifact_code": "RB_CREATE_WALLET_V0",
   "artifact_type": "RB",
-  "content": "# RB_CREATE_WALLET_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_CREATE_WALLET_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_CREATE_WALLET_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for wallet creation workflow\n  description: Binds capability side effects to concrete runtime implementations for wallet creation.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/wallet/events/wallet_events.jsonl\"\n\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n\n    capability_side_effects::CS_SEND_EMAIL_V0:\n      policy:\n        enabled: true\n```",
-  "content_hash": "36257f249076adaf48af0293df4e8b7e6163328808f42013a970e5353a8f7ed2",
+  "content": "# RB_CREATE_WALLET_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_CREATE_WALLET_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_CREATE_WALLET_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for wallet creation workflow\n  description: Binds capability side effects to concrete runtime implementations for wallet creation.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy: {}\n\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n\n    capability_side_effects::CS_SEND_EMAIL_V0:\n      policy:\n        enabled: true\n```",
+  "content_hash": "d0152af6af1234ce75f69f1b7583380e40cdb3c39d5b5e31d5b98fa69ebe7ce2",
   "fqdn_id": "blockchain::RB_CREATE_WALLET_V0",
   "frontmatter": {
     "core": {
       "bindings": {
         "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
-          "policy": {
-            "path": "{{module_data_root}}/blockchain/wallet/events/wallet_events.jsonl"
-          }
+          "policy": {}
         },
         "capability_side_effects::CS_MUTABLE_JSON_V0": {
           "policy": {}

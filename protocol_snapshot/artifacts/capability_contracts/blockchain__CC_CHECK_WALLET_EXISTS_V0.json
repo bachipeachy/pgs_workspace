@@ -4,24 +4,25 @@
   "cc_projection": {
     "steps": [
       {
-        "fqdn": "capability_side_effects::CS_REGISTRY_V0",
-        "id": "CS_REGISTRY_V0",
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
         "kind": "CS",
         "ops": [
-          "REGISTER",
-          "RESOLVE",
-          "EXISTS",
-          "DEREGISTER",
-          "COUNT"
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
         ],
+        "ops_truncated": true,
         "outputs": [
           "result_status"
         ]
       }
     ]
   },
-  "content": "# CC_CHECK_WALLET_EXISTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CHECK_WALLET_EXISTS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nCheck if a wallet ID already exists in the registry before proceeding with key derivation.\n\n---\n\n## 2. Rationale\n\nWallet existence gate:\n- Prevents duplicate wallet creation\n- Gates crypto derivation pipeline \u2014 avoids unnecessary entropy generation for duplicate requests\n- Pure read operation, idempotent\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_REGISTRY_V0 | CS | RESOLVE |\n\nUses RESOLVE (not EXISTS) because the execution engine routes on `result_status`. RESOLVE returns `NOT_FOUND` when the key is absent, enabling direct workflow routing. EXISTS always returns `SUCCESS` with a boolean, which the engine cannot branch on.\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| wallet_id | string | true | Wallet identifier to check |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | NOT_FOUND (new) or SUCCESS (exists) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| NOT_FOUND | Wallet does not exist \u2014 gate passes, proceed to derivation |\n| SUCCESS | Wallet already exists \u2014 abort, duplicate request |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Registry unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND is the expected happy path \u2014 wallet is new, proceed\n- SUCCESS means the wallet already exists and creation should stop\n- Invalid wallet_id results in VIOLATION\n- Registry unavailable results in BACKEND_ERROR\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CHECK_WALLET_EXISTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Check wallet existence in registry\n\n  inputs:\n    wallet_id:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [NOT_FOUND, SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: check_wallet_exists\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      store: WALLET\n      op: RESOLVE\n      inputs:\n        key_or_address: $.inputs.wallet_id\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
-  "content_hash": "9e740c22cd0fd6fac0439a536f292f09a7a2e176a812c7ee34c8855611a52667",
+  "content": "# CC_CHECK_WALLET_EXISTS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CHECK_WALLET_EXISTS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nCheck if a wallet ID already exists in the registry before proceeding with key derivation.\n\n---\n\n## 2. Rationale\n\nWallet existence gate:\n- Prevents duplicate wallet creation\n- Gates crypto derivation pipeline \u2014 avoids unnecessary entropy generation for duplicate requests\n- Pure read operation, idempotent\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | READ |\n\nUses READ (not EXISTS) because the execution engine routes on `result_status`. READ returns `NOT_FOUND` when the key is absent, enabling direct workflow routing. EXISTS always returns `SUCCESS` with a boolean, which the engine cannot branch on.\n\nWALLET store is a mutable JSON store (CS_MUTABLE_JSON_V0 format) \u2014 CS_REGISTRY_V0 does not apply.\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| wallet_id | string | true | Wallet identifier to check |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | NOT_FOUND (new) or SUCCESS (exists) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| NOT_FOUND | Wallet does not exist \u2014 gate passes, proceed to derivation |\n| SUCCESS | Wallet already exists \u2014 abort, duplicate request |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Registry unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND is the expected happy path \u2014 wallet is new, proceed\n- SUCCESS means the wallet already exists and creation should stop\n- Invalid wallet_id results in VIOLATION\n- Registry unavailable results in BACKEND_ERROR\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CHECK_WALLET_EXISTS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Check wallet existence in registry\n\n  inputs:\n    wallet_id:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [NOT_FOUND, SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: check_wallet_exists\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: WALLET\n      op: READ\n      inputs:\n        key: $.inputs.wallet_id\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "25c1e395b701fd3d8618c0fce492895b9fc4dde905ec1b344b153c3fd19dfcc4",
   "fqdn_id": "blockchain::CC_CHECK_WALLET_EXISTS_V0",
   "frontmatter": {
     "cc_code": "CC_CHECK_WALLET_EXISTS_V0",
@@ -40,7 +41,7 @@
       "pipeline": [
         {
           "inputs": {
-            "key_or_address": "$.inputs.wallet_id"
+            "key": "$.inputs.wallet_id"
           },
           "on_result": {
             "BACKEND_ERROR": "exit",
@@ -48,7 +49,7 @@
             "SUCCESS": "exit",
             "VIOLATION": "exit"
           },
-          "op": "RESOLVE",
+          "op": "READ",
           "outputs": {
             "result_status": "$.capability_result.result_status"
           },
@@ -58,7 +59,7 @@
             "VIOLATION",
             "BACKEND_ERROR"
           ],
-          "side_effect": "capability_side_effects::CS_REGISTRY_V0",
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
           "step": "check_wallet_exists",
           "store": "WALLET"
         }

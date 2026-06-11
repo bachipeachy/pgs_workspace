@@ -1,0 +1,57 @@
+{
+  "artifact_code": "IN_REWARD_V0",
+  "artifact_type": "IN",
+  "content": "# IN_REWARD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_REWARD_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_REWARD_V0\n\n---\n\n## 1. Intent\n\nSubmit a REWARD transaction \u2014 distribute staking reward from the POOL wallet to a validator's wallet.\n\n---\n\n## 2. Rationale\n\nREWARD is a SYSTEM operation triggered by block finalization.\nThe source (POOL wallet) is auto-resolved. The destination wallet and block reference are declared.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_REWARD_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| to_wallet_id | string | true | Destination wallet identifier (validator's wallet) |\n| amount | number | true | Reward amount in BACHI |\n| block_hash | string | true | Block hash that triggered this reward |\n| triggered_by | string | true | System trigger reference |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Reward intent accepted |\n| NACK | Reward intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** SYSTEM\n- **Note:** from_address auto-resolved to POOL wallet; no actor_record; no gas params\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_REWARD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit REWARD transaction (SYSTEM)\n  workflow: WF_REWARD_V0\n\n  inputs:\n    to_wallet_id:\n      type: string\n      required: true\n      description: Destination wallet identifier (validator's wallet)\n    amount:\n      type: number\n      required: true\n      description: Reward amount in BACHI\n    block_hash:\n      type: string\n      required: true\n      description: Block hash that triggered this reward\n    triggered_by:\n      type: string\n      required: true\n      description: System trigger reference\n\n  outcomes:\n    ACK:\n      description: Reward intent accepted\n    NACK:\n      description: Reward intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: SYSTEM\n```\n",
+  "content_hash": "cb0779f1786f23d86ea2cfe0a00e4c3fba06d460fa5c11fd7f1dd7efea271629",
+  "fqdn_id": "blockchain::IN_REWARD_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "amount": {
+          "description": "Reward amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "block_hash": {
+          "description": "Block hash that triggered this reward",
+          "required": true,
+          "type": "string"
+        },
+        "to_wallet_id": {
+          "description": "Destination wallet identifier (validator's wallet)",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "System trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Reward intent accepted"
+        },
+        "NACK": {
+          "description": "Reward intent rejected"
+        }
+      },
+      "summary": "Submit REWARD transaction (SYSTEM)",
+      "workflow": "WF_REWARD_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_REWARD_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

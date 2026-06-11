@@ -11,9 +11,10 @@
           "READ",
           "WRITE",
           "DELETE",
-          "EXISTS",
-          "LIST"
+          "DELETE_MANY",
+          "EXISTS"
         ],
+        "ops_truncated": true,
         "outputs": [
           "result_status"
         ]
@@ -35,8 +36,8 @@
       }
     ]
   },
-  "content": "# CC_CREATE_WALLET_RECORD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CREATE_WALLET_RECORD_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nAssemble a complete V0 wallet record from upstream CC outputs and payload data, persist the full record to CS_MUTABLE_JSON_V0, then register a pointer in CS_REGISTRY_V0.\n\n---\n\n## 2. Rationale\n\nWallet record creation:\n- Composes the full wallet record from crypto-derived fields (CC_DERIVE_WALLET_KEYS_V0) and payload fields\n- Persists via registry with stable addressing\n- Immutable binding once created\n- Record structure matches V0 canonical schema\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n| 2 | CS_REGISTRY_V0 | CS | REGISTER |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Source | Description |\n|-------|------|----------|--------|-------------|\n| wallet_id | string | true | CC_GENERATE_WALLET_ID_V0 | Wallet identifier to register |\n| actor_id | string | true | CC_RESOLVE_ACTOR_ID_V0 | Owner actor identifier |\n| wallet_type | string | true | payload | Wallet type (e.g., business) |\n| currency | string | true | payload | Currency code (e.g., BACHI) |\n| network | string | true | payload | Network (e.g., testnet) |\n| security_type | string | true | payload | Security type (e.g., hot) |\n| eoa_public_key_hex | string | true | CC_DERIVE_WALLET_KEYS_V0 | EOA uncompressed public key, hex |\n| eoa_address | string | true | CC_DERIVE_WALLET_KEYS_V0 | EOA Ethereum address, 0x-prefixed |\n| eoa_derivation_path | string | true | CC_DERIVE_WALLET_KEYS_V0 | Full EOA BIP32 path |\n| utxo_public_key_hex | string | true | CC_DERIVE_WALLET_KEYS_V0 | UTXO uncompressed public key, hex |\n| utxo_address | string | true | CC_DERIVE_WALLET_KEYS_V0 | UTXO Ethereum address, 0x-prefixed |\n| utxo_derivation_path | string | true | CC_DERIVE_WALLET_KEYS_V0 | Full UTXO BIP32 path |\n| master_fingerprint | string | true | CC_DERIVE_WALLET_KEYS_V0 | HASH160(master_pubkey)[:4], hex |\n| email_registration | string | true | payload | KYC registration email |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n| address | string | Registry address assigned |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Wallet registered successfully |\n| ALREADY_EXISTS | Wallet already exists |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- Duplicate wallet results in ALREADY_EXISTS\n- Invalid inputs result in VIOLATION\n- Storage failure results in BACKEND_ERROR\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CREATE_WALLET_RECORD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Assemble and persist V0 wallet record\n\n  inputs:\n    wallet_id:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n    wallet_type:\n      type: string\n      required: true\n    currency:\n      type: string\n      required: true\n    network:\n      type: string\n      required: true\n    security_type:\n      type: string\n      required: true\n    eoa_public_key_hex:\n      type: string\n      required: true\n    eoa_address:\n      type: string\n      required: true\n    eoa_derivation_path:\n      type: string\n      required: true\n    utxo_public_key_hex:\n      type: string\n      required: true\n    utxo_address:\n      type: string\n      required: true\n    utxo_derivation_path:\n      type: string\n      required: true\n    master_fingerprint:\n      type: string\n      required: true\n    email_registration:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n    address:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: write_wallet_state\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: WALLET\n      op: WRITE\n      inputs:\n        key: $.inputs.wallet_id\n        value:\n          wallet_id: $.inputs.wallet_id\n          actor_id: $.inputs.actor_id\n          wallet_type: $.inputs.wallet_type\n          account_model: hybrid\n          status: active\n          network: $.inputs.network\n          currency: $.inputs.currency\n          network_config:\n            chain_id: 66\n            rpc_endpoint: \"http://localhost:8545\"\n          security:\n            security_type: $.inputs.security_type\n            key_scheme: secp256k1\n            derivation_standard: bip44\n            coin_type: 66\n            master_fingerprint: $.inputs.master_fingerprint\n            signing:\n              derivation_root: \"m/44'/66'/0'\"\n              address_index_start: 0\n          addresses:\n            eoa:\n              - address: $.inputs.eoa_address\n                derivation_path: $.inputs.eoa_derivation_path\n                format: hex\n                public_key: $.inputs.eoa_public_key_hex\n            utxo:\n              - address: $.inputs.utxo_address\n                derivation_path: $.inputs.utxo_derivation_path\n                format: hex\n                public_key: $.inputs.utxo_public_key_hex\n          state:\n            eoa:\n              nonce: 0\n              balance: 0\n            utxo:\n              utxo_count: 0\n              balance: 0\n          metadata: {}\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: register_wallet_index\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.inputs.wallet_id\n        target_cs: capability_side_effects::CS_MUTABLE_JSON_V0\n        target_ref: $.inputs.wallet_id\n      outputs:\n        result_status: $.capability_result.result_status\n        address: $.capability_result.address\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
-  "content_hash": "14c4182bcdb4f5a905a297539659e6053008a53c74abbae591fce41b4ca261ee",
+  "content": "# CC_CREATE_WALLET_RECORD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CREATE_WALLET_RECORD_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nAssemble a complete V0 wallet record from upstream CC outputs and payload data, persist the full record to CS_MUTABLE_JSON_V0, then register a pointer in CS_REGISTRY_V0.\n\n---\n\n## 2. Rationale\n\nWallet record creation:\n- Composes the full wallet record from crypto-derived fields (CC_DERIVE_WALLET_KEYS_V0) and payload fields\n- Persists via registry with stable addressing\n- Immutable binding once created\n- Record structure matches V0 canonical schema\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n| 2 | CS_REGISTRY_V0 | CS | REGISTER |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Source | Description |\n|-------|------|----------|--------|-------------|\n| wallet_id | string | true | CC_GENERATE_WALLET_ID_V0 | Wallet identifier (WAL-prefixed) |\n| actor_id | string | true | CC_RESOLVE_ACTOR_ID_V0 | Owner actor identifier |\n| wallet_type | string | true | payload | Wallet type \u2014 enum: STANDARD, STAKING, MINT, BURN, POOL |\n| address | string | true | CC_GENERATE_WALLET_ID_V0 | Deterministic wallet address (0x-prefixed, 40 hex chars) |\n| currency | string | false | payload | Currency code (default: BACHI) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | Operation result |\n| address | string | Registry address assigned |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Wallet registered successfully |\n| ALREADY_EXISTS | Wallet already exists |\n| VIOLATION | Invalid input format |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- Duplicate wallet results in ALREADY_EXISTS\n- Invalid inputs result in VIOLATION\n- Storage failure results in BACKEND_ERROR\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CREATE_WALLET_RECORD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Assemble and persist V0 wallet record\n\n  inputs:\n    wallet_id:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n    wallet_type:\n      type: string\n      required: true\n      enum: [STANDARD, STAKING, MINT, BURN, POOL]\n    address:\n      type: string\n      required: true\n      description: Deterministic wallet address (0x-prefixed, 40 hex chars)\n    currency:\n      type: string\n      required: false\n      default: BACHI\n\n  outputs:\n    result_status:\n      type: string\n    address:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: write_wallet_state\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: WALLET\n      op: WRITE\n      inputs:\n        key: $.inputs.wallet_id\n        value:\n          wallet_id: $.inputs.wallet_id\n          actor_id: $.inputs.actor_id\n          wallet_type: $.inputs.wallet_type\n          address: $.inputs.address\n          balance: 0\n          currency: $.inputs.currency\n          status: ACTIVE\n          created_at: \"{{timestamp}}\"\n          last_modified: \"{{timestamp}}\"\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: register_wallet_index\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.inputs.wallet_id\n        target_cs: capability_side_effects::CS_MUTABLE_JSON_V0\n        target_ref: $.inputs.wallet_id\n      outputs:\n        result_status: $.capability_result.result_status\n        address: $.capability_result.address\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n```\n",
+  "content_hash": "6cc2559e5ab067d1598649ff40393aaafdf14519d73b5976e0eb558a13b75a95",
   "fqdn_id": "blockchain::CC_CREATE_WALLET_RECORD_V0",
   "frontmatter": {
     "cc_code": "CC_CREATE_WALLET_RECORD_V0",
@@ -46,48 +47,14 @@
           "required": true,
           "type": "string"
         },
+        "address": {
+          "description": "Deterministic wallet address (0x-prefixed, 40 hex chars)",
+          "required": true,
+          "type": "string"
+        },
         "currency": {
-          "required": true,
-          "type": "string"
-        },
-        "email_registration": {
-          "required": true,
-          "type": "string"
-        },
-        "eoa_address": {
-          "required": true,
-          "type": "string"
-        },
-        "eoa_derivation_path": {
-          "required": true,
-          "type": "string"
-        },
-        "eoa_public_key_hex": {
-          "required": true,
-          "type": "string"
-        },
-        "master_fingerprint": {
-          "required": true,
-          "type": "string"
-        },
-        "network": {
-          "required": true,
-          "type": "string"
-        },
-        "security_type": {
-          "required": true,
-          "type": "string"
-        },
-        "utxo_address": {
-          "required": true,
-          "type": "string"
-        },
-        "utxo_derivation_path": {
-          "required": true,
-          "type": "string"
-        },
-        "utxo_public_key_hex": {
-          "required": true,
+          "default": "BACHI",
+          "required": false,
           "type": "string"
         },
         "wallet_id": {
@@ -95,6 +62,13 @@
           "type": "string"
         },
         "wallet_type": {
+          "enum": [
+            "STANDARD",
+            "STAKING",
+            "MINT",
+            "BURN",
+            "POOL"
+          ],
           "required": true,
           "type": "string"
         }
@@ -112,55 +86,13 @@
           "inputs": {
             "key": "$.inputs.wallet_id",
             "value": {
-              "account_model": "hybrid",
               "actor_id": "$.inputs.actor_id",
-              "addresses": {
-                "eoa": [
-                  {
-                    "address": "$.inputs.eoa_address",
-                    "derivation_path": "$.inputs.eoa_derivation_path",
-                    "format": "hex",
-                    "public_key": "$.inputs.eoa_public_key_hex"
-                  }
-                ],
-                "utxo": [
-                  {
-                    "address": "$.inputs.utxo_address",
-                    "derivation_path": "$.inputs.utxo_derivation_path",
-                    "format": "hex",
-                    "public_key": "$.inputs.utxo_public_key_hex"
-                  }
-                ]
-              },
+              "address": "$.inputs.address",
+              "balance": 0,
+              "created_at": "{{timestamp}}",
               "currency": "$.inputs.currency",
-              "metadata": {},
-              "network": "$.inputs.network",
-              "network_config": {
-                "chain_id": 66,
-                "rpc_endpoint": "http://localhost:8545"
-              },
-              "security": {
-                "coin_type": 66,
-                "derivation_standard": "bip44",
-                "key_scheme": "secp256k1",
-                "master_fingerprint": "$.inputs.master_fingerprint",
-                "security_type": "$.inputs.security_type",
-                "signing": {
-                  "address_index_start": 0,
-                  "derivation_root": "m/44'/66'/0'"
-                }
-              },
-              "state": {
-                "eoa": {
-                  "balance": 0,
-                  "nonce": 0
-                },
-                "utxo": {
-                  "balance": 0,
-                  "utxo_count": 0
-                }
-              },
-              "status": "active",
+              "last_modified": "{{timestamp}}",
+              "status": "ACTIVE",
               "wallet_id": "$.inputs.wallet_id",
               "wallet_type": "$.inputs.wallet_type"
             }

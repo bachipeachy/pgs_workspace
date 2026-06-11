@@ -38,6 +38,7 @@
     }
   },
   "expected": {},
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0::generate_128_bit_entropy",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_GENERATE_ENTROPY_V0"
 }

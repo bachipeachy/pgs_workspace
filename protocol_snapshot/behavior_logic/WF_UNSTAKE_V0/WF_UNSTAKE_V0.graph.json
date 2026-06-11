@@ -1,0 +1,440 @@
+{
+  "wf_id": "WF_UNSTAKE_V0",
+  "entry": "IN_UNSTAKE_V0",
+  "nodes": [
+    {
+      "id": "CC_APPEND_TX_EVENT_V0",
+      "type": "CC",
+      "cc_code": "CC_APPEND_TX_EVENT_V0",
+      "capability": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+            "id": "CS_APPENDONLY_JSONL_V0",
+            "kind": "CS",
+            "ops": [
+              "APPEND",
+              "GET_ALL"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "data": {
+            "amount": "$.payload.amount",
+            "status": "PENDING",
+            "to_wallet_id": "$.payload.to_wallet_id",
+            "tx_type": "UNSTAKE",
+            "validator_index": "$.payload.validator_index"
+          },
+          "event_type": "EV_TRANSACTION_SUBMITTED_V0",
+          "tx_hash": "CC_GENERATE_TX_ID_V0.tx_hash",
+          "tx_id": "CC_GENERATE_TX_ID_V0.tx_id",
+          "wallet_id": "IN.to_wallet_id"
+        }
+      }
+    },
+    {
+      "id": "CC_GENERATE_TX_ID_V0",
+      "type": "CC",
+      "cc_code": "CC_GENERATE_TX_ID_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "amount": "IN.amount",
+          "to_wallet_id": "IN.to_wallet_id",
+          "tx_type": "UNSTAKE"
+        }
+      }
+    },
+    {
+      "id": "CC_RESOLVE_ACTOR_ID_V0",
+      "type": "CC",
+      "cc_code": "CC_RESOLVE_ACTOR_ID_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER",
+              "COUNT"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_record": "IN.actor_record"
+        }
+      }
+    },
+    {
+      "id": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "type": "CC",
+      "cc_code": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "amount": "IN.amount",
+          "to_wallet_id": "IN.to_wallet_id",
+          "validator_index": "IN.validator_index"
+        }
+      }
+    },
+    {
+      "id": "CC_WRITE_MEMPOOL_TX_V0",
+      "type": "CC",
+      "cc_code": "CC_WRITE_MEMPOOL_TX_V0",
+      "capability": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {},
+            "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+            "id": "CT_PURE_GENERATE_ID_V0",
+            "inputs": [
+              "prefix",
+              "data"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "id"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_REGISTRY_V0",
+            "id": "CS_REGISTRY_V0",
+            "kind": "CS",
+            "ops": [
+              "REGISTER",
+              "RESOLVE",
+              "EXISTS",
+              "DEREGISTER",
+              "COUNT"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "actor_id": "CC_RESOLVE_ACTOR_ID_V0.actor_id",
+          "amount": "IN.amount",
+          "created_at": "{{timestamp}}",
+          "gas_limit": "IN.gas_limit",
+          "max_fee_per_gas": "IN.max_fee_per_gas",
+          "max_priority_fee_per_gas": "IN.max_priority_fee_per_gas",
+          "to_wallet_id": "IN.to_wallet_id",
+          "tx_hash": "CC_GENERATE_TX_ID_V0.tx_hash",
+          "tx_id": "CC_GENERATE_TX_ID_V0.tx_id",
+          "tx_type": "UNSTAKE"
+        }
+      }
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_DUPLICATE",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_SUCCESS",
+      "type": "EXIT"
+    },
+    {
+      "id": "IN_UNSTAKE_V0",
+      "type": "IN"
+    }
+  ],
+  "edges": [
+    {
+      "from": "CC_APPEND_TX_EVENT_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_APPEND_TX_EVENT_V0",
+      "to": "EXIT_SUCCESS",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_APPEND_TX_EVENT_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_GENERATE_TX_ID_V0",
+      "to": "CC_WRITE_MEMPOOL_TX_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_GENERATE_TX_ID_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RESOLVE_ACTOR_ID_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "to": "CC_GENERATE_TX_ID_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "EXIT_DUPLICATE",
+      "condition": "ALREADY_EXISTS"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "CC_APPEND_TX_EVENT_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_WRITE_MEMPOOL_TX_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_UNSTAKE_V0",
+      "to": "CC_RESOLVE_ACTOR_ID_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_UNSTAKE_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "EXIT_DUPLICATE"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "CC_APPEND_TX_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "CC_APPEND_TX_EVENT_V0",
+      "EXIT_SUCCESS"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "CC_APPEND_TX_EVENT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "CC_WRITE_MEMPOOL_TX_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "CC_GENERATE_TX_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "CC_VALIDATE_UNSTAKE_POLICY_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "CC_RESOLVE_ACTOR_ID_V0",
+      "EXIT"
+    ],
+    [
+      "IN_UNSTAKE_V0",
+      "EXIT"
+    ]
+  ]
+}

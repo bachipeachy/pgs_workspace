@@ -36,6 +36,7 @@
   "expected": {
     "public_key_uncompressed_bytes": "0x0452c616d91a2488c1fd1f0f172e98f7d1f6e51f8f389b2f8d632a8b490d5f6da9e31e8d2571464198117614b47ddb7238c7c9d3706c3d05daf937e2c387b49c6e"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0::secp256k1_pubkey",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0"
 }

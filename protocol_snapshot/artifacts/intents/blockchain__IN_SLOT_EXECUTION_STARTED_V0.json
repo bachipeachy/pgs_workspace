@@ -1,0 +1,53 @@
+{
+  "artifact_code": "IN_SLOT_EXECUTION_STARTED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_SLOT_EXECUTION_STARTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_SLOT_EXECUTION_STARTED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_PROCESS_SLOT_V0\n\n---\n\n## 1. Intent\n\nAdmit a single slot execution request. Declares the simulation identity and slot number to be processed by `WF_PROCESS_SLOT_V0`.\n\n---\n\n## 2. Rationale\n\nEach slot execution is an atomic unit: one `simulation_id` + one `slot_number` \u2192 one slot clock read \u2192 one block proposal. Declaring both at admission ensures the slot identity is established before the CC pipeline begins; no dynamic slot computation occurs inside the WF.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_PROCESS_SLOT_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; must be non-empty; scopes the slot clock read |\n| `slot_number` | integer | true | Global slot counter value to process; must be >= 0 |\n| `triggered_by` | string | true | Actor ID or system trigger reference; must be non-empty |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Slot execution intent accepted; proceed to WF_PROCESS_SLOT_V0 |\n| NACK | Intent rejected \u2014 invalid or missing required fields |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.orchestration\n- **Subdomain:** orchestration\n- **Authority:** SYSTEM\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_SLOT_EXECUTION_STARTED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Admit single slot execution request\n  workflow: WF_PROCESS_SLOT_V0\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Simulation run identifier; scopes the slot clock read\n    slot_number:\n      type: integer\n      required: true\n      description: Global slot counter value to process; must be >= 0\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outcomes:\n    ACK:\n      description: Slot execution intent accepted\n    NACK:\n      description: Intent rejected \u2014 invalid or missing required fields\n\nextensions:\n  domain: pgs.blockchain.orchestration\n  subdomain: orchestration\n  authority: SYSTEM\n```\n",
+  "content_hash": "f09bc202b0a60cea62f5515a89ea91d6dadd0e45cd2f3543da51003cac2ea6c4",
+  "fqdn_id": "blockchain::IN_SLOT_EXECUTION_STARTED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "simulation_id": {
+          "description": "Simulation run identifier; scopes the slot clock read",
+          "required": true,
+          "type": "string"
+        },
+        "slot_number": {
+          "description": "Global slot counter value to process; must be >= 0",
+          "required": true,
+          "type": "integer"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Slot execution intent accepted"
+        },
+        "NACK": {
+          "description": "Intent rejected \u2014 invalid or missing required fields"
+        }
+      },
+      "summary": "Admit single slot execution request",
+      "workflow": "WF_PROCESS_SLOT_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.orchestration",
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_SLOT_EXECUTION_STARTED_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

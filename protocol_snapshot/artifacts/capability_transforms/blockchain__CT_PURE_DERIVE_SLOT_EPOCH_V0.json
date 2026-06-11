@@ -1,0 +1,114 @@
+{
+  "artifact_code": "CT_PURE_DERIVE_SLOT_EPOCH_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_DERIVE_SLOT_EPOCH_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_DERIVE_SLOT_EPOCH_V0\n- **Artifact Kind:** atom\n- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## Human\n\n### 1. Intent\n\nDerive slot context fields (`slot_index`, `epoch_number`, `round_number`, `timestamp`) from a globally-increasing slot number and slot start timestamp. Pure computation \u2014 zero side effects, zero CS calls.\n\nUsed by `CC_PREPARE_SLOT_CONTEXT_V0` to transform raw slot clock state into the richer context needed for block proposal and slot execution routing.\n\n---\n\n### 2. Determinism & Purity Declaration\n\n| Property | Value | Notes |\n|----------|-------|-------|\n| Deterministic | YES | Same inputs yield identical outputs |\n| Purity Class | ct_pure | No state, no side effects |\n| Side Effects | NONE | Pure arithmetic transform |\n| Replay Safe | YES | Deterministic mapping |\n| CS Calls | NONE | CT purity invariant \u2014 CT may never call CS |\n\n---\n\n### 3. Field Naming Precision\n\n| Field | Semantics |\n|-------|-----------|\n| `slot_number` | Globally-increasing counter; never resets; passed in from slot clock |\n| `slot_index` | Intra-epoch position (0-based); resets to 0 at each epoch boundary |\n| `epoch_number` | Monotonically increasing epoch counter |\n| `round_number` | Pass-through of `slot_number`; satisfies `WF_PROPOSE_BLOCK_V0` payload contract |\n| `timestamp` | Pass-through of `slot_start_ts`; carries clock read result forward |\n\n`slot_index` and `slot_number` are semantically distinct \u2014 use exact field names throughout.\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_DERIVE_SLOT_EPOCH_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n\ncore:\n  summary: Derive slot_index, epoch_number, round_number, and timestamp from slot_number and slot_start_ts\n  description: Pure arithmetic transform; maps globally-increasing slot counter to intra-epoch position, epoch number, block proposal round, and timestamp\n  inputs:\n    slot_number:\n      type: integer\n      required: true\n    slot_start_ts:\n      type: string\n      required: false\n      default: null\n      description: Slot start timestamp; when omitted, a deterministic ISO timestamp is derived from slot_number (base 2026-01-01T00:00:00Z + slot \u00d7 30 s)\n    slots_per_epoch:\n      type: integer\n      required: false\n      default: 32\n  outputs:\n    round_number:\n      type: integer\n    slot_index:\n      type: integer\n    epoch_number:\n      type: integer\n    timestamp:\n      type: string\n\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: DERIVE_SLOT_EPOCH\n  implementation:\n    module: pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_derive_slot_epoch_v0\n    callable: execute\n```\n",
+  "content_hash": "376290f7f486666aeff2424c7d0997ae3d64266f8d0ea5e69e8b65b0f29e9256",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "slot_number": "$.inputs.slot_number",
+          "slot_start_ts": "$.inputs.slot_start_ts",
+          "slots_per_epoch": "$.inputs.slots_per_epoch"
+        },
+        "atom": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_derive_slot_epoch_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_DERIVE_SLOT_EPOCH_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+    "inputs": {
+      "slot_number": {
+        "required": true,
+        "type": "integer"
+      },
+      "slot_start_ts": {
+        "default": null,
+        "description": "Slot start timestamp; when omitted, a deterministic ISO timestamp is derived from slot_number (base 2026-01-01T00:00:00Z + slot \u00d7 30 s)",
+        "required": false,
+        "type": "string"
+      },
+      "slots_per_epoch": {
+        "default": 32,
+        "required": false,
+        "type": "integer"
+      }
+    },
+    "outputs": {
+      "epoch_number": {
+        "from": "__atom_result__"
+      },
+      "round_number": {
+        "from": "__atom_result__"
+      },
+      "slot_index": {
+        "from": "__atom_result__"
+      },
+      "timestamp": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Pure arithmetic transform; maps globally-increasing slot counter to intra-epoch position, epoch number, block proposal round, and timestamp",
+      "inputs": {
+        "slot_number": {
+          "required": true,
+          "type": "integer"
+        },
+        "slot_start_ts": {
+          "default": null,
+          "description": "Slot start timestamp; when omitted, a deterministic ISO timestamp is derived from slot_number (base 2026-01-01T00:00:00Z + slot \u00d7 30 s)",
+          "required": false,
+          "type": "string"
+        },
+        "slots_per_epoch": {
+          "default": 32,
+          "required": false,
+          "type": "integer"
+        }
+      },
+      "outputs": {
+        "epoch_number": {
+          "type": "integer"
+        },
+        "round_number": {
+          "type": "integer"
+        },
+        "slot_index": {
+          "type": "integer"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      },
+      "summary": "Derive slot_index, epoch_number, round_number, and timestamp from slot_number and slot_start_ts"
+    },
+    "ct_code": "CT_PURE_DERIVE_SLOT_EPOCH_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_derive_slot_epoch_v0"
+      },
+      "operation": "DERIVE_SLOT_EPOCH"
+    },
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_transforms",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

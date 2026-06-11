@@ -1,0 +1,67 @@
+{
+  "artifact_code": "WF_RUN_CONSENSUS_LOOP_V0",
+  "artifact_type": "WF",
+  "content": "# WF_RUN_CONSENSUS_LOOP_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_RUN_CONSENSUS_LOOP_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_CONSENSUS_LOOP_STARTED_V0, CC_RUN_SLOT_SEQUENCE_V0\n\n---\n\n## 1. Intent\n\nExecute the ordered slot sequence for a simulation run. Absorbs the slot loop inside CC_RUN_SLOT_SEQUENCE_V0 (Collatz pattern) \u2014 this WF DAG is linear (2 nodes: IN \u2192 execute \u2192 EXIT).\n\n---\n\n## 2. Rationale\n\nPGS WF DAGs have no loop construct \u2014 all iteration is absorbed inside a CC (Collatz pattern). CC_RUN_SLOT_SEQUENCE_V0 contains the slot loop and invokes WF_PROCESS_SLOT_V0 per slot number via CS_WORKFLOW_LOOP_V0. This WF remains linear: admit the payload, execute the slot sequence, exit.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_CONSENSUS_LOOP_STARTED_V0\n    \u251c\u2500 ACK \u2192 CC_RUN_SLOT_SEQUENCE_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 EXIT\n    \u2502           \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_CONSENSUS_LOOP_STARTED_V0 | IN | Entry intent \u2014 validates simulation_id, slot_schedule, triggered_by |\n| CC_RUN_SLOT_SEQUENCE_V0 | CC | Collatz slot loop \u2014 iterates slot_schedule; invokes WF_PROCESS_SLOT_V0 per slot |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_RUN_CONSENSUS_LOOP_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: blockchain::RB_RUN_CONSENSUS_LOOP_V0\nsubdomain: orchestration\n\ncore:\n  summary: Execute ordered slot sequence via Collatz-pattern CC_RUN_SLOT_SEQUENCE_V0\n  start_node: IN_CONSENSUS_LOOP_STARTED_V0\n\n  nodes:\n    IN_CONSENSUS_LOOP_STARTED_V0:\n      type: IN\n      code: IN_CONSENSUS_LOOP_STARTED_V0\n      next:\n        ACK: CC_RUN_SLOT_SEQUENCE_V0\n        NACK: EXIT\n\n    CC_RUN_SLOT_SEQUENCE_V0:\n      type: CC\n      code: CC_RUN_SLOT_SEQUENCE_V0\n      inputs:\n        simulation_id: $.payload.simulation_id\n        slot_schedule: $.payload.slot_schedule\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - Linear 2-node topology \u2014 Collatz pattern absorbed in CC_RUN_SLOT_SEQUENCE_V0\n    - slot_schedule is a pre-expanded array of integer slot numbers from IN_CONSENSUS_LOOP_STARTED_V0\n    - VIOLATION from CC means at least one WF_PROCESS_SLOT_V0 invocation failed \u2014 loop halted\n    - authority: AC_SYSTEM_V0\n```\n",
+  "content_hash": "f2bae24d98164b8d2deb34c37c2b6e25a2cc142485fa7f5a4ca50e37cd503370",
+  "fqdn_id": "blockchain::WF_RUN_CONSENSUS_LOOP_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_RUN_SLOT_SEQUENCE_V0": {
+          "code": "CC_RUN_SLOT_SEQUENCE_V0",
+          "fqdn_id": "blockchain::CC_RUN_SLOT_SEQUENCE_V0",
+          "inputs": {
+            "simulation_id": "$.payload.simulation_id",
+            "slot_schedule": "$.payload.slot_schedule",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_CONSENSUS_LOOP_STARTED_V0": {
+          "code": "IN_CONSENSUS_LOOP_STARTED_V0",
+          "fqdn_id": "blockchain::IN_CONSENSUS_LOOP_STARTED_V0",
+          "next": {
+            "ACK": "CC_RUN_SLOT_SEQUENCE_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_CONSENSUS_LOOP_STARTED_V0",
+      "summary": "Execute ordered slot sequence via Collatz-pattern CC_RUN_SLOT_SEQUENCE_V0"
+    },
+    "extensions": {
+      "notes": [
+        "Linear 2-node topology \u2014 Collatz pattern absorbed in CC_RUN_SLOT_SEQUENCE_V0",
+        "slot_schedule is a pre-expanded array of integer slot numbers from IN_CONSENSUS_LOOP_STARTED_V0",
+        "VIOLATION from CC means at least one WF_PROCESS_SLOT_V0 invocation failed \u2014 loop halted",
+        {
+          "authority": "AC_SYSTEM_V0"
+        }
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_RUN_CONSENSUS_LOOP_V0",
+    "subdomain": "orchestration",
+    "version": "v0",
+    "wf_code": "WF_RUN_CONSENSUS_LOOP_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_RUN_CONSENSUS_LOOP_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,68 @@
+{
+  "artifact_code": "EV_TX_FINALIZED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_TX_FINALIZED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_TX_FINALIZED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA transaction has been finalized \u2014 it is included in a finalized block and its effects are irreversible.\n\n---\n\n## 2. Rationale\n\nTransaction finalization closes the lifecycle loop for mempool entries:\n- Links the transaction to its finalized block\n- Records the effective fees paid\n- Triggers downstream balance reconciliation for affected wallets\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| (consensus finalization CR \u2014 next CR) | (to be declared) |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_hash | string | true | Transaction hash (TX-prefixed) |\n| tx_type | string | true | Transaction type (TRANSFER, STAKE, UNSTAKE, MINT, BURN, POOL, REWARD, SLASH) |\n| from_address | string | true | Source wallet address |\n| to_address | string | true | Destination wallet address |\n| amount | number | true | Transaction amount in BACHI |\n| total_fee | number | true | Total fee paid (gas_used \u00d7 effective_gas_price) |\n| block_hash | string | true | Block hash in which this transaction was finalized |\n| timestamp | string (date-time) | true | When finalization was recorded |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_TX_FINALIZED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Transaction finalized in a canonical block\n  description: Emitted when a mempool transaction is included in a finalized block; signals that wallet balance changes are permanent\n\n  schema:\n    tx_hash:\n      type: string\n      required: true\n    tx_type:\n      type: string\n      required: true\n      enum: [TRANSFER, STAKE, UNSTAKE, MINT, BURN, POOL, REWARD, SLASH]\n    from_address:\n      type: string\n      required: true\n    to_address:\n      type: string\n      required: true\n    amount:\n      type: number\n      required: true\n    total_fee:\n      type: number\n      required: true\n    block_hash:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "f9671717ef62f7a3dd707a5192642499f27e4fa6c3881dcb87941d5342eb3e07",
+  "fqdn_id": "blockchain::EV_TX_FINALIZED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted when a mempool transaction is included in a finalized block; signals that wallet balance changes are permanent",
+      "schema": {
+        "amount": {
+          "required": true,
+          "type": "number"
+        },
+        "block_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "from_address": {
+          "required": true,
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "to_address": {
+          "required": true,
+          "type": "string"
+        },
+        "total_fee": {
+          "required": true,
+          "type": "number"
+        },
+        "tx_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "tx_type": {
+          "enum": [
+            "TRANSFER",
+            "STAKE",
+            "UNSTAKE",
+            "MINT",
+            "BURN",
+            "POOL",
+            "REWARD",
+            "SLASH"
+          ],
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Transaction finalized in a canonical block"
+    },
+    "ev_code": "EV_TX_FINALIZED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

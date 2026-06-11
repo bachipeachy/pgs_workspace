@@ -1,0 +1,29 @@
+{
+  "artifact_code": "RB_RUN_CONSENSUS_LOOP_V0",
+  "artifact_type": "RB",
+  "content": "# RB_RUN_CONSENSUS_LOOP_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_RUN_CONSENSUS_LOOP_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nProvide runtime bindings required to execute the consensus loop coordination workflow. Binds CS_WORKFLOW_LOOP_V0 for the Collatz slot sequence loop within CC_RUN_SLOT_SEQUENCE_V0.\n\n---\n\n## 2. Scope\n\nSupports:\n\n- CS_WORKFLOW_LOOP_V0 for EXECUTE_SEQUENCE operations (Collatz slot loop absorbed inside CC_RUN_SLOT_SEQUENCE_V0)\n\nAll store paths are declared in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0 and resolved at runtime via the `store:` field in each CC step. Invoked WFs (WF_PROCESS_SLOT_V0) carry their own runtime bindings. No additional capabilities permitted.\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_RUN_CONSENSUS_LOOP_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for consensus loop coordination workflow\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_WORKFLOW_LOOP_V0:\n      policy: {}\n```\n",
+  "content_hash": "1a5cab86129cc261bd326c05a3999937a1c9f086f757829ed78c389e961fe3a7",
+  "fqdn_id": "blockchain::RB_RUN_CONSENSUS_LOOP_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_WORKFLOW_LOOP_V0": {
+          "policy": {}
+        }
+      },
+      "storage_structure": "blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+      "summary": "Runtime binding for consensus loop coordination workflow"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "rb_code": "RB_RUN_CONSENSUS_LOOP_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.runtime_bindings",
+  "namespace": "blockchain",
+  "references": [
+    "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

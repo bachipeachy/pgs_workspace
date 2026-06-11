@@ -1,0 +1,48 @@
+{
+  "artifact_type": "CT_CONFORMANCE",
+  "ct_fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "eligible_validators": "$.inputs.eligible_validators",
+          "round_number": "$.inputs.round_number"
+        },
+        "atom": "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_select_proposer_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_SELECT_PROPOSER_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0",
+    "input_types": {
+      "eligible_validators": "array",
+      "round_number": "integer"
+    },
+    "inputs": {
+      "eligible_validators": [
+        {
+          "actor_id": "ACTOR_01",
+          "enrollment_status": "ACTIVE",
+          "stake": "1000"
+        }
+      ],
+      "round_number": 99
+    },
+    "outputs": {
+      "proposer_id": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "expected": {
+    "proposer_id": "ACTOR_01"
+  },
+  "expected_outcome": "SUCCESS",
+  "fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0::single_validator",
+  "test_data_source": "blockchain::TEST_DATA_CT_PURE_SELECT_PROPOSER_V0"
+}

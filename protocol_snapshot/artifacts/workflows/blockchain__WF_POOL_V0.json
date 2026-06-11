@@ -1,0 +1,124 @@
+{
+  "artifact_code": "WF_POOL_V0",
+  "artifact_type": "WF",
+  "content": "# WF_POOL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_POOL_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_POOL_V0, CC_VALIDATE_POOL_POLICY_V0, CC_GENERATE_TX_ID_V0, CC_WRITE_MEMPOOL_TX_V0, CC_APPEND_TX_EVENT_V0\n\n---\n\n## 1. Intent\n\nSubmit a POOL transaction: validate pool wallet existence, generate transaction IDs, persist to mempool, and emit lifecycle event.\n\n---\n\n## 2. Rationale\n\nPOOL is a SYSTEM operation. No actor identity required. Both source (MINT) and destination (POOL) wallets are auto-resolved system wallets. The pool_wallet is validated by CC_VALIDATE_POOL_POLICY_V0. The BACHI model removes ETH signing.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_POOL_V0\n    \u251c\u2500 ACK \u2192 CC_VALIDATE_POOL_POLICY_V0\n    \u2502         \u251c\u2500 SUCCESS \u2192 CC_GENERATE_TX_ID_V0\n    \u2502         \u2502             \u251c\u2500 SUCCESS \u2192 CC_WRITE_MEMPOOL_TX_V0\n    \u2502         \u2502             \u2502             \u251c\u2500 SUCCESS \u2192 CC_APPEND_TX_EVENT_V0\n    \u2502         \u2502             \u2502             \u2502             \u251c\u2500 SUCCESS \u2192 EXIT_SUCCESS\n    \u2502         \u2502             \u2502             \u2502             \u2514\u2500 * \u2192 EXIT\n    \u2502         \u2502             \u2502             \u251c\u2500 ALREADY_EXISTS \u2192 EXIT_DUPLICATE\n    \u2502         \u2502             \u2502             \u2514\u2500 * \u2192 EXIT\n    \u2502         \u2502             \u2514\u2500 VIOLATION \u2192 EXIT\n    \u2502         \u251c\u2500 NOT_FOUND \u2192 EXIT\n    \u2502         \u2514\u2500 * \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_POOL_V0 | IN | Entry intent for POOL |\n| CC_VALIDATE_POOL_POLICY_V0 | CC | Validate pool wallet existence (SYSTEM) |\n| CC_GENERATE_TX_ID_V0 | CC | Generate deterministic tx_id and tx_hash |\n| CC_WRITE_MEMPOOL_TX_V0 | CC | Write transaction to MEMPOOL store and register identity keys |\n| CC_APPEND_TX_EVENT_V0 | CC | Emit transaction lifecycle event |\n| EXIT_SUCCESS | EXIT | Successful completion |\n| EXIT_DUPLICATE | EXIT | Duplicate transaction |\n| EXIT | EXIT | Failure exit |\n\n---\n\n## 5. Admission\n\nNo actor admission required \u2014 SYSTEM authority.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_POOL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\nruntime_binding: blockchain::RB_POOL_V0\nsubdomain: transaction\n\ncore:\n  runtime_binding: blockchain::RB_POOL_V0\n  summary: Submit POOL transaction (SYSTEM) \u2014 validate pool wallet, persist to mempool\n\n  admission:\n    requires: []\n    forbids: []\n\n  start_node: IN_POOL_V0\n\n  nodes:\n    IN_POOL_V0:\n      type: IN\n      code: IN_POOL_V0\n      next:\n        ACK: CC_VALIDATE_POOL_POLICY_V0\n        NACK: EXIT\n\n    CC_VALIDATE_POOL_POLICY_V0:\n      type: CC\n      code: CC_VALIDATE_POOL_POLICY_V0\n      inputs:\n        triggered_by: $.payload.triggered_by\n        pool_wallet_id: POOL\n        amount: $.payload.amount\n      next:\n        SUCCESS: CC_GENERATE_TX_ID_V0\n        NOT_FOUND: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_GENERATE_TX_ID_V0:\n      type: CC\n      code: CC_GENERATE_TX_ID_V0\n      inputs:\n        tx_type: POOL\n        amount: $.payload.amount\n      next:\n        SUCCESS: CC_WRITE_MEMPOOL_TX_V0\n        VIOLATION: EXIT\n\n    CC_WRITE_MEMPOOL_TX_V0:\n      type: CC\n      code: CC_WRITE_MEMPOOL_TX_V0\n      inputs:\n        tx_id: $.results.CC_GENERATE_TX_ID_V0.tx_id\n        tx_hash: $.results.CC_GENERATE_TX_ID_V0.tx_hash\n        tx_type: POOL\n        amount: $.payload.amount\n        created_at: \"{{timestamp}}\"\n      next:\n        SUCCESS: CC_APPEND_TX_EVENT_V0\n        ALREADY_EXISTS: EXIT_DUPLICATE\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_APPEND_TX_EVENT_V0:\n      type: CC\n      code: CC_APPEND_TX_EVENT_V0\n      inputs:\n        event_type: EV_TRANSACTION_SUBMITTED_V0\n        tx_id: $.results.CC_GENERATE_TX_ID_V0.tx_id\n        tx_hash: $.results.CC_GENERATE_TX_ID_V0.tx_hash\n        wallet_id: POOL\n        actor_id: SYSTEM\n        data:\n          tx_type: POOL\n          amount: $.payload.amount\n          triggered_by: $.payload.triggered_by\n          status: PENDING\n      next:\n        SUCCESS: EXIT_SUCCESS\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT_SUCCESS:\n      type: EXIT\n      reason: COMPLETED\n\n    EXIT_DUPLICATE:\n      type: EXIT\n      reason: DUPLICATE_NONCE\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n```\n",
+  "content_hash": "91b497f5f87a67d2686b059646f3ffcd8c4df7867501b01e9130c625d225db97",
+  "fqdn_id": "blockchain::WF_POOL_V0",
+  "frontmatter": {
+    "core": {
+      "admission": {
+        "forbids": [],
+        "requires": []
+      },
+      "nodes": {
+        "CC_APPEND_TX_EVENT_V0": {
+          "code": "CC_APPEND_TX_EVENT_V0",
+          "fqdn_id": "blockchain::CC_APPEND_TX_EVENT_V0",
+          "inputs": {
+            "actor_id": "SYSTEM",
+            "data": {
+              "amount": "$.payload.amount",
+              "status": "PENDING",
+              "triggered_by": "$.payload.triggered_by",
+              "tx_type": "POOL"
+            },
+            "event_type": "EV_TRANSACTION_SUBMITTED_V0",
+            "tx_hash": "$.results.CC_GENERATE_TX_ID_V0.tx_hash",
+            "tx_id": "$.results.CC_GENERATE_TX_ID_V0.tx_id",
+            "wallet_id": "POOL"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT_SUCCESS",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_GENERATE_TX_ID_V0": {
+          "code": "CC_GENERATE_TX_ID_V0",
+          "fqdn_id": "blockchain::CC_GENERATE_TX_ID_V0",
+          "inputs": {
+            "amount": "$.payload.amount",
+            "tx_type": "POOL"
+          },
+          "next": {
+            "SUCCESS": "CC_WRITE_MEMPOOL_TX_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_VALIDATE_POOL_POLICY_V0": {
+          "code": "CC_VALIDATE_POOL_POLICY_V0",
+          "fqdn_id": "blockchain::CC_VALIDATE_POOL_POLICY_V0",
+          "inputs": {
+            "amount": "$.payload.amount",
+            "pool_wallet_id": "POOL",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "NOT_FOUND": "EXIT",
+            "SUCCESS": "CC_GENERATE_TX_ID_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_WRITE_MEMPOOL_TX_V0": {
+          "code": "CC_WRITE_MEMPOOL_TX_V0",
+          "fqdn_id": "blockchain::CC_WRITE_MEMPOOL_TX_V0",
+          "inputs": {
+            "amount": "$.payload.amount",
+            "created_at": "{{timestamp}}",
+            "tx_hash": "$.results.CC_GENERATE_TX_ID_V0.tx_hash",
+            "tx_id": "$.results.CC_GENERATE_TX_ID_V0.tx_id",
+            "tx_type": "POOL"
+          },
+          "next": {
+            "ALREADY_EXISTS": "EXIT_DUPLICATE",
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_APPEND_TX_EVENT_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "EXIT_DUPLICATE": {
+          "reason": "DUPLICATE_NONCE",
+          "type": "EXIT"
+        },
+        "EXIT_SUCCESS": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "IN_POOL_V0": {
+          "code": "IN_POOL_V0",
+          "fqdn_id": "blockchain::IN_POOL_V0",
+          "next": {
+            "ACK": "CC_VALIDATE_POOL_POLICY_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "runtime_binding": "blockchain::RB_POOL_V0",
+      "start_node": "IN_POOL_V0",
+      "summary": "Submit POOL transaction (SYSTEM) \u2014 validate pool wallet, persist to mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_POOL_V0",
+    "subdomain": "transaction",
+    "version": "v0",
+    "wf_code": "WF_POOL_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_POOL_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

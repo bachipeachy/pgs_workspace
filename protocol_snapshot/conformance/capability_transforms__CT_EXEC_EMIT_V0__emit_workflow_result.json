@@ -93,6 +93,7 @@
       "workflow_id": "wf_build_platform_v0"
     }
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_workflow_result",
   "test_data_source": "capability_transforms::TEST_DATA_CT_EXEC_EMIT_V0"
 }

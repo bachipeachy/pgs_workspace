@@ -37,9 +37,8 @@
       }
     }
   },
-  "expected": {
-    "is_member": false
-  },
+  "expected": {},
+  "expected_outcome": "VIOLATION",
   "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0::value_not_in_set",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
 }

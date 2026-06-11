@@ -1,0 +1,155 @@
+{
+  "artifact_code": "CC_SKIP_ROUND_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+        "id": "CT_PURE_ASSEMBLE_RECORD_V0",
+        "inputs": [
+          "fields"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "record"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_SKIP_ROUND_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_SKIP_ROUND_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_ASSEMBLE_RECORD_V0, CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nRecord a skipped consensus round to the CONSENSUS_ROUNDS and CONSENSUS_EVENTS stores when no pending transactions are available for block assembly.\n\n---\n\n## 2. Rationale\n\nRound continuity requires that every consensus round \u2014 including empty ones \u2014 is recorded in the append-only journal. Skipping round records would create gaps in the consensus audit trail. All writes are scoped to consensus_pos stores only.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_ASSEMBLE_RECORD_V0 | CT | Assemble skip_record |\n| 2 | CS_APPENDONLY_JSONL_V0 | CS | APPEND to CONSENSUS_ROUNDS |\n| 3 | CS_APPENDONLY_JSONL_V0 | CS | APPEND to CONSENSUS_EVENTS |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| round_id | integer | true | Consensus round number being skipped |\n| proposer_id | string | true | actor_id of the selected proposer for this round |\n| timestamp | string | true | ISO 8601 timestamp of the skip |\n\n---\n\n## 5. Outputs\n\nNo outputs. This CC records state as side effects only.\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Skip record written to both stores |\n| VIOLATION | Invalid input |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION on missing or invalid required inputs\n- BACKEND_ERROR propagates as a hard failure from any CS step\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_SKIP_ROUND_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Record a skipped consensus round to CONSENSUS_ROUNDS and CONSENSUS_EVENTS\n\n  inputs:\n    round_id:\n      type: integer\n      required: true\n    proposer_id:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      required: true\n      format: date-time\n\n  outputs: {}\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: assemble_skip_record\n      transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0\n      inputs:\n        fields:\n          round_id: $.inputs.round_id\n          proposer_id: $.inputs.proposer_id\n          outcome: SKIPPED\n          timestamp: $.inputs.timestamp\n      outputs:\n        skip_record: $.capability_result.record\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: append_to_rounds\n        VIOLATION: exit\n\n    - step: append_to_rounds\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: CONSENSUS_ROUNDS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.round_id\n        record: $.results.assemble_skip_record.skip_record\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: append_to_events\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: append_to_events\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: CONSENSUS_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.round_id\n        record:\n          event_code: EV_ROUND_SKIPPED_V0\n          round_id: $.inputs.round_id\n          proposer_id: $.inputs.proposer_id\n          outcome: SKIPPED\n          timestamp: $.inputs.timestamp\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: consensus_pos\n  notes:\n    - All writes scoped to consensus_pos stores (CONSENSUS_ROUNDS, CONSENSUS_EVENTS)\n    - No cross-subdomain writes\n```\n",
+  "content_hash": "24e76d8a2912280d273cc158826012fbb42df2ce05b0a986377e2ede71db76b4",
+  "fqdn_id": "blockchain::CC_SKIP_ROUND_V0",
+  "frontmatter": {
+    "cc_code": "CC_SKIP_ROUND_V0",
+    "core": {
+      "inputs": {
+        "proposer_id": {
+          "required": true,
+          "type": "string"
+        },
+        "round_id": {
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {},
+      "pipeline": [
+        {
+          "inputs": {
+            "fields": {
+              "outcome": "SKIPPED",
+              "proposer_id": "$.inputs.proposer_id",
+              "round_id": "$.inputs.round_id",
+              "timestamp": "$.inputs.timestamp"
+            }
+          },
+          "on_result": {
+            "SUCCESS": "append_to_rounds",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "skip_record": "$.capability_result.record"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "assemble_skip_record",
+          "transform": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
+        },
+        {
+          "inputs": {
+            "record": "$.results.assemble_skip_record.skip_record",
+            "stream_id": "$.inputs.round_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "append_to_events",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_to_rounds",
+          "store": "CONSENSUS_ROUNDS"
+        },
+        {
+          "inputs": {
+            "record": {
+              "event_code": "EV_ROUND_SKIPPED_V0",
+              "outcome": "SKIPPED",
+              "proposer_id": "$.inputs.proposer_id",
+              "round_id": "$.inputs.round_id",
+              "timestamp": "$.inputs.timestamp"
+            },
+            "stream_id": "$.inputs.round_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_to_events",
+          "store": "CONSENSUS_EVENTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Record a skipped consensus round to CONSENSUS_ROUNDS and CONSENSUS_EVENTS"
+    },
+    "extensions": {
+      "notes": [
+        "All writes scoped to consensus_pos stores (CONSENSUS_ROUNDS, CONSENSUS_EVENTS)",
+        "No cross-subdomain writes"
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

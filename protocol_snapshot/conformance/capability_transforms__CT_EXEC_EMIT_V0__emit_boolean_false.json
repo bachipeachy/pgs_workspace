@@ -33,6 +33,7 @@
   "expected": {
     "result": false
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_boolean_false",
   "test_data_source": "capability_transforms::TEST_DATA_CT_EXEC_EMIT_V0"
 }

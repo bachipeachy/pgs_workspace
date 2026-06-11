@@ -1,0 +1,131 @@
+{
+  "artifact_code": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "source": "list_validators.validator_list"
+        },
+        "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "id": "CT_PURE_FILTER_RECORDS_V0",
+        "inputs": [
+          "source",
+          "filter"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "extracted"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_QUERY_ELIGIBLE_VALIDATORS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_QUERY_ELIGIBLE_VALIDATORS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_FILTER_RECORDS_V0\n\n---\n\n## 1. Intent\n\nQuery the VALIDATOR store for all registered validators, then filter to those eligible for consensus participation (status=ACTIVE_ONGOING and effective_balance present).\n\n---\n\n## 2. Rationale\n\nProposer selection requires a clean list of eligible validators. Eligibility filtering is a pure transform step (CT_PURE_FILTER_RECORDS_V0) applied after the raw store list is retrieved. This CC is the sole entry point for eligible validator resolution \u2014 no other CC or WF may filter validators independently.\n\nVIOLATION is the exit when no eligible validators exist (empty VALIDATOR store or none with ACTIVE_ONGOING status and stake) \u2014 CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no records match the filter. WF_PROPOSE_BLOCK_V0 routes this VIOLATION to EXIT without recording a round (valid bootstrap behavior).\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | LIST VALIDATOR store \u2192 raw validator list |\n| 2 | CT_PURE_FILTER_RECORDS_V0 | CT | Filter: status=ACTIVE_ONGOING AND effective_balance present |\n\n---\n\n## 4. Inputs\n\nNo inputs required. This CC reads directly from the VALIDATOR store.\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| eligible_validators | array | Filtered list of active validator records with stake |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | One or more eligible validators found; eligible_validators populated |\n| VIOLATION | No eligible validators found (empty pool or none with ACTIVE_ONGOING status and stake), or storage data malformed |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION covers both \"no eligible validators\" (CT filter found no matches) and \"malformed store data\"\n- WF_PROPOSE_BLOCK_V0 routes VIOLATION \u2192 EXIT without recording a round (valid during bootstrap)\n- BACKEND_ERROR propagates as a hard failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_QUERY_ELIGIBLE_VALIDATORS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Query VALIDATOR store and filter to eligible consensus participants\n\n  inputs: {}\n\n  outputs:\n    eligible_validators:\n      type: array\n      items:\n        type: object\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: list_validators\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: VALIDATOR\n      op: LIST\n      inputs: {}\n      outputs:\n        validator_list: $.capability_result.records\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: filter_eligible\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: filter_eligible\n      transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0\n      inputs:\n        source: $.results.list_validators.validator_list\n        filter:\n          status: ACTIVE_ONGOING\n          effective_balance: present\n      outputs:\n        eligible_validators: $.capability_result.extracted\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  subdomain: consensus_pos\n  notes:\n    - CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant \u2014 empty is not NOT_FOUND)\n    - CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no records match \u2014 covers both empty store and no ACTIVE_ONGOING validators\n    - VIOLATION from this CC causes WF_PROPOSE_BLOCK_V0 to EXIT without recording a round (valid during bootstrap)\n    - Eligibility filter: status=ACTIVE_ONGOING AND effective_balance present\n    - Functional runtime dependency on WF_REGISTER_VALIDATOR_V0 being operational (validators must be registered before eligibility queries return results)\n```\n",
+  "content_hash": "1d75dbdaf507f1b6d3d40f8cedc5f8ef08dcd92229d7321880dc77af9011c0cd",
+  "fqdn_id": "blockchain::CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+  "frontmatter": {
+    "cc_code": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+    "core": {
+      "inputs": {},
+      "outputs": {
+        "eligible_validators": {
+          "items": {
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {},
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "filter_eligible",
+            "VIOLATION": "exit"
+          },
+          "op": "LIST",
+          "outputs": {
+            "validator_list": "$.capability_result.records"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "list_validators",
+          "store": "VALIDATOR"
+        },
+        {
+          "inputs": {
+            "filter": {
+              "effective_balance": "present",
+              "status": "ACTIVE_ONGOING"
+            },
+            "source": "$.results.list_validators.validator_list"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "eligible_validators": "$.capability_result.extracted"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "filter_eligible",
+          "transform": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Query VALIDATOR store and filter to eligible consensus participants"
+    },
+    "extensions": {
+      "notes": [
+        "CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant \u2014 empty is not NOT_FOUND)",
+        "CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no records match \u2014 covers both empty store and no ACTIVE_ONGOING validators",
+        "VIOLATION from this CC causes WF_PROPOSE_BLOCK_V0 to EXIT without recording a round (valid during bootstrap)",
+        {
+          "Eligibility filter": "status=ACTIVE_ONGOING AND effective_balance present"
+        },
+        "Functional runtime dependency on WF_REGISTER_VALIDATOR_V0 being operational (validators must be registered before eligibility queries return results)"
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

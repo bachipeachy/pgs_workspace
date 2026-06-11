@@ -1,0 +1,132 @@
+{
+  "artifact_code": "CC_QUERY_PENDING_TRANSACTIONS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "source": "list_pending_transactions.tx_list"
+        },
+        "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "id": "CT_PURE_FILTER_RECORDS_V0",
+        "inputs": [
+          "source",
+          "filter"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "extracted"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_QUERY_PENDING_TRANSACTIONS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_QUERY_PENDING_TRANSACTIONS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_FILTER_RECORDS_V0\n\n---\n\n## 1. Intent\n\nQuery the TRANSACTION store for all transactions with status=pending, returning their IDs for block assembly.\n\n---\n\n## 2. Rationale\n\nBlock proposal requires a list of pending transactions to include. This CC is owned by the `transaction` subdomain \u2014 it reads from transaction-owned storage and exposes a clean cross-subdomain interface. The consensus_pos subdomain calls this CC but does not own or access the TRANSACTION store directly.\n\nCS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for an empty store (substrate invariant). The CT_PURE_FILTER_RECORDS_V0 assert step detects the empty case (or no pending txs) and exits VIOLATION. WF_PROPOSE_BLOCK_V0 routes CC VIOLATION \u2192 CC_SKIP_ROUND_V0 (no pending transactions is a valid round-skip condition, not a protocol error).\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | LIST TRANSACTION store \u2192 all records |\n| 2 | CT_PURE_FILTER_RECORDS_V0 | CT | Assert status=PENDING present (VIOLATION if none) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| filter | object | false | Optional filter parameters (default: status=pending) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| tx_ids | array | Ordered list of pending transaction IDs |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | One or more pending transactions found; tx_ids populated |\n| VIOLATION | No pending transactions found (CT filter found no PENDING records) or storage data malformed |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION from CT_PURE_FILTER_RECORDS_V0 (no PENDING records) is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0\n- BACKEND_ERROR propagates as a hard failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_QUERY_PENDING_TRANSACTIONS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Query TRANSACTION store for pending transactions\n\n  inputs:\n    filter:\n      type: object\n      required: false\n\n  outputs:\n    tx_ids:\n      type: array\n      items:\n        type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: list_pending_transactions\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: TRANSACTION\n      op: LIST\n      inputs: {}\n      outputs:\n        tx_list: $.capability_result.records\n        tx_ids: $.capability_result.keys\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: assert_pending_present\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: assert_pending_present\n      transform: capability_transforms::CT_PURE_FILTER_RECORDS_V0\n      inputs:\n        source: $.results.list_pending_transactions.tx_list\n        filter:\n          status: PENDING\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  subdomain: transaction\n  notes:\n    - Owned by blockchain::transaction; called cross-subdomain by WF_PROPOSE_BLOCK_V0\n    - CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant)\n    - CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no PENDING records found \u2014 covers empty mempool case\n    - VIOLATION from this CC is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0 (no pending txs = valid skip condition)\n    - tx_ids bound from list_pending_transactions.tx_ids (store keys = tx IDs); assert step validates non-empty\n```\n",
+  "content_hash": "7b4d6474786a2e7a7d8a6aa6c08e1a954d9358dc274d36c5fb36a6837be9b2bc",
+  "fqdn_id": "blockchain::CC_QUERY_PENDING_TRANSACTIONS_V0",
+  "frontmatter": {
+    "cc_code": "CC_QUERY_PENDING_TRANSACTIONS_V0",
+    "core": {
+      "inputs": {
+        "filter": {
+          "required": false,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "tx_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {},
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "assert_pending_present",
+            "VIOLATION": "exit"
+          },
+          "op": "LIST",
+          "outputs": {
+            "tx_ids": "$.capability_result.keys",
+            "tx_list": "$.capability_result.records"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "list_pending_transactions",
+          "store": "TRANSACTION"
+        },
+        {
+          "inputs": {
+            "filter": {
+              "status": "PENDING"
+            },
+            "source": "$.results.list_pending_transactions.tx_list"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "assert_pending_present",
+          "transform": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Query TRANSACTION store for pending transactions"
+    },
+    "extensions": {
+      "notes": [
+        "Owned by blockchain::transaction; called cross-subdomain by WF_PROPOSE_BLOCK_V0",
+        "CS_MUTABLE_JSON_V0 LIST returns SUCCESS + [] for empty store (substrate invariant)",
+        "CT_PURE_FILTER_RECORDS_V0 raises VIOLATION when no PENDING records found \u2014 covers empty mempool case",
+        "VIOLATION from this CC is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0 (no pending txs = valid skip condition)",
+        "tx_ids bound from list_pending_transactions.tx_ids (store keys = tx IDs); assert step validates non-empty"
+      ],
+      "subdomain": "transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

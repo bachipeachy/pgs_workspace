@@ -1,6 +1,6 @@
 [project]
 name = "pgs-workspace"
-version = "0.4.0"
+version = "0.5.0"
 description = "PGS Workspace — runnable entry point for Protocol-Governed Systems"
 requires-python = ">=3.12"
 license = "Apache-2.0"

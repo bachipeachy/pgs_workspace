@@ -1,0 +1,152 @@
+{
+  "artifact_code": "WF_STAKE_V0",
+  "artifact_type": "WF",
+  "content": "# WF_STAKE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_STAKE_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_STAKE_V0, CC_RESOLVE_ACTOR_ID_V0, CC_VALIDATE_STAKE_POLICY_V0, CC_GENERATE_TX_ID_V0, CC_WRITE_MEMPOOL_TX_V0, CC_APPEND_TX_EVENT_V0\n\n---\n\n## 1. Intent\n\nSubmit a STAKE transaction: validate actor identity and source wallet ownership, generate transaction IDs, persist to mempool, and emit lifecycle event.\n\n---\n\n## 2. Rationale\n\nSTAKE is an ENDUSER operation. The actor stakes from their own wallet into the protocol pool. The destination (POOL wallet) is auto-resolved by CC_VALIDATE_STAKE_POLICY_V0 \u2014 not supplied by the caller. The BACHI model removes ETH signing.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_STAKE_V0\n    \u251c\u2500 ACK \u2192 CC_RESOLVE_ACTOR_ID_V0\n    \u2502         \u251c\u2500 SUCCESS \u2192 CC_VALIDATE_STAKE_POLICY_V0\n    \u2502         \u2502             \u251c\u2500 SUCCESS \u2192 CC_GENERATE_TX_ID_V0\n    \u2502         \u2502             \u2502             \u251c\u2500 SUCCESS \u2192 CC_WRITE_MEMPOOL_TX_V0\n    \u2502         \u2502             \u2502             \u2502             \u251c\u2500 SUCCESS \u2192 CC_APPEND_TX_EVENT_V0\n    \u2502         \u2502             \u2502             \u2502             \u2502             \u251c\u2500 SUCCESS \u2192 EXIT_SUCCESS\n    \u2502         \u2502             \u2502             \u2502             \u2502             \u2514\u2500 * \u2192 EXIT\n    \u2502         \u2502             \u2502             \u2502             \u251c\u2500 ALREADY_EXISTS \u2192 EXIT_DUPLICATE\n    \u2502         \u2502             \u2502             \u2502             \u2514\u2500 * \u2192 EXIT\n    \u2502         \u2502             \u2502             \u2514\u2500 VIOLATION \u2192 EXIT\n    \u2502         \u2502             \u251c\u2500 NOT_FOUND \u2192 EXIT\n    \u2502         \u2502             \u2514\u2500 * \u2192 EXIT\n    \u2502         \u2514\u2500 * \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_STAKE_V0 | IN | Entry intent for STAKE |\n| CC_RESOLVE_ACTOR_ID_V0 | CC | Resolve actor from actor_record |\n| CC_VALIDATE_STAKE_POLICY_V0 | CC | Validate from_wallet ownership by actor |\n| CC_GENERATE_TX_ID_V0 | CC | Generate deterministic tx_id and tx_hash |\n| CC_WRITE_MEMPOOL_TX_V0 | CC | Write transaction to MEMPOOL store and register identity keys |\n| CC_APPEND_TX_EVENT_V0 | CC | Emit transaction lifecycle event |\n| EXIT_SUCCESS | EXIT | Successful completion |\n| EXIT_DUPLICATE | EXIT | Duplicate transaction |\n| EXIT | EXIT | Failure exit |\n\n---\n\n## 5. Admission\n\n| Requirement | Description |\n|-------------|-------------|\n| requires | EV_WALLET_CREATED_V0 |\n\nActor wallet must exist before staking.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_STAKE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\nruntime_binding: blockchain::RB_STAKE_V0\nsubdomain: transaction\n\ncore:\n  runtime_binding: blockchain::RB_STAKE_V0\n  summary: Submit STAKE transaction \u2014 validate actor ownership, persist to mempool\n\n  admission:\n    requires:\n      - EV_WALLET_CREATED_V0\n    forbids: []\n    bindings:\n      EV_WALLET_CREATED_V0:\n        wallet_id: from_wallet_id\n\n  start_node: IN_STAKE_V0\n\n  nodes:\n    IN_STAKE_V0:\n      type: IN\n      code: IN_STAKE_V0\n      next:\n        ACK: CC_RESOLVE_ACTOR_ID_V0\n        NACK: EXIT\n\n    CC_RESOLVE_ACTOR_ID_V0:\n      type: CC\n      code: CC_RESOLVE_ACTOR_ID_V0\n      inputs:\n        actor_record: $.payload.actor_record\n      next:\n        SUCCESS: CC_VALIDATE_STAKE_POLICY_V0\n        NOT_FOUND: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_VALIDATE_STAKE_POLICY_V0:\n      type: CC\n      code: CC_VALIDATE_STAKE_POLICY_V0\n      inputs:\n        actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n        from_wallet_id: $.payload.from_wallet_id\n        amount: $.payload.amount\n      next:\n        SUCCESS: CC_GENERATE_TX_ID_V0\n        NOT_FOUND: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_GENERATE_TX_ID_V0:\n      type: CC\n      code: CC_GENERATE_TX_ID_V0\n      inputs:\n        tx_type: STAKE\n        from_wallet_id: $.payload.from_wallet_id\n        amount: $.payload.amount\n        actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n      next:\n        SUCCESS: CC_WRITE_MEMPOOL_TX_V0\n        VIOLATION: EXIT\n\n    CC_WRITE_MEMPOOL_TX_V0:\n      type: CC\n      code: CC_WRITE_MEMPOOL_TX_V0\n      inputs:\n        tx_id: $.results.CC_GENERATE_TX_ID_V0.tx_id\n        tx_hash: $.results.CC_GENERATE_TX_ID_V0.tx_hash\n        tx_type: STAKE\n        from_wallet_id: $.payload.from_wallet_id\n        amount: $.payload.amount\n        actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n        gas_limit: $.payload.gas_limit\n        max_fee_per_gas: $.payload.max_fee_per_gas\n        max_priority_fee_per_gas: $.payload.max_priority_fee_per_gas\n        created_at: \"{{timestamp}}\"\n      next:\n        SUCCESS: CC_APPEND_TX_EVENT_V0\n        ALREADY_EXISTS: EXIT_DUPLICATE\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_APPEND_TX_EVENT_V0:\n      type: CC\n      code: CC_APPEND_TX_EVENT_V0\n      inputs:\n        event_type: EV_TRANSACTION_SUBMITTED_V0\n        tx_id: $.results.CC_GENERATE_TX_ID_V0.tx_id\n        tx_hash: $.results.CC_GENERATE_TX_ID_V0.tx_hash\n        wallet_id: $.payload.from_wallet_id\n        actor_id: $.results.CC_RESOLVE_ACTOR_ID_V0.actor_id\n        data:\n          tx_type: STAKE\n          from_wallet_id: $.payload.from_wallet_id\n          amount: $.payload.amount\n          status: PENDING\n      next:\n        SUCCESS: EXIT_SUCCESS\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT_SUCCESS:\n      type: EXIT\n      reason: COMPLETED\n\n    EXIT_DUPLICATE:\n      type: EXIT\n      reason: DUPLICATE_NONCE\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n```\n",
+  "content_hash": "f331f6e90230eb7ecc61b05db4d472d92e754873bd29bb5fffb4dfc96339a0eb",
+  "fqdn_id": "blockchain::WF_STAKE_V0",
+  "frontmatter": {
+    "core": {
+      "admission": {
+        "bindings": {
+          "EV_WALLET_CREATED_V0": {
+            "wallet_id": "from_wallet_id"
+          }
+        },
+        "forbids": [],
+        "requires": [
+          "EV_WALLET_CREATED_V0"
+        ]
+      },
+      "nodes": {
+        "CC_APPEND_TX_EVENT_V0": {
+          "code": "CC_APPEND_TX_EVENT_V0",
+          "fqdn_id": "blockchain::CC_APPEND_TX_EVENT_V0",
+          "inputs": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "data": {
+              "amount": "$.payload.amount",
+              "from_wallet_id": "$.payload.from_wallet_id",
+              "status": "PENDING",
+              "tx_type": "STAKE"
+            },
+            "event_type": "EV_TRANSACTION_SUBMITTED_V0",
+            "tx_hash": "$.results.CC_GENERATE_TX_ID_V0.tx_hash",
+            "tx_id": "$.results.CC_GENERATE_TX_ID_V0.tx_id",
+            "wallet_id": "$.payload.from_wallet_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT_SUCCESS",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_GENERATE_TX_ID_V0": {
+          "code": "CC_GENERATE_TX_ID_V0",
+          "fqdn_id": "blockchain::CC_GENERATE_TX_ID_V0",
+          "inputs": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "amount": "$.payload.amount",
+            "from_wallet_id": "$.payload.from_wallet_id",
+            "tx_type": "STAKE"
+          },
+          "next": {
+            "SUCCESS": "CC_WRITE_MEMPOOL_TX_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_RESOLVE_ACTOR_ID_V0": {
+          "code": "CC_RESOLVE_ACTOR_ID_V0",
+          "fqdn_id": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+          "inputs": {
+            "actor_record": "$.payload.actor_record"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "NOT_FOUND": "EXIT",
+            "SUCCESS": "CC_VALIDATE_STAKE_POLICY_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_VALIDATE_STAKE_POLICY_V0": {
+          "code": "CC_VALIDATE_STAKE_POLICY_V0",
+          "fqdn_id": "blockchain::CC_VALIDATE_STAKE_POLICY_V0",
+          "inputs": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "amount": "$.payload.amount",
+            "from_wallet_id": "$.payload.from_wallet_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "NOT_FOUND": "EXIT",
+            "SUCCESS": "CC_GENERATE_TX_ID_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_WRITE_MEMPOOL_TX_V0": {
+          "code": "CC_WRITE_MEMPOOL_TX_V0",
+          "fqdn_id": "blockchain::CC_WRITE_MEMPOOL_TX_V0",
+          "inputs": {
+            "actor_id": "$.results.CC_RESOLVE_ACTOR_ID_V0.actor_id",
+            "amount": "$.payload.amount",
+            "created_at": "{{timestamp}}",
+            "from_wallet_id": "$.payload.from_wallet_id",
+            "gas_limit": "$.payload.gas_limit",
+            "max_fee_per_gas": "$.payload.max_fee_per_gas",
+            "max_priority_fee_per_gas": "$.payload.max_priority_fee_per_gas",
+            "tx_hash": "$.results.CC_GENERATE_TX_ID_V0.tx_hash",
+            "tx_id": "$.results.CC_GENERATE_TX_ID_V0.tx_id",
+            "tx_type": "STAKE"
+          },
+          "next": {
+            "ALREADY_EXISTS": "EXIT_DUPLICATE",
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_APPEND_TX_EVENT_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "EXIT_DUPLICATE": {
+          "reason": "DUPLICATE_NONCE",
+          "type": "EXIT"
+        },
+        "EXIT_SUCCESS": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "IN_STAKE_V0": {
+          "code": "IN_STAKE_V0",
+          "fqdn_id": "blockchain::IN_STAKE_V0",
+          "next": {
+            "ACK": "CC_RESOLVE_ACTOR_ID_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "runtime_binding": "blockchain::RB_STAKE_V0",
+      "start_node": "IN_STAKE_V0",
+      "summary": "Submit STAKE transaction \u2014 validate actor ownership, persist to mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_STAKE_V0",
+    "subdomain": "transaction",
+    "version": "v0",
+    "wf_code": "WF_STAKE_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_STAKE_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

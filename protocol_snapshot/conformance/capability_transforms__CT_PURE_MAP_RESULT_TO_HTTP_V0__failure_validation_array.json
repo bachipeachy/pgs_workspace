@@ -62,6 +62,7 @@
     },
     "result_status": "VIOLATION"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::failure_validation_array",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_MAP_RESULT_TO_HTTP_V0"
 }

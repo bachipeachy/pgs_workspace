@@ -33,6 +33,7 @@
   "expected": {
     "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon art"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0::entropy_256_bits",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_ENTROPY_TO_MNEMONIC_V0"
 }

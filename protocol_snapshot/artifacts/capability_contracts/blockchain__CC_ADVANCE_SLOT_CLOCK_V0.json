@@ -1,0 +1,136 @@
+{
+  "artifact_code": "CC_ADVANCE_SLOT_CLOCK_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_ADVANCE_SLOT_CLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_ADVANCE_SLOT_CLOCK_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nAdvance the slot clock by one position. Reads the current slot clock record, increments `current_slot` by 1, and writes the updated record back to the SLOT_CLOCK store.\n\n---\n\n## 2. Rationale\n\nThe slot clock tracks the simulation's position in the slot sequence. After each slot completes its full pipeline (block proposal included), the clock must be advanced before the next slot iteration is dispatched. The increment is CC-implementation-level arithmetic (not delegated to a CT) \u2014 `current_slot + 1` is the only computation.\n\nThe 2-step READ \u2192 WRITE pattern is deliberate: the CC reads the authoritative record before writing, ensuring no external state assumption is made about the current slot value.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | READ |\n| 2 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; scopes both the READ and WRITE |\n| `triggered_by` | string | true | Actor ID or system trigger reference |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n| `next_slot` | integer | The new `current_slot` value written to the store (`previous + 1`) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Slot clock advanced and written successfully |\n| NOT_FOUND | Slot clock record not found \u2014 simulation not initialized |\n| VIOLATION | Invalid input or malformed slot clock record |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND on READ exits immediately \u2014 slot clock must exist before it can be advanced\n- VIOLATION on invalid `simulation_id` or malformed record exits\n- BACKEND_ERROR on READ or WRITE exits; partial writes are not possible across two steps if the READ fails\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_ADVANCE_SLOT_CLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Advance slot clock current_slot by 1 \u2014 READ then WRITE\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Simulation run identifier; scopes the slot clock READ and WRITE\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n    next_slot:\n      type: integer\n      description: The new current_slot value written (previous + 1)\n\n  result_status_contract:\n    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: read_slot_clock\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: SLOT_CLOCK\n      op: READ\n      inputs:\n        key: $.inputs.simulation_id\n      outputs:\n        current_slot_record: $.capability_result.value\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: write_advanced_slot_clock\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: SLOT_CLOCK\n      op: WRITE\n      inputs:\n        key: $.inputs.simulation_id\n        value:\n          simulation_id: $.inputs.simulation_id\n          current_slot: \"{{$.results.read_slot_clock.current_slot_record.current_slot + 1}}\"\n          initialized_at: $.results.read_slot_clock.current_slot_record.initialized_at\n          last_advanced_at: \"{{timestamp}}\"\n      outputs:\n        result_status: $.capability_result.result_status\n        next_slot: \"{{$.results.read_slot_clock.current_slot_record.current_slot + 1}}\"\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - SLOT_CLOCK store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n    - CC-level arithmetic \u2014 current_slot + 1; no CT required\n    - 2-step READ then WRITE; NOT_FOUND on READ is a hard exit\n    - next_slot output = the value written, available for downstream CC JSONPath resolution\n```\n",
+  "content_hash": "b0a7822f83ab0dcd9f1569ec875447bca11352c825c1771e7ee681868954f4a7",
+  "fqdn_id": "blockchain::CC_ADVANCE_SLOT_CLOCK_V0",
+  "frontmatter": {
+    "cc_code": "CC_ADVANCE_SLOT_CLOCK_V0",
+    "core": {
+      "inputs": {
+        "simulation_id": {
+          "description": "Simulation run identifier; scopes the slot clock READ and WRITE",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "next_slot": {
+          "description": "The new current_slot value written (previous + 1)",
+          "type": "integer"
+        },
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.simulation_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "current_slot_record": "$.capability_result.value"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "read_slot_clock",
+          "store": "SLOT_CLOCK"
+        },
+        {
+          "inputs": {
+            "key": "$.inputs.simulation_id",
+            "value": {
+              "current_slot": "{{$.results.read_slot_clock.current_slot_record.current_slot + 1}}",
+              "initialized_at": "$.results.read_slot_clock.current_slot_record.initialized_at",
+              "last_advanced_at": "{{timestamp}}",
+              "simulation_id": "$.inputs.simulation_id"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {
+            "next_slot": "{{$.results.read_slot_clock.current_slot_record.current_slot + 1}}",
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_advanced_slot_clock",
+          "store": "SLOT_CLOCK"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Advance slot clock current_slot by 1 \u2014 READ then WRITE"
+    },
+    "extensions": {
+      "notes": [
+        "SLOT_CLOCK store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+        "CC-level arithmetic \u2014 current_slot + 1; no CT required",
+        "2-step READ then WRITE; NOT_FOUND on READ is a hard exit",
+        "next_slot output = the value written, available for downstream CC JSONPath resolution"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

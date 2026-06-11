@@ -65,6 +65,7 @@
       }
     }
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0::increment_from_positive",
   "test_data_source": "blockchain::TEST_DATA_CT_PURE_INCREMENT_WALLET_NONCE_V0"
 }

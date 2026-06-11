@@ -36,6 +36,7 @@
   "expected": {
     "id": "TX_d3ff95909dfb2231"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_numeric_data",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_GENERATE_ID_V0"
 }

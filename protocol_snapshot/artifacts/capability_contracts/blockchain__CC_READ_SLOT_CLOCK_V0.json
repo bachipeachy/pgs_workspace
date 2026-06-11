@@ -1,0 +1,107 @@
+{
+  "artifact_code": "CC_READ_SLOT_CLOCK_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_READ_SLOT_CLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_READ_SLOT_CLOCK_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nRead the current slot clock record for a simulation run. Returns the full slot clock record keyed by `simulation_id`. NOT_FOUND is a hard failure \u2014 slot clock must be initialized before any slot processing begins.\n\n---\n\n## 2. Rationale\n\nThe slot clock is the authoritative state for slot sequencing. Any CC that needs the current slot position reads it via this CC. Treating NOT_FOUND as a hard exit (rather than a recoverable state) enforces the invariant that `CC_INITIALIZE_SLOT_CLOCK_V0` must succeed before any slot processing CC is invoked.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | READ |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; scopes the slot clock read |\n| `triggered_by` | string | true | Actor ID or system trigger reference |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n| `slot_clock` | object | Full slot clock record: `{simulation_id, current_slot, initialized_at}` |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Slot clock record found and returned |\n| NOT_FOUND | No slot clock record exists for this simulation_id \u2014 hard exit |\n| VIOLATION | Invalid input (empty simulation_id) |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND is a hard exit \u2014 no slot clock means the simulation was not initialized; caller must not proceed\n- VIOLATION on empty or invalid `simulation_id` key\n- BACKEND_ERROR if the SLOT_CLOCK store is unavailable\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_READ_SLOT_CLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Read current slot clock record for a simulation run\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Simulation run identifier; scopes the slot clock read\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n    slot_clock:\n      type: object\n      description: Full slot clock record\n\n  result_status_contract:\n    allowed: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: read_slot_clock\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: SLOT_CLOCK\n      op: READ\n      inputs:\n        key: $.inputs.simulation_id\n      outputs:\n        result_status: $.capability_result.result_status\n        slot_clock: $.capability_result.value\n      result_surface: [SUCCESS, NOT_FOUND, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        NOT_FOUND: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - SLOT_CLOCK store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n    - NOT_FOUND is a hard failure \u2014 slot clock must be initialized before slot processing\n    - slot_clock output carries full record including current_slot\n```\n",
+  "content_hash": "92f6fa2754fef52798e349b63cfb7e93d90d26642cf5bee8514eec02b61a135c",
+  "fqdn_id": "blockchain::CC_READ_SLOT_CLOCK_V0",
+  "frontmatter": {
+    "cc_code": "CC_READ_SLOT_CLOCK_V0",
+    "core": {
+      "inputs": {
+        "simulation_id": {
+          "description": "Simulation run identifier; scopes the slot clock read",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        },
+        "slot_clock": {
+          "description": "Full slot clock record",
+          "type": "object"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.simulation_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "NOT_FOUND": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "result_status": "$.capability_result.result_status",
+            "slot_clock": "$.capability_result.value"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "NOT_FOUND",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "read_slot_clock",
+          "store": "SLOT_CLOCK"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "NOT_FOUND",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Read current slot clock record for a simulation run"
+    },
+    "extensions": {
+      "notes": [
+        "SLOT_CLOCK store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+        "NOT_FOUND is a hard failure \u2014 slot clock must be initialized before slot processing",
+        "slot_clock output carries full record including current_slot"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

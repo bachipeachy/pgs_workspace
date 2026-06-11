@@ -1,0 +1,117 @@
+{
+  "artifact_code": "CC_RUN_SLOT_SEQUENCE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+        "id": "CS_WORKFLOW_LOOP_V0",
+        "kind": "CS",
+        "ops": [
+          "EXECUTE_SEQUENCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RUN_SLOT_SEQUENCE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RUN_SLOT_SEQUENCE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_WORKFLOW_LOOP_V0\n\n---\n\n## 1. Intent\n\nExecute the ordered slot sequence for a simulation run. For each slot number in `slot_schedule`, invoke `WF_PROCESS_SLOT_V0` with `simulation_id` and the item slot number. This CC absorbs the slot loop internally (Collatz pattern) \u2014 the governing WF (WF_RUN_CONSENSUS_LOOP_V0) DAG is linear.\n\n---\n\n## 2. Rationale\n\nPGS WF DAGs have no loop construct \u2014 all iteration must be absorbed inside a CC (Collatz pattern). This CC is the loop container for the finite consensus slot run. All domain behavior (slot clock read/advance, block proposal) executes inside `WF_PROCESS_SLOT_V0`. This CC contains no domain logic \u2014 it declares a fully parametric dispatch to CS_WORKFLOW_LOOP_V0, which iterates the slot_schedule array and invokes WF_PROCESS_SLOT_V0 per item.\n\nTermination: the slot loop exits when `slot_schedule` is exhausted. Finite termination is guaranteed by the non-empty finite array declared in IN_CONSENSUS_LOOP_STARTED_V0.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_WORKFLOW_LOOP_V0 | CS | EXECUTE_SEQUENCE \u2014 iterate slot_schedule; dispatch WF_PROCESS_SLOT_V0 per slot number |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; injected into every WF_PROCESS_SLOT_V0 invocation |\n| `slot_schedule` | array | true | Non-empty ordered list of slot descriptor objects `{slot_number: integer}` to execute |\n| `triggered_by` | string | true | Actor ID or system trigger reference; injected into every WF_PROCESS_SLOT_V0 invocation |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n| `slots_executed` | integer | Number of slot numbers processed (`items_processed` from CS) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All slot numbers processed; all WF_PROCESS_SLOT_V0 invocations returned SUCCESS |\n| VIOLATION | Any WF_PROCESS_SLOT_V0 invocation returned non-SUCCESS; loop halted |\n| BACKEND_ERROR | Loop executor or storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION from any WF_PROCESS_SLOT_V0 invocation propagates as CC VIOLATION \u2014 the slot run halts; remaining slots do not execute\n- BACKEND_ERROR propagates as a hard failure\n- No partial commit \u2014 VIOLATION exits before remaining slots execute\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RUN_SLOT_SEQUENCE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Collatz-pattern slot loop \u2014 execute all slots in slot_schedule via CS_WORKFLOW_LOOP_V0\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Simulation run identifier; injected into every WF_PROCESS_SLOT_V0 payload\n    slot_schedule:\n      type: array\n      required: true\n      description: \"Non-empty ordered list of slot descriptor objects {slot_number: integer} to execute\"\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n    slots_executed:\n      type: integer\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: execute_slot_sequence\n      side_effect: capability_side_effects::CS_WORKFLOW_LOOP_V0\n      op: EXECUTE_SEQUENCE\n      inputs:\n        sequence: $.inputs.slot_schedule\n        triggered_by: $.inputs.triggered_by\n        item_wf:\n          code: blockchain::WF_PROCESS_SLOT_V0\n          payload_fields:\n            slot_number: slot_number\n          inject:\n            simulation_id: $.inputs.simulation_id\n            triggered_by: $.inputs.triggered_by\n      outputs:\n        slots_executed: $.capability_result.items_processed\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - Collatz pattern \u2014 loop absorbed inside this CC; WF_RUN_CONSENSUS_LOOP_V0 DAG is linear\n    - CS_WORKFLOW_LOOP_V0 EXECUTE_SEQUENCE is the governed side effect \u2014 zero domain knowledge in substrate\n    - slot_schedule items are slot descriptor dicts {slot_number: integer}; payload_fields maps dest slot_number \u2192 source slot_number in item\n    - simulation_id injected into every WF_PROCESS_SLOT_V0 invocation\n    - VIOLATION from any WF_PROCESS_SLOT_V0 invocation halts the loop \u2014 no partial execution\n    - Termination guaranteed by finite slot_schedule declared in IN_CONSENSUS_LOOP_STARTED_V0\n```\n",
+  "content_hash": "5e954988c22542272946d95c92c165567de8ffa1a41485e35ef23aae59fa0dfe",
+  "fqdn_id": "blockchain::CC_RUN_SLOT_SEQUENCE_V0",
+  "frontmatter": {
+    "cc_code": "CC_RUN_SLOT_SEQUENCE_V0",
+    "core": {
+      "inputs": {
+        "simulation_id": {
+          "description": "Simulation run identifier; injected into every WF_PROCESS_SLOT_V0 payload",
+          "required": true,
+          "type": "string"
+        },
+        "slot_schedule": {
+          "description": "Non-empty ordered list of slot descriptor objects {slot_number: integer} to execute",
+          "required": true,
+          "type": "array"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        },
+        "slots_executed": {
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "item_wf": {
+              "code": "blockchain::WF_PROCESS_SLOT_V0",
+              "inject": {
+                "simulation_id": "$.inputs.simulation_id",
+                "triggered_by": "$.inputs.triggered_by"
+              },
+              "payload_fields": {
+                "slot_number": "slot_number"
+              }
+            },
+            "sequence": "$.inputs.slot_schedule",
+            "triggered_by": "$.inputs.triggered_by"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "EXECUTE_SEQUENCE",
+          "outputs": {
+            "slots_executed": "$.capability_result.items_processed"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+          "step": "execute_slot_sequence"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Collatz-pattern slot loop \u2014 execute all slots in slot_schedule via CS_WORKFLOW_LOOP_V0"
+    },
+    "extensions": {
+      "notes": [
+        "Collatz pattern \u2014 loop absorbed inside this CC; WF_RUN_CONSENSUS_LOOP_V0 DAG is linear",
+        "CS_WORKFLOW_LOOP_V0 EXECUTE_SEQUENCE is the governed side effect \u2014 zero domain knowledge in substrate",
+        {
+          "slot_schedule items are slot descriptor dicts {slot_number": "integer}; payload_fields maps dest slot_number \u2192 source slot_number in item"
+        },
+        "simulation_id injected into every WF_PROCESS_SLOT_V0 invocation",
+        "VIOLATION from any WF_PROCESS_SLOT_V0 invocation halts the loop \u2014 no partial execution",
+        "Termination guaranteed by finite slot_schedule declared in IN_CONSENSUS_LOOP_STARTED_V0"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

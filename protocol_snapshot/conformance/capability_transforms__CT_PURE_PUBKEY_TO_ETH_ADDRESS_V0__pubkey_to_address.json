@@ -33,6 +33,7 @@
   "expected": {
     "eth_address_hex": "0x5cd71875c4d0ab1708a380e03fefc3a28aa24831"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0::pubkey_to_address",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0"
 }

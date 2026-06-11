@@ -1,0 +1,137 @@
+{
+  "artifact_code": "CC_DISPATCH_SIMULATION_WORKERS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_CONCURRENT_WORKFLOWS_V0",
+        "id": "CS_CONCURRENT_WORKFLOWS_V0",
+        "kind": "CS",
+        "ops": [
+          "EXECUTE_CONCURRENT"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_DISPATCH_SIMULATION_WORKERS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_DISPATCH_SIMULATION_WORKERS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_CONCURRENT_WORKFLOWS_V0\n\n---\n\n## 1. Intent\n\nConcurrently dispatch the two simulation sub-workflows \u2014 `WF_RUN_CONSENSUS_LOOP_V0` and `WF_RUN_TX_WORKLOAD_V0` \u2014 and collect their results. Both workers run to completion regardless of individual outcomes. Results are correlated by workflow FQDN code.\n\n---\n\n## 2. Rationale\n\nChain simulation runs two independent workers: the consensus loop (slot sequencing + block proposals) and the TX workload (typed transaction submissions). Concurrent execution maximizes simulation fidelity. No ordering dependency exists between the two workers.\n\n`PARTIAL_FAILURE` is an expected simulation outcome \u2014 if one worker fails, the other's results are still meaningful and must be captured. Both SUCCESS and PARTIAL_FAILURE route to `CC_RECORD_SIMULATION_SUMMARY_V0`; only BACKEND_ERROR exits without recording.\n\nResults are correlated by `code` (workflow FQDN) per CS_CONCURRENT_WORKFLOWS_V0 contract \u2014 not by array position.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_CONCURRENT_WORKFLOWS_V0 | CS | EXECUTE_CONCURRENT |\n\n**Workers dispatched:**\n- `blockchain::WF_RUN_CONSENSUS_LOOP_V0` \u2014 consensus slot loop worker\n- `blockchain::WF_RUN_TX_WORKLOAD_V0` \u2014 TX workload worker\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; injected into WF_RUN_CONSENSUS_LOOP_V0 payload |\n| `slot_schedule` | array | true | Pre-expanded ordered list of integer slot numbers; passed to WF_RUN_CONSENSUS_LOOP_V0 |\n| `tx_interval_seconds` | integer | true | Interval between TX submissions in seconds; passed to WF_RUN_TX_WORKLOAD_V0 |\n| `tx_sequence` | array | true | Non-empty ordered list of TX specs; passed to WF_RUN_TX_WORKLOAD_V0 |\n| `triggered_by` | string | true | Actor ID or system trigger reference; injected into both worker payloads |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Aggregate result \u2014 SUCCESS, PARTIAL_FAILURE, or BACKEND_ERROR |\n| `results` | array | Per-worker result array; each entry: `{code, result_status, outputs}`; correlated by FQDN code |\n| `all_succeeded` | boolean | `true` iff both workers returned SUCCESS |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Both workers returned SUCCESS |\n| PARTIAL_FAILURE | At least one worker returned non-SUCCESS; other worker still executed |\n| BACKEND_ERROR | Execution infrastructure unavailable; no workers were able to run |\n\n---\n\n## 7. Failure Semantics\n\n- PARTIAL_FAILURE is not a fatal error \u2014 it routes to CC_RECORD_SIMULATION_SUMMARY_V0 for recording\n- BACKEND_ERROR exits without recording \u2014 infrastructure failure, not a domain outcome\n- All workers execute regardless of peer outcomes \u2014 no short-circuit on PARTIAL_FAILURE\n- Duplicate workflow codes within a single invocation are a VIOLATION (governance invariant, not expected in this CC)\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_DISPATCH_SIMULATION_WORKERS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Concurrently dispatch consensus loop + TX workload workers; collect results\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Simulation run identifier; injected into WF_RUN_CONSENSUS_LOOP_V0 payload\n    slot_schedule:\n      type: array\n      required: true\n      description: Pre-expanded ordered list of integer slot numbers; passed to WF_RUN_CONSENSUS_LOOP_V0\n    tx_interval_seconds:\n      type: integer\n      required: true\n      description: TX submission interval in seconds; passed to WF_RUN_TX_WORKLOAD_V0\n    tx_sequence:\n      type: array\n      required: true\n      description: Non-empty ordered list of TX specs; passed to WF_RUN_TX_WORKLOAD_V0\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference; injected into both worker payloads\n\n  outputs:\n    result_status:\n      type: string\n    results:\n      type: array\n      description: Per-worker results correlated by workflow FQDN code\n    all_succeeded:\n      type: boolean\n\n  result_status_contract:\n    allowed: [SUCCESS, PARTIAL_FAILURE, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: dispatch_concurrent_workers\n      side_effect: capability_side_effects::CS_CONCURRENT_WORKFLOWS_V0\n      op: EXECUTE_CONCURRENT\n      inputs:\n        workflows:\n          - code: blockchain::WF_RUN_CONSENSUS_LOOP_V0\n            payload:\n              simulation_id: $.inputs.simulation_id\n              slot_schedule: $.inputs.slot_schedule\n              triggered_by: $.inputs.triggered_by\n          - code: blockchain::WF_RUN_TX_WORKLOAD_V0\n            payload:\n              tx_interval_seconds: $.inputs.tx_interval_seconds\n              tx_sequence: $.inputs.tx_sequence\n              triggered_by: $.inputs.triggered_by\n        triggered_by: $.inputs.triggered_by\n      outputs:\n        result_status: $.capability_result.result_status\n        results: $.capability_result.results\n        all_succeeded: $.capability_result.all_succeeded\n      result_surface: [SUCCESS, PARTIAL_FAILURE, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        PARTIAL_FAILURE: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - CS_CONCURRENT_WORKFLOWS_V0 contract \u2014 all workers execute; no short-circuit on peer VIOLATION\n    - Results correlated by code (FQDN), NOT by array position\n    - Both SUCCESS and PARTIAL_FAILURE route to CC_RECORD_SIMULATION_SUMMARY_V0 \u2014 summary always recorded\n    - BACKEND_ERROR exits without recording \u2014 infrastructure failure\n    - WF payloads constructed inline \u2014 simulation_id and triggered_by injected into consensus loop; tx_interval_seconds and tx_sequence into TX workload\n```\n",
+  "content_hash": "d7374b25f8acf483d0f8070d007a215c964dddc698d1bd7c1c765e5ee6475c18",
+  "fqdn_id": "blockchain::CC_DISPATCH_SIMULATION_WORKERS_V0",
+  "frontmatter": {
+    "cc_code": "CC_DISPATCH_SIMULATION_WORKERS_V0",
+    "core": {
+      "inputs": {
+        "simulation_id": {
+          "description": "Simulation run identifier; injected into WF_RUN_CONSENSUS_LOOP_V0 payload",
+          "required": true,
+          "type": "string"
+        },
+        "slot_schedule": {
+          "description": "Pre-expanded ordered list of integer slot numbers; passed to WF_RUN_CONSENSUS_LOOP_V0",
+          "required": true,
+          "type": "array"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference; injected into both worker payloads",
+          "required": true,
+          "type": "string"
+        },
+        "tx_interval_seconds": {
+          "description": "TX submission interval in seconds; passed to WF_RUN_TX_WORKLOAD_V0",
+          "required": true,
+          "type": "integer"
+        },
+        "tx_sequence": {
+          "description": "Non-empty ordered list of TX specs; passed to WF_RUN_TX_WORKLOAD_V0",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "all_succeeded": {
+          "type": "boolean"
+        },
+        "result_status": {
+          "type": "string"
+        },
+        "results": {
+          "description": "Per-worker results correlated by workflow FQDN code",
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "triggered_by": "$.inputs.triggered_by",
+            "workflows": [
+              {
+                "code": "blockchain::WF_RUN_CONSENSUS_LOOP_V0",
+                "payload": {
+                  "simulation_id": "$.inputs.simulation_id",
+                  "slot_schedule": "$.inputs.slot_schedule",
+                  "triggered_by": "$.inputs.triggered_by"
+                }
+              },
+              {
+                "code": "blockchain::WF_RUN_TX_WORKLOAD_V0",
+                "payload": {
+                  "triggered_by": "$.inputs.triggered_by",
+                  "tx_interval_seconds": "$.inputs.tx_interval_seconds",
+                  "tx_sequence": "$.inputs.tx_sequence"
+                }
+              }
+            ]
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "PARTIAL_FAILURE": "exit",
+            "SUCCESS": "exit"
+          },
+          "op": "EXECUTE_CONCURRENT",
+          "outputs": {
+            "all_succeeded": "$.capability_result.all_succeeded",
+            "result_status": "$.capability_result.result_status",
+            "results": "$.capability_result.results"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "PARTIAL_FAILURE",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_CONCURRENT_WORKFLOWS_V0",
+          "step": "dispatch_concurrent_workers"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "PARTIAL_FAILURE",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Concurrently dispatch consensus loop + TX workload workers; collect results"
+    },
+    "extensions": {
+      "notes": [
+        "CS_CONCURRENT_WORKFLOWS_V0 contract \u2014 all workers execute; no short-circuit on peer VIOLATION",
+        "Results correlated by code (FQDN), NOT by array position",
+        "Both SUCCESS and PARTIAL_FAILURE route to CC_RECORD_SIMULATION_SUMMARY_V0 \u2014 summary always recorded",
+        "BACKEND_ERROR exits without recording \u2014 infrastructure failure",
+        "WF payloads constructed inline \u2014 simulation_id and triggered_by injected into consensus loop; tx_interval_seconds and tx_sequence into TX workload"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

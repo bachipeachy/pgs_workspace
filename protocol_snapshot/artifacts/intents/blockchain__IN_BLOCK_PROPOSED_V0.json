@@ -1,0 +1,71 @@
+{
+  "artifact_code": "IN_BLOCK_PROPOSED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_BLOCK_PROPOSED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_BLOCK_PROPOSED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** WF_PROPOSE_BLOCK_V0\n\n---\n\n## 1. Intent\n\nInitiate a consensus proposer selection and block formation round for a given round number.\n\n---\n\n## 2. Rationale\n\nBlock proposal is triggered externally by a consensus driver supplying a round number, a triggering actor, and the round timestamp. The intent validates these three required fields before admitting the payload to WF_PROPOSE_BLOCK_V0. Timestamp is carried in the intent so that all downstream CCs (CC_FORM_BLOCK_V0, CC_SKIP_ROUND_V0, CC_RECORD_CONSENSUS_ROUND_V0) write consistent time data without each independently sourcing a timestamp.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_PROPOSE_BLOCK_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| round_number | integer | true | Non-negative consensus round number |\n| triggered_by | string | true | actor_id of the consensus driver triggering this round |\n| slot | integer | true | Slot within epoch; equals round_number % 32; supplied by CC_EXECUTE_SLOT_SEQUENCE_V0 |\n| epoch | integer | true | Epoch number; equals round_number // 32; supplied by CC_EXECUTE_SLOT_SEQUENCE_V0 |\n| timestamp | string | true | ISO 8601 timestamp of round initiation |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Payload admitted \u2014 all five required fields present and valid |\n| NACK | Payload rejected \u2014 missing required fields or round_number negative |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.consensus_pos.block_proposal\n- **Notes:**\n  - round_number must be a non-negative integer (\u2265 0); rounds are zero-indexed\n  - timestamp is carried through to all downstream CCs for consistent event timestamping\n  - triggered_by must be a valid actor_id string; actor existence is not validated at intent admission\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_BLOCK_PROPOSED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Initiate a consensus block proposal round\n  workflow: WF_PROPOSE_BLOCK_V0\n\n  inputs:\n    round_number:\n      type: integer\n      required: true\n      minimum: 0\n      description: Non-negative consensus round number\n    triggered_by:\n      type: string\n      required: true\n      description: actor_id of the consensus driver triggering this round\n    slot:\n      type: integer\n      required: true\n      minimum: 0\n      description: Slot within epoch; equals round_number % 32; supplied by CC_EXECUTE_SLOT_SEQUENCE_V0\n    epoch:\n      type: integer\n      required: true\n      minimum: 0\n      description: Epoch number; equals round_number // 32; supplied by CC_EXECUTE_SLOT_SEQUENCE_V0\n    timestamp:\n      type: string\n      required: true\n      format: date-time\n      description: ISO 8601 timestamp of round initiation\n\n  outcomes:\n    ACK:\n      description: Payload admitted \u2014 all five required fields present and valid\n    NACK:\n      description: Payload rejected \u2014 missing required fields or round_number negative\n\nextensions:\n  domain: pgs.consensus_pos.block_proposal\n  notes:\n    - round_number minimum is 0 (rounds are zero-indexed)\n    - slot and epoch are caller-supplied by CC_EXECUTE_SLOT_SEQUENCE_V0 from the slot descriptor\n    - timestamp carried through to CC_FORM_BLOCK_V0, CC_SKIP_ROUND_V0, CC_RECORD_CONSENSUS_ROUND_V0\n    - triggered_by actor existence not validated at intent admission\n```\n",
+  "content_hash": "758f4c8519a8ae3ba86a86bb5dff1382f1342112d35add78feed43dc38b8006b",
+  "fqdn_id": "blockchain::IN_BLOCK_PROPOSED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "epoch": {
+          "description": "Epoch number; equals round_number // 32; supplied by CC_EXECUTE_SLOT_SEQUENCE_V0",
+          "minimum": 0,
+          "required": true,
+          "type": "integer"
+        },
+        "round_number": {
+          "description": "Non-negative consensus round number",
+          "minimum": 0,
+          "required": true,
+          "type": "integer"
+        },
+        "slot": {
+          "description": "Slot within epoch; equals round_number % 32; supplied by CC_EXECUTE_SLOT_SEQUENCE_V0",
+          "minimum": 0,
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "description": "ISO 8601 timestamp of round initiation",
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "actor_id of the consensus driver triggering this round",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Payload admitted \u2014 all five required fields present and valid"
+        },
+        "NACK": {
+          "description": "Payload rejected \u2014 missing required fields or round_number negative"
+        }
+      },
+      "summary": "Initiate a consensus block proposal round",
+      "workflow": "WF_PROPOSE_BLOCK_V0"
+    },
+    "extensions": {
+      "domain": "pgs.consensus_pos.block_proposal",
+      "notes": [
+        "round_number minimum is 0 (rounds are zero-indexed)",
+        "slot and epoch are caller-supplied by CC_EXECUTE_SLOT_SEQUENCE_V0 from the slot descriptor",
+        "timestamp carried through to CC_FORM_BLOCK_V0, CC_SKIP_ROUND_V0, CC_RECORD_CONSENSUS_ROUND_V0",
+        "triggered_by actor existence not validated at intent admission"
+      ]
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_BLOCK_PROPOSED_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,115 @@
+{
+  "artifact_code": "WF_PROCESS_SLOT_V0",
+  "artifact_type": "WF",
+  "content": "# WF_PROCESS_SLOT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_PROCESS_SLOT_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** IN_SLOT_EXECUTION_STARTED_V0, CC_READ_SLOT_CLOCK_V0, CC_PREPARE_SLOT_CONTEXT_V0, CC_INVOKE_BLOCK_PROPOSAL_V0, CC_ADVANCE_SLOT_CLOCK_V0\n\n---\n\n## 1. Intent\n\nProcess a single blockchain slot. Reads the current slot clock state, derives the execution context (slot_index, epoch_number, round_number, timestamp), invokes block proposal for this slot, then advances the slot clock. Linear 5-node topology \u2014 no loops; the Collatz pattern is applied at the consensus loop level.\n\n---\n\n## 2. Rationale\n\nEach slot execution is atomic: one simulation_id + one slot_number yields one block proposal and one slot clock advance. The slot clock read precedes context derivation \u2014 context is derived from the authoritative clock state, not from the raw intent payload. Advancing the clock is the final step to ensure the slot is marked complete only after the block is successfully proposed.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_SLOT_EXECUTION_STARTED_V0\n    \u251c\u2500 ACK \u2192 CC_READ_SLOT_CLOCK_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 CC_PREPARE_SLOT_CONTEXT_V0\n    \u2502           \u2502               \u251c\u2500 SUCCESS \u2192 CC_INVOKE_BLOCK_PROPOSAL_V0\n    \u2502           \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_ADVANCE_SLOT_CLOCK_V0\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 NOT_FOUND \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2502               \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2514\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u251c\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u251c\u2500 NOT_FOUND \u2192 EXIT\n    \u2502           \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_SLOT_EXECUTION_STARTED_V0 | IN | Entry intent \u2014 validates simulation_id, slot_number, triggered_by |\n| CC_READ_SLOT_CLOCK_V0 | CC | Read current slot clock record for this simulation |\n| CC_PREPARE_SLOT_CONTEXT_V0 | CC | Derive slot execution context via CT_PURE_DERIVE_SLOT_EPOCH_V0 |\n| CC_INVOKE_BLOCK_PROPOSAL_V0 | CC | Invoke WF_PROPOSE_BLOCK_V0 with slot context payload |\n| CC_ADVANCE_SLOT_CLOCK_V0 | CC | Advance slot clock current_slot by 1 |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_PROCESS_SLOT_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: blockchain::RB_PROCESS_SLOT_V0\nsubdomain: orchestration\n\ncore:\n  summary: Process a single blockchain slot \u2014 read clock, derive context, propose block, advance clock\n  start_node: IN_SLOT_EXECUTION_STARTED_V0\n\n  nodes:\n    IN_SLOT_EXECUTION_STARTED_V0:\n      type: IN\n      code: IN_SLOT_EXECUTION_STARTED_V0\n      next:\n        ACK: CC_READ_SLOT_CLOCK_V0\n        NACK: EXIT\n\n    CC_READ_SLOT_CLOCK_V0:\n      type: CC\n      code: CC_READ_SLOT_CLOCK_V0\n      inputs:\n        simulation_id: $.payload.simulation_id\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: CC_PREPARE_SLOT_CONTEXT_V0\n        NOT_FOUND: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_PREPARE_SLOT_CONTEXT_V0:\n      type: CC\n      code: CC_PREPARE_SLOT_CONTEXT_V0\n      inputs:\n        slot_number: $.payload.slot_number\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: CC_INVOKE_BLOCK_PROPOSAL_V0\n        VIOLATION: EXIT\n\n    CC_INVOKE_BLOCK_PROPOSAL_V0:\n      type: CC\n      code: CC_INVOKE_BLOCK_PROPOSAL_V0\n      inputs:\n        slot_index: $.results.CC_PREPARE_SLOT_CONTEXT_V0.slot_index\n        epoch_number: $.results.CC_PREPARE_SLOT_CONTEXT_V0.epoch_number\n        round_number: $.results.CC_PREPARE_SLOT_CONTEXT_V0.round_number\n        timestamp: $.results.CC_PREPARE_SLOT_CONTEXT_V0.timestamp\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: CC_ADVANCE_SLOT_CLOCK_V0\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_ADVANCE_SLOT_CLOCK_V0:\n      type: CC\n      code: CC_ADVANCE_SLOT_CLOCK_V0\n      inputs:\n        simulation_id: $.payload.simulation_id\n        triggered_by: $.payload.triggered_by\n      next:\n        SUCCESS: EXIT\n        NOT_FOUND: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - Linear 5-node topology \u2014 no loops; Collatz pattern applied at CC_RUN_SLOT_SEQUENCE_V0 level\n    - CC_READ_SLOT_CLOCK_V0 reads the slot clock \u2014 NOT_FOUND is a hard exit (simulation not initialized)\n    - CC_PREPARE_SLOT_CONTEXT_V0 uses {{timestamp}} internally for slot_start_ts \u2014 no binding needed\n    - CC_ADVANCE_SLOT_CLOCK_V0 reads internally before writing \u2014 no current_slot binding needed from WF\n    - slot_number comes from intent payload ($.payload.slot_number), not from the slot clock read\n    - Block proposal failure (VIOLATION or BACKEND_ERROR) exits before slot clock is advanced\n    - authority: AC_SYSTEM_V0\n```\n",
+  "content_hash": "6799de0e4dcf6350a0c90882542b02f1551d9b97a30034dbbf29f91f3671a4bc",
+  "fqdn_id": "blockchain::WF_PROCESS_SLOT_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_ADVANCE_SLOT_CLOCK_V0": {
+          "code": "CC_ADVANCE_SLOT_CLOCK_V0",
+          "fqdn_id": "blockchain::CC_ADVANCE_SLOT_CLOCK_V0",
+          "inputs": {
+            "simulation_id": "$.payload.simulation_id",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "NOT_FOUND": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_INVOKE_BLOCK_PROPOSAL_V0": {
+          "code": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+          "fqdn_id": "blockchain::CC_INVOKE_BLOCK_PROPOSAL_V0",
+          "inputs": {
+            "epoch_number": "$.results.CC_PREPARE_SLOT_CONTEXT_V0.epoch_number",
+            "round_number": "$.results.CC_PREPARE_SLOT_CONTEXT_V0.round_number",
+            "slot_index": "$.results.CC_PREPARE_SLOT_CONTEXT_V0.slot_index",
+            "timestamp": "$.results.CC_PREPARE_SLOT_CONTEXT_V0.timestamp",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_ADVANCE_SLOT_CLOCK_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_PREPARE_SLOT_CONTEXT_V0": {
+          "code": "CC_PREPARE_SLOT_CONTEXT_V0",
+          "fqdn_id": "blockchain::CC_PREPARE_SLOT_CONTEXT_V0",
+          "inputs": {
+            "slot_number": "$.payload.slot_number",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "SUCCESS": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_READ_SLOT_CLOCK_V0": {
+          "code": "CC_READ_SLOT_CLOCK_V0",
+          "fqdn_id": "blockchain::CC_READ_SLOT_CLOCK_V0",
+          "inputs": {
+            "simulation_id": "$.payload.simulation_id",
+            "triggered_by": "$.payload.triggered_by"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "NOT_FOUND": "EXIT",
+            "SUCCESS": "CC_PREPARE_SLOT_CONTEXT_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_SLOT_EXECUTION_STARTED_V0": {
+          "code": "IN_SLOT_EXECUTION_STARTED_V0",
+          "fqdn_id": "blockchain::IN_SLOT_EXECUTION_STARTED_V0",
+          "next": {
+            "ACK": "CC_READ_SLOT_CLOCK_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_SLOT_EXECUTION_STARTED_V0",
+      "summary": "Process a single blockchain slot \u2014 read clock, derive context, propose block, advance clock"
+    },
+    "extensions": {
+      "notes": [
+        "Linear 5-node topology \u2014 no loops; Collatz pattern applied at CC_RUN_SLOT_SEQUENCE_V0 level",
+        "CC_READ_SLOT_CLOCK_V0 reads the slot clock \u2014 NOT_FOUND is a hard exit (simulation not initialized)",
+        "CC_PREPARE_SLOT_CONTEXT_V0 uses {{timestamp}} internally for slot_start_ts \u2014 no binding needed",
+        "CC_ADVANCE_SLOT_CLOCK_V0 reads internally before writing \u2014 no current_slot binding needed from WF",
+        "slot_number comes from intent payload ($.payload.slot_number), not from the slot clock read",
+        "Block proposal failure (VIOLATION or BACKEND_ERROR) exits before slot clock is advanced",
+        {
+          "authority": "AC_SYSTEM_V0"
+        }
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_PROCESS_SLOT_V0",
+    "subdomain": "orchestration",
+    "version": "v0",
+    "wf_code": "WF_PROCESS_SLOT_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_PROCESS_SLOT_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

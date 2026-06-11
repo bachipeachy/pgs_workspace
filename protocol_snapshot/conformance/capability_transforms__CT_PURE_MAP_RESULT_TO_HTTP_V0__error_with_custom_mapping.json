@@ -62,6 +62,7 @@
     },
     "result_status": "BACKEND_ERROR"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::error_with_custom_mapping",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_MAP_RESULT_TO_HTTP_V0"
 }

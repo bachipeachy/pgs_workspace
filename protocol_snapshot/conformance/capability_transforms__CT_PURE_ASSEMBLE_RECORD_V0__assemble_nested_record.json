@@ -45,6 +45,7 @@
       "user_id": "123"
     }
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0::assemble_nested_record",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_ASSEMBLE_RECORD_V0"
 }

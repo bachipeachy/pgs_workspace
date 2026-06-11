@@ -50,13 +50,13 @@ echo "[info] Base dir:  $BASE_DIR"
 cd "$WS_ROOT"
 
 # --------------------------------------------------
-# Wipe all .venv directories across all eight repos
+# Wipe all .venv directories across all nine repos
 # --------------------------------------------------
 
 echo ""
-echo "[1/9] Removing stale .venv directories across all repos..."
+echo "[1/10] Removing stale .venv directories across all repos..."
 
-for repo in pgs_runtime pgs_governance pgs_compiler pgs_transport pgs_capabilities pgs_blockchain pgs_ai_governance pgs_workspace; do
+for repo in pgs_runtime pgs_governance pgs_compiler pgs_transport pgs_capabilities pgs_blockchain pgs_ai_governance pgs_change_mgmt pgs_workspace; do
   venv_path="$BASE_DIR/$repo/.venv"
   if [ -d "$venv_path" ]; then
     echo "  [rm] $venv_path"
@@ -71,7 +71,7 @@ done
 # --------------------------------------------------
 
 echo ""
-echo "[2/9] Creating virtual environment in pgs_workspace..."
+echo "[2/10] Creating virtual environment in pgs_workspace..."
 
 python3.12 -m venv .venv
 source .venv/bin/activate
@@ -81,7 +81,7 @@ source .venv/bin/activate
 # --------------------------------------------------
 
 echo ""
-echo "[3/9] Upgrading pip..."
+echo "[3/10] Upgrading pip..."
 
 pip install --upgrade pip
 
@@ -109,10 +109,10 @@ install_repo () {
 
 echo ""
 if [ "$PGS_ENV" = "local" ]; then
-  echo "[4/9] Installing pgs_runtime from local source..."
+  echo "[4/10] Installing pgs_runtime from local source..."
   install_repo "pgs_runtime"
 else
-  echo "[4/9] Installing pgs_runtime from PyPI..."
+  echo "[4/10] Installing pgs_runtime from PyPI..."
   pip install pgs_runtime
 fi
 
@@ -121,7 +121,7 @@ fi
 # --------------------------------------------------
 
 echo ""
-echo "[5/9] Installing governance + compiler..."
+echo "[5/10] Installing governance + compiler..."
 
 install_repo "pgs_governance"
 install_repo "pgs_compiler"
@@ -131,7 +131,7 @@ install_repo "pgs_compiler"
 # --------------------------------------------------
 
 echo ""
-echo "[6/9] Installing transport + capabilities..."
+echo "[6/10] Installing transport + capabilities..."
 
 install_repo "pgs_transport"
 install_repo "pgs_capabilities"
@@ -141,17 +141,32 @@ install_repo "pgs_capabilities"
 # --------------------------------------------------
 
 echo ""
-echo "[7/9] Installing domains..."
+echo "[7/10] Installing domains..."
 
 install_repo "pgs_blockchain"
 install_repo "pgs_ai_governance"
+
+# --------------------------------------------------
+# Verify change management authoring layer (data repo — not installed)
+# --------------------------------------------------
+
+echo ""
+echo "[8/10] Verifying pgs_change_mgmt (authoring layer)..."
+
+# pgs_change_mgmt is a markdown templates/dossiers/docs repo — no Python package.
+# It is read by the change-management agent, not imported, so it is not pip-installed.
+if [ -d "$BASE_DIR/pgs_change_mgmt" ]; then
+  echo "  [present] pgs_change_mgmt — markdown data repo; no install"
+else
+  echo "  [skip] pgs_change_mgmt not found alongside other repos — change-management pipeline unavailable"
+fi
 
 # --------------------------------------------------
 # Generate environment activation helper
 # --------------------------------------------------
 
 echo ""
-echo "[8/9] Generating environment activation helper..."
+echo "[9/10] Generating environment activation helper..."
 
 cat > "$WS_ROOT/env.sh" <<EOF
 #!/usr/bin/env bash
@@ -169,7 +184,7 @@ chmod +x "$WS_ROOT/env.sh"
 # --------------------------------------------------
 
 echo ""
-echo "[9/9] Creating workspace directories and installing seed data..."
+echo "[10/10] Creating workspace directories and installing seed data..."
 
 mkdir -p "$WS_ROOT/data"
 mkdir -p "$WS_ROOT/traces"
@@ -186,9 +201,12 @@ cp "$WS_ROOT/seeds/validators.json" "$WS_ROOT/data/blockchain/consensus_pos/regi
 echo "  [seed] validators.json → data/blockchain/consensus_pos/registry/"
 
 echo ""
-echo "---------------------------------------"
+echo "----------------------------------------"
 echo "PGS Bootstrap Complete (env: $PGS_ENV)"
-echo "---------------------------------------"
+echo "  Seven Python packages installed: runtime, governance, compiler,"
+echo "  transport, capabilities, blockchain, ai_governance"
+echo "  change_mgmt (authoring layer) verified — markdown data repo, not installed"
+echo "----------------------------------------"
 
 echo ""
 echo "Activate:"

@@ -1,0 +1,127 @@
+{
+  "artifact_code": "CC_PREPARE_SLOT_CONTEXT_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "slot_number": "in.slot_number",
+          "slots_per_epoch": "in.slots_per_epoch"
+        },
+        "fqdn": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+        "id": "CT_PURE_DERIVE_SLOT_EPOCH_V0",
+        "inputs": [
+          "slot_number",
+          "slot_start_ts",
+          "slots_per_epoch"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "round_number",
+          "slot_index",
+          "epoch_number",
+          "timestamp"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_PREPARE_SLOT_CONTEXT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_PREPARE_SLOT_CONTEXT_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_DERIVE_SLOT_EPOCH_V0\n\n---\n\n## 1. Intent\n\nDerive the full slot execution context from a raw slot number. Invokes `CT_PURE_DERIVE_SLOT_EPOCH_V0` to compute `slot_index`, `epoch_number`, `round_number`, and `timestamp` from `slot_number` and `slot_start_ts`.\n\n---\n\n## 2. Rationale\n\nBlock proposal and slot routing require richer context than the raw `slot_number` provided by the slot clock. This CC is the single point where slot clock state is transformed into execution context. The CT is pure \u2014 no side effects, deterministic output for identical inputs.\n\n`slot_start_ts` is optional \u2014 when not supplied, the CT derives a deterministic ISO timestamp from `slot_number` (base epoch `2026-01-01T00:00:00Z` + slot \u00d7 30 s). `slots_per_epoch` defaults to 32 and is optional \u2014 the protocol constant governs epoch boundaries.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_DERIVE_SLOT_EPOCH_V0 | CT | DERIVE_SLOT_EPOCH |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `slot_number` | integer | true | Global slot counter value; sourced from slot clock `current_slot` via upstream CC_READ_SLOT_CLOCK_V0 |\n| `slots_per_epoch` | integer | false | Epoch boundary divisor; default 32 |\n| `triggered_by` | string | true | Actor ID or system trigger reference |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n| `slot_index` | integer | Intra-epoch slot position (0-based); `slot_number % slots_per_epoch` |\n| `epoch_number` | integer | Monotonically increasing epoch counter; `slot_number // slots_per_epoch` |\n| `round_number` | integer | Pass-through of `slot_number`; satisfies WF_PROPOSE_BLOCK_V0 payload contract |\n| `timestamp` | string | Slot start timestamp; captured at context preparation time |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Slot context derived successfully |\n| VIOLATION | Invalid input (negative slot_number, invalid slots_per_epoch) |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION on invalid `slot_number` (negative or non-integer) or `slots_per_epoch < 1`\n- CT is pure \u2014 no storage, no network; BACKEND_ERROR is not applicable\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_PREPARE_SLOT_CONTEXT_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Derive slot execution context via CT_PURE_DERIVE_SLOT_EPOCH_V0\n\n  inputs:\n    slot_number:\n      type: integer\n      required: true\n      description: Global slot counter; sourced from slot clock current_slot\n    slots_per_epoch:\n      type: integer\n      required: false\n      default: 32\n      description: Epoch boundary divisor; protocol constant\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n    slot_index:\n      type: integer\n    epoch_number:\n      type: integer\n    round_number:\n      type: integer\n    timestamp:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: derive_slot_epoch\n      transform: blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0\n      op: DERIVE_SLOT_EPOCH\n      inputs:\n        slot_number: $.inputs.slot_number\n        slots_per_epoch: $.inputs.slots_per_epoch\n      outputs:\n        slot_index: $.capability_result.slot_index\n        epoch_number: $.capability_result.epoch_number\n        round_number: $.capability_result.round_number\n        timestamp: $.capability_result.timestamp\n      on_ct_result:\n        on_success: SUCCESS\n        on_failure: VIOLATION\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - slot_start_ts omitted \u2014 CT derives deterministic ISO timestamp from slot_number when not supplied\n    - slots_per_epoch defaults to 32 if not supplied; CT applies same default\n    - slot_index and slot_number are semantically distinct; use exact field names downstream\n    - round_number is a pass-through of slot_number; satisfies WF_PROPOSE_BLOCK_V0 contract\n```\n",
+  "content_hash": "b67535aec5d213608138e08901cde8fb7cb231b441d822572987464dc8ce736d",
+  "fqdn_id": "blockchain::CC_PREPARE_SLOT_CONTEXT_V0",
+  "frontmatter": {
+    "cc_code": "CC_PREPARE_SLOT_CONTEXT_V0",
+    "core": {
+      "inputs": {
+        "slot_number": {
+          "description": "Global slot counter; sourced from slot clock current_slot",
+          "required": true,
+          "type": "integer"
+        },
+        "slots_per_epoch": {
+          "default": 32,
+          "description": "Epoch boundary divisor; protocol constant",
+          "required": false,
+          "type": "integer"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "epoch_number": {
+          "type": "integer"
+        },
+        "result_status": {
+          "type": "string"
+        },
+        "round_number": {
+          "type": "integer"
+        },
+        "slot_index": {
+          "type": "integer"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "slot_number": "$.inputs.slot_number",
+            "slots_per_epoch": "$.inputs.slots_per_epoch"
+          },
+          "on_ct_result": {
+            "on_failure": "VIOLATION",
+            "on_success": "SUCCESS"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "DERIVE_SLOT_EPOCH",
+          "outputs": {
+            "epoch_number": "$.capability_result.epoch_number",
+            "round_number": "$.capability_result.round_number",
+            "slot_index": "$.capability_result.slot_index",
+            "timestamp": "$.capability_result.timestamp"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "derive_slot_epoch",
+          "transform": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Derive slot execution context via CT_PURE_DERIVE_SLOT_EPOCH_V0"
+    },
+    "extensions": {
+      "notes": [
+        "slot_start_ts omitted \u2014 CT derives deterministic ISO timestamp from slot_number when not supplied",
+        "slots_per_epoch defaults to 32 if not supplied; CT applies same default",
+        "slot_index and slot_number are semantically distinct; use exact field names downstream",
+        "round_number is a pass-through of slot_number; satisfies WF_PROPOSE_BLOCK_V0 contract"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

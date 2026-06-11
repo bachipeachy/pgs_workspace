@@ -1,0 +1,116 @@
+{
+  "artifact_code": "CC_RUN_TX_SEQUENCE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+        "id": "CS_WORKFLOW_LOOP_V0",
+        "kind": "CS",
+        "ops": [
+          "EXECUTE_SEQUENCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RUN_TX_SEQUENCE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RUN_TX_SEQUENCE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_WORKFLOW_LOOP_V0\n\n---\n\n## 1. Intent\n\nExecute the ordered TX workload sequence. For each TX spec in `tx_sequence`, dispatch to the appropriate typed TX workflow (WF_MINT_V0, WF_TRANSFER_V0, WF_BURN_V0, etc.) based on `tx_type`. This CC absorbs the TX loop internally (Collatz pattern) \u2014 the governing WF (WF_RUN_TX_WORKLOAD_V0) DAG is linear.\n\n---\n\n## 2. Rationale\n\nPGS WF DAGs have no loop construct \u2014 all iteration must be absorbed inside a CC (Collatz pattern). This CC is the loop container for the finite TX workload run. Each TX spec carries `tx_type` and all required payload fields for the targeted TX workflow \u2014 no payload construction occurs inside this CC. Dispatch mapping is declared explicitly in the `item_wf.wf_dispatch` spec.\n\nTermination: the TX loop exits when `tx_sequence` is exhausted. Finite termination is guaranteed by the non-empty finite array declared in IN_TX_WORKLOAD_STARTED_V0.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_WORKFLOW_LOOP_V0 | CS | EXECUTE_SEQUENCE \u2014 iterate tx_sequence; dispatch by tx_type to typed TX WF |\n\n**TX type dispatch mapping:**\n- `TRANSFER` \u2192 `blockchain::WF_TRANSFER_V0`\n- `STAKE` \u2192 `blockchain::WF_STAKE_V0`\n- `UNSTAKE` \u2192 `blockchain::WF_UNSTAKE_V0`\n- `MINT` \u2192 `blockchain::WF_MINT_V0`\n- `BURN` \u2192 `blockchain::WF_BURN_V0`\n- `POOL` \u2192 `blockchain::WF_POOL_V0`\n- `REWARD` \u2192 `blockchain::WF_REWARD_V0`\n- `SLASH` \u2192 `blockchain::WF_SLASH_V0`\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `tx_sequence` | array | true | Non-empty ordered list of TX specs; each item carries `tx_type` and all required payload fields for the targeted TX workflow |\n| `triggered_by` | string | true | Actor ID or system trigger reference |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n| `tx_submitted` | integer | Number of TX workflow invocations completed (`items_processed` from CS) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All TX specs processed; all typed TX WF invocations returned SUCCESS |\n| VIOLATION | Any typed TX WF invocation returned non-SUCCESS, or unknown tx_type encountered; loop halted |\n| BACKEND_ERROR | Loop executor or storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION from any typed TX WF invocation propagates as CC VIOLATION \u2014 the TX run halts; remaining TX specs do not execute\n- Unknown `tx_type` value (not in dispatch mapping) propagates as VIOLATION\n- BACKEND_ERROR propagates as a hard failure\n- No partial commit \u2014 VIOLATION exits before remaining TX specs execute\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RUN_TX_SEQUENCE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Collatz-pattern TX loop \u2014 dispatch tx_sequence by tx_type via CS_WORKFLOW_LOOP_V0\n\n  inputs:\n    tx_sequence:\n      type: array\n      required: true\n      description: Non-empty ordered list of TX specs; each item carries tx_type and all payload fields for the targeted TX WF\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n    tx_submitted:\n      type: integer\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: execute_tx_sequence\n      side_effect: capability_side_effects::CS_WORKFLOW_LOOP_V0\n      op: EXECUTE_SEQUENCE\n      inputs:\n        sequence: $.inputs.tx_sequence\n        triggered_by: $.inputs.triggered_by\n        item_wf:\n          wf_dispatch:\n            key_field: tx_type\n            mapping:\n              TRANSFER: blockchain::WF_TRANSFER_V0\n              STAKE: blockchain::WF_STAKE_V0\n              UNSTAKE: blockchain::WF_UNSTAKE_V0\n              MINT: blockchain::WF_MINT_V0\n              BURN: blockchain::WF_BURN_V0\n              POOL: blockchain::WF_POOL_V0\n              REWARD: blockchain::WF_REWARD_V0\n              SLASH: blockchain::WF_SLASH_V0\n      outputs:\n        tx_submitted: $.capability_result.items_processed\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - Collatz pattern \u2014 loop absorbed inside this CC; WF_RUN_TX_WORKLOAD_V0 DAG is linear\n    - CS_WORKFLOW_LOOP_V0 EXECUTE_SEQUENCE governs dispatch \u2014 zero domain knowledge in substrate\n    - tx_sequence items are TX spec objects; each carries tx_type and all payload fields for the targeted WF\n    - Dispatch mapping declared here \u2014 this CC is the single authoritative mapping for tx_type \u2192 WF\n    - VIOLATION from any TX WF invocation halts the loop \u2014 no partial execution\n    - Unknown tx_type propagates as VIOLATION from the dispatcher\n    - Termination guaranteed by finite tx_sequence declared in IN_TX_WORKLOAD_STARTED_V0\n```\n",
+  "content_hash": "776e649172c14af01131a2270aa49df6efc313980d5c74e56f89aa78d8a07c50",
+  "fqdn_id": "blockchain::CC_RUN_TX_SEQUENCE_V0",
+  "frontmatter": {
+    "cc_code": "CC_RUN_TX_SEQUENCE_V0",
+    "core": {
+      "inputs": {
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        },
+        "tx_sequence": {
+          "description": "Non-empty ordered list of TX specs; each item carries tx_type and all payload fields for the targeted TX WF",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        },
+        "tx_submitted": {
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "item_wf": {
+              "wf_dispatch": {
+                "key_field": "tx_type",
+                "mapping": {
+                  "BURN": "blockchain::WF_BURN_V0",
+                  "MINT": "blockchain::WF_MINT_V0",
+                  "POOL": "blockchain::WF_POOL_V0",
+                  "REWARD": "blockchain::WF_REWARD_V0",
+                  "SLASH": "blockchain::WF_SLASH_V0",
+                  "STAKE": "blockchain::WF_STAKE_V0",
+                  "TRANSFER": "blockchain::WF_TRANSFER_V0",
+                  "UNSTAKE": "blockchain::WF_UNSTAKE_V0"
+                }
+              }
+            },
+            "sequence": "$.inputs.tx_sequence",
+            "triggered_by": "$.inputs.triggered_by"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "EXECUTE_SEQUENCE",
+          "outputs": {
+            "tx_submitted": "$.capability_result.items_processed"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+          "step": "execute_tx_sequence"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Collatz-pattern TX loop \u2014 dispatch tx_sequence by tx_type via CS_WORKFLOW_LOOP_V0"
+    },
+    "extensions": {
+      "notes": [
+        "Collatz pattern \u2014 loop absorbed inside this CC; WF_RUN_TX_WORKLOAD_V0 DAG is linear",
+        "CS_WORKFLOW_LOOP_V0 EXECUTE_SEQUENCE governs dispatch \u2014 zero domain knowledge in substrate",
+        "tx_sequence items are TX spec objects; each carries tx_type and all payload fields for the targeted WF",
+        "Dispatch mapping declared here \u2014 this CC is the single authoritative mapping for tx_type \u2192 WF",
+        "VIOLATION from any TX WF invocation halts the loop \u2014 no partial execution",
+        "Unknown tx_type propagates as VIOLATION from the dispatcher",
+        "Termination guaranteed by finite tx_sequence declared in IN_TX_WORKLOAD_STARTED_V0"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

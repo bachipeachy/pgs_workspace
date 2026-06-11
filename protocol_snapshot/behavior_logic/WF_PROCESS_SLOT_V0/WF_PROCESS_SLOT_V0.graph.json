@@ -1,0 +1,302 @@
+{
+  "wf_id": "WF_PROCESS_SLOT_V0",
+  "entry": "IN_SLOT_EXECUTION_STARTED_V0",
+  "nodes": [
+    {
+      "id": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "type": "CC",
+      "cc_code": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "simulation_id": "IN.simulation_id",
+          "triggered_by": "IN.triggered_by"
+        }
+      }
+    },
+    {
+      "id": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "type": "CC",
+      "cc_code": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "capability": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+            "id": "CS_WORKFLOW_GATEWAY_V0",
+            "kind": "CS",
+            "ops": [
+              "EXECUTE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "epoch_number": "CC_PREPARE_SLOT_CONTEXT_V0.epoch_number",
+          "round_number": "CC_PREPARE_SLOT_CONTEXT_V0.round_number",
+          "slot_index": "CC_PREPARE_SLOT_CONTEXT_V0.slot_index",
+          "timestamp": "CC_PREPARE_SLOT_CONTEXT_V0.timestamp",
+          "triggered_by": "IN.triggered_by"
+        }
+      }
+    },
+    {
+      "id": "CC_PREPARE_SLOT_CONTEXT_V0",
+      "type": "CC",
+      "cc_code": "CC_PREPARE_SLOT_CONTEXT_V0",
+      "capability": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+      "capability_type": "CT",
+      "projection": {
+        "steps": [
+          {
+            "bindings": {
+              "slot_number": "in.slot_number",
+              "slots_per_epoch": "in.slots_per_epoch"
+            },
+            "fqdn": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0",
+            "id": "CT_PURE_DERIVE_SLOT_EPOCH_V0",
+            "inputs": [
+              "slot_number",
+              "slot_start_ts",
+              "slots_per_epoch"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "round_number",
+              "slot_index",
+              "epoch_number",
+              "timestamp"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "slot_number": "IN.slot_number",
+          "triggered_by": "IN.triggered_by"
+        }
+      }
+    },
+    {
+      "id": "CC_READ_SLOT_CLOCK_V0",
+      "type": "CC",
+      "cc_code": "CC_READ_SLOT_CLOCK_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "simulation_id": "IN.simulation_id",
+          "triggered_by": "IN.triggered_by"
+        }
+      }
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    },
+    {
+      "id": "IN_SLOT_EXECUTION_STARTED_V0",
+      "type": "IN"
+    }
+  ],
+  "edges": [
+    {
+      "from": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "to": "CC_ADVANCE_SLOT_CLOCK_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_PREPARE_SLOT_CONTEXT_V0",
+      "to": "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_PREPARE_SLOT_CONTEXT_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_READ_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_READ_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "NOT_FOUND"
+    },
+    {
+      "from": "CC_READ_SLOT_CLOCK_V0",
+      "to": "CC_PREPARE_SLOT_CONTEXT_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_READ_SLOT_CLOCK_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_SLOT_EXECUTION_STARTED_V0",
+      "to": "CC_READ_SLOT_CLOCK_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_SLOT_EXECUTION_STARTED_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "CC_ADVANCE_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "CC_ADVANCE_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "CC_ADVANCE_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "CC_ADVANCE_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "CC_INVOKE_BLOCK_PROPOSAL_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "CC_PREPARE_SLOT_CONTEXT_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "CC_READ_SLOT_CLOCK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_SLOT_EXECUTION_STARTED_V0",
+      "EXIT"
+    ]
+  ]
+}

@@ -1,0 +1,238 @@
+{
+  "artifact_code": "CC_FORM_BLOCK_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "data": "in.round_id"
+        },
+        "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "id": "CT_PURE_GENERATE_ID_V0",
+        "inputs": [
+          "prefix",
+          "data"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "id"
+        ]
+      },
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+        "id": "CT_PURE_ASSEMBLE_RECORD_V0",
+        "inputs": [
+          "fields"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "record"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_FORM_BLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_FORM_BLOCK_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0, CT_PURE_ASSEMBLE_RECORD_V0, CS_MUTABLE_JSON_V0, CS_APPENDONLY_JSONL_V0\n\n---\n\n## 1. Intent\n\nForm a new block from the selected proposer, pending transactions, and round context. Write the block to the BLOCKS store and append a block lifecycle event to BLOCK_EVENTS.\n\n---\n\n## 2. Rationale\n\nBlock formation is the canonical write operation for the `blockchain::block` subdomain. All writes are scoped to block-owned stores (BLOCKS, BLOCK_EVENTS). No cross-subdomain writes occur in this CC. The block record is the primary unit of the block subdomain.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | Generate block_id (prefix: B) |\n| 2 | CT_PURE_ASSEMBLE_RECORD_V0 | CT | Assemble block_record |\n| 3 | CS_MUTABLE_JSON_V0 | CS | WRITE to BLOCKS store |\n| 4 | CS_APPENDONLY_JSONL_V0 | CS | APPEND to BLOCK_EVENTS store |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| round_id | integer | true | Consensus round number (maps to block height) |\n| slot | integer | true | Slot number within the epoch |\n| epoch | integer | true | Epoch number |\n| proposer_id | string | true | actor_id of the proposing validator |\n| tx_ids | array | true | Ordered list of transaction IDs to include |\n| timestamp | string | true | ISO 8601 block formation timestamp |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| block_id | string | Generated block identifier (B-prefixed) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Block formed, written, and event appended |\n| VIOLATION | Invalid input |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION on missing or invalid required inputs\n- BACKEND_ERROR propagates as a hard failure from any CS step\n- block_id is returned on SUCCESS only\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_FORM_BLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Form a block, write to BLOCKS store, append to BLOCK_EVENTS\n\n  inputs:\n    round_id:\n      type: integer\n      required: true\n      description: Consensus round number (maps to block height)\n    slot:\n      type: integer\n      required: true\n      description: Slot number within the epoch\n    epoch:\n      type: integer\n      required: true\n      description: Epoch number\n    proposer_id:\n      type: string\n      required: true\n    tx_ids:\n      type: array\n      required: true\n      items:\n        type: string\n    timestamp:\n      type: string\n      required: true\n      format: date-time\n\n  outputs:\n    block_id:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_block_id\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      inputs:\n        prefix: B\n        data: $.inputs.round_id\n      outputs:\n        block_id: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: assemble_block_record\n        VIOLATION: exit\n\n    - step: assemble_block_record\n      transform: capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0\n      inputs:\n        fields:\n          block_id: $.results.generate_block_id.block_id\n          round_id: $.inputs.round_id\n          slot: $.inputs.slot\n          epoch: $.inputs.epoch\n          proposer_id: $.inputs.proposer_id\n          tx_ids: $.inputs.tx_ids\n          is_canonical: false\n          status: PROPOSED\n          timestamp: $.inputs.timestamp\n      outputs:\n        block_record: $.capability_result.record\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: write_block\n        VIOLATION: exit\n\n    - step: write_block\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: BLOCKS\n      op: WRITE\n      inputs:\n        key: $.results.generate_block_id.block_id\n        value: $.results.assemble_block_record.block_record\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: append_block_event\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: append_block_event\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: BLOCK_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.results.generate_block_id.block_id\n        record:\n          event_code: EV_BLOCK_PROPOSED_V0\n          block_id: $.results.generate_block_id.block_id\n          round_id: $.inputs.round_id\n          slot: $.inputs.slot\n          epoch: $.inputs.epoch\n          proposer_id: $.inputs.proposer_id\n          tx_ids: $.inputs.tx_ids\n          timestamp: $.inputs.timestamp\n      outputs:\n        block_id: $.results.generate_block_id.block_id\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: block\n  notes:\n    - All writes scoped to blockchain::block stores (BLOCKS, BLOCK_EVENTS)\n    - block_id propagated to caller for CC_RECORD_CONSENSUS_ROUND_V0\n```\n",
+  "content_hash": "d3a91689c26f3f1825bc8bb9b2eb0b8a995ff3db912ea7ad00fd6f930ca54de9",
+  "fqdn_id": "blockchain::CC_FORM_BLOCK_V0",
+  "frontmatter": {
+    "cc_code": "CC_FORM_BLOCK_V0",
+    "core": {
+      "inputs": {
+        "epoch": {
+          "description": "Epoch number",
+          "required": true,
+          "type": "integer"
+        },
+        "proposer_id": {
+          "required": true,
+          "type": "string"
+        },
+        "round_id": {
+          "description": "Consensus round number (maps to block height)",
+          "required": true,
+          "type": "integer"
+        },
+        "slot": {
+          "description": "Slot number within the epoch",
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "tx_ids": {
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "block_id": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "data": "$.inputs.round_id",
+            "prefix": "B"
+          },
+          "on_result": {
+            "SUCCESS": "assemble_block_record",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "block_id": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_block_id",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        },
+        {
+          "inputs": {
+            "fields": {
+              "block_id": "$.results.generate_block_id.block_id",
+              "epoch": "$.inputs.epoch",
+              "is_canonical": false,
+              "proposer_id": "$.inputs.proposer_id",
+              "round_id": "$.inputs.round_id",
+              "slot": "$.inputs.slot",
+              "status": "PROPOSED",
+              "timestamp": "$.inputs.timestamp",
+              "tx_ids": "$.inputs.tx_ids"
+            }
+          },
+          "on_result": {
+            "SUCCESS": "write_block",
+            "VIOLATION": "exit"
+          },
+          "outputs": {
+            "block_record": "$.capability_result.record"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "assemble_block_record",
+          "transform": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
+        },
+        {
+          "inputs": {
+            "key": "$.results.generate_block_id.block_id",
+            "value": "$.results.assemble_block_record.block_record"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "append_block_event",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_block",
+          "store": "BLOCKS"
+        },
+        {
+          "inputs": {
+            "record": {
+              "block_id": "$.results.generate_block_id.block_id",
+              "epoch": "$.inputs.epoch",
+              "event_code": "EV_BLOCK_PROPOSED_V0",
+              "proposer_id": "$.inputs.proposer_id",
+              "round_id": "$.inputs.round_id",
+              "slot": "$.inputs.slot",
+              "timestamp": "$.inputs.timestamp",
+              "tx_ids": "$.inputs.tx_ids"
+            },
+            "stream_id": "$.results.generate_block_id.block_id"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "block_id": "$.results.generate_block_id.block_id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "append_block_event",
+          "store": "BLOCK_EVENTS"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Form a block, write to BLOCKS store, append to BLOCK_EVENTS"
+    },
+    "extensions": {
+      "notes": [
+        "All writes scoped to blockchain::block stores (BLOCKS, BLOCK_EVENTS)",
+        "block_id propagated to caller for CC_RECORD_CONSENSUS_ROUND_V0"
+      ],
+      "subdomain": "block"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.block.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
+    "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

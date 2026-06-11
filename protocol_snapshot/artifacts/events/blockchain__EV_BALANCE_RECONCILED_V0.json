@@ -1,0 +1,54 @@
+{
+  "artifact_code": "EV_BALANCE_RECONCILED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_BALANCE_RECONCILED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_BALANCE_RECONCILED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA wallet's balance has been reconciled following transaction finalization.\n\n---\n\n## 2. Rationale\n\nBalance reconciliation closes the wallet lifecycle loop after a finalized transaction:\n- Records the before/after balance for audit\n- Links the balance change to the transaction that caused it\n- Enables wallet event stream reconstruction and audit trail\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| (consensus finalization CR \u2014 next CR) | (to be declared) |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| wallet_id | string | true | Wallet identifier |\n| actor_id | string | true | Actor who owns this wallet |\n| previous_balance | number | true | Balance before this transaction |\n| delta | number | true | Signed balance change (positive = credit, negative = debit) |\n| new_balance | number | true | Balance after this transaction |\n| tx_hash | string | true | Transaction hash that caused this reconciliation |\n| timestamp | string (date-time) | true | When reconciliation was recorded |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_BALANCE_RECONCILED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Wallet balance reconciled after transaction finalization\n  description: Emitted after a finalized transaction updates a wallet's balance; enables complete audit trail of balance changes\n\n  schema:\n    wallet_id:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n    previous_balance:\n      type: number\n      required: true\n    delta:\n      type: number\n      required: true\n    new_balance:\n      type: number\n      required: true\n    tx_hash:\n      type: string\n      required: true\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "fdef541272c2182824b5a2452cbb724e81855cbd9376eed39d4d36656f3e5158",
+  "fqdn_id": "blockchain::EV_BALANCE_RECONCILED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted after a finalized transaction updates a wallet's balance; enables complete audit trail of balance changes",
+      "schema": {
+        "actor_id": {
+          "required": true,
+          "type": "string"
+        },
+        "delta": {
+          "required": true,
+          "type": "number"
+        },
+        "new_balance": {
+          "required": true,
+          "type": "number"
+        },
+        "previous_balance": {
+          "required": true,
+          "type": "number"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        },
+        "tx_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "wallet_id": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Wallet balance reconciled after transaction finalization"
+    },
+    "ev_code": "EV_BALANCE_RECONCILED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.wallet.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

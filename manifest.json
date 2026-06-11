@@ -1,5 +1,5 @@
 {
-  "version": "0.3.0",
+  "version": "0.5.0",
 
   "workspace_type": "pgs_workspace",
 
@@ -10,14 +10,19 @@
     "tokenized_snapshot": "tokenized runtime projections (machine-oriented topology)",
     "evidence_snapshot": "compiler evidence projections (causality graph + views)",
     "vocabulary_snapshot": "aggregate semantic vocabulary (address space)",
-    "trust_snapshot": "attestation and trust boundary projections"
+    "trust_snapshot": "attestation and trust boundary projections",
+    "pps_snapshot": "protocol projection surface — machine-readable workflow/CC/CT index"
   },
 
   "required_packages": [
     "pgs_runtime",
+    "pgs_governance",
+    "pgs_compiler",
+    "pgs_transport",
     "pgs_capabilities",
     "pgs_blockchain",
-    "pgs_ai_governance"
+    "pgs_ai_governance",
+    "pgs_change_mgmt"
   ],
 
   "workspace_outputs": [
@@ -26,11 +31,20 @@
     "evidence_snapshot/",
     "vocabulary_snapshot/",
     "trust_snapshot/",
+    "pps_snapshot/",
     "traces/"
   ],
 
   "seed_data": [
+    "seeds/genesis_actor.json",
     "seeds/license_facts.json",
-    "seeds/register_actor_unverified_payload.json"
+    "seeds/register_actor_unverified_payload.json",
+    "seeds/register_validator_payload.json",
+    "seeds/actor_population.json",
+    "seeds/validator_population.json",
+    "seeds/consensus_slot_specs.json",
+    "seeds/system_wallets.json",
+    "seeds/validators.json",
+    "seeds/wallets.json"
   ]
 }

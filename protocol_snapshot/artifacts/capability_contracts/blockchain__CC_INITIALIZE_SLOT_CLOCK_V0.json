@@ -1,0 +1,104 @@
+{
+  "artifact_code": "CC_INITIALIZE_SLOT_CLOCK_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_INITIALIZE_SLOT_CLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_INITIALIZE_SLOT_CLOCK_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nInitialize the slot clock for a simulation run. Writes the initial slot clock record keyed by `simulation_id` to the SLOT_CLOCK store.\n\n---\n\n## 2. Rationale\n\nThe slot clock is the central state object for slot sequencing in a simulation run. All CCs that read or advance the slot clock depend on this initialization. Writing at `simulation_id` as key establishes the isolation boundary \u2014 each simulation run owns exactly one slot clock record.\n\nLast-write-wins semantics apply: re-initializing the same `simulation_id` resets the slot clock. Callers are responsible for ensuring this is invoked exactly once per simulation run.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `simulation_id` | string | true | Simulation run identifier; primary isolation key; becomes the slot clock record key |\n| `triggered_by` | string | true | Actor ID or system trigger reference |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `result_status` | string | Operation result |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Slot clock record written successfully |\n| VIOLATION | Invalid input (empty simulation_id) |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION on empty or invalid `simulation_id` key\n- BACKEND_ERROR if the SLOT_CLOCK store is unavailable\n- No ALREADY_EXISTS \u2014 CS_MUTABLE_JSON_V0 WRITE is last-write-wins\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_INITIALIZE_SLOT_CLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Initialize slot clock record for a simulation run\n\n  inputs:\n    simulation_id:\n      type: string\n      required: true\n      description: Primary isolation key; becomes the slot clock record key\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: write_slot_clock_init\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: SLOT_CLOCK\n      op: WRITE\n      inputs:\n        key: $.inputs.simulation_id\n        value:\n          simulation_id: $.inputs.simulation_id\n          current_slot: 0\n          initialized_at: \"{{timestamp}}\"\n      outputs:\n        result_status: $.capability_result.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: orchestration\n  notes:\n    - SLOT_CLOCK store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n    - keyed by simulation_id \u2014 isolation invariant established at init\n    - last-write-wins; callers must ensure single init per simulation run\n```\n",
+  "content_hash": "424829beb8ff8cd70822c404c24ec974c3c74e3f2d696ec1eaed3d80fd8e6cf9",
+  "fqdn_id": "blockchain::CC_INITIALIZE_SLOT_CLOCK_V0",
+  "frontmatter": {
+    "cc_code": "CC_INITIALIZE_SLOT_CLOCK_V0",
+    "core": {
+      "inputs": {
+        "simulation_id": {
+          "description": "Primary isolation key; becomes the slot clock record key",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "$.inputs.simulation_id",
+            "value": {
+              "current_slot": 0,
+              "initialized_at": "{{timestamp}}",
+              "simulation_id": "$.inputs.simulation_id"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {
+            "result_status": "$.capability_result.result_status"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_slot_clock_init",
+          "store": "SLOT_CLOCK"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Initialize slot clock record for a simulation run"
+    },
+    "extensions": {
+      "notes": [
+        "SLOT_CLOCK store is defined in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+        "keyed by simulation_id \u2014 isolation invariant established at init",
+        "last-write-wins; callers must ensure single init per simulation run"
+      ],
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

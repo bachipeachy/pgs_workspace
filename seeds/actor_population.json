@@ -1,0 +1,32 @@
+[
+  {
+    "first_name": "Bachi",
+    "last_name": "Eight",
+    "email_registration": "bachi8@yahoo.com",
+    "wallet_types": []
+  },
+  {
+    "first_name": "Gomer",
+    "last_name": "Adams",
+    "email_registration": "gomer.adams@bachi.testnet",
+    "wallet_types": ["PRIVATE", "BUSINESS"]
+  },
+  {
+    "first_name": "Liam",
+    "last_name": "Adams",
+    "email_registration": "liam.adams@bachi.testnet",
+    "wallet_types": ["PRIVATE", "BUSINESS"]
+  },
+  {
+    "first_name": "Isha",
+    "last_name": "Adams",
+    "email_registration": "isha.adams@bachi.testnet",
+    "wallet_types": ["PRIVATE", "BUSINESS"]
+  },
+  {
+    "first_name": "Sophie",
+    "last_name": "Cyber",
+    "email_registration": "sophie.cyber@bachi.testnet",
+    "wallet_types": ["PRIVATE", "BUSINESS"]
+  }
+]

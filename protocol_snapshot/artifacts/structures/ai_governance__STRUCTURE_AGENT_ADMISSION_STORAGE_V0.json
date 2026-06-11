@@ -1,0 +1,48 @@
+{
+  "artifact_code": "STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_AGENT_ADMISSION_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_AGENT_ADMISSION_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare storage topology for the agent admission subdomain. Maps entity types to storage implementations and paths.\n\n---\n\n## 2. Rationale\n\nStorage paths are a governance concern, not a runtime implementation detail. This STRUCTURE artifact:\n- Centralizes storage topology for agent_admission (single source of truth)\n- Decouples CC artifacts from filesystem layout\n- Enforces entity-level isolation \u2014 GOVERNANCE_ACTIONS and GOVERNANCE_AUDIT are scoped to agent_admission; LICENSE_FACTS is read-only from ai_licensing\n\n---\n\n## 3. Storage Model\n\n**Principle:** One store per domain entity type.\n\n**Entity Types:**\n- LICENSE_FACTS: Read-only license tier and status feed (shared with agent_governance \u2014 read-only access only)\n- GOVERNANCE_ACTIONS: Mutable registry of authorized agent admission actions (idempotency tracking)\n- GOVERNANCE_AUDIT: Append-only audit trail for all admission authorization and denial decisions\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_AGENT_ADMISSION_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Agent admission subdomain storage topology\n  layer: DOMAINS\n  domain: ai_governance\n\n  storage_roots:\n    base_path: \"{{module_data_root}}\"\n\n  entity_stores:\n    LICENSE_FACTS:\n      description: \"Read-only license tier and status fact feed (shared with agent_governance)\"\n      path: \"ai_governance/ai_licensing/license_facts.json\"\n    GOVERNANCE_ACTIONS:\n      description: \"Registry of authorized agent admission actions (idempotency tracking)\"\n      path: \"ai_governance/agent_admission/governance_actions.json\"\n    GOVERNANCE_AUDIT:\n      description: \"Append-only audit trail for agent admission authorization and denial decisions\"\n      path: \"ai_governance/agent_admission/governance_audit.jsonl\"\n\n  isolation:\n    rules:\n      - \"LICENSE_FACTS is read-only \u2014 agent_admission may not mutate license facts\"\n      - \"GOVERNANCE_AUDIT is append-only \u2014 admission audit records are immutable\"\n      - \"GOVERNANCE_ACTIONS is scoped to agent_admission \u2014 no cross-subdomain writes\"\n```\n",
+  "content_hash": "4ebcf2aeb850a75c1a357b8af7201455b85f4cfd78c4ff8d5042b7641c760237",
+  "fqdn_id": "ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+  "frontmatter": {
+    "core": {
+      "domain": "ai_governance",
+      "entity_stores": {
+        "GOVERNANCE_ACTIONS": {
+          "description": "Registry of authorized agent admission actions (idempotency tracking)",
+          "path": "ai_governance/agent_admission/governance_actions.json"
+        },
+        "GOVERNANCE_AUDIT": {
+          "description": "Append-only audit trail for agent admission authorization and denial decisions",
+          "path": "ai_governance/agent_admission/governance_audit.jsonl"
+        },
+        "LICENSE_FACTS": {
+          "description": "Read-only license tier and status fact feed (shared with agent_governance)",
+          "path": "ai_governance/ai_licensing/license_facts.json"
+        }
+      },
+      "isolation": {
+        "rules": [
+          "LICENSE_FACTS is read-only \u2014 agent_admission may not mutate license facts",
+          "GOVERNANCE_AUDIT is append-only \u2014 admission audit records are immutable",
+          "GOVERNANCE_ACTIONS is scoped to agent_admission \u2014 no cross-subdomain writes"
+        ]
+      },
+      "layer": "DOMAINS",
+      "storage_roots": {
+        "base_path": "{{module_data_root}}"
+      },
+      "summary": "Agent admission subdomain storage topology"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "structure_code": "STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+    "version": "v0"
+  },
+  "layer_code": "AI_GOVERNANCE",
+  "module_path": "pgs_ai_governance.registry.agent_admission.layers",
+  "namespace": "ai_governance",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

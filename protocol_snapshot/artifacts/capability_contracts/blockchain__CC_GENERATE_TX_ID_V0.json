@@ -1,0 +1,136 @@
+{
+  "artifact_code": "CC_GENERATE_TX_ID_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {},
+        "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
+        "id": "CT_PURE_GENERATE_ID_V0",
+        "inputs": [
+          "prefix",
+          "data"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "id"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_GENERATE_TX_ID_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_GENERATE_TX_ID_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0\n\n---\n\n## 1. Intent\n\nGenerate a deterministic transaction ID and transaction hash from transaction data fields.\n\n---\n\n## 2. Rationale\n\nBACHI transactions do not use ETH-style EIP-1559 signing or keccak-256 hashing. Instead, both\ntx_id and tx_hash are content-addressable identifiers derived from the transaction's core data\nusing CT_PURE_GENERATE_ID_V0. This replaces CC_BUILD_ETH_TX_V0 + CC_HASH_TRANSACTION_V0 in the\nBACHI-native transaction pipeline.\n\n- tx_id: T-prefixed deterministic ID from transaction data\n- tx_hash: T_HASH-prefixed deterministic ID from transaction data (same source data, different prefix)\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID (tx_id) |\n| 2 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID (tx_hash) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_type | string | true | Transaction type (TRANSFER, STAKE, UNSTAKE, MINT, BURN, POOL, REWARD, SLASH) |\n| from_wallet_id | string | false | Source wallet identifier (null for MINT, REWARD) |\n| to_wallet_id | string | false | Destination wallet identifier (null for BURN, POOL) |\n| amount | number | true | Transaction amount in BACHI |\n| actor_id | string | false | Submitting actor identifier (null for SYSTEM transactions) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| tx_id | string | T-prefixed transaction identifier |\n| tx_hash | string | T_HASH-prefixed transaction hash |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Both tx_id and tx_hash generated |\n| VIOLATION | Invalid input |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_GENERATE_TX_ID_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Generate deterministic tx_id and tx_hash for BACHI transactions\n\n  inputs:\n    tx_type:\n      type: string\n      required: true\n      description: Transaction type\n    from_wallet_id:\n      type: string\n      required: false\n      description: Source wallet identifier (null for MINT, REWARD)\n    to_wallet_id:\n      type: string\n      required: false\n      description: Destination wallet identifier (null for BURN, POOL)\n    amount:\n      type: number\n      required: true\n      description: Transaction amount in BACHI\n    actor_id:\n      type: string\n      required: false\n      description: Submitting actor (null for SYSTEM transactions)\n\n  outputs:\n    tx_id:\n      type: string\n    tx_hash:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_tx_id\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: T\n        data:\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          to_wallet_id: $.inputs.to_wallet_id\n          amount: $.inputs.amount\n          actor_id: $.inputs.actor_id\n      outputs:\n        tx_id: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: generate_tx_hash\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: T_HASH\n        data:\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          to_wallet_id: $.inputs.to_wallet_id\n          amount: $.inputs.amount\n          actor_id: $.inputs.actor_id\n      outputs:\n        tx_hash: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n```\n",
+  "content_hash": "70fd8f51b0b81d57e14bfafa9673f1b66c3389eea428b587c3f85f01ca12ee1a",
+  "fqdn_id": "blockchain::CC_GENERATE_TX_ID_V0",
+  "frontmatter": {
+    "cc_code": "CC_GENERATE_TX_ID_V0",
+    "core": {
+      "inputs": {
+        "actor_id": {
+          "description": "Submitting actor (null for SYSTEM transactions)",
+          "required": false,
+          "type": "string"
+        },
+        "amount": {
+          "description": "Transaction amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "from_wallet_id": {
+          "description": "Source wallet identifier (null for MINT, REWARD)",
+          "required": false,
+          "type": "string"
+        },
+        "to_wallet_id": {
+          "description": "Destination wallet identifier (null for BURN, POOL)",
+          "required": false,
+          "type": "string"
+        },
+        "tx_type": {
+          "description": "Transaction type",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "tx_hash": {
+          "type": "string"
+        },
+        "tx_id": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "data": {
+              "actor_id": "$.inputs.actor_id",
+              "amount": "$.inputs.amount",
+              "from_wallet_id": "$.inputs.from_wallet_id",
+              "to_wallet_id": "$.inputs.to_wallet_id",
+              "tx_type": "$.inputs.tx_type"
+            },
+            "prefix": "T"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "GENERATE_ID",
+          "outputs": {
+            "tx_id": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_tx_id",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        },
+        {
+          "inputs": {
+            "data": {
+              "actor_id": "$.inputs.actor_id",
+              "amount": "$.inputs.amount",
+              "from_wallet_id": "$.inputs.from_wallet_id",
+              "to_wallet_id": "$.inputs.to_wallet_id",
+              "tx_type": "$.inputs.tx_type"
+            },
+            "prefix": "T_HASH"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "GENERATE_ID",
+          "outputs": {
+            "tx_hash": "$.capability_result.id"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "generate_tx_hash",
+          "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Generate deterministic tx_id and tx_hash for BACHI transactions"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "capability_transforms::CT_PURE_GENERATE_ID_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

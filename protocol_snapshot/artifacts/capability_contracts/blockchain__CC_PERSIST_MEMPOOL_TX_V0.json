@@ -42,11 +42,27 @@
         "outputs": [
           "result_status"
         ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
       }
     ]
   },
-  "content": "# CC_PERSIST_MEMPOOL_TX_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_PERSIST_MEMPOOL_TX_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0, CS_REGISTRY_V0, CS_APPENDONLY_JSONL_V0, CS_REGISTRY_V0\n\n---\n\n## 1. Intent\n\nPersist the signed transaction to the local mempool and register in the transaction index.\n\n---\n\n## 2. Rationale\n\nOnly signed transactions are persisted. The mempool is append-only and immutable.\nThe transaction index maps tx_id \u2192 tx_hash for lookup. Record contains actor_id\nand wallet_id only \u2014 no PII.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID |\n| 2 | CS_REGISTRY_V0 | CS | REGISTER |\n| 3 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n| 4 | CS_REGISTRY_V0 | CS | REGISTER |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_id | string | true | Transaction identifier |\n| tx_hash | string | true | Transaction hash |\n| tx_type | string | true | Transaction type (ETH) |\n| from_address | string | true | Sender address |\n| to_address | string | true | Destination address |\n| value | string | true | Transfer value in wei |\n| nonce | integer | true | Transaction nonce |\n| gas_limit | integer | true | Gas limit |\n| max_fee_per_gas | string | true | Max fee per gas |\n| max_priority_fee_per_gas | string | true | Max priority fee |\n| data | string | true | Transaction data |\n| chain_id | integer | true | Chain identifier |\n| signature | object | true | {v, r, s} signature |\n| wallet_id | string | true | Source wallet |\n| actor_id | string | true | Submitting actor |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | SUCCESS, VIOLATION, ALREADY_EXISTS, or BACKEND_ERROR |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Record persisted and indexed |\n| ALREADY_EXISTS | Duplicate nonce for wallet (TX_NONCE_DUPLICATE) |\n| VIOLATION | Duplicate tx_id or tx_hash (TX_PERSIST_FAILED) |\n| BACKEND_ERROR | Storage write failure |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_PERSIST_MEMPOOL_TX_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Persist signed transaction to mempool and register in index\n\n  inputs:\n    tx_id:\n      type: string\n      required: true\n    tx_hash:\n      type: string\n      required: true\n    tx_type:\n      type: string\n      required: true\n    from_address:\n      type: string\n      required: true\n    to_address:\n      type: string\n      required: true\n    value:\n      type: string\n      required: true\n    nonce:\n      type: integer\n      required: true\n    gas_limit:\n      type: integer\n      required: true\n    max_fee_per_gas:\n      type: string\n      required: true\n    max_priority_fee_per_gas:\n      type: string\n      required: true\n    data:\n      type: string\n      required: true\n    chain_id:\n      type: integer\n      required: true\n    signature:\n      type: object\n      required: true\n    wallet_id:\n      type: string\n      required: true\n    actor_id:\n      type: string\n      required: true\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_nonce_key\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: NONCE\n        data:\n          from_address: $.inputs.from_address\n          nonce: $.inputs.nonce\n      outputs:\n        nonce_key: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: register_nonce\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.results.generate_nonce_key.nonce_key\n        target_cs: capability_side_effects::CS_MUTABLE_JSON_V0\n        target_ref: $.inputs.from_address\n        metadata:\n          nonce: $.inputs.nonce\n          wallet_id: $.inputs.wallet_id\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: append_mempool_tx\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: TRANSACTION_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.tx_id\n        actor_id: $.inputs.actor_id\n        record:\n          tx_id: $.inputs.tx_id\n          tx_hash: $.inputs.tx_hash\n          tx_type: $.inputs.tx_type\n          from_address: $.inputs.from_address\n          to_address: $.inputs.to_address\n          value: $.inputs.value\n          nonce: $.inputs.nonce\n          gas_limit: $.inputs.gas_limit\n          max_fee_per_gas: $.inputs.max_fee_per_gas\n          max_priority_fee_per_gas: $.inputs.max_priority_fee_per_gas\n          data: $.inputs.data\n          chain_id: $.inputs.chain_id\n          signature: $.inputs.signature\n          wallet_id: $.inputs.wallet_id\n          actor_id: $.inputs.actor_id\n          status: PENDING\n          created_at: \"{{timestamp}}\"\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: register_tx_hash\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.inputs.tx_id\n        target_cs: capability_side_effects::CS_APPENDONLY_JSONL_V0\n        target_ref: $.inputs.tx_hash\n        metadata:\n          tx_type: $.inputs.tx_type\n          wallet_id: $.inputs.wallet_id\n          status: PENDING\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n  error_codes:\n    ALREADY_EXISTS: TX_NONCE_DUPLICATE\n    VIOLATION: TX_PERSIST_FAILED\n    BACKEND_ERROR: TX_PERSIST_FAILED\n```\n",
-  "content_hash": "9a5f00be6e3703dda57f5328210498f5d5286003ad1b8db79a20b786c6ef9b6d",
+  "content": "# CC_PERSIST_MEMPOOL_TX_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_PERSIST_MEMPOOL_TX_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_GENERATE_ID_V0, CS_REGISTRY_V0, CS_APPENDONLY_JSONL_V0, CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nPersist the signed transaction to the local mempool and register in the transaction index.\n\n---\n\n## 2. Rationale\n\nOnly signed transactions are persisted. The mempool is append-only and immutable.\nThe transaction index maps tx_id \u2192 tx_hash for lookup. Record contains actor_id\nand wallet_id only \u2014 no PII.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CT_PURE_GENERATE_ID_V0 | CT | GENERATE_ID |\n| 2 | CS_REGISTRY_V0 | CS | REGISTER |\n| 3 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n| 4 | CS_MUTABLE_JSON_V0 | CS | WRITE (pending tx record \u2192 MEMPOOL store) |\n| 5 | CS_REGISTRY_V0 | CS | REGISTER |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_id | string | true | Transaction identifier (TX-prefixed, generated upstream) |\n| tx_hash | string | true | Transaction hash (TX-prefixed, generated upstream) |\n| tx_type | string | true | Transaction type \u2014 injected as wf_literal by each typed WF |\n| from_wallet_id | string | false | Source wallet (null for MINT, REWARD) |\n| to_wallet_id | string | false | Destination wallet (null for BURN, POOL) |\n| amount | number | true | Transaction amount in BACHI |\n| actor_id | string | false | Submitting actor (null for SYSTEM transactions) |\n| gas_limit | integer | false | Gas limit (ENDUSER transactions only) |\n| max_fee_per_gas | string | false | Max fee per gas (ENDUSER transactions only) |\n| max_priority_fee_per_gas | string | false | Max priority fee per gas (ENDUSER transactions only) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | SUCCESS, VIOLATION, ALREADY_EXISTS, or BACKEND_ERROR |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Record persisted and indexed |\n| ALREADY_EXISTS | Duplicate nonce for wallet (TX_NONCE_DUPLICATE) |\n| VIOLATION | Duplicate tx_id or tx_hash (TX_PERSIST_FAILED) |\n| BACKEND_ERROR | Storage write failure |\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_PERSIST_MEMPOOL_TX_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Persist signed transaction to mempool and register in index\n\n  inputs:\n    tx_id:\n      type: string\n      required: true\n      description: Transaction identifier (T-prefixed)\n    tx_hash:\n      type: string\n      required: true\n      description: Transaction hash (T_HASH-prefixed)\n    tx_type:\n      type: string\n      required: true\n      description: Transaction type; injected as wf_literal by each typed WF\n    from_wallet_id:\n      type: string\n      required: false\n      description: Source wallet (null for MINT, REWARD)\n    to_wallet_id:\n      type: string\n      required: false\n      description: Destination wallet (null for BURN, POOL)\n    amount:\n      type: number\n      required: true\n      description: Transaction amount in BACHI\n    actor_id:\n      type: string\n      required: false\n      description: Submitting actor (null for SYSTEM transactions)\n    gas_limit:\n      type: integer\n      required: false\n    max_fee_per_gas:\n      type: string\n      required: false\n    max_priority_fee_per_gas:\n      type: string\n      required: false\n\n  outputs:\n    result_status:\n      type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: generate_tx_key\n      transform: capability_transforms::CT_PURE_GENERATE_ID_V0\n      op: GENERATE_ID\n      inputs:\n        prefix: T_KEY\n        data:\n          tx_id: $.inputs.tx_id\n          tx_type: $.inputs.tx_type\n      outputs:\n        tx_key: $.capability_result.id\n      result_surface: [SUCCESS, VIOLATION]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n\n    - step: register_tx_key\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.results.generate_tx_key.tx_key\n        target_cs: capability_side_effects::CS_MUTABLE_JSON_V0\n        target_ref: $.inputs.tx_id\n        metadata:\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          to_wallet_id: $.inputs.to_wallet_id\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: append_mempool_tx\n      side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n      store: TRANSACTION_EVENTS\n      op: APPEND\n      inputs:\n        stream_id: $.inputs.tx_id\n        actor_id: $.inputs.actor_id\n        record:\n          tx_id: $.inputs.tx_id\n          tx_hash: $.inputs.tx_hash\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          to_wallet_id: $.inputs.to_wallet_id\n          amount: $.inputs.amount\n          actor_id: $.inputs.actor_id\n          gas_limit: $.inputs.gas_limit\n          max_fee_per_gas: $.inputs.max_fee_per_gas\n          max_priority_fee_per_gas: $.inputs.max_priority_fee_per_gas\n          status: PENDING\n          created_at: \"{{timestamp}}\"\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: write_pending_tx\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: MEMPOOL\n      op: WRITE\n      inputs:\n        key: $.inputs.tx_id\n        value:\n          tx_id: $.inputs.tx_id\n          tx_hash: $.inputs.tx_hash\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          to_wallet_id: $.inputs.to_wallet_id\n          amount: $.inputs.amount\n          actor_id: $.inputs.actor_id\n          status: PENDING\n      outputs: {}\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: continue\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n    - step: register_tx_hash\n      side_effect: capability_side_effects::CS_REGISTRY_V0\n      op: REGISTER\n      inputs:\n        key: $.inputs.tx_id\n        target_cs: capability_side_effects::CS_APPENDONLY_JSONL_V0\n        target_ref: $.inputs.tx_hash\n        metadata:\n          tx_type: $.inputs.tx_type\n          from_wallet_id: $.inputs.from_wallet_id\n          status: PENDING\n      outputs:\n        result_status: $.result_status\n      result_surface: [SUCCESS, ALREADY_EXISTS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        ALREADY_EXISTS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n  error_codes:\n    ALREADY_EXISTS: TX_NONCE_DUPLICATE\n    VIOLATION: TX_PERSIST_FAILED\n    BACKEND_ERROR: TX_PERSIST_FAILED\n```\n",
+  "content_hash": "302d3a8225c0d26a0087bb0db26722786d3b29debefcab64cd22f0d294ea3f16",
   "fqdn_id": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
   "frontmatter": {
     "cc_code": "CC_PERSIST_MEMPOOL_TX_V0",
@@ -58,62 +74,49 @@
       },
       "inputs": {
         "actor_id": {
-          "required": true,
+          "description": "Submitting actor (null for SYSTEM transactions)",
+          "required": false,
           "type": "string"
         },
-        "chain_id": {
+        "amount": {
+          "description": "Transaction amount in BACHI",
           "required": true,
-          "type": "integer"
+          "type": "number"
         },
-        "data": {
-          "required": true,
-          "type": "string"
-        },
-        "from_address": {
-          "required": true,
+        "from_wallet_id": {
+          "description": "Source wallet (null for MINT, REWARD)",
+          "required": false,
           "type": "string"
         },
         "gas_limit": {
-          "required": true,
+          "required": false,
           "type": "integer"
         },
         "max_fee_per_gas": {
-          "required": true,
+          "required": false,
           "type": "string"
         },
         "max_priority_fee_per_gas": {
-          "required": true,
+          "required": false,
           "type": "string"
         },
-        "nonce": {
-          "required": true,
-          "type": "integer"
-        },
-        "signature": {
-          "required": true,
-          "type": "object"
-        },
-        "to_address": {
-          "required": true,
+        "to_wallet_id": {
+          "description": "Destination wallet (null for BURN, POOL)",
+          "required": false,
           "type": "string"
         },
         "tx_hash": {
+          "description": "Transaction hash (T_HASH-prefixed)",
           "required": true,
           "type": "string"
         },
         "tx_id": {
+          "description": "Transaction identifier (T-prefixed)",
           "required": true,
           "type": "string"
         },
         "tx_type": {
-          "required": true,
-          "type": "string"
-        },
-        "value": {
-          "required": true,
-          "type": "string"
-        },
-        "wallet_id": {
+          "description": "Transaction type; injected as wf_literal by each typed WF",
           "required": true,
           "type": "string"
         }
@@ -127,10 +130,10 @@
         {
           "inputs": {
             "data": {
-              "from_address": "$.inputs.from_address",
-              "nonce": "$.inputs.nonce"
+              "tx_id": "$.inputs.tx_id",
+              "tx_type": "$.inputs.tx_type"
             },
-            "prefix": "NONCE"
+            "prefix": "T_KEY"
           },
           "on_result": {
             "SUCCESS": "continue",
@@ -138,24 +141,25 @@
           },
           "op": "GENERATE_ID",
           "outputs": {
-            "nonce_key": "$.capability_result.id"
+            "tx_key": "$.capability_result.id"
           },
           "result_surface": [
             "SUCCESS",
             "VIOLATION"
           ],
-          "step": "generate_nonce_key",
+          "step": "generate_tx_key",
           "transform": "capability_transforms::CT_PURE_GENERATE_ID_V0"
         },
         {
           "inputs": {
-            "key": "$.results.generate_nonce_key.nonce_key",
+            "key": "$.results.generate_tx_key.tx_key",
             "metadata": {
-              "nonce": "$.inputs.nonce",
-              "wallet_id": "$.inputs.wallet_id"
+              "from_wallet_id": "$.inputs.from_wallet_id",
+              "to_wallet_id": "$.inputs.to_wallet_id",
+              "tx_type": "$.inputs.tx_type"
             },
             "target_cs": "capability_side_effects::CS_MUTABLE_JSON_V0",
-            "target_ref": "$.inputs.from_address"
+            "target_ref": "$.inputs.tx_id"
           },
           "on_result": {
             "ALREADY_EXISTS": "exit",
@@ -174,29 +178,24 @@
             "BACKEND_ERROR"
           ],
           "side_effect": "capability_side_effects::CS_REGISTRY_V0",
-          "step": "register_nonce"
+          "step": "register_tx_key"
         },
         {
           "inputs": {
             "actor_id": "$.inputs.actor_id",
             "record": {
               "actor_id": "$.inputs.actor_id",
-              "chain_id": "$.inputs.chain_id",
+              "amount": "$.inputs.amount",
               "created_at": "{{timestamp}}",
-              "data": "$.inputs.data",
-              "from_address": "$.inputs.from_address",
+              "from_wallet_id": "$.inputs.from_wallet_id",
               "gas_limit": "$.inputs.gas_limit",
               "max_fee_per_gas": "$.inputs.max_fee_per_gas",
               "max_priority_fee_per_gas": "$.inputs.max_priority_fee_per_gas",
-              "nonce": "$.inputs.nonce",
-              "signature": "$.inputs.signature",
               "status": "PENDING",
-              "to_address": "$.inputs.to_address",
+              "to_wallet_id": "$.inputs.to_wallet_id",
               "tx_hash": "$.inputs.tx_hash",
               "tx_id": "$.inputs.tx_id",
-              "tx_type": "$.inputs.tx_type",
-              "value": "$.inputs.value",
-              "wallet_id": "$.inputs.wallet_id"
+              "tx_type": "$.inputs.tx_type"
             },
             "stream_id": "$.inputs.tx_id"
           },
@@ -221,10 +220,40 @@
         {
           "inputs": {
             "key": "$.inputs.tx_id",
-            "metadata": {
+            "value": {
+              "actor_id": "$.inputs.actor_id",
+              "amount": "$.inputs.amount",
+              "from_wallet_id": "$.inputs.from_wallet_id",
               "status": "PENDING",
-              "tx_type": "$.inputs.tx_type",
-              "wallet_id": "$.inputs.wallet_id"
+              "to_wallet_id": "$.inputs.to_wallet_id",
+              "tx_hash": "$.inputs.tx_hash",
+              "tx_id": "$.inputs.tx_id",
+              "tx_type": "$.inputs.tx_type"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "write_pending_tx",
+          "store": "MEMPOOL"
+        },
+        {
+          "inputs": {
+            "key": "$.inputs.tx_id",
+            "metadata": {
+              "from_wallet_id": "$.inputs.from_wallet_id",
+              "status": "PENDING",
+              "tx_type": "$.inputs.tx_type"
             },
             "target_cs": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
             "target_ref": "$.inputs.tx_hash"

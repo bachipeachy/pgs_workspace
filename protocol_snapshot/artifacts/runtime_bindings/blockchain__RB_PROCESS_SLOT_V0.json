@@ -1,0 +1,33 @@
+{
+  "artifact_code": "RB_PROCESS_SLOT_V0",
+  "artifact_type": "RB",
+  "content": "# RB_PROCESS_SLOT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_PROCESS_SLOT_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nProvide runtime bindings required to execute the single slot processing workflow. Binds CS_MUTABLE_JSON_V0 for slot clock reads and advances, and CS_WORKFLOW_GATEWAY_V0 for block proposal invocation via CC_INVOKE_BLOCK_PROPOSAL_V0.\n\n---\n\n## 2. Scope\n\nSupports:\n\n- CS_MUTABLE_JSON_V0 for SLOT_CLOCK store READ (CC_READ_SLOT_CLOCK_V0) and WRITE (CC_ADVANCE_SLOT_CLOCK_V0)\n- CS_WORKFLOW_GATEWAY_V0 for EXECUTE invocation of WF_PROPOSE_BLOCK_V0 (CC_INVOKE_BLOCK_PROPOSAL_V0)\n\nAll store paths are declared in STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0 and resolved at runtime via the `store:` field in each CC step. Invoked WFs (WF_PROPOSE_BLOCK_V0) carry their own runtime bindings. No additional capabilities permitted.\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_PROCESS_SLOT_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for single slot execution workflow\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n    capability_side_effects::CS_WORKFLOW_GATEWAY_V0:\n      policy: {}\n```\n",
+  "content_hash": "72113558197d9fde109eb64bd9b1c63cc1876cfc24db643b52e43f39d65d7dec",
+  "fqdn_id": "blockchain::RB_PROCESS_SLOT_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_MUTABLE_JSON_V0": {
+          "policy": {}
+        },
+        "capability_side_effects::CS_WORKFLOW_GATEWAY_V0": {
+          "policy": {}
+        }
+      },
+      "storage_structure": "blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+      "summary": "Runtime binding for single slot execution workflow"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "rb_code": "RB_PROCESS_SLOT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.runtime_bindings",
+  "namespace": "blockchain",
+  "references": [
+    "capability_side_effects::CS_MUTABLE_JSON_V0",
+    "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

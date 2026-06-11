@@ -1,0 +1,52 @@
+{
+  "artifact_code": "IN_BURN_V0",
+  "artifact_type": "IN",
+  "content": "# IN_BURN_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_BURN_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_BURN_V0\n\n---\n\n## 1. Intent\n\nSubmit a BURN transaction \u2014 destroy BACHI by moving it from a wallet to the BURN wallet.\n\n---\n\n## 2. Rationale\n\nBURN is a SYSTEM operation. No actor identity required.\nThe destination (BURN wallet) is auto-resolved. Only the source wallet and amount are declared.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_BURN_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| from_wallet_id | string | true | Source wallet identifier |\n| amount | number | true | Burn amount in BACHI |\n| triggered_by | string | true | System trigger reference |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Burn intent accepted |\n| NACK | Burn intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** SYSTEM\n- **Note:** to_address auto-resolved to BURN wallet; no actor_record; no gas params\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_BURN_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit BURN transaction (SYSTEM)\n  workflow: WF_BURN_V0\n\n  inputs:\n    from_wallet_id:\n      type: string\n      required: true\n      description: Source wallet identifier\n    amount:\n      type: number\n      required: true\n      description: Burn amount in BACHI\n    triggered_by:\n      type: string\n      required: true\n      description: System trigger reference\n\n  outcomes:\n    ACK:\n      description: Burn intent accepted\n    NACK:\n      description: Burn intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: SYSTEM\n```\n",
+  "content_hash": "e8644d65f08309b3f425f1ae38cc887048c73f05d00bbe1022da419cadb27cb4",
+  "fqdn_id": "blockchain::IN_BURN_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "amount": {
+          "description": "Burn amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "from_wallet_id": {
+          "description": "Source wallet identifier",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "System trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Burn intent accepted"
+        },
+        "NACK": {
+          "description": "Burn intent rejected"
+        }
+      },
+      "summary": "Submit BURN transaction (SYSTEM)",
+      "workflow": "WF_BURN_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_BURN_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

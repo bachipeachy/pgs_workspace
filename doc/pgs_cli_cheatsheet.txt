@@ -13,59 +13,81 @@ python -m pgs_compiler.cli build --workspace ~/pgs/pgs_workspace
 python -m pgs_compiler.cli build-pps --workspace ~/pgs/pgs_workspace                                       
 
 
-pgs_runtime run --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+=========
+# pgs_blockchain domain
 
-pgs_runtime run --wf blockchain::WF_VERIFY_ACTOR_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/verify_actor_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf blockchain::WF_CREATE_WALLET_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/wallet/test_payloads/create_wallet_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf blockchain::WF_VERIFY_ACTOR_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/verify_actor_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf blockchain::WF_SUBMIT_TRANSACTION_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/transaction/test_payloads/submit_transaction_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf blockchain::WF_CREATE_WALLET_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/wallet/test_payloads/create_wallet_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
+pgs_runtime run --wf blockchain::WF_SUBMIT_TRANSACTION_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/transaction/test_payloads/submit_transaction_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf blockchain::WF_REGISTER_VALIDATOR_V0 --payload ~/pgs/pgs_workspace/seeds/register_validator_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf blockchain::WF_REGISTER_VALIDATOR_V0 --payload ~/pgs/pgs_workspace/seeds/register_validator_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+pgs_runtime run --wf blockchain::WF_PROPOSE_BLOCK_V0  --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/consensus_pos/test_payloads/propose_block_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+python ~/pgs/pgs_workspace/scripts/test_blockchain_e2e.py --clean --no-delay --max-txs 24 --max-slots 24 --behavior-logic
 
 
 ==========
-# pgs_ai_governance domain -> Execute workflows in subdomains "ai_licensing", "ai_governance" and collatz_conjecture
+# pgs_ai_governance domain
 
 
 # ai_licensing - four scenarios
 
-pgs_runtime run --wf ai_governance::WF_PROVISION_AI_LICENSING_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/provision_ai_licensing_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_PROVISION_AI_LICENSING_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/provision_ai_licensing_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_DENY_PROVISION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/deny_provision_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_DENY_PROVISION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/deny_provision_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_AUTO_RECLAIM_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/auto_reclaim_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_AUTO_RECLAIM_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/auto_reclaim_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_PROVISION_AI_LICENSING_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/quota_exceeded_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_PROVISION_AI_LICENSING_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/ai_licensing/test_payloads/quota_exceeded_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
 
 # agent_governance - seven scenarios
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/01_valid_standard_action.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/01_valid_standard_action.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/02_no_license.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/02_no_license.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/03_standard_requests_premium.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/03_standard_requests_premium.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/04_enterprise_premium_allowed.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/04_enterprise_premium_allowed.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/05_undeclared_tool.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/05_undeclared_tool.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/06_parameter_violation.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/06_parameter_violation.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/07_shell_command_absent.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ACTION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_governance/test_payloads/07_shell_command_absent.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
 
 # collatz_conjecture - three scenarios note: Running subdomain proves the execution is domain neutral
 
-pgs_runtime run --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/01_happy_path.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/01_happy_path.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/02_single_number.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/02_single_number.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
-pgs_runtime run --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/03_invalid_nack.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --visualize
+pgs_runtime run --wf ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/collatz_conjecture/test_payloads/03_invalid_nack.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
 
 ========
+govern_agent_admission - six scenarios
+
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_admission/test_payloads/01_web_search_authorized.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+                                               
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_admission/test_payloads/02_no_license.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_admission/test_payloads/03_standard_requests_write.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_admission/test_payloads/04_enterprise_write_authorized.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_admission/test_payloads/05_undeclared_tool.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs/pgs_ai_governance/pgs_ai_governance/testbed/agent_admission/test_payloads/06_parameter_violation.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
+
+
+=========
 # http user interface with thin client to run same workflows that ran using CLI
 
 # quick start for blockchain and ai_governance
@@ -83,10 +105,6 @@ pgs_runtime examine ~/pgs/pgs_workspace/traces/T_20260430_042629_291_82151081/T_
 
 python ~/pgs/pgs_runtime/testbed/run_runtime_tests.py -v
 
-=======
-# pgs_agent support run goverance pipeline
-
-~/pgs/pgs_agent/scripts/run_governance_pipeline.sh
 
 
 

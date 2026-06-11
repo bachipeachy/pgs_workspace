@@ -1,0 +1,53 @@
+{
+  "artifact_code": "IN_TX_WORKLOAD_STARTED_V0",
+  "artifact_type": "IN",
+  "content": "# IN_TX_WORKLOAD_STARTED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_TX_WORKLOAD_STARTED_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_RUN_TX_WORKLOAD_V0\n\n---\n\n## 1. Intent\n\nAdmit a TX workload execution request. Declares the transaction interval and the ordered sequence of typed TX submissions to be dispatched by `WF_RUN_TX_WORKLOAD_V0`.\n\n---\n\n## 2. Rationale\n\n`tx_sequence` carries fully resolved TX payload objects \u2014 each item declares `tx_type` and all fields required by the targeted TX workflow. Resolving payloads at admission ensures the workload is self-contained; no payload construction logic is needed inside the WF.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_RUN_TX_WORKLOAD_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `tx_interval_seconds` | integer | true | Interval between TX submissions in seconds; must be > 0 |\n| `tx_sequence` | array | true | Non-empty ordered list of TX specs; each item carries `tx_type` and all required payload fields for the targeted TX workflow |\n| `triggered_by` | string | true | Actor ID or system trigger reference; must be non-empty |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | TX workload intent accepted; proceed to WF_RUN_TX_WORKLOAD_V0 |\n| NACK | Intent rejected \u2014 invalid or missing required fields |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.orchestration\n- **Subdomain:** orchestration\n- **Authority:** SYSTEM\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_TX_WORKLOAD_STARTED_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Admit TX workload execution request\n  workflow: WF_RUN_TX_WORKLOAD_V0\n\n  inputs:\n    tx_interval_seconds:\n      type: integer\n      required: true\n      description: Interval between TX submissions in seconds; must be > 0\n    tx_sequence:\n      type: array\n      required: true\n      description: Non-empty ordered list of TX specs; each item carries tx_type and all required payload fields for the targeted TX workflow\n    triggered_by:\n      type: string\n      required: true\n      description: Actor ID or system trigger reference\n\n  outcomes:\n    ACK:\n      description: TX workload intent accepted\n    NACK:\n      description: Intent rejected \u2014 invalid or missing required fields\n\nextensions:\n  domain: pgs.blockchain.orchestration\n  subdomain: orchestration\n  authority: SYSTEM\n```\n",
+  "content_hash": "f83937add47e80a52d4f78784e77862979c27e48328fcd185088b8a4e2045288",
+  "fqdn_id": "blockchain::IN_TX_WORKLOAD_STARTED_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "triggered_by": {
+          "description": "Actor ID or system trigger reference",
+          "required": true,
+          "type": "string"
+        },
+        "tx_interval_seconds": {
+          "description": "Interval between TX submissions in seconds; must be > 0",
+          "required": true,
+          "type": "integer"
+        },
+        "tx_sequence": {
+          "description": "Non-empty ordered list of TX specs; each item carries tx_type and all required payload fields for the targeted TX workflow",
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "TX workload intent accepted"
+        },
+        "NACK": {
+          "description": "Intent rejected \u2014 invalid or missing required fields"
+        }
+      },
+      "summary": "Admit TX workload execution request",
+      "workflow": "WF_RUN_TX_WORKLOAD_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.orchestration",
+      "subdomain": "orchestration"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_TX_WORKLOAD_STARTED_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,40 @@
+{
+  "artifact_code": "RB_REWARD_V0",
+  "artifact_type": "RB",
+  "content": "# RB_REWARD_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_REWARD_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_REWARD_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for REWARD transaction workflow\n  description: Binds capability side effects to concrete runtime implementations for REWARD (SYSTEM). CS_REGISTRY_V0 provides tx dedup for CC_PERSIST_MEMPOOL_TX_V0.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy: {}\n\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n```\n",
+  "content_hash": "e24e707fca90c3bb5fd3bc2f36caa4b9792b8d96d62cbddfdf356c1dd1ceeac5",
+  "fqdn_id": "blockchain::RB_REWARD_V0",
+  "frontmatter": {
+    "core": {
+      "bindings": {
+        "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
+          "policy": {}
+        },
+        "capability_side_effects::CS_MUTABLE_JSON_V0": {
+          "policy": {}
+        },
+        "capability_side_effects::CS_REGISTRY_V0": {
+          "policy": {
+            "path": "{{module_data_root}}/blockchain/identity/registry/actors.json"
+          }
+        }
+      },
+      "description": "Binds capability side effects to concrete runtime implementations for REWARD (SYSTEM). CS_REGISTRY_V0 provides tx dedup for CC_PERSIST_MEMPOOL_TX_V0.",
+      "storage_structure": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+      "summary": "Runtime binding for REWARD transaction workflow"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+    "rb_code": "RB_REWARD_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.runtime_bindings",
+  "namespace": "blockchain",
+  "references": [
+    "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+    "capability_side_effects::CS_MUTABLE_JSON_V0",
+    "capability_side_effects::CS_REGISTRY_V0",
+    "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+  ],
+  "version": "0"
+}

@@ -55,6 +55,7 @@
     "current_nonce": 5,
     "from_address": "0x1234567890123456789012345678901234567890"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0::extract_fields_standard",
   "test_data_source": "blockchain::TEST_DATA_CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0"
 }

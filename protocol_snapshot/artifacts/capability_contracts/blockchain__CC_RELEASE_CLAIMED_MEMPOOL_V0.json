@@ -1,0 +1,106 @@
+{
+  "artifact_code": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RELEASE_CLAIMED_MEMPOOL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RELEASE_CLAIMED_MEMPOOL_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nRelease a proposer's CLAIMED transactions back to PENDING when block formation fails, preventing\nclaimed transactions from being permanently stranded in the CLAIMED state.\n\n---\n\n## 2. Rationale\n\nCC_CLAIM_MEMPOOL_TXS_V0 transitions PENDING \u2192 CLAIMED with claimed_by stamped to the proposer.\nIf CC_FORM_BLOCK_V0 fails (VIOLATION or BACKEND_ERROR), the claimed transactions would be stuck\nas CLAIMED and invisible to future proposers' PENDING queries \u2014 a liveness bug.\n\nThis CC is the recovery path: it reverses CLAIMED \u2192 PENDING for the specific proposer only.\nScoping the filter to {status: CLAIMED, claimed_by: proposer_id} ensures that a failing slot_A\ndoes not accidentally release slot_B's in-flight claims.\n\nVIOLATION (nothing to release) is treated as idempotent success at the WF level \u2014 the proposer\nmay have already been cleaned up or never successfully claimed.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | UPDATE_WHERE CLAIMED\u2192PENDING (scoped to this proposer) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| proposer_id | string | true | Proposer whose claims are to be released |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| released_count | integer | Number of transactions reverted to PENDING |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | One or more CLAIMED transactions released back to PENDING |\n| VIOLATION | No CLAIMED transactions found for this proposer (idempotent \u2014 treated as clean) |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION (nothing to release) is acceptable \u2014 routed to EXIT by WF (idempotent recovery)\n- BACKEND_ERROR propagates as a hard failure\n- claimed_by: null removes the ownership field, returning the record to clean PENDING state\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RELEASE_CLAIMED_MEMPOOL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Release a proposer's CLAIMED mempool transactions back to PENDING on block formation failure\n\n  inputs:\n    proposer_id:\n      type: string\n      required: true\n      description: Proposer whose CLAIMED transactions are to be reverted to PENDING\n\n  outputs:\n    released_count:\n      type: integer\n      description: Number of transactions reverted to PENDING\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: release_claimed_txs\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: MEMPOOL\n      op: UPDATE_WHERE\n      inputs:\n        filter:\n          status: CLAIMED\n          claimed_by: $.inputs.proposer_id\n        updates:\n          status: PENDING\n          claimed_by: null\n      outputs:\n        released_count: $.capability_result.updated_count\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: mempool\n  notes:\n    - Recovery path invoked by WF_PROPOSE_BLOCK_V0 on CC_FORM_BLOCK_V0 VIOLATION or BACKEND_ERROR\n    - \"Filter is proposer-scoped \u2014 {status: CLAIMED, claimed_by: proposer_id} \u2014 never releases peer proposers' claims\"\n    - claimed_by: null removes the field from the record (UPDATE_WHERE null-value semantics = field deletion)\n    - VIOLATION (nothing matched) is idempotent; WF routes it to EXIT without error\n    - released_count bound from updated_count (number of records actually reverted)\n```\n",
+  "content_hash": "314f9711acc2c855739e223201d3b1ca408c909b23a0b37ca5136f26b325fe9d",
+  "fqdn_id": "blockchain::CC_RELEASE_CLAIMED_MEMPOOL_V0",
+  "frontmatter": {
+    "cc_code": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+    "core": {
+      "inputs": {
+        "proposer_id": {
+          "description": "Proposer whose CLAIMED transactions are to be reverted to PENDING",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "released_count": {
+          "description": "Number of transactions reverted to PENDING",
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "filter": {
+              "claimed_by": "$.inputs.proposer_id",
+              "status": "CLAIMED"
+            },
+            "updates": {
+              "claimed_by": null,
+              "status": "PENDING"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "UPDATE_WHERE",
+          "outputs": {
+            "released_count": "$.capability_result.updated_count"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "release_claimed_txs",
+          "store": "MEMPOOL"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Release a proposer's CLAIMED mempool transactions back to PENDING on block formation failure"
+    },
+    "extensions": {
+      "notes": [
+        "Recovery path invoked by WF_PROPOSE_BLOCK_V0 on CC_FORM_BLOCK_V0 VIOLATION or BACKEND_ERROR",
+        "Filter is proposer-scoped \u2014 {status: CLAIMED, claimed_by: proposer_id} \u2014 never releases peer proposers' claims",
+        {
+          "claimed_by": "null removes the field from the record (UPDATE_WHERE null-value semantics = field deletion)"
+        },
+        "VIOLATION (nothing matched) is idempotent; WF routes it to EXIT without error",
+        "released_count bound from updated_count (number of records actually reverted)"
+      ],
+      "subdomain": "mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.mempool.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

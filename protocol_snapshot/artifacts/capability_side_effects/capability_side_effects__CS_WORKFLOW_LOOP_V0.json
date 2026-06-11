@@ -1,0 +1,113 @@
+{
+  "artifact_code": "CS_WORKFLOW_LOOP_V0",
+  "artifact_type": "CS",
+  "content": "# CS_WORKFLOW_LOOP_V0\n\n## Header\n\n- **Artifact Code:** CS_WORKFLOW_LOOP_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nExecute a finite sequence of governed WF invocations using a declarative dispatch spec (Collatz loop pattern). Zero domain knowledge \u2014 the declaring CC provides all dispatch logic as inputs. This CS is the substrate mechanism that enables the Collatz pattern for loop-absorbing CCs.\n\n**Ownership:** Infrastructure-owned CS. Domain CCs bind to it via runtime bindings.\n\n---\n\n## 2. Side-Effect Category\n\n- **Category:** Execution Gateway\n- **Side-Effect Type:** internal\n- **Idempotent:** false (WF invocations have side effects)\n\n---\n\n## 3. Operations\n\n### 3.1 EXECUTE_SEQUENCE\n\nIterate over a `sequence` array. For each item:\n1. For each sub-item in the item's declared sub-sequence field, resolve the WF code from a key-field dispatch mapping and invoke it.\n2. Invoke the declared `item_wf` with fields mapped from the item.\n\nAll dispatch logic (WF codes, field mappings, key-field routing) is declared by the calling CC in the input payload \u2014 this CS has zero domain knowledge.\n\n**Input fields:**\n\n| Field | Type | Description |\n|-------|------|-------------|\n| sequence | array | Ordered list of items to iterate |\n| triggered_by | string | Actor ID \u2014 available for injection into item WF payloads |\n| item_wf | object | `{code, payload_fields, inject}` \u2014 WF to invoke per item |\n| item_sub_sequence | object | `{field, wf_dispatch: {key_field, mapping}, payload_fields}` \u2014 sub-sequence dispatch spec |\n\n**item_wf fields:**\n- `code` \u2014 FQDN of the WF to invoke for each item; mutually exclusive with `wf_dispatch`\n- `wf_dispatch` \u2014 `{key_field, mapping}` \u2014 resolves WF code from `item[key_field]`; mutually exclusive with `code`\n- `payload_fields` \u2014 `{dest_field: source_field_in_item}` mapping; omit when using `wf_dispatch` to pass entire item as payload\n- `inject` \u2014 `{field: literal_value}` \u2014 constants injected into item WF payload\n\n**Governance rule:** Exactly one of `code` or `wf_dispatch` must be supplied in `item_wf`.\n\n**item_sub_sequence fields:**\n- `field` \u2014 name of the array field within each item\n- `wf_dispatch.key_field` \u2014 field in each sub-item used to select WF code\n- `wf_dispatch.mapping` \u2014 `{key_value: wf_fqdn}` dispatch table\n- `payload_fields` \u2014 `{dest_field: source_field_in_sub_item}` mapping; omit to pass entire sub-item\n\n**Output fields:**\n\n| Field | Type | Description |\n|-------|------|-------------|\n| result_status | string | SUCCESS / VIOLATION / BACKEND_ERROR |\n| items_processed | integer | Number of items from sequence that completed successfully |\n| sub_items_processed | integer | Total sub-items processed across all items |\n\n**Result Status Values:** SUCCESS, VIOLATION, BACKEND_ERROR\n\n**Failure semantics:**\n- VIOLATION from any WF invocation halts the loop and propagates immediately\n- Unknown key in wf_dispatch.mapping \u2192 VIOLATION\n- BACKEND_ERROR on executor failure\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_WORKFLOW_LOOP_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Execute a finite sequence of governed WF invocations via declarative dispatch spec\n  category: execution_gateway\n\n  policy:\n    operations: [EXECUTE_SEQUENCE]\n\n  operations:\n    EXECUTE_SEQUENCE:\n      summary: Iterate sequence; invoke item_wf per item and dispatch sub-items by key-field mapping\n      handler: execute\n      input: [sequence, triggered_by, item_wf, item_sub_sequence]\n      output: [result_status, items_processed, sub_items_processed]\n      idempotent: false\n      result_status_values: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_LOOP_V0.runtime\n  callable: WorkflowLoopRuntime\n\nextensions:\n  cs_kind: execution_gateway\n  side_effect_type: internal\n\n  vocabulary:\n    result_status: [SUCCESS, VIOLATION, BACKEND_ERROR]\n\n  notes:\n    - workflow_executor injected at runtime by the dispatcher \u2014 not declarable in JSON policy\n    - Zero domain knowledge \u2014 all WF codes and field mappings declared by the calling CC\n    - Sub-sequence processed BEFORE item_wf (transactions before block proposal per slot)\n    - VIOLATION halts the loop immediately \u2014 no partial commit\n    - payload_fields omitted in item_sub_sequence \u2192 entire sub-item passed as payload\n    - item_wf.code and item_wf.wf_dispatch are mutually exclusive; exactly one must be supplied\n    - item_wf.wf_dispatch \u2014 resolves WF code from item[key_field]; payload_fields omitted \u2192 entire item passed as payload\n```\n",
+  "content_hash": "7186eea11755f859385c63d24fbd0bb4c1cd4c509b89a2da8c9ab14767d63f7e",
+  "cs_ir": {
+    "cs_metadata": {
+      "capability": {
+        "supported_operation_specs": [
+          "EXECUTE_SEQUENCE"
+        ]
+      },
+      "operations": {
+        "operations": {
+          "EXECUTE_SEQUENCE": {
+            "handler": "execute",
+            "idempotent": false,
+            "input": [
+              "sequence",
+              "triggered_by",
+              "item_wf",
+              "item_sub_sequence"
+            ],
+            "output": [
+              "result_status",
+              "items_processed",
+              "sub_items_processed"
+            ],
+            "result_status_values": [
+              "SUCCESS",
+              "VIOLATION",
+              "BACKEND_ERROR"
+            ],
+            "summary": "Iterate sequence; invoke item_wf per item and dispatch sub-items by key-field mapping"
+          }
+        }
+      }
+    },
+    "handler_ref": {
+      "callable": "WorkflowLoopRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_LOOP_V0.runtime"
+    }
+  },
+  "fqdn_id": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+  "frontmatter": {
+    "core": {
+      "category": "execution_gateway",
+      "operations": {
+        "EXECUTE_SEQUENCE": {
+          "handler": "execute",
+          "idempotent": false,
+          "input": [
+            "sequence",
+            "triggered_by",
+            "item_wf",
+            "item_sub_sequence"
+          ],
+          "output": [
+            "result_status",
+            "items_processed",
+            "sub_items_processed"
+          ],
+          "result_status_values": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "summary": "Iterate sequence; invoke item_wf per item and dispatch sub-items by key-field mapping"
+        }
+      },
+      "policy": {
+        "operations": [
+          "EXECUTE_SEQUENCE"
+        ]
+      },
+      "summary": "Execute a finite sequence of governed WF invocations via declarative dispatch spec"
+    },
+    "cs_code": "CS_WORKFLOW_LOOP_V0",
+    "extensions": {
+      "cs_kind": "execution_gateway",
+      "notes": [
+        "workflow_executor injected at runtime by the dispatcher \u2014 not declarable in JSON policy",
+        "Zero domain knowledge \u2014 all WF codes and field mappings declared by the calling CC",
+        "Sub-sequence processed BEFORE item_wf (transactions before block proposal per slot)",
+        "VIOLATION halts the loop immediately \u2014 no partial commit",
+        "payload_fields omitted in item_sub_sequence \u2192 entire sub-item passed as payload",
+        "item_wf.code and item_wf.wf_dispatch are mutually exclusive; exactly one must be supplied",
+        "item_wf.wf_dispatch \u2014 resolves WF code from item[key_field]; payload_fields omitted \u2192 entire item passed as payload"
+      ],
+      "side_effect_type": "internal",
+      "vocabulary": {
+        "result_status": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ]
+      }
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "implementation": {
+      "callable": "WorkflowLoopRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_LOOP_V0.runtime"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_SIDE_EFFECTS",
+  "module_path": "pgs_side_effects.registry.capability_side_effects",
+  "namespace": "capability_side_effects",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+  ],
+  "version": "0"
+}

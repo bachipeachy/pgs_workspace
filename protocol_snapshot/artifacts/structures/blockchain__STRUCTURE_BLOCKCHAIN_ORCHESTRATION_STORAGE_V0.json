@@ -1,0 +1,63 @@
+{
+  "artifact_code": "STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare storage topology for the blockchain orchestration subdomain. Maps the slot clock entity and simulation summary entity to storage implementations and paths. Enforces ownership and simulation isolation invariants.\n\n---\n\n## 2. Rationale\n\nThe orchestration subdomain introduces two new entity types not covered by `STRUCTURE_BLOCKCHAIN_STORAGE_V0`:\n- **SLOT_CLOCK**: Keyed mutable record tracking the active slot position per simulation run.\n- **SIMULATION_SUMMARY**: Append-only journal recording completed simulation outcomes.\n\nStorage paths are a governance concern, not a runtime implementation detail. Declaring them here:\n- Provides a single source of truth for orchestration storage topology.\n- Decouples CC artifacts from filesystem layout.\n- Enforces `simulation_id` as the primary isolation boundary \u2014 each simulation run owns exactly one SLOT_CLOCK record; concurrent runs do not collide.\n- Enforces ownership invariant \u2014 no non-orchestration artifact may directly mutate these stores.\n\n---\n\n## 3. Storage Model\n\n**Principle:** One store per entity type. Subdomain ownership is exclusive.\n\n**Entity Types:**\n- SLOT_CLOCK: Keyed mutable record; one active record per `simulation_id`; initialized at simulation launch; advanced per slot execution.\n- SIMULATION_SUMMARY: Append-only journal; one record per completed simulation run; immutable after write.\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\n\ncore:\n  summary: Blockchain orchestration subdomain storage topology\n  description: Maps slot clock and simulation summary entities to storage implementations and paths\n\n  layer: DOMAINS\n  domain: blockchain\n  subdomain: orchestration\n\n  storage_roots:\n    base_path: \"{{module_data_root}}\"\n    description: \"Root path for all orchestration subdomain storage (resolved at runtime)\"\n\n  entity_stores:\n    SLOT_CLOCK:\n      description: \"Keyed mutable slot clock record (CS_MUTABLE_JSON_V0); one active record per simulation_id; initialized at launch; advanced per slot\"\n      path: \"blockchain/orchestration/state/slot_clock.json\"\n\n    SIMULATION_SUMMARY:\n      description: \"Append-only simulation outcome journal (CS_APPENDONLY_JSONL_V0); one record per completed simulation run; immutable after write\"\n      path: \"blockchain/orchestration/events/simulation_summary.jsonl\"\n\n  resolution:\n    description: \"Runtime path resolution strategy\"\n    algorithm: \"base_path / entity_stores[entity_type].path\"\n    example: \"{{module_data_root}}/blockchain/orchestration/state/slot_clock.json\"\n\n  isolation:\n    description: \"Simulation isolation and ownership constraints\"\n    rules:\n      - \"simulation_id is the primary isolation boundary \u2014 each simulation run owns exactly one SLOT_CLOCK record\"\n      - \"Concurrent simulation runs identified by distinct simulation_id values do not collide\"\n      - \"No non-orchestration artifact may directly mutate SLOT_CLOCK or SIMULATION_SUMMARY stores\"\n      - \"blockchain::orchestration CCs write only to orchestration stores; cross-subdomain writes are forbidden\"\n      - \"Storage paths resolved via STRUCTURE only \u2014 no hardcoded paths in CC or RB artifacts\"\n\n  migration:\n    description: \"Storage migration policy\"\n    rules:\n      - \"Path changes are STRUCTURE updates (versioned)\"\n      - \"CC artifacts remain unchanged during migration\"\n      - \"Runtime resolves paths from active STRUCTURE version\"\n```\n",
+  "content_hash": "bc8fc058dfeace636db04a81653dc6e7c0cefbdb5ccc7808736134d45ec90c5b",
+  "fqdn_id": "blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Maps slot clock and simulation summary entities to storage implementations and paths",
+      "domain": "blockchain",
+      "entity_stores": {
+        "SIMULATION_SUMMARY": {
+          "description": "Append-only simulation outcome journal (CS_APPENDONLY_JSONL_V0); one record per completed simulation run; immutable after write",
+          "path": "blockchain/orchestration/events/simulation_summary.jsonl"
+        },
+        "SLOT_CLOCK": {
+          "description": "Keyed mutable slot clock record (CS_MUTABLE_JSON_V0); one active record per simulation_id; initialized at launch; advanced per slot",
+          "path": "blockchain/orchestration/state/slot_clock.json"
+        }
+      },
+      "isolation": {
+        "description": "Simulation isolation and ownership constraints",
+        "rules": [
+          "simulation_id is the primary isolation boundary \u2014 each simulation run owns exactly one SLOT_CLOCK record",
+          "Concurrent simulation runs identified by distinct simulation_id values do not collide",
+          "No non-orchestration artifact may directly mutate SLOT_CLOCK or SIMULATION_SUMMARY stores",
+          "blockchain::orchestration CCs write only to orchestration stores; cross-subdomain writes are forbidden",
+          "Storage paths resolved via STRUCTURE only \u2014 no hardcoded paths in CC or RB artifacts"
+        ]
+      },
+      "layer": "DOMAINS",
+      "migration": {
+        "description": "Storage migration policy",
+        "rules": [
+          "Path changes are STRUCTURE updates (versioned)",
+          "CC artifacts remain unchanged during migration",
+          "Runtime resolves paths from active STRUCTURE version"
+        ]
+      },
+      "resolution": {
+        "algorithm": "base_path / entity_stores[entity_type].path",
+        "description": "Runtime path resolution strategy",
+        "example": "{{module_data_root}}/blockchain/orchestration/state/slot_clock.json"
+      },
+      "storage_roots": {
+        "base_path": "{{module_data_root}}",
+        "description": "Root path for all orchestration subdomain storage (resolved at runtime)"
+      },
+      "subdomain": "orchestration",
+      "summary": "Blockchain orchestration subdomain storage topology"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "structure_code": "STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.orchestration",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

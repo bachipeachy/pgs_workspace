@@ -1,0 +1,52 @@
+{
+  "artifact_code": "IN_MINT_V0",
+  "artifact_type": "IN",
+  "content": "# IN_MINT_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_MINT_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_MINT_V0\n\n---\n\n## 1. Intent\n\nSubmit a MINT transaction \u2014 issue new BACHI from the MINT wallet to a target wallet.\n\n---\n\n## 2. Rationale\n\nMINT is a SYSTEM operation. No actor identity required.\nThe source (MINT wallet) is auto-resolved. Only the destination wallet and amount are declared.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_MINT_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| to_wallet_id | string | true | Destination wallet identifier |\n| amount | number | true | Mint amount in BACHI |\n| triggered_by | string | true | System trigger reference (e.g. genesis, reward event) |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Mint intent accepted |\n| NACK | Mint intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** SYSTEM\n- **Note:** from_address auto-resolved to MINT wallet; no actor_record; no gas params\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_MINT_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit MINT transaction (SYSTEM)\n  workflow: WF_MINT_V0\n\n  inputs:\n    to_wallet_id:\n      type: string\n      required: true\n      description: Destination wallet identifier\n    amount:\n      type: number\n      required: true\n      description: Mint amount in BACHI\n    triggered_by:\n      type: string\n      required: true\n      description: System trigger reference\n\n  outcomes:\n    ACK:\n      description: Mint intent accepted\n    NACK:\n      description: Mint intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: SYSTEM\n```\n",
+  "content_hash": "c9a9f677efcd556cc616727ccb77b4967b8ec2db717dadd3dd0305eaa9667d2e",
+  "fqdn_id": "blockchain::IN_MINT_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "amount": {
+          "description": "Mint amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "to_wallet_id": {
+          "description": "Destination wallet identifier",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "System trigger reference",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Mint intent accepted"
+        },
+        "NACK": {
+          "description": "Mint intent rejected"
+        }
+      },
+      "summary": "Submit MINT transaction (SYSTEM)",
+      "workflow": "WF_MINT_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_MINT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

@@ -33,6 +33,7 @@
   "expected": {
     "hash_hex": "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0::hash_empty",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_KECCAK256_HASH_V0"
 }

@@ -1,0 +1,109 @@
+{
+  "artifact_code": "CC_DRAIN_MEMPOOL_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_DRAIN_MEMPOOL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_DRAIN_MEMPOOL_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nDelete a list of consumed transaction IDs from the MEMPOOL store after they have been included in a formed block.\n\n---\n\n## 2. Rationale\n\nThe MEMPOOL is an ephemeral staging buffer. Once transactions have been formed into a block (by CC_FORM_BLOCK_V0), they must be removed from the MEMPOOL before the consensus round is recorded. This CC owns the drain operation \u2014 it is idempotent (NOT_FOUND per tx_id is treated as already drained) and DELETE-only (it never writes to the TRANSACTION store or any other store).\n\nDrain occurs after block formation and before round recording in WF_PROPOSE_BLOCK_V0, so the block_id provides the correlation reference.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | DELETE_MANY \u2014 remove all tx_ids from MEMPOOL store |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| tx_ids | array | true | List of transaction IDs to delete from MEMPOOL |\n| block_id | string | true | Block ID that consumed these transactions (correlation reference) |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| drained_count | integer | Number of transactions actually removed from MEMPOOL |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | Delete operation completed; drained_count reflects keys actually removed |\n| VIOLATION | tx_ids input missing or malformed |\n| BACKEND_ERROR | Storage write failure |\n\n---\n\n## 7. Failure Semantics\n\n- NOT_FOUND per tx_id is treated as already drained \u2014 idempotent, not an error\n- VIOLATION only if tx_ids is missing or not an array\n- BACKEND_ERROR propagates as a hard failure\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_DRAIN_MEMPOOL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Delete consumed transactions from MEMPOOL store after block formation\n\n  inputs:\n    tx_ids:\n      type: array\n      required: true\n      description: Transaction IDs to remove from MEMPOOL\n      items:\n        type: string\n    block_id:\n      type: string\n      required: true\n      description: Block ID that consumed these transactions (correlation reference)\n\n  outputs:\n    drained_count:\n      type: integer\n      description: Number of keys actually removed from MEMPOOL\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: delete_consumed_txs\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: MEMPOOL\n      op: DELETE_MANY\n      inputs:\n        keys: $.inputs.tx_ids\n      outputs:\n        drained_count: $.capability_result.drained_count\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\n  error_codes:\n    VIOLATION: TX_DRAIN_FAILED\n    BACKEND_ERROR: TX_DRAIN_FAILED\n\nextensions:\n  subdomain: mempool\n  notes:\n    - DELETE-only operation; never writes to TRANSACTION store or any other store\n    - Idempotent \u2014 NOT_FOUND per tx_id treated as already drained (DELETE_MANY substrate invariant)\n    - Called by WF_PROPOSE_BLOCK_V0 after CC_FORM_BLOCK_V0 SUCCESS, before CC_RECORD_CONSENSUS_ROUND_V0\n    - block_id is a correlation reference only; not written to any store by this CC\n    - drained_count reflects keys actually present and removed; may be less than len(tx_ids) on partial re-drain\n```\n",
+  "content_hash": "f89e720e9d8eace6bd60ca5b844a86dfb75c3e585e6c3417cebc2489aa48e75b",
+  "fqdn_id": "blockchain::CC_DRAIN_MEMPOOL_V0",
+  "frontmatter": {
+    "cc_code": "CC_DRAIN_MEMPOOL_V0",
+    "core": {
+      "error_codes": {
+        "BACKEND_ERROR": "TX_DRAIN_FAILED",
+        "VIOLATION": "TX_DRAIN_FAILED"
+      },
+      "inputs": {
+        "block_id": {
+          "description": "Block ID that consumed these transactions (correlation reference)",
+          "required": true,
+          "type": "string"
+        },
+        "tx_ids": {
+          "description": "Transaction IDs to remove from MEMPOOL",
+          "items": {
+            "type": "string"
+          },
+          "required": true,
+          "type": "array"
+        }
+      },
+      "outputs": {
+        "drained_count": {
+          "description": "Number of keys actually removed from MEMPOOL",
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "keys": "$.inputs.tx_ids"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "DELETE_MANY",
+          "outputs": {
+            "drained_count": "$.capability_result.drained_count"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "delete_consumed_txs",
+          "store": "MEMPOOL"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Delete consumed transactions from MEMPOOL store after block formation"
+    },
+    "extensions": {
+      "notes": [
+        "DELETE-only operation; never writes to TRANSACTION store or any other store",
+        "Idempotent \u2014 NOT_FOUND per tx_id treated as already drained (DELETE_MANY substrate invariant)",
+        "Called by WF_PROPOSE_BLOCK_V0 after CC_FORM_BLOCK_V0 SUCCESS, before CC_RECORD_CONSENSUS_ROUND_V0",
+        "block_id is a correlation reference only; not written to any store by this CC",
+        "drained_count reflects keys actually present and removed; may be less than len(tx_ids) on partial re-drain"
+      ],
+      "subdomain": "mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.mempool.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

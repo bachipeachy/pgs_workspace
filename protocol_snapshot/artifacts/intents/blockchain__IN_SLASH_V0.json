@@ -1,0 +1,57 @@
+{
+  "artifact_code": "IN_SLASH_V0",
+  "artifact_type": "IN",
+  "content": "# IN_SLASH_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_SLASH_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_SLASH_V0\n\n---\n\n## 1. Intent\n\nSubmit a SLASH transaction \u2014 penalize a misbehaving validator by moving funds from their wallet to the BURN wallet.\n\n---\n\n## 2. Rationale\n\nSLASH is a SYSTEM operation triggered by consensus penalty detection.\nThe destination (BURN wallet) is auto-resolved. The source wallet and validator index are declared.\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|--------|-------------|\n| WF_SLASH_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| from_wallet_id | string | true | Validator's wallet identifier to slash |\n| validator_index | integer | true | Validator index being slashed |\n| amount | number | true | Slash amount in BACHI |\n| triggered_by | string | true | System trigger reference |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---------|-------------|\n| ACK | Slash intent accepted |\n| NACK | Slash intent rejected |\n\n---\n\n## 6. Domain\n\n- **Domain:** pgs.blockchain.transaction\n- **Authority:** SYSTEM\n- **Note:** to_address auto-resolved to BURN wallet; no actor_record; no gas params\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_SLASH_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\n\ncore:\n  summary: Submit SLASH transaction (SYSTEM)\n  workflow: WF_SLASH_V0\n\n  inputs:\n    from_wallet_id:\n      type: string\n      required: true\n      description: Validator's wallet identifier to slash\n    validator_index:\n      type: integer\n      required: true\n      description: Validator index being slashed\n    amount:\n      type: number\n      required: true\n      description: Slash amount in BACHI\n    triggered_by:\n      type: string\n      required: true\n      description: System trigger reference\n\n  outcomes:\n    ACK:\n      description: Slash intent accepted\n    NACK:\n      description: Slash intent rejected\n\nextensions:\n  domain: pgs.blockchain.transaction\n  authority: SYSTEM\n```\n",
+  "content_hash": "e206194d4fb86350934e180ae97eb6bcd027954796b1cb820247d57318b8eb01",
+  "fqdn_id": "blockchain::IN_SLASH_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "amount": {
+          "description": "Slash amount in BACHI",
+          "required": true,
+          "type": "number"
+        },
+        "from_wallet_id": {
+          "description": "Validator's wallet identifier to slash",
+          "required": true,
+          "type": "string"
+        },
+        "triggered_by": {
+          "description": "System trigger reference",
+          "required": true,
+          "type": "string"
+        },
+        "validator_index": {
+          "description": "Validator index being slashed",
+          "required": true,
+          "type": "integer"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": "Slash intent accepted"
+        },
+        "NACK": {
+          "description": "Slash intent rejected"
+        }
+      },
+      "summary": "Submit SLASH transaction (SYSTEM)",
+      "workflow": "WF_SLASH_V0"
+    },
+    "extensions": {
+      "authority": "SYSTEM",
+      "domain": "pgs.blockchain.transaction"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_SLASH_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.transaction.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

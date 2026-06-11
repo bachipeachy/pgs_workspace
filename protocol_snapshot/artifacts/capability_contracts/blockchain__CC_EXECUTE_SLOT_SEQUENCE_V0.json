@@ -1,0 +1,134 @@
+{
+  "artifact_code": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+        "id": "CS_WORKFLOW_LOOP_V0",
+        "kind": "CS",
+        "ops": [
+          "EXECUTE_SEQUENCE"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_EXECUTE_SLOT_SEQUENCE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_EXECUTE_SLOT_SEQUENCE_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** CS_WORKFLOW_LOOP_V0\n\n---\n\n## 1. Intent\n\nExecute a finite ordered sequence of consensus slots. For each slot descriptor in `slot_schedule`, submit each declared transaction to its typed transaction workflow, then invoke WF_PROPOSE_BLOCK_V0 for that slot. This CC absorbs the slot loop internally (Collatz pattern) \u2014 the governing WF (WF_RUN_CONSENSUS_SLOTS_V0) DAG is linear.\n\n---\n\n## 2. Rationale\n\nPGS WF DAGs have no loop construct \u2014 all iteration must be absorbed inside a CC (Collatz pattern). This CC is the loop container for the finite slot run. All domain behavior (transaction submission, block proposal, round recording) lives in the governed WFs invoked per slot. This CC contains no domain logic \u2014 it declares a fully parametric dispatch spec to CS_WORKFLOW_LOOP_V0, which iterates the sequence and invokes the governed WFs.\n\nCross-subdomain write rule: this CC does NOT write to any store directly. All writes (BLOCKS, CONSENSUS_ROUNDS, TRANSACTION) occur through the owned CCs of their respective subdomains, invoked via governed WFs. The Collatz pattern ensures that all side effects are mediated through governed capability contracts with full trace coverage.\n\nTermination: the slot loop exits when `slot_schedule` is exhausted. There is no external kill signal and no polling. Finite termination is guaranteed by the non-empty finite array declared in IN_CONSENSUS_SLOTS_V0.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_WORKFLOW_LOOP_V0 | CS | EXECUTE_SEQUENCE \u2014 iterate slot_schedule with fully declarative dispatch spec |\n\n**Dispatch spec declared in step inputs:**\n- `item_sub_sequence`: for each slot, iterate `transactions` array; dispatch by `tx_type` key field \u2192 typed transaction WF (WF_TRANSFER_V0, WF_STAKE_V0, etc.)\n- `item_wf`: invoke WF_PROPOSE_BLOCK_V0 with slot fields {round_number, slot, epoch, timestamp} + triggered_by inject\n\nSub-sequence (transactions) is processed BEFORE item WF (block proposal) \u2014 transactions must be in mempool before the block is proposed.\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| slot_schedule | array | true | Ordered list of slot descriptors from IN_CONSENSUS_SLOTS_V0 |\n| triggered_by | string | true | System actor_id initiating the slot run |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| slots_executed | integer | Number of slot descriptors processed (items_processed from CS) |\n| tx_submitted | integer | Total transaction WF invocations across all slots (sub_items_processed from CS) |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | All slot descriptors processed; all governed WF invocations returned SUCCESS |\n| VIOLATION | Any governed WF invocation returned non-SUCCESS; loop halted |\n| BACKEND_ERROR | Storage or executor unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION from any governed WF invocation (transaction or block proposal) propagates as CC VIOLATION \u2014 the slot run halts\n- BACKEND_ERROR propagates as a hard failure\n- This CC never partially commits \u2014 VIOLATION exits before remaining slots execute\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_EXECUTE_SLOT_SEQUENCE_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Collatz-pattern slot loop \u2014 execute all slots via CS_WORKFLOW_LOOP_V0 declarative dispatch\n\n  inputs:\n    slot_schedule:\n      type: array\n      required: true\n      description: Ordered list of slot descriptors; each contains transactions and block proposal fields\n    triggered_by:\n      type: string\n      required: true\n      description: System actor_id initiating the slot run\n\n  outputs:\n    slots_executed:\n      type: integer\n    tx_submitted:\n      type: integer\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: execute_slot_sequence\n      side_effect: capability_side_effects::CS_WORKFLOW_LOOP_V0\n      op: EXECUTE_SEQUENCE\n      inputs:\n        sequence: $.inputs.slot_schedule\n        triggered_by: $.inputs.triggered_by\n        item_wf:\n          code: blockchain::WF_PROPOSE_BLOCK_V0\n          payload_fields:\n            round_number: round_number\n            slot: slot\n            epoch: epoch\n            timestamp: timestamp\n          inject:\n            triggered_by: $.inputs.triggered_by\n        item_sub_sequence:\n          field: transactions\n          wf_dispatch:\n            key_field: tx_type\n            mapping:\n              TRANSFER: blockchain::WF_TRANSFER_V0\n              STAKE: blockchain::WF_STAKE_V0\n              UNSTAKE: blockchain::WF_UNSTAKE_V0\n              MINT: blockchain::WF_MINT_V0\n              BURN: blockchain::WF_BURN_V0\n              POOL: blockchain::WF_POOL_V0\n              REWARD: blockchain::WF_REWARD_V0\n              SLASH: blockchain::WF_SLASH_V0\n      outputs:\n        slots_executed: $.capability_result.items_processed\n        tx_submitted: $.capability_result.sub_items_processed\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: consensus_pos\n  notes:\n    - Collatz pattern \u2014 loop absorbed inside this CC; WF_RUN_CONSENSUS_SLOTS_V0 DAG is linear (3 nodes)\n    - CS_WORKFLOW_LOOP_V0 EXECUTE_SEQUENCE is the governed side effect \u2014 zero domain knowledge in substrate\n    - All dispatch logic declared in item_wf and item_sub_sequence inputs \u2014 CC is the domain authority\n    - Sub-sequence (transactions) processed BEFORE item_wf (block proposal) per slot\n    - Typed WF dispatch: TRANSFER\u2192WF_TRANSFER_V0, STAKE\u2192WF_STAKE_V0, UNSTAKE\u2192WF_UNSTAKE_V0, MINT\u2192WF_MINT_V0, BURN\u2192WF_BURN_V0, POOL\u2192WF_POOL_V0, REWARD\u2192WF_REWARD_V0, SLASH\u2192WF_SLASH_V0\n    - No direct writes to any store \u2014 all writes occur through owned CCs of their respective subdomains\n    - Termination guaranteed by finite slot_schedule (non-empty array declared in IN_CONSENSUS_SLOTS_V0)\n    - VIOLATION from any WF invocation halts the loop \u2014 no partial commit\n    - $.inputs.triggered_by inside inject dict is resolved by dispatcher input resolution (recursive dict handling)\n```\n",
+  "content_hash": "d8d0a71f4fbdb2da7cd436dccd610fa28b77735a66350fdfefbc24284ac29b04",
+  "fqdn_id": "blockchain::CC_EXECUTE_SLOT_SEQUENCE_V0",
+  "frontmatter": {
+    "cc_code": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+    "core": {
+      "inputs": {
+        "slot_schedule": {
+          "description": "Ordered list of slot descriptors; each contains transactions and block proposal fields",
+          "required": true,
+          "type": "array"
+        },
+        "triggered_by": {
+          "description": "System actor_id initiating the slot run",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "slots_executed": {
+          "type": "integer"
+        },
+        "tx_submitted": {
+          "type": "integer"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "item_sub_sequence": {
+              "field": "transactions",
+              "wf_dispatch": {
+                "key_field": "tx_type",
+                "mapping": {
+                  "BURN": "blockchain::WF_BURN_V0",
+                  "MINT": "blockchain::WF_MINT_V0",
+                  "POOL": "blockchain::WF_POOL_V0",
+                  "REWARD": "blockchain::WF_REWARD_V0",
+                  "SLASH": "blockchain::WF_SLASH_V0",
+                  "STAKE": "blockchain::WF_STAKE_V0",
+                  "TRANSFER": "blockchain::WF_TRANSFER_V0",
+                  "UNSTAKE": "blockchain::WF_UNSTAKE_V0"
+                }
+              }
+            },
+            "item_wf": {
+              "code": "blockchain::WF_PROPOSE_BLOCK_V0",
+              "inject": {
+                "triggered_by": "$.inputs.triggered_by"
+              },
+              "payload_fields": {
+                "epoch": "epoch",
+                "round_number": "round_number",
+                "slot": "slot",
+                "timestamp": "timestamp"
+              }
+            },
+            "sequence": "$.inputs.slot_schedule",
+            "triggered_by": "$.inputs.triggered_by"
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "EXECUTE_SEQUENCE",
+          "outputs": {
+            "slots_executed": "$.capability_result.items_processed",
+            "tx_submitted": "$.capability_result.sub_items_processed"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+          "step": "execute_slot_sequence"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Collatz-pattern slot loop \u2014 execute all slots via CS_WORKFLOW_LOOP_V0 declarative dispatch"
+    },
+    "extensions": {
+      "notes": [
+        "Collatz pattern \u2014 loop absorbed inside this CC; WF_RUN_CONSENSUS_SLOTS_V0 DAG is linear (3 nodes)",
+        "CS_WORKFLOW_LOOP_V0 EXECUTE_SEQUENCE is the governed side effect \u2014 zero domain knowledge in substrate",
+        "All dispatch logic declared in item_wf and item_sub_sequence inputs \u2014 CC is the domain authority",
+        "Sub-sequence (transactions) processed BEFORE item_wf (block proposal) per slot",
+        {
+          "Typed WF dispatch": "TRANSFER\u2192WF_TRANSFER_V0, STAKE\u2192WF_STAKE_V0, UNSTAKE\u2192WF_UNSTAKE_V0, MINT\u2192WF_MINT_V0, BURN\u2192WF_BURN_V0, POOL\u2192WF_POOL_V0, REWARD\u2192WF_REWARD_V0, SLASH\u2192WF_SLASH_V0"
+        },
+        "No direct writes to any store \u2014 all writes occur through owned CCs of their respective subdomains",
+        "Termination guaranteed by finite slot_schedule (non-empty array declared in IN_CONSENSUS_SLOTS_V0)",
+        "VIOLATION from any WF invocation halts the loop \u2014 no partial commit",
+        "$.inputs.triggered_by inside inject dict is resolved by dispatcher input resolution (recursive dict handling)"
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

@@ -1,0 +1,45 @@
+{
+  "artifact_code": "EV_ROUND_SKIPPED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_ROUND_SKIPPED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_ROUND_SKIPPED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nA consensus round was skipped due to no pending transactions.\n\n---\n\n## 2. Rationale\n\nThis event records a skipped round in the consensus lifecycle:\n- Provides a complete audit record of all rounds, including empty ones\n- Enables monitoring of validator liveness and network activity\n- Preserves round_id continuity in the consensus journal\n\n---\n\n## 3. Emitted By\n\n| Workflow | Capability Contract |\n|----------|---------------------|\n| WF_PROPOSE_BLOCK_V0 | CC_SKIP_ROUND_V0 |\n\n---\n\n## 4. Schema\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| round_id | integer | true | Consensus round number that was skipped |\n| proposer_id | string | true | actor_id of the selected proposer for this round |\n| outcome | string | true | Always SKIPPED |\n| timestamp | string (date-time) | true | When the skip was recorded |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_ROUND_SKIPPED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\n\ncore:\n  summary: Consensus round skipped \u2014 no pending transactions\n  description: Emitted by CC_SKIP_ROUND_V0 when a consensus round produces no block due to an empty transaction pool\n\n  schema:\n    round_id:\n      type: integer\n      required: true\n    proposer_id:\n      type: string\n      required: true\n    outcome:\n      type: string\n      required: true\n      enum: [SKIPPED]\n    timestamp:\n      type: string\n      format: date-time\n      required: true\n```\n",
+  "content_hash": "e76dddc45c7dabcfbb54eb00c1925eb12c4cb7cf035620c9671da6c930eb4a07",
+  "fqdn_id": "blockchain::EV_ROUND_SKIPPED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Emitted by CC_SKIP_ROUND_V0 when a consensus round produces no block due to an empty transaction pool",
+      "schema": {
+        "outcome": {
+          "enum": [
+            "SKIPPED"
+          ],
+          "required": true,
+          "type": "string"
+        },
+        "proposer_id": {
+          "required": true,
+          "type": "string"
+        },
+        "round_id": {
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Consensus round skipped \u2014 no pending transactions"
+    },
+    "ev_code": "EV_ROUND_SKIPPED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

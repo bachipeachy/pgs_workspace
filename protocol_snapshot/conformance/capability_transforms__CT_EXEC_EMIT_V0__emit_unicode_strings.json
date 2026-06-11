@@ -43,6 +43,7 @@
       "math": "\u03c0 \u2248 3.14159"
     }
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_unicode_strings",
   "test_data_source": "capability_transforms::TEST_DATA_CT_EXEC_EMIT_V0"
 }

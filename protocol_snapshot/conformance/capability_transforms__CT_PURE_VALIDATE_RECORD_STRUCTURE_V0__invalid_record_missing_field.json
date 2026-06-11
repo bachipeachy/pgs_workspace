@@ -53,6 +53,7 @@
       }
     ]
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0::invalid_record_missing_field",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_VALIDATE_RECORD_STRUCTURE_V0"
 }

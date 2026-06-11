@@ -1,0 +1,106 @@
+{
+  "artifact_code": "CS_CONCURRENT_WORKFLOWS_V0",
+  "artifact_type": "CS",
+  "content": "# CS_CONCURRENT_WORKFLOWS_V0\n\n## Header\n\n- **Artifact Code:** CS_CONCURRENT_WORKFLOWS_V0\n- **Artifact Kind:** capability_side_effect\n- **Governed By:** CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n- **Version:** v0\n- **Status:** draft\n- **Dependencies:** NONE\n\n---\n\n## 1. Intent\n\nExecute a declared set of workflows concurrently and collect all results. Completion ordering is not guaranteed. All workflows run to completion regardless of individual outcomes \u2014 no short-circuit on VIOLATION.\n\n**Ownership:** Infrastructure-owned CS. Domain CCs bind to it via runtime bindings.\n\n---\n\n## 2. Side-Effect Category\n\n- **Category:** Execution Gateway\n- **Side-Effect Type:** internal\n- **Idempotent:** false (WF invocations have side effects)\n\n---\n\n## 3. Operations\n\n### 3.1 EXECUTE_CONCURRENT\n\nInvoke all declared workflows. All execute; none are skipped due to peer outcomes.\n\n**Input fields:**\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `workflows` | array | YES | Ordered list of WF invocation specs; each entry: `{code: FQDN, payload: object}`; each `code` must be unique within a single invocation |\n| `triggered_by` | string | YES | Actor ID \u2014 available for injection into WF payloads |\n\n**Output fields:**\n\n| Field | Type | Description |\n|-------|------|-------------|\n| `results` | array | One entry per invoked WF: `{code: FQDN, result_status: string, outputs: object}`; correlated by `code` field, NOT by array position |\n| `all_succeeded` | boolean | `true` iff every WF returned `SUCCESS`; `false` if any returned `VIOLATION` or `BACKEND_ERROR` |\n\n**Result Status Values:** `SUCCESS`, `PARTIAL_FAILURE`, `BACKEND_ERROR`\n\n**Contract invariants:**\n- Workflow completion ordering is not guaranteed.\n- Results are correlated by `code` (workflow FQDN) \u2014 callers must use `code` as the lookup key, not array index.\n- All declared workflows execute; VIOLATION in one does not halt peers.\n- Duplicate `code` values within a single invocation are a VIOLATION.\n\n---\n\n## Machine\n\n```yaml\ncs_code: CS_CONCURRENT_WORKFLOWS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0\n\ncore:\n  summary: Execute a declared set of workflows concurrently and collect all results\n  category: execution_gateway\n\n  policy:\n    operations: [EXECUTE_CONCURRENT]\n\n  operations:\n    EXECUTE_CONCURRENT:\n      summary: Invoke all declared workflows concurrently; collect results correlated by code\n      handler: execute\n      input: [workflows, triggered_by]\n      output: [results, all_succeeded]\n      idempotent: false\n      result_status_values: [SUCCESS, PARTIAL_FAILURE, BACKEND_ERROR]\n\nimplementation:\n  module: pgs_side_effects.implementation.side_effects.internal.CS_CONCURRENT_WORKFLOWS_V0.runtime\n  callable: ConcurrentWorkflowsRuntime\n\nextensions:\n  cs_kind: execution_gateway\n  side_effect_type: internal\n\n  vocabulary:\n    result_status: [SUCCESS, PARTIAL_FAILURE, BACKEND_ERROR]\n\n  notes:\n    - workflow_executor injected at runtime by the dispatcher \u2014 not declarable in JSON policy\n    - Zero domain knowledge \u2014 all WF codes and payloads declared by the calling CC\n    - All workflows execute regardless of peer outcomes \u2014 no short-circuit\n    - Results correlated by code (workflow FQDN), NOT by array position\n    - Duplicate code values in a single invocation \u2192 VIOLATION\n    - BACKEND_ERROR if workflow_executor raises an unhandled exception\n```\n",
+  "content_hash": "0f8e3dcc9b339cb88840ca60b2f1338fc2a7d64f13c81a99a3f3483ad3c7c68a",
+  "cs_ir": {
+    "cs_metadata": {
+      "capability": {
+        "supported_operation_specs": [
+          "EXECUTE_CONCURRENT"
+        ]
+      },
+      "operations": {
+        "operations": {
+          "EXECUTE_CONCURRENT": {
+            "handler": "execute",
+            "idempotent": false,
+            "input": [
+              "workflows",
+              "triggered_by"
+            ],
+            "output": [
+              "results",
+              "all_succeeded"
+            ],
+            "result_status_values": [
+              "SUCCESS",
+              "PARTIAL_FAILURE",
+              "BACKEND_ERROR"
+            ],
+            "summary": "Invoke all declared workflows concurrently; collect results correlated by code"
+          }
+        }
+      }
+    },
+    "handler_ref": {
+      "callable": "ConcurrentWorkflowsRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.internal.CS_CONCURRENT_WORKFLOWS_V0.runtime"
+    }
+  },
+  "fqdn_id": "capability_side_effects::CS_CONCURRENT_WORKFLOWS_V0",
+  "frontmatter": {
+    "core": {
+      "category": "execution_gateway",
+      "operations": {
+        "EXECUTE_CONCURRENT": {
+          "handler": "execute",
+          "idempotent": false,
+          "input": [
+            "workflows",
+            "triggered_by"
+          ],
+          "output": [
+            "results",
+            "all_succeeded"
+          ],
+          "result_status_values": [
+            "SUCCESS",
+            "PARTIAL_FAILURE",
+            "BACKEND_ERROR"
+          ],
+          "summary": "Invoke all declared workflows concurrently; collect results correlated by code"
+        }
+      },
+      "policy": {
+        "operations": [
+          "EXECUTE_CONCURRENT"
+        ]
+      },
+      "summary": "Execute a declared set of workflows concurrently and collect all results"
+    },
+    "cs_code": "CS_CONCURRENT_WORKFLOWS_V0",
+    "extensions": {
+      "cs_kind": "execution_gateway",
+      "notes": [
+        "workflow_executor injected at runtime by the dispatcher \u2014 not declarable in JSON policy",
+        "Zero domain knowledge \u2014 all WF codes and payloads declared by the calling CC",
+        "All workflows execute regardless of peer outcomes \u2014 no short-circuit",
+        "Results correlated by code (workflow FQDN), NOT by array position",
+        "Duplicate code values in a single invocation \u2192 VIOLATION",
+        "BACKEND_ERROR if workflow_executor raises an unhandled exception"
+      ],
+      "side_effect_type": "internal",
+      "vocabulary": {
+        "result_status": [
+          "SUCCESS",
+          "PARTIAL_FAILURE",
+          "BACKEND_ERROR"
+        ]
+      }
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+    "implementation": {
+      "callable": "ConcurrentWorkflowsRuntime",
+      "module": "pgs_side_effects.implementation.side_effects.internal.CS_CONCURRENT_WORKFLOWS_V0.runtime"
+    },
+    "version": "v0"
+  },
+  "layer_code": "REUSABLE_SIDE_EFFECTS",
+  "module_path": "pgs_side_effects.registry.capability_side_effects",
+  "namespace": "capability_side_effects",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+  ],
+  "version": "0"
+}

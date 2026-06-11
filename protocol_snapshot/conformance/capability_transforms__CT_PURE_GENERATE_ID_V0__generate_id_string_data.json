@@ -36,6 +36,7 @@
   "expected": {
     "id": "AC_ac8cc683f338b84f"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_string_data",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_GENERATE_ID_V0"
 }

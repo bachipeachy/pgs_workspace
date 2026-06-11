@@ -36,6 +36,7 @@
   "expected": {
     "quota_available": false
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0::quota_exceeded",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_CHECK_QUOTA_AVAILABLE_V0"
 }

@@ -1,0 +1,167 @@
+{
+  "wf_id": "WF_RUN_CONSENSUS_SLOTS_V0",
+  "entry": "IN_CONSENSUS_SLOTS_V0",
+  "nodes": [
+    {
+      "id": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "type": "CC",
+      "cc_code": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "capability": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
+            "id": "CS_WORKFLOW_LOOP_V0",
+            "kind": "CS",
+            "ops": [
+              "EXECUTE_SEQUENCE"
+            ],
+            "outputs": [
+              "result_status"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "slot_schedule": "IN.slot_schedule",
+          "triggered_by": "IN.triggered_by"
+        }
+      }
+    },
+    {
+      "id": "CC_VERIFY_SLOT_RESULTS_V0",
+      "type": "CC",
+      "cc_code": "CC_VERIFY_SLOT_RESULTS_V0",
+      "capability": "capability_side_effects::CS_MUTABLE_JSON_V0",
+      "capability_type": "CS",
+      "projection": {
+        "steps": [
+          {
+            "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+            "id": "CS_MUTABLE_JSON_V0",
+            "kind": "CS",
+            "ops": [
+              "READ",
+              "WRITE",
+              "DELETE",
+              "DELETE_MANY",
+              "EXISTS"
+            ],
+            "ops_truncated": true,
+            "outputs": [
+              "result_status"
+            ]
+          },
+          {
+            "bindings": {
+              "source": "list_blocks.block_list"
+            },
+            "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+            "id": "CT_PURE_FILTER_RECORDS_V0",
+            "inputs": [
+              "source",
+              "filter"
+            ],
+            "kind": "CT",
+            "outputs": [
+              "extracted"
+            ]
+          }
+        ]
+      },
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "slots_executed": "CC_EXECUTE_SLOT_SEQUENCE_V0.slots_executed"
+        }
+      }
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    },
+    {
+      "id": "IN_CONSENSUS_SLOTS_V0",
+      "type": "IN"
+    }
+  ],
+  "edges": [
+    {
+      "from": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "to": "CC_VERIFY_SLOT_RESULTS_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "CC_VERIFY_SLOT_RESULTS_V0",
+      "to": "EXIT",
+      "condition": "BACKEND_ERROR"
+    },
+    {
+      "from": "CC_VERIFY_SLOT_RESULTS_V0",
+      "to": "EXIT",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VERIFY_SLOT_RESULTS_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_CONSENSUS_SLOTS_V0",
+      "to": "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_CONSENSUS_SLOTS_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_CONSENSUS_SLOTS_V0",
+      "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "EXIT"
+    ],
+    [
+      "IN_CONSENSUS_SLOTS_V0",
+      "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "CC_VERIFY_SLOT_RESULTS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_CONSENSUS_SLOTS_V0",
+      "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "CC_VERIFY_SLOT_RESULTS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_CONSENSUS_SLOTS_V0",
+      "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "CC_VERIFY_SLOT_RESULTS_V0",
+      "EXIT"
+    ],
+    [
+      "IN_CONSENSUS_SLOTS_V0",
+      "CC_EXECUTE_SLOT_SEQUENCE_V0",
+      "EXIT"
+    ],
+    [
+      "IN_CONSENSUS_SLOTS_V0",
+      "EXIT"
+    ]
+  ]
+}

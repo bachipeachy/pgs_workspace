@@ -43,6 +43,7 @@
     "child_chain_code_bytes": "0xcb3c17166cc30eb7fdd11993fb7307531372e565cd7c7136cbfa4655622bc2be",
     "child_private_key_bytes": "0x7272904512add56fef94c7b4cfc62bedd0632afbad680f2eb404e95f2d84cbfa"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0::derive_hardened_child",
   "test_data_source": "capability_transforms::TEST_DATA_CT_PURE_DERIVE_CHILD_KEY_V0"
 }

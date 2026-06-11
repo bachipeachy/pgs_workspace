@@ -1,0 +1,105 @@
+{
+  "artifact_code": "CC_CLAIM_MEMPOOL_TXS_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_CLAIM_MEMPOOL_TXS_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_CLAIM_MEMPOOL_TXS_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** CC_QUERY_MEMPOOL_TXS_V0 (in WF_PROPOSE_BLOCK_V0 \u2014 QUERY remains for read-only inspection)\n- **Dependencies:** CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nAtomically claim all PENDING transactions in the MEMPOOL for a specific proposer, transitioning\nthem from PENDING to CLAIMED and returning their IDs for block assembly.\n\n---\n\n## 2. Rationale\n\nCC_QUERY_MEMPOOL_TXS_V0 uses a non-atomic LIST + filter pattern: two concurrent slot workers can\nboth snapshot the same PENDING transactions before either drains, producing double-includes in\nseparate blocks. This CC replaces it in WF_PROPOSE_BLOCK_V0 with a single atomic UPDATE_WHERE\nthat claims all PENDING records under a per-file lock, ensuring mutual exclusion at the substrate\nlevel.\n\nClaim ownership (claimed_by: proposer_id) scopes each claim to its proposer. Recovery via\nCC_RELEASE_CLAIMED_MEMPOOL_V0 only releases the calling proposer's claims, preventing slot_A's\nfailure from releasing slot_B's in-flight claims.\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|------|------------|------|-----------|\n| 1 | CS_MUTABLE_JSON_V0 | CS | UPDATE_WHERE PENDING\u2192CLAIMED (atomic under per-file lock) |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| proposer_id | string | true | Proposer identity; stamped as claimed_by on each claimed record |\n\n---\n\n## 5. Outputs\n\n| Field | Type | Description |\n|-------|------|-------------|\n| tx_ids | array | IDs of transactions now CLAIMED by this proposer |\n\n---\n\n## 6. Result Status Contract\n\n| Status | Condition |\n|--------|-----------|\n| SUCCESS | One or more PENDING transactions claimed; tx_ids populated |\n| VIOLATION | No PENDING transactions in MEMPOOL (empty or all already CLAIMED) |\n| BACKEND_ERROR | Storage unavailable |\n\n---\n\n## 7. Failure Semantics\n\n- VIOLATION (no PENDING txs) is routed by WF_PROPOSE_BLOCK_V0 \u2192 CC_SKIP_ROUND_V0 (valid skip condition)\n- BACKEND_ERROR propagates as a hard failure\n- On CC_FORM_BLOCK_V0 failure: WF routes to CC_RELEASE_CLAIMED_MEMPOOL_V0 to revert CLAIMED \u2192 PENDING\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_CLAIM_MEMPOOL_TXS_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\n\ncore:\n  summary: Atomically claim PENDING mempool transactions for a proposer; mutual exclusion via per-file lock\n\n  inputs:\n    proposer_id:\n      type: string\n      required: true\n      description: Proposer identity stamped on claimed records\n\n  outputs:\n    tx_ids:\n      type: array\n      items:\n        type: string\n\n  result_status_contract:\n    allowed: [SUCCESS, VIOLATION, BACKEND_ERROR]\n    on_input_failure: VIOLATION\n\n  pipeline:\n    - step: claim_pending_txs\n      side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n      store: MEMPOOL\n      op: UPDATE_WHERE\n      inputs:\n        filter:\n          status: PENDING\n        updates:\n          status: CLAIMED\n          claimed_by: $.inputs.proposer_id\n      outputs:\n        tx_ids: $.capability_result.matched_keys\n      result_surface: [SUCCESS, VIOLATION, BACKEND_ERROR]\n      on_result:\n        SUCCESS: exit\n        VIOLATION: exit\n        BACKEND_ERROR: exit\n\nextensions:\n  subdomain: mempool\n  notes:\n    - Replaces CC_QUERY_MEMPOOL_TXS_V0 in WF_PROPOSE_BLOCK_V0; QUERY CC retained for read-only inspection\n    - UPDATE_WHERE is atomic under a per-file threading lock \u2014 no two concurrent proposers can claim the same PENDING tx\n    - claimed_by scopes each claim to its proposer; recovery in CC_RELEASE_CLAIMED_MEMPOOL_V0 is proposer-scoped\n    - VIOLATION (no PENDING) routes WF \u2192 CC_SKIP_ROUND_V0 (same routing semantics as CC_QUERY_MEMPOOL_TXS_V0 VIOLATION)\n    - tx_ids bound from matched_keys (store keys of claimed records)\n```\n",
+  "content_hash": "6882885abf9fa5f1e592df07c840aa0a6a8fc32ac5797cac2724607e64997ff8",
+  "fqdn_id": "blockchain::CC_CLAIM_MEMPOOL_TXS_V0",
+  "frontmatter": {
+    "cc_code": "CC_CLAIM_MEMPOOL_TXS_V0",
+    "core": {
+      "inputs": {
+        "proposer_id": {
+          "description": "Proposer identity stamped on claimed records",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "outputs": {
+        "tx_ids": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "filter": {
+              "status": "PENDING"
+            },
+            "updates": {
+              "claimed_by": "$.inputs.proposer_id",
+              "status": "CLAIMED"
+            }
+          },
+          "on_result": {
+            "BACKEND_ERROR": "exit",
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "UPDATE_WHERE",
+          "outputs": {
+            "tx_ids": "$.capability_result.matched_keys"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION",
+            "BACKEND_ERROR"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "claim_pending_txs",
+          "store": "MEMPOOL"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION",
+          "BACKEND_ERROR"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "Atomically claim PENDING mempool transactions for a proposer; mutual exclusion via per-file lock"
+    },
+    "extensions": {
+      "notes": [
+        "Replaces CC_QUERY_MEMPOOL_TXS_V0 in WF_PROPOSE_BLOCK_V0; QUERY CC retained for read-only inspection",
+        "UPDATE_WHERE is atomic under a per-file threading lock \u2014 no two concurrent proposers can claim the same PENDING tx",
+        "claimed_by scopes each claim to its proposer; recovery in CC_RELEASE_CLAIMED_MEMPOOL_V0 is proposer-scoped",
+        "VIOLATION (no PENDING) routes WF \u2192 CC_SKIP_ROUND_V0 (same routing semantics as CC_QUERY_MEMPOOL_TXS_V0 VIOLATION)",
+        "tx_ids bound from matched_keys (store keys of claimed records)"
+      ],
+      "subdomain": "mempool"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.mempool.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

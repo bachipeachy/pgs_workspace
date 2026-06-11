@@ -1,27 +1,23 @@
 {
   "artifact_code": "RB_SUBMIT_TRANSACTION_V0",
   "artifact_type": "RB",
-  "content": "# RB_SUBMIT_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_SUBMIT_TRANSACTION_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_SUBMIT_TRANSACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for transaction submission workflow\n  description: Binds capability side effects to concrete runtime implementations for transaction submission.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/identity/registry/actors.json\"\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy:\n        path: \"{{module_data_root}}/blockchain/transaction/events/transaction_events.jsonl\"\n\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n```",
-  "content_hash": "a07d0516c6ce47c33b78e3e79b0af089058fff7461e1c301497b76ec171edc49",
+  "content": "# RB_SUBMIT_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** RB_SUBMIT_TRANSACTION_V0\n- **Artifact Kind:** runtime_binding\n- **Governed By:** CONSTITUTION_RUNTIME_BINDING_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nProvide runtime bindings required to execute the transaction submission workflow, covering mutable JSON access for MEMPOOL and ACTOR stores, registry access for MEMPOOL_INDEX and ACTOR identity registry, and append-only journal writes for TRANSACTION_EVENTS.\n\n---\n\n## 2. Scope\n\nSupports:\n\n- Registry binding for MEMPOOL_INDEX (deduplication) and ACTOR identity (actor resolution) \u2014 store-resolved via STRUCTURE_BLOCKCHAIN_STORAGE_V0\n- Mutable JSON binding for MEMPOOL store (pending transaction staging) \u2014 store-resolved via STRUCTURE_BLOCKCHAIN_STORAGE_V0\n- Append-only journal binding for TRANSACTION_EVENTS store \u2014 store-resolved via STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\nAll store paths are declared in STRUCTURE_BLOCKCHAIN_STORAGE_V0 and resolved at runtime via the `store:` field in each CC step. No additional capabilities permitted.\n\n---\n\n## Machine\n\n```yaml\nrb_code: RB_SUBMIT_TRANSACTION_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_RUNTIME_BINDING_V0\n\ncore:\n  summary: Runtime binding for transaction submission workflow\n  description: Binds capability side effects to concrete runtime implementations for transaction submission. All store paths resolved from STRUCTURE_BLOCKCHAIN_STORAGE_V0.\n  storage_structure: blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0\n\n  bindings:\n    capability_side_effects::CS_REGISTRY_V0:\n      policy: {}\n\n    capability_side_effects::CS_APPENDONLY_JSONL_V0:\n      policy: {}\n\n    capability_side_effects::CS_MUTABLE_JSON_V0:\n      policy: {}\n```",
+  "content_hash": "b6027656df8fe3dd1279e6d0dce6049d6e528a435d50529a1e2bfba3cd56ebdf",
   "fqdn_id": "blockchain::RB_SUBMIT_TRANSACTION_V0",
   "frontmatter": {
     "core": {
       "bindings": {
         "capability_side_effects::CS_APPENDONLY_JSONL_V0": {
-          "policy": {
-            "path": "{{module_data_root}}/blockchain/transaction/events/transaction_events.jsonl"
-          }
+          "policy": {}
         },
         "capability_side_effects::CS_MUTABLE_JSON_V0": {
           "policy": {}
         },
         "capability_side_effects::CS_REGISTRY_V0": {
-          "policy": {
-            "path": "{{module_data_root}}/blockchain/identity/registry/actors.json"
-          }
+          "policy": {}
         }
       },
-      "description": "Binds capability side effects to concrete runtime implementations for transaction submission.",
+      "description": "Binds capability side effects to concrete runtime implementations for transaction submission. All store paths resolved from STRUCTURE_BLOCKCHAIN_STORAGE_V0.",
       "storage_structure": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
       "summary": "Runtime binding for transaction submission workflow"
     },

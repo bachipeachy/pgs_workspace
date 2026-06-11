@@ -1,0 +1,46 @@
+[
+  {
+    "actor_record": {
+      "first_name": "Bachi",
+      "last_name": "One",
+      "email_registration": "bachi.one@bachi.testnet"
+    },
+    "pubkey": "0xa100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
+    "withdrawal_credentials": "0x00a100000000000000000000000000000000000000000000000000000000000001",
+    "effective_balance": 32000000000,
+    "balance": 32000000000
+  },
+  {
+    "actor_record": {
+      "first_name": "Bachi",
+      "last_name": "Two",
+      "email_registration": "bachi.two@bachi.testnet"
+    },
+    "pubkey": "0xa200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002",
+    "withdrawal_credentials": "0x00a200000000000000000000000000000000000000000000000000000000000002",
+    "effective_balance": 32000000000,
+    "balance": 32000000000
+  },
+  {
+    "actor_record": {
+      "first_name": "Bachi",
+      "last_name": "Three",
+      "email_registration": "bachi.three@bachi.testnet"
+    },
+    "pubkey": "0xa300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003",
+    "withdrawal_credentials": "0x00a300000000000000000000000000000000000000000000000000000000000003",
+    "effective_balance": 32000000000,
+    "balance": 32000000000
+  },
+  {
+    "actor_record": {
+      "first_name": "Bachi",
+      "last_name": "Four",
+      "email_registration": "bachi.four@bachi.testnet"
+    },
+    "pubkey": "0xa400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004",
+    "withdrawal_credentials": "0x00a400000000000000000000000000000000000000000000000000000000000004",
+    "effective_balance": 32000000000,
+    "balance": 32000000000
+  }
+]

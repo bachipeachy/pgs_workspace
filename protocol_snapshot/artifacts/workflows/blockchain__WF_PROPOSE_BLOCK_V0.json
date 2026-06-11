@@ -1,0 +1,173 @@
+{
+  "artifact_code": "WF_PROPOSE_BLOCK_V0",
+  "artifact_type": "WF",
+  "content": "# WF_PROPOSE_BLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_PROPOSE_BLOCK_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** IN_BLOCK_PROPOSED_V0, CC_QUERY_ELIGIBLE_VALIDATORS_V0, CC_SELECT_PROPOSER_V0, CC_CLAIM_MEMPOOL_TXS_V0, CC_RELEASE_CLAIMED_MEMPOOL_V0, CC_FORM_BLOCK_V0, CC_DRAIN_MEMPOOL_V0, CC_RECORD_CONSENSUS_ROUND_V0, CC_SKIP_ROUND_V0\n\n---\n\n## 1. Intent\n\nExecute a consensus proposer selection round: identify eligible validators, select the proposer deterministically, atomically claim pending transactions from the MEMPOOL (mutual exclusion against concurrent slot workers), form a block, drain the MEMPOOL, record the round, or skip the round if no transactions are pending. On block formation failure, release claimed transactions back to PENDING.\n\n---\n\n## 2. Rationale\n\nBlock proposal is a multi-path workflow with two terminal outcomes:\n\n- **Block proposed**: eligible validators exist, proposer selected, transactions pending \u2192 block formed and round recorded\n- **Round skipped**: no eligible validators OR no pending transactions \u2192 round skipped and recorded\n\nEach path is governed by CC-declared outcome routing \u2014 no runtime branching logic. Cross-subdomain CC calls (CC_CLAIM_MEMPOOL_TXS_V0, CC_RELEASE_CLAIMED_MEMPOOL_V0, and CC_DRAIN_MEMPOOL_V0 from mempool subdomain, CC_FORM_BLOCK_V0 from block subdomain) are permitted at the WF level; the WF does not own those stores.\n\nThe proposer selection is deterministic (round_number modulo eligible validator count) via CT_PURE_SELECT_PROPOSER_V0, ensuring that all nodes converge on the same proposer for a given round.\n\n---\n\n## 3. Execution Graph\n\n```\nIN_BLOCK_PROPOSED_V0\n    \u251c\u2500 ACK \u2192 CC_QUERY_ELIGIBLE_VALIDATORS_V0\n    \u2502           \u251c\u2500 SUCCESS \u2192 CC_SELECT_PROPOSER_V0\n    \u2502           \u2502               \u251c\u2500 SUCCESS \u2192 CC_CLAIM_MEMPOOL_TXS_V0\n    \u2502           \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_FORM_BLOCK_V0\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_DRAIN_MEMPOOL_V0\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u251c\u2500 SUCCESS \u2192 CC_RECORD_CONSENSUS_ROUND_V0 \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2502               \u2514\u2500 * \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u251c\u2500 VIOLATION \u2192 CC_RELEASE_CLAIMED_MEMPOOL_V0 \u2192 EXIT\n    \u2502           \u2502               \u2502               \u2502               \u2514\u2500 BACKEND_ERROR \u2192 CC_RELEASE_CLAIMED_MEMPOOL_V0 \u2192 EXIT\n    \u2502           \u2502               \u2502               \u251c\u2500 VIOLATION \u2192 CC_SKIP_ROUND_V0 \u2192 EXIT  (no pending txs)\n    \u2502           \u2502               \u2502               \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2502           \u2502               \u2514\u2500 VIOLATION \u2192 EXIT\n    \u2502           \u251c\u2500 VIOLATION \u2192 EXIT  (no eligible validators \u2014 round not recorded)\n    \u2502           \u2514\u2500 BACKEND_ERROR \u2192 EXIT\n    \u2514\u2500 NACK \u2192 EXIT\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Purpose |\n|------|------|---------|\n| IN_BLOCK_PROPOSED_V0 | IN | Entry intent \u2014 validates payload |\n| CC_QUERY_ELIGIBLE_VALIDATORS_V0 | CC | Query VALIDATOR store for active validators with stake |\n| CC_SELECT_PROPOSER_V0 | CC | Deterministic round-robin proposer selection |\n| CC_CLAIM_MEMPOOL_TXS_V0 | CC | Atomically claim PENDING txs for this proposer; mutual exclusion via per-file lock (cross-subdomain: mempool) |\n| CC_RELEASE_CLAIMED_MEMPOOL_V0 | CC | Release this proposer's CLAIMED txs back to PENDING on block failure (cross-subdomain: mempool) |\n| CC_FORM_BLOCK_V0 | CC | Form block, write to BLOCKS, append to BLOCK_EVENTS (cross-subdomain: block) |\n| CC_DRAIN_MEMPOOL_V0 | CC | Delete consumed transactions from MEMPOOL store (cross-subdomain: mempool) |\n| CC_RECORD_CONSENSUS_ROUND_V0 | CC | Record the consensus round journal entry in CONSENSUS_ROUNDS |\n| CC_SKIP_ROUND_V0 | CC | Record a skipped round in CONSENSUS_ROUNDS and CONSENSUS_EVENTS |\n| EXIT | EXIT | Terminal node |\n\n---\n\n## 5. Admission\n\nRound number must be a non-negative integer. Triggered_by must be a valid actor_id string. Timestamp must be ISO 8601.\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_PROPOSE_BLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\n\nruntime_binding: blockchain::RB_PROPOSE_BLOCK_V0\nsubdomain: consensus_pos\n\ncore:\n  summary: Execute a consensus proposer selection and block formation round\n  start_node: IN_BLOCK_PROPOSED_V0\n\n  nodes:\n    IN_BLOCK_PROPOSED_V0:\n      type: IN\n      code: IN_BLOCK_PROPOSED_V0\n      next:\n        ACK: CC_QUERY_ELIGIBLE_VALIDATORS_V0\n        NACK: EXIT\n\n    CC_QUERY_ELIGIBLE_VALIDATORS_V0:\n      type: CC\n      code: CC_QUERY_ELIGIBLE_VALIDATORS_V0\n      inputs: {}\n      next:\n        SUCCESS: CC_SELECT_PROPOSER_V0\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_SELECT_PROPOSER_V0:\n      type: CC\n      code: CC_SELECT_PROPOSER_V0\n      inputs:\n        eligible_validators: $.results.CC_QUERY_ELIGIBLE_VALIDATORS_V0.eligible_validators\n        round_number: $.payload.round_number\n      next:\n        SUCCESS: CC_CLAIM_MEMPOOL_TXS_V0\n        VIOLATION: EXIT\n\n    CC_CLAIM_MEMPOOL_TXS_V0:\n      type: CC\n      code: CC_CLAIM_MEMPOOL_TXS_V0\n      inputs:\n        proposer_id: $.results.CC_SELECT_PROPOSER_V0.proposer_id\n      next:\n        SUCCESS: CC_FORM_BLOCK_V0\n        VIOLATION: CC_SKIP_ROUND_V0\n        BACKEND_ERROR: EXIT\n\n    CC_FORM_BLOCK_V0:\n      type: CC\n      code: CC_FORM_BLOCK_V0\n      inputs:\n        round_id: $.payload.round_number\n        proposer_id: $.results.CC_SELECT_PROPOSER_V0.proposer_id\n        tx_ids: $.results.CC_CLAIM_MEMPOOL_TXS_V0.tx_ids\n        timestamp: $.payload.timestamp\n        slot: $.payload.slot\n        epoch: $.payload.epoch\n      next:\n        SUCCESS: CC_DRAIN_MEMPOOL_V0\n        VIOLATION: CC_RELEASE_CLAIMED_MEMPOOL_V0\n        BACKEND_ERROR: CC_RELEASE_CLAIMED_MEMPOOL_V0\n\n    CC_RELEASE_CLAIMED_MEMPOOL_V0:\n      type: CC\n      code: CC_RELEASE_CLAIMED_MEMPOOL_V0\n      inputs:\n        proposer_id: $.results.CC_SELECT_PROPOSER_V0.proposer_id\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_DRAIN_MEMPOOL_V0:\n      type: CC\n      code: CC_DRAIN_MEMPOOL_V0\n      inputs:\n        tx_ids: $.results.CC_CLAIM_MEMPOOL_TXS_V0.tx_ids\n        block_id: $.results.CC_FORM_BLOCK_V0.block_id\n      next:\n        SUCCESS: CC_RECORD_CONSENSUS_ROUND_V0\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_RECORD_CONSENSUS_ROUND_V0:\n      type: CC\n      code: CC_RECORD_CONSENSUS_ROUND_V0\n      inputs:\n        round_id: $.payload.round_number\n        proposer_id: $.results.CC_SELECT_PROPOSER_V0.proposer_id\n        block_id: $.results.CC_FORM_BLOCK_V0.block_id\n        timestamp: $.payload.timestamp\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    CC_SKIP_ROUND_V0:\n      type: CC\n      code: CC_SKIP_ROUND_V0\n      inputs:\n        round_id: $.payload.round_number\n        proposer_id: $.results.CC_SELECT_PROPOSER_V0.proposer_id\n        timestamp: $.payload.timestamp\n      next:\n        SUCCESS: EXIT\n        VIOLATION: EXIT\n        BACKEND_ERROR: EXIT\n\n    EXIT:\n      type: EXIT\n      reason: EXITED\n\nextensions:\n  subdomain: consensus_pos\n  notes:\n    - CC_CLAIM_MEMPOOL_TXS_V0 replaces CC_QUERY_MEMPOOL_TXS_V0 in this WF \u2014 atomic claim prevents concurrent slot workers from double-including the same tx\n    - CC_CLAIM_MEMPOOL_TXS_V0 and CC_DRAIN_MEMPOOL_V0 are owned by mempool subdomain (cross-subdomain calls)\n    - CC_RELEASE_CLAIMED_MEMPOOL_V0 is the recovery path \u2014 reverts CLAIMED \u2192 PENDING on CC_FORM_BLOCK_V0 failure; scoped to this proposer_id\n    - CC_FORM_BLOCK_V0 is owned by block subdomain (cross-subdomain call)\n    - VIOLATION from CC_QUERY_ELIGIBLE_VALIDATORS_V0 exits immediately (no eligible validators \u2014 valid during bootstrap; no round record written)\n    - VIOLATION from CC_CLAIM_MEMPOOL_TXS_V0 routes to CC_SKIP_ROUND_V0 (valid: proposer selected but no PENDING txs in MEMPOOL)\n    - CC_SKIP_ROUND_V0 always receives a valid proposer_id (CC_SELECT_PROPOSER_V0 has completed on this path)\n    - CC_DRAIN_MEMPOOL_V0 receives tx_ids from CC_CLAIM_MEMPOOL_TXS_V0 \u2014 the same IDs that were claimed and included in the formed block\n    - CC_RELEASE_CLAIMED_MEMPOOL_V0 VIOLATION (nothing to release) routes to EXIT \u2014 idempotent, not an error\n    - tx lifecycle: PENDING \u2192 CLAIMED (claim) \u2192 deleted from MEMPOOL + written to TRANSACTION store (drain+confirm) OR CLAIMED \u2192 PENDING (release on failure)\n```\n",
+  "content_hash": "1584401f8d600bee3f88edce3920304cc738afbc9b4caeb7cd6fa9cf1649ad87",
+  "fqdn_id": "blockchain::WF_PROPOSE_BLOCK_V0",
+  "frontmatter": {
+    "core": {
+      "nodes": {
+        "CC_CLAIM_MEMPOOL_TXS_V0": {
+          "code": "CC_CLAIM_MEMPOOL_TXS_V0",
+          "fqdn_id": "blockchain::CC_CLAIM_MEMPOOL_TXS_V0",
+          "inputs": {
+            "proposer_id": "$.results.CC_SELECT_PROPOSER_V0.proposer_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_FORM_BLOCK_V0",
+            "VIOLATION": "CC_SKIP_ROUND_V0"
+          },
+          "type": "CC"
+        },
+        "CC_DRAIN_MEMPOOL_V0": {
+          "code": "CC_DRAIN_MEMPOOL_V0",
+          "fqdn_id": "blockchain::CC_DRAIN_MEMPOOL_V0",
+          "inputs": {
+            "block_id": "$.results.CC_FORM_BLOCK_V0.block_id",
+            "tx_ids": "$.results.CC_CLAIM_MEMPOOL_TXS_V0.tx_ids"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_RECORD_CONSENSUS_ROUND_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_FORM_BLOCK_V0": {
+          "code": "CC_FORM_BLOCK_V0",
+          "fqdn_id": "blockchain::CC_FORM_BLOCK_V0",
+          "inputs": {
+            "epoch": "$.payload.epoch",
+            "proposer_id": "$.results.CC_SELECT_PROPOSER_V0.proposer_id",
+            "round_id": "$.payload.round_number",
+            "slot": "$.payload.slot",
+            "timestamp": "$.payload.timestamp",
+            "tx_ids": "$.results.CC_CLAIM_MEMPOOL_TXS_V0.tx_ids"
+          },
+          "next": {
+            "BACKEND_ERROR": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+            "SUCCESS": "CC_DRAIN_MEMPOOL_V0",
+            "VIOLATION": "CC_RELEASE_CLAIMED_MEMPOOL_V0"
+          },
+          "type": "CC"
+        },
+        "CC_QUERY_ELIGIBLE_VALIDATORS_V0": {
+          "code": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+          "fqdn_id": "blockchain::CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+          "inputs": {},
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "CC_SELECT_PROPOSER_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_RECORD_CONSENSUS_ROUND_V0": {
+          "code": "CC_RECORD_CONSENSUS_ROUND_V0",
+          "fqdn_id": "blockchain::CC_RECORD_CONSENSUS_ROUND_V0",
+          "inputs": {
+            "block_id": "$.results.CC_FORM_BLOCK_V0.block_id",
+            "proposer_id": "$.results.CC_SELECT_PROPOSER_V0.proposer_id",
+            "round_id": "$.payload.round_number",
+            "timestamp": "$.payload.timestamp"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_RELEASE_CLAIMED_MEMPOOL_V0": {
+          "code": "CC_RELEASE_CLAIMED_MEMPOOL_V0",
+          "fqdn_id": "blockchain::CC_RELEASE_CLAIMED_MEMPOOL_V0",
+          "inputs": {
+            "proposer_id": "$.results.CC_SELECT_PROPOSER_V0.proposer_id"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_SELECT_PROPOSER_V0": {
+          "code": "CC_SELECT_PROPOSER_V0",
+          "fqdn_id": "blockchain::CC_SELECT_PROPOSER_V0",
+          "inputs": {
+            "eligible_validators": "$.results.CC_QUERY_ELIGIBLE_VALIDATORS_V0.eligible_validators",
+            "round_number": "$.payload.round_number"
+          },
+          "next": {
+            "SUCCESS": "CC_CLAIM_MEMPOOL_TXS_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "CC_SKIP_ROUND_V0": {
+          "code": "CC_SKIP_ROUND_V0",
+          "fqdn_id": "blockchain::CC_SKIP_ROUND_V0",
+          "inputs": {
+            "proposer_id": "$.results.CC_SELECT_PROPOSER_V0.proposer_id",
+            "round_id": "$.payload.round_number",
+            "timestamp": "$.payload.timestamp"
+          },
+          "next": {
+            "BACKEND_ERROR": "EXIT",
+            "SUCCESS": "EXIT",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "IN_BLOCK_PROPOSED_V0": {
+          "code": "IN_BLOCK_PROPOSED_V0",
+          "fqdn_id": "blockchain::IN_BLOCK_PROPOSED_V0",
+          "next": {
+            "ACK": "CC_QUERY_ELIGIBLE_VALIDATORS_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "start_node": "IN_BLOCK_PROPOSED_V0",
+      "summary": "Execute a consensus proposer selection and block formation round"
+    },
+    "extensions": {
+      "notes": [
+        "CC_CLAIM_MEMPOOL_TXS_V0 replaces CC_QUERY_MEMPOOL_TXS_V0 in this WF \u2014 atomic claim prevents concurrent slot workers from double-including the same tx",
+        "CC_CLAIM_MEMPOOL_TXS_V0 and CC_DRAIN_MEMPOOL_V0 are owned by mempool subdomain (cross-subdomain calls)",
+        "CC_RELEASE_CLAIMED_MEMPOOL_V0 is the recovery path \u2014 reverts CLAIMED \u2192 PENDING on CC_FORM_BLOCK_V0 failure; scoped to this proposer_id",
+        "CC_FORM_BLOCK_V0 is owned by block subdomain (cross-subdomain call)",
+        "VIOLATION from CC_QUERY_ELIGIBLE_VALIDATORS_V0 exits immediately (no eligible validators \u2014 valid during bootstrap; no round record written)",
+        {
+          "VIOLATION from CC_CLAIM_MEMPOOL_TXS_V0 routes to CC_SKIP_ROUND_V0 (valid": "proposer selected but no PENDING txs in MEMPOOL)"
+        },
+        "CC_SKIP_ROUND_V0 always receives a valid proposer_id (CC_SELECT_PROPOSER_V0 has completed on this path)",
+        "CC_DRAIN_MEMPOOL_V0 receives tx_ids from CC_CLAIM_MEMPOOL_TXS_V0 \u2014 the same IDs that were claimed and included in the formed block",
+        "CC_RELEASE_CLAIMED_MEMPOOL_V0 VIOLATION (nothing to release) routes to EXIT \u2014 idempotent, not an error",
+        {
+          "tx lifecycle": "PENDING \u2192 CLAIMED (claim) \u2192 deleted from MEMPOOL + written to TRANSACTION store (drain+confirm) OR CLAIMED \u2192 PENDING (release on failure)"
+        }
+      ],
+      "subdomain": "consensus_pos"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_PROPOSE_BLOCK_V0",
+    "subdomain": "consensus_pos",
+    "version": "v0",
+    "wf_code": "WF_PROPOSE_BLOCK_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.consensus_pos.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_PROPOSE_BLOCK_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

@@ -1,6 +1,6 @@
 {
   "cs": {
-    "275": {
+    "290": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -54,7 +54,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
       }
     },
-    "46": {
+    "53": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -108,15 +108,52 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_APPENDONLY_JSONL_V0.runtime"
       }
     },
-    "47": {
+    "54": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "EXECUTE_CONCURRENT"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "EXECUTE_CONCURRENT": {
+              "handler": "execute",
+              "idempotent": false,
+              "input": [
+                "workflows",
+                "triggered_by"
+              ],
+              "output": [
+                "results",
+                "all_succeeded"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "PARTIAL_FAILURE",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Invoke all declared workflows concurrently; collect results correlated by code"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "ConcurrentWorkflowsRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.internal.CS_CONCURRENT_WORKFLOWS_V0.runtime"
+      }
+    },
+    "55": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
             "READ",
             "WRITE",
             "DELETE",
+            "DELETE_MANY",
             "EXISTS",
-            "LIST"
+            "LIST",
+            "UPDATE_WHERE"
           ]
         },
         "operations": {
@@ -137,6 +174,23 @@
                 "BACKEND_ERROR"
               ],
               "summary": "Remove the given key and its value"
+            },
+            "DELETE_MANY": {
+              "handler": "delete_many",
+              "idempotent": true,
+              "input": [
+                "keys"
+              ],
+              "output": [
+                "result_status",
+                "drained_count"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Delete a list of keys; idempotent per key (NOT_FOUND treated as already deleted)"
             },
             "EXISTS": {
               "handler": "exists",
@@ -187,6 +241,26 @@
               ],
               "summary": "Retrieve value for a given key"
             },
+            "UPDATE_WHERE": {
+              "handler": "update_where",
+              "idempotent": false,
+              "input": [
+                "filter",
+                "updates"
+              ],
+              "notes": "filter={field:value,...} AND semantics; updates={field:value,...} applied to all matched records; null value removes field; VIOLATION when no records match; load+filter+update+save serialized under per-file threading lock",
+              "output": [
+                "result_status",
+                "matched_keys",
+                "updated_count"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Atomically update all records matching ALL filter conditions; serialized per file"
+            },
             "WRITE": {
               "handler": "write",
               "idempotent": true,
@@ -212,7 +286,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
       }
     },
-    "48": {
+    "56": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -320,7 +394,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_REGISTRY_V0.runtime"
       }
     },
-    "49": {
+    "57": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -350,7 +424,7 @@
         "module": "pgs_side_effects.implementation.side_effects.external.CS_SEND_EMAIL_V0.runtime"
       }
     },
-    "50": {
+    "58": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -384,10 +458,48 @@
         "callable": "WorkflowGatewayRuntime",
         "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_GATEWAY_V0.runtime"
       }
+    },
+    "59": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "EXECUTE_SEQUENCE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "EXECUTE_SEQUENCE": {
+              "handler": "execute",
+              "idempotent": false,
+              "input": [
+                "sequence",
+                "triggered_by",
+                "item_wf",
+                "item_sub_sequence"
+              ],
+              "output": [
+                "result_status",
+                "items_processed",
+                "sub_items_processed"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Iterate sequence; invoke item_wf per item and dispatch sub-items by key-field mapping"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "WorkflowLoopRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_LOOP_V0.runtime"
+      }
     }
   },
   "ct": {
-    "20": {
+    "23": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -419,7 +531,7 @@
         }
       }
     },
-    "21": {
+    "24": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -454,7 +566,7 @@
         }
       }
     },
-    "51": {
+    "60": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -486,7 +598,7 @@
         }
       }
     },
-    "52": {
+    "61": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -518,7 +630,7 @@
         }
       }
     },
-    "53": {
+    "62": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -556,7 +668,7 @@
         }
       }
     },
-    "54": {
+    "63": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -588,7 +700,7 @@
         }
       }
     },
-    "55": {
+    "64": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -635,7 +747,7 @@
         }
       }
     },
-    "56": {
+    "65": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -670,7 +782,7 @@
         }
       }
     },
-    "57": {
+    "66": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -724,7 +836,7 @@
         }
       }
     },
-    "58": {
+    "67": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -756,7 +868,7 @@
         }
       }
     },
-    "59": {
+    "68": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -805,7 +917,7 @@
         }
       }
     },
-    "60": {
+    "69": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -849,7 +961,45 @@
         }
       }
     },
-    "61": {
+    "70": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
+              "filter": "$.inputs.filter",
+              "source": "$.inputs.source"
+            },
+            "atom": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_filter_records_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_FILTER_RECORDS_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
+        "inputs": {
+          "filter": {
+            "description": "Field criteria dict. Values are exact match or \"present\" for existence check.",
+            "required": true,
+            "type": "object"
+          },
+          "source": {
+            "description": "Array of record objects to filter",
+            "required": true,
+            "type": "array"
+          }
+        },
+        "outputs": {
+          "extracted": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "71": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -888,7 +1038,7 @@
         }
       }
     },
-    "62": {
+    "72": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -926,7 +1076,7 @@
         }
       }
     },
-    "63": {
+    "73": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -958,7 +1108,7 @@
         }
       }
     },
-    "64": {
+    "74": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -996,7 +1146,7 @@
         }
       }
     },
-    "65": {
+    "75": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1040,7 +1190,7 @@
         }
       }
     },
-    "66": {
+    "76": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1072,7 +1222,7 @@
         }
       }
     },
-    "67": {
+    "77": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1104,7 +1254,7 @@
         }
       }
     },
-    "68": {
+    "78": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1146,7 +1296,7 @@
         }
       }
     },
-    "69": {
+    "79": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1178,7 +1328,7 @@
         }
       }
     },
-    "70": {
+    "80": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1219,7 +1369,7 @@
         }
       }
     },
-    "71": {
+    "81": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1257,7 +1407,7 @@
         }
       }
     },
-    "72": {
+    "82": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1298,59 +1448,143 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "280": {
-      "275": {
+    "295": {
+      "290": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },
         "type": "CS"
       }
     },
-    "36": {
-      "46": {
+    "40": {
+      "53": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
-          "path": "{{module_data_root}}/ai_governance/agent_governance/governance_audit.jsonl",
           "storage_structure_artifact": {
             "frontmatter": {
               "core": {
-                "description": "Maps entity types to storage implementations and paths",
                 "domain": "ai_governance",
                 "entity_stores": {
+                  "GOVERNANCE_ACTIONS": {
+                    "description": "Registry of authorized agent admission actions (idempotency tracking)",
+                    "path": "ai_governance/agent_admission/governance_actions.json"
+                  },
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent admission authorization and denial decisions",
+                    "path": "ai_governance/agent_admission/governance_audit.jsonl"
+                  },
                   "LICENSE_FACTS": {
-                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "description": "Read-only license tier and status fact feed (shared with agent_governance)",
                     "path": "ai_governance/ai_licensing/license_facts.json"
                   }
                 },
                 "isolation": {
-                  "description": "Entity storage isolation constraints",
                   "rules": [
-                    "Each entity type has dedicated storage",
-                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
-                    "Storage paths resolved via STRUCTURE only"
+                    "LICENSE_FACTS is read-only \u2014 agent_admission may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 admission audit records are immutable",
+                    "GOVERNANCE_ACTIONS is scoped to agent_admission \u2014 no cross-subdomain writes"
                   ]
                 },
                 "layer": "DOMAINS",
-                "resolution": {
-                  "algorithm": "base_path / entity_stores[entity_type].path",
-                  "description": "Runtime path resolution strategy",
-                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
-                },
                 "storage_roots": {
-                  "base_path": "{{module_data_root}}",
-                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                  "base_path": "{{module_data_root}}"
                 },
-                "summary": "Agent governance domain storage topology"
+                "summary": "Agent admission subdomain storage topology"
               },
               "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
-              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "structure_code": "STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      },
+      "55": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "GOVERNANCE_ACTIONS": {
+                    "description": "Registry of authorized agent admission actions (idempotency tracking)",
+                    "path": "ai_governance/agent_admission/governance_actions.json"
+                  },
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent admission authorization and denial decisions",
+                    "path": "ai_governance/agent_admission/governance_audit.jsonl"
+                  },
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (shared with agent_governance)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "rules": [
+                    "LICENSE_FACTS is read-only \u2014 agent_admission may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 admission audit records are immutable",
+                    "GOVERNANCE_ACTIONS is scoped to agent_admission \u2014 no cross-subdomain writes"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}"
+                },
+                "summary": "Agent admission subdomain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      },
+      "56": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/ai_governance/agent_admission/governance_actions.json",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "GOVERNANCE_ACTIONS": {
+                    "description": "Registry of authorized agent admission actions (idempotency tracking)",
+                    "path": "ai_governance/agent_admission/governance_actions.json"
+                  },
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent admission authorization and denial decisions",
+                    "path": "ai_governance/agent_admission/governance_audit.jsonl"
+                  },
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (shared with agent_governance)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "rules": [
+                    "LICENSE_FACTS is read-only \u2014 agent_admission may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 admission audit records are immutable",
+                    "GOVERNANCE_ACTIONS is scoped to agent_admission \u2014 no cross-subdomain writes"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}"
+                },
+                "summary": "Agent admission subdomain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
               "version": "v0"
             }
           },
           "strict": true
         }
-      },
-      "47": {
+      }
+    },
+    "41": {
+      "53": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
           "storage_structure_artifact": {
@@ -1359,6 +1593,14 @@
                 "description": "Maps entity types to storage implementations and paths",
                 "domain": "ai_governance",
                 "entity_stores": {
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent governance authorization and denial decisions",
+                    "path": "ai_governance/agent_governance/governance_audit.jsonl"
+                  },
+                  "LICENSE_AUDIT": {
+                    "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+                    "path": "ai_governance/ai_licensing/audit_log.jsonl"
+                  },
                   "LICENSE_FACTS": {
                     "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
                     "path": "ai_governance/ai_licensing/license_facts.json"
@@ -1369,6 +1611,8 @@
                   "rules": [
                     "Each entity type has dedicated storage",
                     "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable",
+                    "LICENSE_AUDIT is append-only \u2014 license audit records are immutable",
                     "Storage paths resolved via STRUCTURE only"
                   ]
                 },
@@ -1391,16 +1635,23 @@
           }
         }
       },
-      "48": {
+      "55": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
-          "path": "{{module_data_root}}/ai_governance/agent_governance/governance_actions.json",
           "storage_structure_artifact": {
             "frontmatter": {
               "core": {
                 "description": "Maps entity types to storage implementations and paths",
                 "domain": "ai_governance",
                 "entity_stores": {
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent governance authorization and denial decisions",
+                    "path": "ai_governance/agent_governance/governance_audit.jsonl"
+                  },
+                  "LICENSE_AUDIT": {
+                    "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+                    "path": "ai_governance/ai_licensing/audit_log.jsonl"
+                  },
                   "LICENSE_FACTS": {
                     "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
                     "path": "ai_governance/ai_licensing/license_facts.json"
@@ -1411,6 +1662,60 @@
                   "rules": [
                     "Each entity type has dedicated storage",
                     "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable",
+                    "LICENSE_AUDIT is append-only \u2014 license audit records are immutable",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                },
+                "summary": "Agent governance domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
+      },
+      "56": {
+        "policy": {
+          "module_data_root": "{{module_data_root}}",
+          "path": "{{module_data_root}}/ai_governance/agent_governance/governance_actions.json",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent governance authorization and denial decisions",
+                    "path": "ai_governance/agent_governance/governance_audit.jsonl"
+                  },
+                  "LICENSE_AUDIT": {
+                    "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+                    "path": "ai_governance/ai_licensing/audit_log.jsonl"
+                  },
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable",
+                    "LICENSE_AUDIT is append-only \u2014 license audit records are immutable",
                     "Storage paths resolved via STRUCTURE only"
                   ]
                 },
@@ -1435,8 +1740,8 @@
         }
       }
     },
-    "37": {
-      "47": {
+    "42": {
+      "55": {
         "policy": {
           "module_data_root": "{{module_data_root}}",
           "storage_structure_artifact": {
@@ -1478,24 +1783,109 @@
         }
       }
     },
-    "38": {
-      "46": {
-        "host": "AppendOnlyJsonlRuntime",
-        "operation": "APPEND",
+    "43": {
+      "53": {
         "policy": {
-          "path": "{{module_data_root}}/ai_governance/ai_licensing/audit_log.jsonl",
-          "strict": true
-        },
-        "type": "CS"
+          "module_data_root": "{{module_data_root}}",
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent governance authorization and denial decisions",
+                    "path": "ai_governance/agent_governance/governance_audit.jsonl"
+                  },
+                  "LICENSE_AUDIT": {
+                    "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+                    "path": "ai_governance/ai_licensing/audit_log.jsonl"
+                  },
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable",
+                    "LICENSE_AUDIT is append-only \u2014 license audit records are immutable",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                },
+                "summary": "Agent governance domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
       },
-      "48": {
-        "host": "RegistryRuntime",
-        "operation": "READ_WRITE",
+      "56": {
         "policy": {
+          "module_data_root": "{{module_data_root}}",
           "path": "{{module_data_root}}/ai_governance/ai_licensing/license_registry.json",
-          "strict": true
-        },
-        "type": "CS"
+          "storage_structure_artifact": {
+            "frontmatter": {
+              "core": {
+                "description": "Maps entity types to storage implementations and paths",
+                "domain": "ai_governance",
+                "entity_stores": {
+                  "GOVERNANCE_AUDIT": {
+                    "description": "Append-only audit trail for agent governance authorization and denial decisions",
+                    "path": "ai_governance/agent_governance/governance_audit.jsonl"
+                  },
+                  "LICENSE_AUDIT": {
+                    "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+                    "path": "ai_governance/ai_licensing/audit_log.jsonl"
+                  },
+                  "LICENSE_FACTS": {
+                    "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+                    "path": "ai_governance/ai_licensing/license_facts.json"
+                  }
+                },
+                "isolation": {
+                  "description": "Entity storage isolation constraints",
+                  "rules": [
+                    "Each entity type has dedicated storage",
+                    "LICENSE_FACTS is read-only \u2014 agent governance may not mutate license facts",
+                    "GOVERNANCE_AUDIT is append-only \u2014 agent governance audit records are immutable",
+                    "LICENSE_AUDIT is append-only \u2014 license audit records are immutable",
+                    "Storage paths resolved via STRUCTURE only"
+                  ]
+                },
+                "layer": "DOMAINS",
+                "resolution": {
+                  "algorithm": "base_path / entity_stores[entity_type].path",
+                  "description": "Runtime path resolution strategy",
+                  "example": "{{module_data_root}}/ai_governance/ai_licensing/license_facts.json"
+                },
+                "storage_roots": {
+                  "base_path": "{{module_data_root}}",
+                  "description": "Root path for all agent governance storage (resolved at runtime)"
+                },
+                "summary": "Agent governance domain storage topology"
+              },
+              "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+              "structure_code": "STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+              "version": "v0"
+            }
+          }
+        }
       }
     }
   }

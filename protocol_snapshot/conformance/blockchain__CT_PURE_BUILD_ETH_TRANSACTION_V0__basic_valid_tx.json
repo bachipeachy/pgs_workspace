@@ -57,6 +57,7 @@
   "expected": {
     "unsigned_tx_bytes": "0x02f0010a843b9aca008504a817c800825208941234567890123456789012345678901234567890880de0b6b3a764000080c0"
   },
+  "expected_outcome": "SUCCESS",
   "fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0::basic_valid_tx",
   "test_data_source": "blockchain::TEST_DATA_CT_PURE_BUILD_ETH_TRANSACTION_V0"
 }
