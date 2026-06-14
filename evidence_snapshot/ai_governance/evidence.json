@@ -114,15 +114,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 6,
-      "source_fqdn": "ai_governance::CC_BIND_AGENT_LICENSE_TO_TOOL_SURFACE_V0",
-      "target_address": 74,
-      "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "key": "$.inputs.license_tier",
@@ -152,15 +143,6 @@
       "source_fqdn": "ai_governance::CC_BIND_AGENT_LICENSE_TO_TOOL_SURFACE_V0",
       "target_address": 74,
       "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 6,
-      "source_fqdn": "ai_governance::CC_BIND_AGENT_LICENSE_TO_TOOL_SURFACE_V0",
-      "target_address": 82,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -222,15 +204,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 7,
-      "source_fqdn": "ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "target_address": 74,
-      "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "key": "$.inputs.license_tier",
@@ -263,15 +236,6 @@
       "source_fqdn": "ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
       "target_address": 74,
       "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 7,
-      "source_fqdn": "ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "target_address": 82,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -329,15 +293,6 @@
       "source_fqdn": "ai_governance::CC_CHECK_AGENT_TOOL_DECLARED_V0",
       "target_address": 17,
       "target_fqdn": "ai_governance::CC_RESOLVE_LICENSE_TIER_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 8,
-      "source_fqdn": "ai_governance::CC_CHECK_AGENT_TOOL_DECLARED_V0",
-      "target_address": 82,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -402,15 +357,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 9,
-      "source_fqdn": "ai_governance::CC_CHECK_TOOL_DECLARED_V0",
-      "target_address": 82,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "allowed_set": [
@@ -455,15 +401,6 @@
       "source_fqdn": "ai_governance::CC_COMPUTE_SEQUENCES_V0",
       "target_address": 22,
       "target_fqdn": "ai_governance::CC_VERIFY_TERMINATION_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 10,
-      "source_fqdn": "ai_governance::CC_COMPUTE_SEQUENCES_V0",
-      "target_address": 23,
-      "target_fqdn": "ai_governance::CT_PURE_COLLATZ_STEP_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -550,15 +487,6 @@
       "source_fqdn": "ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0",
       "target_address": 9,
       "target_fqdn": "ai_governance::CC_CHECK_TOOL_DECLARED_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 12,
-      "source_fqdn": "ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0",
-      "target_address": 72,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -685,15 +613,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 14,
-      "source_fqdn": "ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0",
-      "target_address": 68,
-      "target_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "last_active_date": "$.inputs.last_active_date",
@@ -757,15 +676,6 @@
       "source_fqdn": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
       "target_address": 53,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 15,
-      "source_fqdn": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
-      "target_address": 72,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -872,15 +782,6 @@
       "source_fqdn": "ai_governance::CC_RECORD_GOVERNED_ACTION_V0",
       "target_address": 56,
       "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 16,
-      "source_fqdn": "ai_governance::CC_RECORD_GOVERNED_ACTION_V0",
-      "target_address": 72,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1021,15 +922,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 17,
-      "source_fqdn": "ai_governance::CC_RESOLVE_LICENSE_TIER_V0",
-      "target_address": 82,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "allowed_set": [
@@ -1131,15 +1023,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 19,
-      "source_fqdn": "ai_governance::CC_VALIDATE_AGENT_TOOL_PARAMETERS_V0",
-      "target_address": 74,
-      "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "key": "$.inputs.tool_name",
@@ -1182,15 +1065,6 @@
       "source_fqdn": "ai_governance::CC_VALIDATE_AGENT_TOOL_PARAMETERS_V0",
       "target_address": 74,
       "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 19,
-      "source_fqdn": "ai_governance::CC_VALIDATE_AGENT_TOOL_PARAMETERS_V0",
-      "target_address": 80,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1252,15 +1126,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 20,
-      "source_fqdn": "ai_governance::CC_VALIDATE_ELIGIBILITY_V0",
-      "target_address": 62,
-      "target_fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "assigned_count": "$.inputs.assigned_count",
@@ -1280,15 +1145,6 @@
       "source_fqdn": "ai_governance::CC_VALIDATE_ELIGIBILITY_V0",
       "target_address": 62,
       "target_fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 20,
-      "source_fqdn": "ai_governance::CC_VALIDATE_ELIGIBILITY_V0",
-      "target_address": 63,
-      "target_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1344,15 +1200,6 @@
       "source_fqdn": "ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0",
       "target_address": 16,
       "target_fqdn": "ai_governance::CC_RECORD_GOVERNED_ACTION_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 21,
-      "source_fqdn": "ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "target_address": 74,
-      "target_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1419,15 +1266,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 21,
-      "source_fqdn": "ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "target_address": 80,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "parameters": "$.inputs.parameters",
@@ -1469,15 +1307,6 @@
       "source_fqdn": "ai_governance::CC_VERIFY_TERMINATION_V0",
       "target_address": 18,
       "target_fqdn": "ai_governance::CC_STORE_RESULTS_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 22,
-      "source_fqdn": "ai_governance::CC_VERIFY_TERMINATION_V0",
-      "target_address": 24,
-      "target_fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1739,7 +1568,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 40,
       "source_fqdn": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
       "target_address": 53,
@@ -1753,37 +1584,8 @@
       },
       "source_address": 40,
       "source_fqdn": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
-      "target_address": 53,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 40,
-      "source_fqdn": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
       "target_address": 55,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 40,
-      "source_fqdn": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
-      "target_address": 55,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 40,
-      "source_fqdn": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
-      "target_address": 56,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -1808,7 +1610,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 41,
       "source_fqdn": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
       "target_address": 53,
@@ -1822,37 +1626,8 @@
       },
       "source_address": 41,
       "source_fqdn": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
-      "target_address": 53,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 41,
-      "source_fqdn": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
       "target_address": 55,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 41,
-      "source_fqdn": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
-      "target_address": 55,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 41,
-      "source_fqdn": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
-      "target_address": 56,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -1877,15 +1652,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 42,
-      "source_fqdn": "ai_governance::RB_COLLATZ_V0",
-      "target_address": 55,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -1906,15 +1672,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "ai_governance::RB_LICENSE_BINDINGS_V0",
-      "target_address": 53,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -1922,15 +1679,6 @@
       "source_fqdn": "ai_governance::RB_LICENSE_BINDINGS_V0",
       "target_address": 53,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "ai_governance::RB_LICENSE_BINDINGS_V0",
-      "target_address": 56,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -1981,7 +1729,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 47,
       "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
@@ -1990,7 +1738,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 47,
       "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
@@ -1999,15 +1747,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 47,
-      "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
-      "target_address": 39,
-      "target_fqdn": "ai_governance::IN_RECLAIM_LICENSE_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 47,
@@ -2016,8 +1755,17 @@
       "target_fqdn": "ai_governance::IN_RECLAIM_LICENSE_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 47,
+      "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
+      "target_address": 39,
+      "target_fqdn": "ai_governance::IN_RECLAIM_LICENSE_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 47,
       "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
@@ -2044,7 +1792,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 48,
       "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
@@ -2053,7 +1801,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 48,
       "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
@@ -2062,7 +1810,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 48,
       "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
@@ -2071,15 +1819,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 48,
-      "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
-      "target_address": 36,
-      "target_fqdn": "ai_governance::IN_COLLATZ_INPUT_VALIDATED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 48,
@@ -2088,8 +1827,17 @@
       "target_fqdn": "ai_governance::IN_COLLATZ_INPUT_VALIDATED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 48,
+      "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
+      "target_address": 36,
+      "target_fqdn": "ai_governance::IN_COLLATZ_INPUT_VALIDATED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 48,
       "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
@@ -2116,7 +1864,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 49,
       "source_fqdn": "ai_governance::WF_DENY_PROVISION_V0",
@@ -2125,15 +1873,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 49,
-      "source_fqdn": "ai_governance::WF_DENY_PROVISION_V0",
-      "target_address": 37,
-      "target_fqdn": "ai_governance::IN_DENY_PROVISION_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 49,
@@ -2142,8 +1881,17 @@
       "target_fqdn": "ai_governance::IN_DENY_PROVISION_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 49,
+      "source_fqdn": "ai_governance::WF_DENY_PROVISION_V0",
+      "target_address": 37,
+      "target_fqdn": "ai_governance::IN_DENY_PROVISION_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 49,
       "source_fqdn": "ai_governance::WF_DENY_PROVISION_V0",
@@ -2170,7 +1918,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2179,7 +1927,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2188,7 +1936,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2197,7 +1945,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2206,7 +1954,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2215,7 +1963,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2224,7 +1972,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2233,7 +1981,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2242,7 +1990,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2251,7 +1999,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2260,15 +2008,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 50,
-      "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
-      "target_address": 34,
-      "target_fqdn": "ai_governance::IN_AGENT_ACTION_REQUESTED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 50,
@@ -2277,8 +2016,17 @@
       "target_fqdn": "ai_governance::IN_AGENT_ACTION_REQUESTED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 50,
+      "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
+      "target_address": 34,
+      "target_fqdn": "ai_governance::IN_AGENT_ACTION_REQUESTED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
@@ -2296,7 +2044,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2305,7 +2053,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2314,7 +2062,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2323,7 +2071,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2332,7 +2080,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2341,7 +2089,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2350,7 +2098,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2359,7 +2107,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2368,7 +2116,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2377,7 +2125,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2386,15 +2134,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 51,
-      "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
-      "target_address": 35,
-      "target_fqdn": "ai_governance::IN_AGENT_ADMISSION_REQUESTED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 51,
@@ -2403,8 +2142,17 @@
       "target_fqdn": "ai_governance::IN_AGENT_ADMISSION_REQUESTED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 51,
+      "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
+      "target_address": 35,
+      "target_fqdn": "ai_governance::IN_AGENT_ADMISSION_REQUESTED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
@@ -2422,7 +2170,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
@@ -2431,7 +2179,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
@@ -2440,7 +2188,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
@@ -2449,7 +2197,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
@@ -2458,15 +2206,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 52,
-      "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
-      "target_address": 38,
-      "target_fqdn": "ai_governance::IN_PROVISION_AI_LICENSE_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 52,
@@ -2475,8 +2214,17 @@
       "target_fqdn": "ai_governance::IN_PROVISION_AI_LICENSE_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 52,
+      "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
+      "target_address": 38,
+      "target_fqdn": "ai_governance::IN_PROVISION_AI_LICENSE_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
@@ -4095,15 +3843,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 295,
-      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
-      "target_address": 290,
-      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -4123,7 +3862,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 296,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
@@ -4132,7 +3871,7 @@
     },
     {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 296,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
@@ -4150,7 +3889,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 297,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
@@ -4159,7 +3898,7 @@
     },
     {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 297,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",

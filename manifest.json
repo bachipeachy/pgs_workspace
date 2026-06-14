@@ -1,7 +1,23 @@
 {
-  "version": "0.5.0",
+  "version": "0.5.1",
 
   "workspace_type": "pgs_workspace",
+
+  "pgs_release": {
+    "release": "0.6.0",
+    "description": "PGS Release — a compatible set of independently versioned component repos. Repos version independently (MAJOR.MINOR.PATCH); the release is this manifest-level declaration, not a lockstep repo bump.",
+    "components": {
+      "pgs_compiler": "0.6.0",
+      "pgs_runtime": "0.5.0",
+      "pgs_governance": "0.5.0",
+      "pgs_transport": "0.5.0",
+      "pgs_capabilities": "0.5.0",
+      "pgs_blockchain": "0.5.0",
+      "pgs_ai_governance": "0.5.0",
+      "pgs_change_mgmt": "0.5.1",
+      "pgs_workspace": "0.5.1"
+    }
+  },
 
   "runtime_generation": "projection-native",
 

@@ -1801,15 +1801,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 265,
-      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
-      "target_address": 260,
-      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -1829,7 +1820,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 266,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
@@ -1838,7 +1829,7 @@
     },
     {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 266,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
@@ -1856,7 +1847,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 267,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
@@ -1865,7 +1856,7 @@
     },
     {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 267,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",

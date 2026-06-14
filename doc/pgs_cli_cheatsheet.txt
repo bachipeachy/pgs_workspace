@@ -96,7 +96,10 @@ pgs_runtime run --wf ai_governance::WF_GOVERN_AGENT_ADMISSION_V0 --payload ~/pgs
 
 ========
 # Trace Examination - use correct trace files
-pgs_runtime examine ~/pgs/pgs_workspace/traces/T_20260430_042629_291_82151081/T_20260430_042629_291_82151081.jsonl
+# Trace layout: traces/<domain>/<WF_CODE>/<TRACE_ID>/<TRACE_ID>.jsonl  (list them: pi trace list)
+# NOTE: pgs_runtime examine currently targets a retired trace schema and rejects
+#       current traces — pending rewrite to trace_schema_version v0.
+pgs_runtime examine ~/pgs/pgs_workspace/traces/blockchain/WF_REGISTER_ACTOR_UNVERIFIED_V0/<TRACE_ID>/<TRACE_ID>.jsonl
 
 =======
 #pgs_runtime conformance testing
@@ -104,6 +107,110 @@ pgs_runtime examine ~/pgs/pgs_workspace/traces/T_20260430_042629_291_82151081/T_
 # These scripts can be run in pgs_runtime to test conformance of various CT and CS artifacts.
 
 python ~/pgs/pgs_runtime/testbed/run_runtime_tests.py -v
+
+
+========
+# pi — Protocol Inspection (read-only queries over the compiled snapshot set)
+# Setup: workspace must be declared (no cwd guessing). One-time:
+
+export PGS_WORKSPACE=~/pgs/pgs_workspace
+
+# Every command also accepts --workspace <abs path> and --json (stable schema for agents/CI/jq).
+# Full FQDNs required in one-shot mode; bare codes work only inside the shell with a declared scope.
+
+
+# -- interactive shell (tab completion over objects, verbs, FQDNs) --
+
+pi                                      # no args opens the shell
+#   pi> use blockchain                  # declare scope -> prompt becomes pi:blockchain>
+#   pi:blockchain> artifact refs CC_GENERATE_TX_ID_V0    # bare codes expand within scope
+#   pi:blockchain> behavior_logic show WF_MINT_V0
+#   pi:blockchain> use                  # clear scope
+#   pi> exit
+
+
+# -- artifact (kind-agnostic, the daily drivers) --
+
+pi artifact show      blockchain::CC_GENERATE_TX_ID_V0     # identity, governance, ref/dep counts
+pi artifact refs      blockchain::CC_GENERATE_TX_ID_V0     # who references this (consumers)
+pi artifact refs      blockchain::CC_GENERATE_TX_ID_V0 --transitive
+pi artifact deps      blockchain::WF_CREATE_WALLET_V0 --transitive
+pi artifact lineage   capability_side_effects::CS_APPENDONLY_JSONL_V0   # ancestor + descendant trees
+pi artifact owner     blockchain::WF_CREATE_WALLET_V0      # domain / subdomain / STRUCTURE
+pi artifact source    blockchain::WF_MINT_V0               # authoring Markdown from PPS snapshot
+pi artifact lifecycle blockchain::WF_CREATE_WALLET_V0      # declared status (ACTIVE/RETIRED/UNKNOWN)
+pi artifact list --kind WF --domain blockchain
+
+
+# -- kind objects (list/show sugar + kind-specific verbs) --
+
+pi wf list --domain ai_governance
+pi wf lineage  blockchain::WF_CREATE_WALLET_V0             # execution tree from evidence routing
+pi wf outcomes blockchain::WF_CREATE_WALLET_V0             # declared terminal states
+pi cc outcomes blockchain::CC_GENERATE_TX_ID_V0            # enumerated outcome set
+pi cc binding  blockchain::CC_DERIVE_WALLET_KEYS_V0        # CT/CS bindings + mapping RBs
+pi ct impl     capability_transforms::CT_PURE_GENERATE_ID_V0   # RBs mapping this CT
+pi cs surface                                              # the enumerated side-effect surface
+pi rb resolve  capability_side_effects::CS_SEND_EMAIL_V0   # which RBs bind this CS
+pi ev list --domain blockchain
+pi ac show blockchain::AC_ENDUSER_V0
+pi in show blockchain::IN_WALLET_CREATED_V0
+
+
+# -- topology (change-management workhorse; impact output is dossier evidence) --
+
+pi topology wf     blockchain::WF_MINT_V0                  # full reachability graph of a WF
+pi topology cc     blockchain::CC_GENERATE_TX_ID_V0        # every WF position with routing context
+pi topology impact capability_transforms::CT_PURE_GENERATE_ID_V0       # transitive consumer closure
+pi topology impact capability_transforms::CT_PURE_GENERATE_ID_V0 --json   # paste into dossier
+pi topology path   blockchain::WF_MINT_V0 capability_side_effects::CS_APPENDONLY_JSONL_V0
+
+
+# -- behavior logic (reads *.graph.json, never the PNGs) --
+
+pi behavior_logic list
+pi behavior_logic show   blockchain::WF_VERIFY_ACTOR_V0    # terminal tree incl. EXIT routing
+pi behavior_logic render blockchain::WF_MINT_V0 --mermaid  # paste into Markdown
+pi behavior_logic render blockchain::WF_MINT_V0 --dot      # pipe to graphviz
+pi behavior_logic open   blockchain::WF_CREATE_WALLET_V0   # open compiler-materialized PNG
+
+
+# -- store (entity-store ownership; from artifact_index/stores.json) --
+
+pi store list
+pi store show      ACTOR                                   # bare name OK when unique; else domain::STORE
+pi store show      GOVERNANCE_AUDIT                        # shows ALL declarations (multi-path case)
+pi store consumers ACTOR                                   # CCs that touch this store
+
+
+# -- vocab / pps (address space + authoring surface) --
+
+pi vocab search  WALLET
+pi vocab resolve blockchain::WF_MINT_V0                    # FQDN -> structure, paths, addresses
+pi vocab stats
+pi pps stats
+pi pps list --kind WF
+pi pps show blockchain::CC_GENERATE_TX_ID_V0
+
+
+# -- snapshot / validation / CI --
+
+pi stats                                # workspace-wide one-screen summary
+pi snapshot status                      # snapshot_status.json: valid? when? hash?
+pi snapshot summary                     # counts by kind and domain
+pi snapshot topology                    # domain -> subdomain -> WF map
+pi snapshot stats                       # graph metrics (orphans = ASSERTs + TIs, expected)
+pi snapshot validate                    # conformance state (pure query, always exit 0)
+pi snapshot violations                  # failing cases named; exit 0
+pi snapshot violations --strict         # exit 1 if any violations (CI gate)
+pi validate --strict                    # one-shot CI gate: VALID + zero violations or exit 1
+
+
+# -- trace (delegating facade; analysis belongs to pgs_runtime examine) --
+
+pi trace list
+pi trace list --domain blockchain --workflow WF_MINT_V0
+pi trace explain <TRACE_ID>             # delegates to: pgs_runtime examine <trace>.jsonl
 
 
 

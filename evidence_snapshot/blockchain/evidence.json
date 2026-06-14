@@ -285,15 +285,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 8,
-      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
-      "target_address": 58,
-      "target_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "chain_id": "$.inputs.chain_id",
@@ -320,15 +311,6 @@
       "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
       "target_address": 58,
       "target_fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 8,
-      "source_fqdn": "blockchain::CC_BUILD_ETH_TX_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -668,15 +650,6 @@
       "source_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
       "target_address": 13,
       "target_fqdn": "blockchain::CC_CREATE_WALLET_RECORD_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 14,
-      "source_fqdn": "blockchain::CC_DERIVE_WALLET_KEYS_V0",
-      "target_address": 60,
-      "target_fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1028,15 +1001,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 18,
-      "source_fqdn": "blockchain::CC_FORM_BLOCK_V0",
-      "target_address": 155,
-      "target_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "fields": {
@@ -1065,15 +1029,6 @@
       "source_fqdn": "blockchain::CC_FORM_BLOCK_V0",
       "target_address": 155,
       "target_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 18,
-      "source_fqdn": "blockchain::CC_FORM_BLOCK_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1118,15 +1073,6 @@
       "source_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
       "target_address": 36,
       "target_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 19,
-      "source_fqdn": "blockchain::CC_GENERATE_ACTOR_ID_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1259,15 +1205,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 20,
-      "source_fqdn": "blockchain::CC_GENERATE_TX_ID_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "data": {
@@ -1347,15 +1284,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 21,
-      "source_fqdn": "blockchain::CC_GENERATE_WALLET_ID_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "data": "$.inputs.seed_record",
@@ -1396,15 +1324,6 @@
       "source_fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
       "target_address": 56,
       "target_fqdn": "blockchain::CC_WRITE_MEMPOOL_TX_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 22,
-      "source_fqdn": "blockchain::CC_HASH_TRANSACTION_V0",
-      "target_address": 167,
-      "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -1720,15 +1639,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 26,
-      "source_fqdn": "blockchain::CC_PERSIST_MEMPOOL_TX_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "data": {
@@ -1814,15 +1724,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 28,
-      "source_fqdn": "blockchain::CC_PREPARE_SLOT_CONTEXT_V0",
-      "target_address": 59,
-      "target_fqdn": "blockchain::CT_PURE_DERIVE_SLOT_EPOCH_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "slot_number": "$.inputs.slot_number",
@@ -1893,15 +1794,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 29,
-      "source_fqdn": "blockchain::CC_QUERY_ELIGIBLE_VALIDATORS_V0",
-      "target_address": 164,
-      "target_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "filter": {
@@ -1961,15 +1853,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 30,
-      "source_fqdn": "blockchain::CC_QUERY_MEMPOOL_TXS_V0",
-      "target_address": 164,
-      "target_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "filter": {
@@ -2022,15 +1905,6 @@
       "source_fqdn": "blockchain::CC_QUERY_PENDING_TRANSACTIONS_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 31,
-      "source_fqdn": "blockchain::CC_QUERY_PENDING_TRANSACTIONS_V0",
-      "target_address": 164,
-      "target_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -2193,15 +2067,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 34,
-      "source_fqdn": "blockchain::CC_RECORD_CONSENSUS_ROUND_V0",
-      "target_address": 155,
-      "target_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "fields": {
@@ -2357,15 +2222,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 36,
-      "source_fqdn": "blockchain::CC_REGISTER_ACTOR_KYC_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "data": {
@@ -2451,15 +2307,6 @@
       "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
       "target_address": 8,
       "target_fqdn": "blockchain::CC_BUILD_ETH_TX_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 38,
-      "source_fqdn": "blockchain::CC_RESERVE_NONCE_V0",
-      "target_address": 62,
-      "target_fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -2620,15 +2467,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 39,
-      "source_fqdn": "blockchain::CC_RESOLVE_ACTOR_ID_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "data": {
@@ -2772,15 +2610,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 42,
-      "source_fqdn": "blockchain::CC_SELECT_PROPOSER_V0",
-      "target_address": 63,
-      "target_fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "eligible_validators": "$.inputs.eligible_validators",
@@ -2821,15 +2650,6 @@
       "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
       "target_address": 22,
       "target_fqdn": "blockchain::CC_HASH_TRANSACTION_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
-      "target_address": 158,
-      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -2958,15 +2778,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
-      "target_address": 159,
-      "target_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "seed_bytes": "$.results.mnemonic_to_seed.seed_bytes"
@@ -2986,15 +2797,6 @@
       "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
       "target_address": 159,
       "target_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
-      "target_address": 160,
-      "target_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -3028,15 +2830,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
-      "target_address": 167,
-      "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "input_bytes": "$.inputs.unsigned_tx_bytes"
@@ -3055,15 +2848,6 @@
       "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
       "target_address": 167,
       "target_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 43,
-      "source_fqdn": "blockchain::CC_SIGN_TRANSACTION_V0",
-      "target_address": 170,
-      "target_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -3149,15 +2933,6 @@
       "source_fqdn": "blockchain::CC_SKIP_ROUND_V0",
       "target_address": 147,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 44,
-      "source_fqdn": "blockchain::CC_SKIP_ROUND_V0",
-      "target_address": 155,
-      "target_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -3539,15 +3314,6 @@
     {
       "kind": "CC_BINDS_CT",
       "kind_address": 16386,
-      "metadata": {},
-      "source_address": 52,
-      "source_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0",
-      "target_address": 61,
-      "target_fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
       "metadata": {
         "inputs": {
           "wallet_record": "$.results.read_wallet_record.wallet_data"
@@ -3641,15 +3407,6 @@
       "source_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
       "target_address": 52,
       "target_fqdn": "blockchain::CC_VALIDATE_TX_POLICY_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 53,
-      "source_fqdn": "blockchain::CC_VALIDATE_TX_STRUCTURE_V0",
-      "target_address": 175,
-      "target_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -3787,15 +3544,6 @@
       "source_fqdn": "blockchain::CC_VERIFY_SLOT_RESULTS_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 55,
-      "source_fqdn": "blockchain::CC_VERIFY_SLOT_RESULTS_V0",
-      "target_address": 164,
-      "target_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -4037,15 +3785,6 @@
       "source_fqdn": "blockchain::CC_WRITE_MEMPOOL_TX_V0",
       "target_address": 150,
       "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
-    },
-    {
-      "kind": "CC_BINDS_CT",
-      "kind_address": 16386,
-      "metadata": {},
-      "source_address": 56,
-      "source_fqdn": "blockchain::CC_WRITE_MEMPOOL_TX_V0",
-      "target_address": 166,
-      "target_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0"
     },
     {
       "kind": "CC_BINDS_CT",
@@ -4718,7 +4457,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 98,
       "source_fqdn": "blockchain::RB_BURN_V0",
       "target_address": 147,
@@ -4732,37 +4473,8 @@
       },
       "source_address": 98,
       "source_fqdn": "blockchain::RB_BURN_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 98,
-      "source_fqdn": "blockchain::RB_BURN_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 98,
-      "source_fqdn": "blockchain::RB_BURN_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 98,
-      "source_fqdn": "blockchain::RB_BURN_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -4787,15 +4499,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 99,
-      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -4803,15 +4506,6 @@
       "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
       "target_address": 147,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 99,
-      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -4827,15 +4521,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 99,
-      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -4843,15 +4528,6 @@
       "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
       "target_address": 150,
       "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 99,
-      "source_fqdn": "blockchain::RB_CREATE_WALLET_V0",
-      "target_address": 151,
-      "target_fqdn": "capability_side_effects::CS_SEND_EMAIL_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -4876,7 +4552,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 100,
       "source_fqdn": "blockchain::RB_MINT_V0",
       "target_address": 147,
@@ -4890,37 +4568,8 @@
       },
       "source_address": 100,
       "source_fqdn": "blockchain::RB_MINT_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 100,
-      "source_fqdn": "blockchain::RB_MINT_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 100,
-      "source_fqdn": "blockchain::RB_MINT_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 100,
-      "source_fqdn": "blockchain::RB_MINT_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -4945,7 +4594,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 101,
       "source_fqdn": "blockchain::RB_POOL_V0",
       "target_address": 147,
@@ -4959,37 +4610,8 @@
       },
       "source_address": 101,
       "source_fqdn": "blockchain::RB_POOL_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 101,
-      "source_fqdn": "blockchain::RB_POOL_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 101,
-      "source_fqdn": "blockchain::RB_POOL_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 101,
-      "source_fqdn": "blockchain::RB_POOL_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5014,15 +4636,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 102,
-      "source_fqdn": "blockchain::RB_PROCESS_SLOT_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -5030,15 +4643,6 @@
       "source_fqdn": "blockchain::RB_PROCESS_SLOT_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 102,
-      "source_fqdn": "blockchain::RB_PROCESS_SLOT_V0",
-      "target_address": 152,
-      "target_fqdn": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5063,15 +4667,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 103,
-      "source_fqdn": "blockchain::RB_PROPOSE_BLOCK_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -5079,15 +4674,6 @@
       "source_fqdn": "blockchain::RB_PROPOSE_BLOCK_V0",
       "target_address": 147,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 103,
-      "source_fqdn": "blockchain::RB_PROPOSE_BLOCK_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5112,15 +4698,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 104,
-      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -5128,15 +4705,6 @@
       "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
       "target_address": 147,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 104,
-      "source_fqdn": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5161,7 +4729,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 105,
       "source_fqdn": "blockchain::RB_REGISTER_VALIDATOR_V0",
       "target_address": 147,
@@ -5175,37 +4745,8 @@
       },
       "source_address": 105,
       "source_fqdn": "blockchain::RB_REGISTER_VALIDATOR_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 105,
-      "source_fqdn": "blockchain::RB_REGISTER_VALIDATOR_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 105,
-      "source_fqdn": "blockchain::RB_REGISTER_VALIDATOR_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 105,
-      "source_fqdn": "blockchain::RB_REGISTER_VALIDATOR_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5230,7 +4771,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 106,
       "source_fqdn": "blockchain::RB_REWARD_V0",
       "target_address": 147,
@@ -5244,37 +4787,8 @@
       },
       "source_address": 106,
       "source_fqdn": "blockchain::RB_REWARD_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 106,
-      "source_fqdn": "blockchain::RB_REWARD_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 106,
-      "source_fqdn": "blockchain::RB_REWARD_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 106,
-      "source_fqdn": "blockchain::RB_REWARD_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5295,15 +4809,6 @@
       "source_fqdn": "blockchain::RB_REWARD_V0",
       "target_address": 309,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 107,
-      "source_fqdn": "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5315,15 +4820,6 @@
       "source_fqdn": "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
       "target_address": 147,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 107,
-      "source_fqdn": "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
-      "target_address": 148,
-      "target_fqdn": "capability_side_effects::CS_CONCURRENT_WORKFLOWS_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5339,15 +4835,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 107,
-      "source_fqdn": "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -5364,15 +4851,6 @@
       "source_fqdn": "blockchain::RB_RUN_CHAIN_SIMULATION_V0",
       "target_address": 309,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 108,
-      "source_fqdn": "blockchain::RB_RUN_CONSENSUS_LOOP_V0",
-      "target_address": 153,
-      "target_fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5397,15 +4875,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 109,
-      "source_fqdn": "blockchain::RB_RUN_CONSENSUS_SLOTS_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -5413,15 +4882,6 @@
       "source_fqdn": "blockchain::RB_RUN_CONSENSUS_SLOTS_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 109,
-      "source_fqdn": "blockchain::RB_RUN_CONSENSUS_SLOTS_V0",
-      "target_address": 153,
-      "target_fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5442,15 +4902,6 @@
       "source_fqdn": "blockchain::RB_RUN_CONSENSUS_SLOTS_V0",
       "target_address": 309,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 110,
-      "source_fqdn": "blockchain::RB_RUN_TX_WORKLOAD_V0",
-      "target_address": 153,
-      "target_fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5475,7 +4926,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 111,
       "source_fqdn": "blockchain::RB_SLASH_V0",
       "target_address": 147,
@@ -5489,37 +4942,8 @@
       },
       "source_address": 111,
       "source_fqdn": "blockchain::RB_SLASH_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 111,
-      "source_fqdn": "blockchain::RB_SLASH_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 111,
-      "source_fqdn": "blockchain::RB_SLASH_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 111,
-      "source_fqdn": "blockchain::RB_SLASH_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5544,7 +4968,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 112,
       "source_fqdn": "blockchain::RB_STAKE_V0",
       "target_address": 147,
@@ -5558,37 +4984,8 @@
       },
       "source_address": 112,
       "source_fqdn": "blockchain::RB_STAKE_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 112,
-      "source_fqdn": "blockchain::RB_STAKE_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 112,
-      "source_fqdn": "blockchain::RB_STAKE_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 112,
-      "source_fqdn": "blockchain::RB_STAKE_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5613,7 +5010,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 113,
       "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
       "target_address": 147,
@@ -5627,37 +5026,8 @@
       },
       "source_address": 113,
       "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 113,
-      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 113,
-      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 113,
-      "source_fqdn": "blockchain::RB_SUBMIT_TRANSACTION_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5682,7 +5052,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 114,
       "source_fqdn": "blockchain::RB_TRANSFER_V0",
       "target_address": 147,
@@ -5696,37 +5068,8 @@
       },
       "source_address": 114,
       "source_fqdn": "blockchain::RB_TRANSFER_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 114,
-      "source_fqdn": "blockchain::RB_TRANSFER_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 114,
-      "source_fqdn": "blockchain::RB_TRANSFER_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 114,
-      "source_fqdn": "blockchain::RB_TRANSFER_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5751,7 +5094,9 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
+      "metadata": {
+        "handler_ref": ""
+      },
       "source_address": 115,
       "source_fqdn": "blockchain::RB_UNSTAKE_V0",
       "target_address": 147,
@@ -5765,37 +5110,8 @@
       },
       "source_address": 115,
       "source_fqdn": "blockchain::RB_UNSTAKE_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 115,
-      "source_fqdn": "blockchain::RB_UNSTAKE_V0",
       "target_address": 149,
       "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {
-        "handler_ref": ""
-      },
-      "source_address": 115,
-      "source_fqdn": "blockchain::RB_UNSTAKE_V0",
-      "target_address": 149,
-      "target_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 115,
-      "source_fqdn": "blockchain::RB_UNSTAKE_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5816,15 +5132,6 @@
       "source_fqdn": "blockchain::RB_UNSTAKE_V0",
       "target_address": 309,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 116,
-      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
-      "target_address": 147,
-      "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5836,15 +5143,6 @@
       "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
       "target_address": 147,
       "target_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
-      "metadata": {},
-      "source_address": 116,
-      "source_fqdn": "blockchain::RB_VERIFY_ACTOR_V0",
-      "target_address": 150,
-      "target_fqdn": "capability_side_effects::CS_REGISTRY_V0"
     },
     {
       "kind": "RB_MAPS",
@@ -5930,8 +5228,56 @@
       "target_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0"
     },
     {
+      "kind": "TI_INVOKES_WF",
+      "kind_address": 16394,
+      "metadata": {
+        "route_method": "POST",
+        "route_path": "/api/v0/create_wallet"
+      },
+      "source_address": 124,
+      "source_fqdn": "blockchain::TI_HTTP_CREATE_WALLET_V0",
+      "target_address": 129,
+      "target_fqdn": "blockchain::WF_CREATE_WALLET_V0"
+    },
+    {
+      "kind": "TI_INVOKES_WF",
+      "kind_address": 16394,
+      "metadata": {
+        "route_method": "POST",
+        "route_path": "/api/v0/register_actor"
+      },
+      "source_address": 125,
+      "source_fqdn": "blockchain::TI_HTTP_REGISTER_ACTOR_V0",
+      "target_address": 134,
+      "target_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+    },
+    {
+      "kind": "TI_INVOKES_WF",
+      "kind_address": 16394,
+      "metadata": {
+        "route_method": "POST",
+        "route_path": "/api/v0/submit_transaction"
+      },
+      "source_address": 126,
+      "source_fqdn": "blockchain::TI_HTTP_SUBMIT_TRANSACTION_V0",
+      "target_address": 143,
+      "target_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0"
+    },
+    {
+      "kind": "TI_INVOKES_WF",
+      "kind_address": 16394,
+      "metadata": {
+        "route_method": "POST",
+        "route_path": "/api/v0/verify_actor"
+      },
+      "source_address": 127,
+      "source_fqdn": "blockchain::TI_HTTP_VERIFY_ACTOR_V0",
+      "target_address": 146,
+      "target_fqdn": "blockchain::WF_VERIFY_ACTOR_V0"
+    },
+    {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 128,
       "source_fqdn": "blockchain::WF_BURN_V0",
@@ -5940,7 +5286,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 128,
       "source_fqdn": "blockchain::WF_BURN_V0",
@@ -5949,7 +5295,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 128,
       "source_fqdn": "blockchain::WF_BURN_V0",
@@ -5958,7 +5304,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 128,
       "source_fqdn": "blockchain::WF_BURN_V0",
@@ -5967,15 +5313,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 128,
-      "source_fqdn": "blockchain::WF_BURN_V0",
-      "target_address": 82,
-      "target_fqdn": "blockchain::IN_BURN_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 128,
@@ -5984,8 +5321,17 @@
       "target_fqdn": "blockchain::IN_BURN_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 128,
+      "source_fqdn": "blockchain::WF_BURN_V0",
+      "target_address": 82,
+      "target_fqdn": "blockchain::IN_BURN_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 128,
       "source_fqdn": "blockchain::WF_BURN_V0",
@@ -6003,7 +5349,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6012,7 +5358,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6021,7 +5367,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6030,7 +5376,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6039,7 +5385,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6048,7 +5394,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6057,7 +5403,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6066,15 +5412,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 129,
-      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
-      "target_address": 97,
-      "target_fqdn": "blockchain::IN_WALLET_CREATED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 129,
@@ -6083,8 +5420,17 @@
       "target_fqdn": "blockchain::IN_WALLET_CREATED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 129,
+      "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
+      "target_address": 97,
+      "target_fqdn": "blockchain::IN_WALLET_CREATED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 129,
       "source_fqdn": "blockchain::WF_CREATE_WALLET_V0",
@@ -6102,7 +5448,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 130,
       "source_fqdn": "blockchain::WF_MINT_V0",
@@ -6111,7 +5457,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 130,
       "source_fqdn": "blockchain::WF_MINT_V0",
@@ -6120,7 +5466,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 130,
       "source_fqdn": "blockchain::WF_MINT_V0",
@@ -6129,7 +5475,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 130,
       "source_fqdn": "blockchain::WF_MINT_V0",
@@ -6138,15 +5484,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 130,
-      "source_fqdn": "blockchain::WF_MINT_V0",
-      "target_address": 85,
-      "target_fqdn": "blockchain::IN_MINT_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 130,
@@ -6155,8 +5492,17 @@
       "target_fqdn": "blockchain::IN_MINT_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 130,
+      "source_fqdn": "blockchain::WF_MINT_V0",
+      "target_address": 85,
+      "target_fqdn": "blockchain::IN_MINT_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 130,
       "source_fqdn": "blockchain::WF_MINT_V0",
@@ -6174,7 +5520,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 131,
       "source_fqdn": "blockchain::WF_POOL_V0",
@@ -6183,7 +5529,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 131,
       "source_fqdn": "blockchain::WF_POOL_V0",
@@ -6192,7 +5538,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 131,
       "source_fqdn": "blockchain::WF_POOL_V0",
@@ -6201,7 +5547,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 131,
       "source_fqdn": "blockchain::WF_POOL_V0",
@@ -6210,15 +5556,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 131,
-      "source_fqdn": "blockchain::WF_POOL_V0",
-      "target_address": 86,
-      "target_fqdn": "blockchain::IN_POOL_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 131,
@@ -6227,8 +5564,17 @@
       "target_fqdn": "blockchain::IN_POOL_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 131,
+      "source_fqdn": "blockchain::WF_POOL_V0",
+      "target_address": 86,
+      "target_fqdn": "blockchain::IN_POOL_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 131,
       "source_fqdn": "blockchain::WF_POOL_V0",
@@ -6246,7 +5592,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 132,
       "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
@@ -6255,7 +5601,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 132,
       "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
@@ -6264,7 +5610,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 132,
       "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
@@ -6273,7 +5619,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 132,
       "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
@@ -6282,15 +5628,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 132,
-      "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
-      "target_address": 90,
-      "target_fqdn": "blockchain::IN_SLOT_EXECUTION_STARTED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 132,
@@ -6299,8 +5636,17 @@
       "target_fqdn": "blockchain::IN_SLOT_EXECUTION_STARTED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 132,
+      "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
+      "target_address": 90,
+      "target_fqdn": "blockchain::IN_SLOT_EXECUTION_STARTED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 132,
       "source_fqdn": "blockchain::WF_PROCESS_SLOT_V0",
@@ -6318,7 +5664,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6327,7 +5673,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6336,7 +5682,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6345,7 +5691,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6354,7 +5700,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6363,7 +5709,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6372,7 +5718,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6381,7 +5727,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6390,15 +5736,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 133,
-      "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
-      "target_address": 81,
-      "target_fqdn": "blockchain::IN_BLOCK_PROPOSED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 133,
@@ -6407,8 +5744,17 @@
       "target_fqdn": "blockchain::IN_BLOCK_PROPOSED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 133,
+      "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
+      "target_address": 81,
+      "target_fqdn": "blockchain::IN_BLOCK_PROPOSED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 133,
       "source_fqdn": "blockchain::WF_PROPOSE_BLOCK_V0",
@@ -6426,7 +5772,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 134,
       "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
@@ -6435,7 +5781,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 134,
       "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
@@ -6444,7 +5790,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 134,
       "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
@@ -6453,15 +5799,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 134,
-      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
-      "target_address": 79,
-      "target_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 134,
@@ -6470,8 +5807,17 @@
       "target_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 134,
+      "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
+      "target_address": 79,
+      "target_fqdn": "blockchain::IN_ACTOR_REGISTERED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 134,
       "source_fqdn": "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0",
@@ -6489,7 +5835,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 135,
       "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
@@ -6498,7 +5844,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 135,
       "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
@@ -6507,7 +5853,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 135,
       "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
@@ -6516,7 +5862,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 135,
       "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
@@ -6525,15 +5871,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 135,
-      "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
-      "target_address": 96,
-      "target_fqdn": "blockchain::IN_VALIDATOR_REGISTERED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 135,
@@ -6542,8 +5879,17 @@
       "target_fqdn": "blockchain::IN_VALIDATOR_REGISTERED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 135,
+      "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
+      "target_address": 96,
+      "target_fqdn": "blockchain::IN_VALIDATOR_REGISTERED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 135,
       "source_fqdn": "blockchain::WF_REGISTER_VALIDATOR_V0",
@@ -6561,7 +5907,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 136,
       "source_fqdn": "blockchain::WF_REWARD_V0",
@@ -6570,7 +5916,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 136,
       "source_fqdn": "blockchain::WF_REWARD_V0",
@@ -6579,7 +5925,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 136,
       "source_fqdn": "blockchain::WF_REWARD_V0",
@@ -6588,7 +5934,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 136,
       "source_fqdn": "blockchain::WF_REWARD_V0",
@@ -6597,15 +5943,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 136,
-      "source_fqdn": "blockchain::WF_REWARD_V0",
-      "target_address": 87,
-      "target_fqdn": "blockchain::IN_REWARD_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 136,
@@ -6614,8 +5951,17 @@
       "target_fqdn": "blockchain::IN_REWARD_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 136,
+      "source_fqdn": "blockchain::WF_REWARD_V0",
+      "target_address": 87,
+      "target_fqdn": "blockchain::IN_REWARD_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 136,
       "source_fqdn": "blockchain::WF_REWARD_V0",
@@ -6633,7 +5979,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 137,
       "source_fqdn": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
@@ -6642,7 +5988,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 137,
       "source_fqdn": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
@@ -6651,7 +5997,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 137,
       "source_fqdn": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
@@ -6660,15 +6006,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 137,
-      "source_fqdn": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
-      "target_address": 88,
-      "target_fqdn": "blockchain::IN_RUN_CHAIN_SIMULATION_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 137,
@@ -6677,8 +6014,17 @@
       "target_fqdn": "blockchain::IN_RUN_CHAIN_SIMULATION_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 137,
+      "source_fqdn": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
+      "target_address": 88,
+      "target_fqdn": "blockchain::IN_RUN_CHAIN_SIMULATION_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 137,
       "source_fqdn": "blockchain::WF_RUN_CHAIN_SIMULATION_V0",
@@ -6696,7 +6042,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 138,
       "source_fqdn": "blockchain::WF_RUN_CONSENSUS_LOOP_V0",
@@ -6705,15 +6051,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 138,
-      "source_fqdn": "blockchain::WF_RUN_CONSENSUS_LOOP_V0",
-      "target_address": 83,
-      "target_fqdn": "blockchain::IN_CONSENSUS_LOOP_STARTED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 138,
@@ -6722,8 +6059,17 @@
       "target_fqdn": "blockchain::IN_CONSENSUS_LOOP_STARTED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 138,
+      "source_fqdn": "blockchain::WF_RUN_CONSENSUS_LOOP_V0",
+      "target_address": 83,
+      "target_fqdn": "blockchain::IN_CONSENSUS_LOOP_STARTED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 138,
       "source_fqdn": "blockchain::WF_RUN_CONSENSUS_LOOP_V0",
@@ -6741,7 +6087,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 139,
       "source_fqdn": "blockchain::WF_RUN_CONSENSUS_SLOTS_V0",
@@ -6750,7 +6096,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 139,
       "source_fqdn": "blockchain::WF_RUN_CONSENSUS_SLOTS_V0",
@@ -6759,15 +6105,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 139,
-      "source_fqdn": "blockchain::WF_RUN_CONSENSUS_SLOTS_V0",
-      "target_address": 84,
-      "target_fqdn": "blockchain::IN_CONSENSUS_SLOTS_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 139,
@@ -6776,8 +6113,17 @@
       "target_fqdn": "blockchain::IN_CONSENSUS_SLOTS_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 139,
+      "source_fqdn": "blockchain::WF_RUN_CONSENSUS_SLOTS_V0",
+      "target_address": 84,
+      "target_fqdn": "blockchain::IN_CONSENSUS_SLOTS_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 139,
       "source_fqdn": "blockchain::WF_RUN_CONSENSUS_SLOTS_V0",
@@ -6795,7 +6141,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 140,
       "source_fqdn": "blockchain::WF_RUN_TX_WORKLOAD_V0",
@@ -6804,15 +6150,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 140,
-      "source_fqdn": "blockchain::WF_RUN_TX_WORKLOAD_V0",
-      "target_address": 94,
-      "target_fqdn": "blockchain::IN_TX_WORKLOAD_STARTED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 140,
@@ -6821,8 +6158,17 @@
       "target_fqdn": "blockchain::IN_TX_WORKLOAD_STARTED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 140,
+      "source_fqdn": "blockchain::WF_RUN_TX_WORKLOAD_V0",
+      "target_address": 94,
+      "target_fqdn": "blockchain::IN_TX_WORKLOAD_STARTED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 140,
       "source_fqdn": "blockchain::WF_RUN_TX_WORKLOAD_V0",
@@ -6840,7 +6186,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 141,
       "source_fqdn": "blockchain::WF_SLASH_V0",
@@ -6849,7 +6195,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 141,
       "source_fqdn": "blockchain::WF_SLASH_V0",
@@ -6858,7 +6204,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 141,
       "source_fqdn": "blockchain::WF_SLASH_V0",
@@ -6867,7 +6213,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 141,
       "source_fqdn": "blockchain::WF_SLASH_V0",
@@ -6876,15 +6222,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 141,
-      "source_fqdn": "blockchain::WF_SLASH_V0",
-      "target_address": 89,
-      "target_fqdn": "blockchain::IN_SLASH_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 141,
@@ -6893,8 +6230,17 @@
       "target_fqdn": "blockchain::IN_SLASH_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 141,
+      "source_fqdn": "blockchain::WF_SLASH_V0",
+      "target_address": 89,
+      "target_fqdn": "blockchain::IN_SLASH_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 141,
       "source_fqdn": "blockchain::WF_SLASH_V0",
@@ -6912,7 +6258,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 142,
       "source_fqdn": "blockchain::WF_STAKE_V0",
@@ -6921,7 +6267,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 142,
       "source_fqdn": "blockchain::WF_STAKE_V0",
@@ -6930,7 +6276,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 142,
       "source_fqdn": "blockchain::WF_STAKE_V0",
@@ -6939,7 +6285,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 142,
       "source_fqdn": "blockchain::WF_STAKE_V0",
@@ -6948,7 +6294,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 142,
       "source_fqdn": "blockchain::WF_STAKE_V0",
@@ -6957,15 +6303,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 142,
-      "source_fqdn": "blockchain::WF_STAKE_V0",
-      "target_address": 91,
-      "target_fqdn": "blockchain::IN_STAKE_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 142,
@@ -6974,8 +6311,17 @@
       "target_fqdn": "blockchain::IN_STAKE_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 142,
+      "source_fqdn": "blockchain::WF_STAKE_V0",
+      "target_address": 91,
+      "target_fqdn": "blockchain::IN_STAKE_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 142,
       "source_fqdn": "blockchain::WF_STAKE_V0",
@@ -6993,7 +6339,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7002,7 +6348,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7011,7 +6357,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7020,7 +6366,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7029,7 +6375,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7038,7 +6384,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7047,7 +6393,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7056,7 +6402,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7065,7 +6411,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7074,15 +6420,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 143,
-      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
-      "target_address": 92,
-      "target_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 143,
@@ -7091,8 +6428,17 @@
       "target_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 143,
+      "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
+      "target_address": 92,
+      "target_fqdn": "blockchain::IN_TRANSACTION_SUBMITTED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 143,
       "source_fqdn": "blockchain::WF_SUBMIT_TRANSACTION_V0",
@@ -7110,7 +6456,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 144,
       "source_fqdn": "blockchain::WF_TRANSFER_V0",
@@ -7119,7 +6465,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 144,
       "source_fqdn": "blockchain::WF_TRANSFER_V0",
@@ -7128,7 +6474,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 144,
       "source_fqdn": "blockchain::WF_TRANSFER_V0",
@@ -7137,7 +6483,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 144,
       "source_fqdn": "blockchain::WF_TRANSFER_V0",
@@ -7146,7 +6492,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 144,
       "source_fqdn": "blockchain::WF_TRANSFER_V0",
@@ -7155,15 +6501,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 144,
-      "source_fqdn": "blockchain::WF_TRANSFER_V0",
-      "target_address": 93,
-      "target_fqdn": "blockchain::IN_TRANSFER_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 144,
@@ -7172,8 +6509,17 @@
       "target_fqdn": "blockchain::IN_TRANSFER_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 144,
+      "source_fqdn": "blockchain::WF_TRANSFER_V0",
+      "target_address": 93,
+      "target_fqdn": "blockchain::IN_TRANSFER_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 144,
       "source_fqdn": "blockchain::WF_TRANSFER_V0",
@@ -7191,7 +6537,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 145,
       "source_fqdn": "blockchain::WF_UNSTAKE_V0",
@@ -7200,7 +6546,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 145,
       "source_fqdn": "blockchain::WF_UNSTAKE_V0",
@@ -7209,7 +6555,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 145,
       "source_fqdn": "blockchain::WF_UNSTAKE_V0",
@@ -7218,7 +6564,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 145,
       "source_fqdn": "blockchain::WF_UNSTAKE_V0",
@@ -7227,7 +6573,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 145,
       "source_fqdn": "blockchain::WF_UNSTAKE_V0",
@@ -7236,15 +6582,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 145,
-      "source_fqdn": "blockchain::WF_UNSTAKE_V0",
-      "target_address": 95,
-      "target_fqdn": "blockchain::IN_UNSTAKE_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 145,
@@ -7253,8 +6590,17 @@
       "target_fqdn": "blockchain::IN_UNSTAKE_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 145,
+      "source_fqdn": "blockchain::WF_UNSTAKE_V0",
+      "target_address": 95,
+      "target_fqdn": "blockchain::IN_UNSTAKE_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 145,
       "source_fqdn": "blockchain::WF_UNSTAKE_V0",
@@ -7272,7 +6618,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 146,
       "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
@@ -7281,7 +6627,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 146,
       "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
@@ -7290,7 +6636,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 146,
       "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
@@ -7299,7 +6645,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 146,
       "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
@@ -7308,15 +6654,6 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
-      "metadata": {},
-      "source_address": 146,
-      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
-      "target_address": 80,
-      "target_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0"
-    },
-    {
-      "kind": "WF_START",
       "kind_address": 16397,
       "metadata": {},
       "source_address": 146,
@@ -7325,8 +6662,17 @@
       "target_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0"
     },
     {
+      "kind": "WF_START",
+      "kind_address": 16398,
+      "metadata": {},
+      "source_address": 146,
+      "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
+      "target_address": 80,
+      "target_fqdn": "blockchain::IN_ACTOR_VERIFIED_V0"
+    },
+    {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 146,
       "source_fqdn": "blockchain::WF_VERIFY_ACTOR_V0",
@@ -8936,15 +8282,6 @@
     {
       "kind": "RB_MAPS",
       "kind_address": 16392,
-      "metadata": {},
-      "source_address": 389,
-      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
-      "target_address": 384,
-      "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
-    },
-    {
-      "kind": "RB_MAPS",
-      "kind_address": 16392,
       "metadata": {
         "handler_ref": ""
       },
@@ -8964,7 +8301,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 390,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
@@ -8973,7 +8310,7 @@
     },
     {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 390,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
@@ -8991,7 +8328,7 @@
     },
     {
       "kind": "WF_CONTAINS_NODE",
-      "kind_address": 16396,
+      "kind_address": 16397,
       "metadata": {},
       "source_address": 391,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
@@ -9000,7 +8337,7 @@
     },
     {
       "kind": "WF_BINDS_RB",
-      "kind_address": 16395,
+      "kind_address": 16396,
       "metadata": {},
       "source_address": 391,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",

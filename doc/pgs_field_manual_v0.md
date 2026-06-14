@@ -531,6 +531,28 @@ The compiler emits `evidence_graph.json` per structure during S7. This is the co
 
 **Contract freeze:** The `EvidenceQuery` public surface is a protocol surface, not a utility library. Additions require explicit versioning. No compiler-internal fields may be exposed.
 
+### 5.5 Protocol Inspection (`pi`)
+
+Compilation answers *is this protocol admissible?* Inspection answers *what does this protocol mean?* `pi` (Protocol Inspection command processor, in `pgs_compiler`, v0.6.0+) is the read-only query surface over the compiled snapshot set — the relationship-navigation tool that replaces grepping markdown and mentally reconstructing dependency graphs the compiler has already built and verified.
+
+**Governing principle (V0):** *`pi` answers questions. The compiler performs changes. The runtime performs execution.* No mutation verb exists in the taxonomy, the CLI, or the library — including caches. Because inspection answers come from the same verified projections the runtime consumes, a `pi` result carries snapshot authority and is admissible as dossier evidence (Stage 3 impact analysis cites `pi topology impact --json` directly).
+
+**One core, three surfaces:** the inspection library (`pgs_compiler.inspection`: loader → resolver → traversal) is the core; the terminal CLI/shell and the `--json` output (stable schema, for agents and CI) are its projections. All three return the same answer by construction.
+
+| Property | Statement |
+|----------|-----------|
+| Read-only | No write API exists anywhere in the inspection path |
+| Workspace explicit | `--workspace` flag or `PGS_WORKSPACE` env var; no cwd guessing |
+| Validity gate | Refuses to answer unless `snapshot_status.json` is VALID |
+| Zero Inference | Full FQDNs required one-shot; bare codes hard-error naming candidates; shell `use <domain>` scope is declared and visible in the prompt (`pi:<domain>>`) |
+| Fail hard | Missing projection / unknown FQDN → non-zero exit with explicit cause |
+| Determinism | Same snapshot + same command → byte-identical output |
+| SoC | Zero runtime imports; `pi trace explain` delegates to `pgs_runtime examine` via subprocess — pi never parses traces |
+
+**Query sources (all compiler-materialized):** `protocol_snapshot/artifact_index/` (`index.json` — FQDN → domain/structure/kind/paths/addresses; `stores.json` — entity-store ownership join), per-scope `evidence.json` (the artifact-level semantic graph: `NODE_NEXT`, `WF_CONTAINS_NODE`, `CC_BINDS_CT/CS`, `WF_BINDS_RB`, `RB_MAPS`, `GOVERNED_BY` edges), `vocabulary_snapshot/`, `pps_snapshot/index.json`, `protocol_snapshot/behavior_logic/<WF>/*.graph.json`, and `conformance_results.json`. Both index projections enter the workspace only via `pgs_compiler.cli build` — never hand-placed.
+
+**Command taxonomy:** `pi <object> <verb> [target]` over objects `artifact`, `wf|cc|ct|cs|rb|in|ev|ac`, `topology`, `behavior_logic`, `store`, `vocab`, `pps`, `snapshot`, `trace`, plus top-level `validate` (CI gate: `--strict` exits non-zero unless VALID with zero violations) and `stats`. Bare `pi` opens the interactive shell. Full command set: `doc/pgs_cli_cheatsheet.txt`.
+
 ---
 
 ## 6. Runtime Model
@@ -918,8 +940,9 @@ python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_PLATFORM_CONFIG_V
 python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0
 python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0
 
-# Phase B — cross-structure aggregation (after all Phase A)
-python -m pgs_compiler.cli compile --structure STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0
+# Cross-structure aggregation happens in `build` (artifact_index/ emission) —
+# the former Phase B vocabulary-aggregate compile step is retired; per-domain
+# vocabulary is materialized in Phase A (S7).
 
 # Full build — compile + sync + conformance + attestation + snapshot validation
 python -m pgs_compiler.cli build --workspace /abs/path/to/pgs_workspace
@@ -930,6 +953,28 @@ python -m pgs_compiler.cli inspect --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG
 python -m pgs_compiler.cli inspect --structure STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0 \
   --family CONSTRUCTION
 ```
+
+### Protocol Inspection (pi)
+
+```bash
+export PGS_WORKSPACE=/abs/path/to/pgs_workspace   # or pass --workspace per command
+
+# Daily drivers
+pi artifact refs blockchain::CC_GENERATE_TX_ID_V0       # who references this artifact
+pi topology impact <fqdn> --json                        # transitive consumer closure (dossier evidence)
+pi behavior_logic show blockchain::WF_MINT_V0           # execution tree from *.graph.json
+pi artifact source blockchain::WF_MINT_V0               # authoring Markdown from PPS snapshot
+pi snapshot validate                                    # conformance state of the snapshot
+pi validate --strict                                    # CI gate: exit 1 unless VALID + zero violations
+
+# Interactive shell (tab completion; bare codes resolve within declared scope)
+pi
+#   pi> use blockchain
+#   pi:blockchain> artifact refs CC_GENERATE_TX_ID_V0
+#   pi:blockchain> exit
+```
+
+Full taxonomy (artifact, kind objects, topology, behavior_logic, store, vocab, pps, snapshot, trace): `doc/pgs_cli_cheatsheet.txt`. Doctrine: §5.5.
 
 ### Clean State Rebuild
 

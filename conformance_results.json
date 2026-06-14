@@ -1,0 +1,395 @@
+{
+  "all_passed": true,
+  "artifact_count": 77,
+  "cases": [
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_BUILD_ETH_TRANSACTION_V0::basic_valid_tx",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_DERIVE_WALLET_KEYPAIRS_V0::derive_deterministic_v0",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_EXTRACT_WALLET_TX_FIELDS_V0::extract_fields_standard",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0::increment_from_positive",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_INCREMENT_WALLET_NONCE_V0::increment_from_zero",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0::select_by_modulo",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0::select_first_proposer",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "blockchain::CT_PURE_SELECT_PROPOSER_V0::single_validator",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_array_objects",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_array_primitives",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_boolean_false",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_boolean_true",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_empty_array",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_empty_object",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_integer",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_large_array",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_mixed_array",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_nested_object",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_null",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_simple_object",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_string",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_unicode_strings",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_EXEC_EMIT_V0::emit_workflow_result",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0::assemble_nested_record",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0::assemble_simple_record",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0::quota_available",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0::quota_exceeded",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0::training_completed",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0::training_not_completed",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0::derive_hardened_child",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0::derive_normal_child",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0::derive_master_key_from_seed",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0::sign_message_secp256k1",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0::entropy_128_bits",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0::entropy_256_bits",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0::user_active",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0::user_inactive",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_EXTRACT_V0::extract_nested_field",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_EXTRACT_V0::extract_nested_numeric",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_EXTRACT_V0::extract_top_level_field",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0::filter_by_exact_value",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0::filter_by_field_presence",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0::filter_multi_criteria",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0::filter_single_match",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0::generate_128_bit_entropy",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0::generate_256_bit_entropy",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_deterministic",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_numeric_data",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_object_data",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0::generate_id_string_data",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0::hash_empty",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0::hash_simple_hex",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0::hash_without_prefix",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0::lookup_array_value",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0::lookup_numeric_value",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0::lookup_object_value",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_LOOKUP_V0::lookup_string_value",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::error_with_custom_mapping",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::failure_validation_array",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::failure_with_error",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::success_complex_nested",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::success_empty_value",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0::success_with_data",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0::mnemonic_to_seed_basic",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0::passthrough_array",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0::passthrough_boolean",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0::passthrough_number",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0::passthrough_object",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0::passthrough_string",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0::secp256k1_pubkey",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0::pubkey_to_address",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0::all_rules_pass",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0::rule_fails",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0::invalid_record_missing_field",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0::valid_record",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0::value_in_set",
+      "passed": true
+    },
+    {
+      "error": null,
+      "fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0::value_not_in_set",
+      "passed": true
+    }
+  ],
+  "failed": 0,
+  "generated_by": "pgs_compiler.cli build",
+  "passed": 77,
+  "schema_version": "v0"
+}

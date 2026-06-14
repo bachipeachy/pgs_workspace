@@ -1,0 +1,409 @@
+{
+  "compiler_version": "0.6.0",
+  "generated_by": "pgs_compiler.cli build",
+  "schema_version": "v0",
+  "store_count": 21,
+  "stores": {
+    "ai_governance::COLLATZ_RESULTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "ai_governance::STRUCTURE_COLLATZ_STORAGE_V0",
+          "description": "Mutable store for Collatz sequences and conjecture verdict (last-write-wins)",
+          "path": "ai_governance/collatz_conjecture/collatz_results.json"
+        }
+      ],
+      "domain": "ai_governance",
+      "store": "COLLATZ_RESULTS"
+    },
+    "ai_governance::GOVERNANCE_ACTIONS": {
+      "declarations": [
+        {
+          "bindings": [
+            {
+              "consumer_ccs": [
+                "ai_governance::CC_RECORD_GOVERNED_ACTION_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
+              "workflows": [
+                "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0"
+              ]
+            }
+          ],
+          "declared_by": "ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+          "description": "Registry of authorized agent admission actions (idempotency tracking)",
+          "path": "ai_governance/agent_admission/governance_actions.json"
+        }
+      ],
+      "domain": "ai_governance",
+      "store": "GOVERNANCE_ACTIONS"
+    },
+    "ai_governance::GOVERNANCE_AUDIT": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+          "description": "Append-only audit trail for agent admission authorization and denial decisions",
+          "path": "ai_governance/agent_admission/governance_audit.jsonl"
+        },
+        {
+          "bindings": [],
+          "declared_by": "ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+          "description": "Append-only audit trail for agent governance authorization and denial decisions",
+          "path": "ai_governance/agent_governance/governance_audit.jsonl"
+        }
+      ],
+      "domain": "ai_governance",
+      "store": "GOVERNANCE_AUDIT"
+    },
+    "ai_governance::LICENSE_AUDIT": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+          "description": "Append-only audit trail for license provisioning, denial, and reclaim decisions",
+          "path": "ai_governance/ai_licensing/audit_log.jsonl"
+        }
+      ],
+      "domain": "ai_governance",
+      "store": "LICENSE_AUDIT"
+    },
+    "ai_governance::LICENSE_FACTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
+          "description": "Read-only license tier and status fact feed (shared with agent_governance)",
+          "path": "ai_governance/ai_licensing/license_facts.json"
+        },
+        {
+          "bindings": [],
+          "declared_by": "ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
+          "description": "Read-only license tier and status fact feed (user_id \u2192 license record)",
+          "path": "ai_governance/ai_licensing/license_facts.json"
+        }
+      ],
+      "domain": "ai_governance",
+      "store": "LICENSE_FACTS"
+    },
+    "blockchain::ACTOR": {
+      "declarations": [
+        {
+          "bindings": [
+            {
+              "consumer_ccs": [
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_BURN_V0",
+              "workflows": [
+                "blockchain::WF_BURN_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_CREATE_WALLET_RECORD_V0",
+                "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_CREATE_WALLET_V0",
+              "workflows": [
+                "blockchain::WF_CREATE_WALLET_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_MINT_V0",
+              "workflows": [
+                "blockchain::WF_MINT_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_POOL_V0",
+              "workflows": [
+                "blockchain::WF_POOL_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_REGISTER_ACTOR_KYC_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_REGISTER_ACTOR_UNVERIFIED_V0",
+              "workflows": [
+                "blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_CHECK_ACTOR_EXISTS_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_REGISTER_VALIDATOR_V0",
+              "workflows": [
+                "blockchain::WF_REGISTER_VALIDATOR_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_REWARD_V0",
+              "workflows": [
+                "blockchain::WF_REWARD_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_SLASH_V0",
+              "workflows": [
+                "blockchain::WF_SLASH_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_STAKE_V0",
+              "workflows": [
+                "blockchain::WF_STAKE_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_TRANSFER_V0",
+              "workflows": [
+                "blockchain::WF_TRANSFER_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_RESOLVE_ACTOR_ID_V0",
+                "blockchain::CC_WRITE_MEMPOOL_TX_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_UNSTAKE_V0",
+              "workflows": [
+                "blockchain::WF_UNSTAKE_V0"
+              ]
+            },
+            {
+              "consumer_ccs": [
+                "blockchain::CC_PERSIST_VERIFIED_ACTOR_V0",
+                "blockchain::CC_RESOLVE_ACTOR_ID_V0"
+              ],
+              "cs": "capability_side_effects::CS_REGISTRY_V0",
+              "rb": "blockchain::RB_VERIFY_ACTOR_V0",
+              "workflows": [
+                "blockchain::WF_VERIFY_ACTOR_V0"
+              ]
+            }
+          ],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Actor identity registry (KYC \u2192 actor_id resolution)",
+          "path": "blockchain/identity/registry/actors.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "ACTOR"
+    },
+    "blockchain::ACTOR_EVENTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Actor lifecycle event journal",
+          "path": "blockchain/identity/events/identity_events.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "ACTOR_EVENTS"
+    },
+    "blockchain::BLOCKS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Block state storage (block_id \u2192 block record; CS_MUTABLE_JSON_V0)",
+          "path": "blockchain/block/blocks/blocks.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "BLOCKS"
+    },
+    "blockchain::BLOCK_EVENTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Block lifecycle event journal (CS_APPENDONLY_JSONL_V0)",
+          "path": "blockchain/block/events/block_events.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "BLOCK_EVENTS"
+    },
+    "blockchain::CONSENSUS_EVENTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Consensus lifecycle event journal (CS_APPENDONLY_JSONL_V0)",
+          "path": "blockchain/consensus_pos/events/consensus_events.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "CONSENSUS_EVENTS"
+    },
+    "blockchain::CONSENSUS_ROUNDS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Consensus round journal (CS_APPENDONLY_JSONL_V0)",
+          "path": "blockchain/consensus_pos/rounds/rounds.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "CONSENSUS_ROUNDS"
+    },
+    "blockchain::MEMPOOL": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Ephemeral staging buffer for pending transactions (CS_MUTABLE_JSON_V0); keyed by tx_id; deleted on drain",
+          "path": "blockchain/mempool/state/mempool.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "MEMPOOL"
+    },
+    "blockchain::MEMPOOL_INDEX": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Deduplication registry for tx_id and tx_hash uniqueness (CS_REGISTRY_V0)",
+          "path": "blockchain/mempool/registry/mempool_index.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "MEMPOOL_INDEX"
+    },
+    "blockchain::SIMULATION_SUMMARY": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+          "description": "Append-only simulation outcome journal (CS_APPENDONLY_JSONL_V0); one record per completed simulation run; immutable after write",
+          "path": "blockchain/orchestration/events/simulation_summary.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "SIMULATION_SUMMARY"
+    },
+    "blockchain::SLOT_CLOCK": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0",
+          "description": "Keyed mutable slot clock record (CS_MUTABLE_JSON_V0); one active record per simulation_id; initialized at launch; advanced per slot",
+          "path": "blockchain/orchestration/state/slot_clock.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "SLOT_CLOCK"
+    },
+    "blockchain::TRANSACTION": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Transaction state storage (tx_id \u2192 transaction record)",
+          "path": "blockchain/transaction/state/transactions.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "TRANSACTION"
+    },
+    "blockchain::TRANSACTION_EVENTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Transaction lifecycle event journal",
+          "path": "blockchain/transaction/events/transaction_events.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "TRANSACTION_EVENTS"
+    },
+    "blockchain::VALIDATOR": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Validator registry (actor_id \u2192 validator record; CS_MUTABLE_JSON_V0)",
+          "path": "blockchain/consensus_pos/registry/validators.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "VALIDATOR"
+    },
+    "blockchain::VALIDATOR_EVENTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Validator lifecycle event journal",
+          "path": "blockchain/consensus_pos/events/validator_events.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "VALIDATOR_EVENTS"
+    },
+    "blockchain::WALLET": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Wallet state storage (wallet_id \u2192 wallet record)",
+          "path": "blockchain/wallet/state/wallets.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "WALLET"
+    },
+    "blockchain::WALLET_EVENTS": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_BLOCKCHAIN_STORAGE_V0",
+          "description": "Wallet lifecycle event journal",
+          "path": "blockchain/wallet/events/wallet_events.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "WALLET_EVENTS"
+    }
+  }
+}
