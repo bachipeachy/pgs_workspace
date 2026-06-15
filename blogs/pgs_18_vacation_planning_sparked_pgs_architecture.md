@@ -2,9 +2,7 @@
 
 ### *A milestone birthday atop Mt. Fuji, eight days of criss-crossing Japan by train, and the shower-thought that sparked the idea for Protocol-Governed Systems.*
 
-Japanese trains on their assigned tracks with clearly marked station stops, the line of stops dissolving into a graph of nodes and edges, Mt. Fuji at sunrise in the distance — the journey as a pre-mapped topology with no room to wander.
-
-![How a painful, helpless feeling — and one friend's offhand remark — became the seed of Protocol-Governed Systems.](assets/blog_18.jpg)
+![Japanese trains on their assigned tracks with clearly marked station stops, the line of stops dissolving into a graph of nodes and edges, Mt. Fuji at sunrise in the distance — the journey as a pre-mapped topology with no room to wander.](assets/blog_18.jpg)
 
 I want to tell you about a vacation that changed the way I think about software.
 
@@ -90,7 +88,7 @@ The mountain was not the architecture. The *itinerary* was. Mt. Fuji was just th
 
 I have kept this deliberately light on the machinery. If you would like to watch a real "train" run its track — a single transaction walking the execution topology, stop by stop, taking only the exits it was allowed to take — I traced exactly that in an earlier post:
 
-**[What Actually Happens Inside a Protocol-Governed Execution (Blog 12)](pgs_12_inside_pgs_execution.md)**
+**[What Actually Happens Inside a Protocol-Governed Execution (Blog 12)](/blog/inside-a-protocol-governed-execution/)**
 
 That one opens the box and follows a live execution end to end. Think of this post as *why I planned the trip this way*, and that one as *the train pulling out of the station*.
 
