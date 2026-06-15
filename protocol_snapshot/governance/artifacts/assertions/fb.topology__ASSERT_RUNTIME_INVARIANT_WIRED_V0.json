@@ -1,0 +1,30 @@
+{
+  "artifact_code": "ASSERT_RUNTIME_INVARIANT_WIRED_V0",
+  "artifact_type": "ASSERT",
+  "content": "# ASSERT_RUNTIME_INVARIANT_WIRED_V0\n\nArchitectural Assertion\n\n## Machine\n\n```yaml\nartifact_code: ASSERT_RUNTIME_INVARIANT_WIRED_V0\nartifact_type: ASSERT\nartifact_kind: ASSERT\nversion: 0\n\ngoverned_by:\n  - fb.topology::INVARIANT_RUNTIME_INVARIANT_WIRED_V0\n\nscope:\n  applies_to:\n    - PLATFORM\n\nimplementation:\n  module: pgs_governance.registry.handlers.assert_runtime_invariant_wired_v0\n  callable: execute\n```\n\n## Summary\n\nFor every INVARIANT whose `core.enforcement_stage` contains `runtime_outcome`,\nverifies the declared `core.runtime_binding` is wired to a real enforcement point:\n\n1. the `enforced_by` CC exists and declares `violation_outcome` in its `result_surface`;\n2. the `enforcing_workflow` contains that CC as a node and routes `violation_outcome`\n   to `terminal_node`;\n3. `terminal_node` exists in that workflow.\n\nReads only artifact data (WF/CC frontmatter). Does not change the compiler or the\nruntime \u2014 enforcement remains the existing CC outcome routing; this assertion only\nproves the binding so that no runtime invariant is decorative.\n\n## Enforcement\n\n- **Phase**: 5 (ASSERT)\n- **Failure Mode**: HARD FAIL (build stops)\n- **Scope**: All INVARIANT artifacts with a runtime enforcement stage\n\n## Version History\n\n- **V0**: Initial runtime-invariant wiring assertion (2026-06-14)\n",
+  "content_hash": "7eebff5bcc62d919d895f1cb04b6a6fc0013811343c94ca8ac5ebea6c706daa9",
+  "fqdn_id": "fb.topology::ASSERT_RUNTIME_INVARIANT_WIRED_V0",
+  "frontmatter": {
+    "artifact_code": "ASSERT_RUNTIME_INVARIANT_WIRED_V0",
+    "artifact_kind": "ASSERT",
+    "artifact_type": "ASSERT",
+    "governed_by": [
+      "fb.topology::INVARIANT_RUNTIME_INVARIANT_WIRED_V0"
+    ],
+    "implementation": {
+      "callable": "execute",
+      "module": "pgs_governance.registry.handlers.assert_runtime_invariant_wired_v0"
+    },
+    "scope": {
+      "applies_to": [
+        "PLATFORM"
+      ]
+    },
+    "version": 0
+  },
+  "layer_code": "GOVERNANCE",
+  "module_path": "pgs_governance.registry.FB_TOPOLOGY.assertions",
+  "namespace": "fb.topology",
+  "references": [],
+  "version": "0"
+}

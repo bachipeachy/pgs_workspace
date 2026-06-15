@@ -2,7 +2,7 @@
 # A Formal Structural Taxonomy for Protocol-Governed Systems
 
 **Bachi (aka Bhash Ganti)**
-Contact: bachi.bachi@myyahoo.com
+Contact: bachipeachy@gmail.com
 
 ---
 
@@ -502,7 +502,7 @@ For licensing inquiries or permissions beyond the scope of this license, contact
 ## Author Information
 
 **Bachi (aka Bhash Ganti)**
-Contact: bachi.bachi@myyahoo.com
+Contact: bachipeachy@gmail.com
 
 **Conflict of Interest:** The author is developing commercial implementations of the described architecture.
 

@@ -797,7 +797,7 @@ contact the author.
 # Author Information
 
 Bachi (aka Bhash Ganti)  
-Contact: `bachi.bachi@myyahoo.com`
+Contact: `bachipeachy@gmail.com`
 
 **Conflict of Interest:** The author is developing commercial
 implementations of the described architecture.

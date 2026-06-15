@@ -1,15 +1,15 @@
 {
   "allocation_strategy": "deterministic_fqdn_order",
   "compiler_version": "0.6.0",
-  "edge_count": 354,
-  "graph_address_hash": "d01348cd3163aaba450f34d26548b1350146af0f4de60fd9b634080c9c8abaeb",
+  "edge_count": 355,
+  "graph_address_hash": "8c79a2aa7af7065524282eae748f78d69c29a715e93992507b8709741bf8f90f",
   "graph_topology_hash": "",
-  "node_count": 298,
+  "node_count": 300,
   "projection_class": "machine_projection",
-  "projection_hash": "75a27a38f4ecc4362a9a1bb55a2acec730c8c79b5244854b8c1d9536e3a7761d",
+  "projection_hash": "94633a5041bb4ecb517b88649363b2433b8fe809642ced568ff0cb4a5ce3987d",
   "projection_schema_version": "v0",
   "projection_type": "tokenized",
   "requires_fqdn_identity": false,
   "structure_id": "ai_governance",
-  "vocabulary_hash": "7dd0dd798c83539f05e79b48f0903de2b638e18367234a707c1ffd1e4ade2b28"
+  "vocabulary_hash": "32c9ac4f676caab3cda0062df7d4e34b4ec047512d711732c9e83e676799aba3"
 }
