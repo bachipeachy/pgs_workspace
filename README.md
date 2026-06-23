@@ -182,7 +182,7 @@ It is a governed execution substrate.
 - Protocol-first system evolution
 - FQDN-based artifact identity
 - Governance-constrained compiler behavior
-- Governed SDLC change management — Change Request to Authoring Mandate (`pgs_change_mgmt`, new in v0.5.0)
+- Governance-first change management — every change is a governed Change Request → Authoring Mandate dossier; authoring is interchangeable, authority is not ([`pgs_change_mgmt`](https://github.com/bachipeachy/pgs_change_mgmt#readme))
 
 ---
 
@@ -225,6 +225,20 @@ Explore what PGS makes possible beyond workflow governance:
 - [Protocol-Governed Blockchain Chain Runtime](doc/challenge_projects/1_protocol_governed_blockchain_chain_runtime.md) — build & close the blockchain/chain CR from its governed dossier (2/5)
 - [Protocol-Governed Autonomous Agent Runtime](doc/challenge_projects/2_pgs_governed_autonomous_agent_runtime.md) — structural governance for autonomous AI agents (3/5)
 - [Protocol-Governed Transformer Runtime](doc/challenge_projects/3_pgs_governed_transformer_runtime.md) — declarative AI model topology as a governed execution substrate (5/5)
+
+---
+
+# Evolving the system — governed change
+
+PGS does not stop at governing execution; it governs **how the system itself changes**. Every protocol change travels a governed, gated pipeline — from a plain-language Change Request to an Authoring Mandate — producing a complete, reviewable dossier *before* any artifact is authored.
+
+The pipeline is **governance-first and authority-invariant**: a stage may be drafted by a human or an automated agent, but authority resides in the governed artifacts, structural validation, approval gates, and the compiler — never in the author. *The actor proposes; governance disposes.*
+
+To make a change, start with the change-management guide:
+
+- **[pgs_change_mgmt — Governed Change Management](https://github.com/bachipeachy/pgs_change_mgmt#readme)** — CR types, the staged pipeline, how to seed a Change Request, and what happens after the Authoring Mandate.
+
+Doctrine and reference: [`doc/pgs_change_management_conceptual_model_v1.md`](doc/pgs_change_management_conceptual_model_v1.md) and field manual [`doc/pgs_field_manual_v1.md`](doc/pgs_field_manual_v1.md) §4.
 
 ---
 

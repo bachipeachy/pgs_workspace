@@ -147,19 +147,17 @@ install_repo "pgs_blockchain"
 install_repo "pgs_ai_governance"
 
 # --------------------------------------------------
-# Verify change management authoring layer (data repo — not installed)
+# Install change management engine (authoring layer)
 # --------------------------------------------------
 
 echo ""
-echo "[8/10] Verifying pgs_change_mgmt (authoring layer)..."
+echo "[8/10] Installing pgs_change_mgmt (change management engine)..."
 
-# pgs_change_mgmt is a markdown templates/dossiers/docs repo — no Python package.
-# It is read by the change-management agent, not imported, so it is not pip-installed.
-if [ -d "$BASE_DIR/pgs_change_mgmt" ]; then
-  echo "  [present] pgs_change_mgmt — markdown data repo; no install"
-else
-  echo "  [skip] pgs_change_mgmt not found alongside other repos — change-management pipeline unavailable"
-fi
+# pgs_change_mgmt is the governance projection engine — a Python package
+# (pgs_change_mgmt/) alongside its markdown templates/dossiers/docs. It is
+# installed editable so the engine is importable; it is not on PyPI, so even
+# under --env remote it installs from local source.
+install_repo "pgs_change_mgmt"
 
 # --------------------------------------------------
 # Generate environment activation helper
@@ -203,9 +201,8 @@ echo "  [seed] validators.json → data/blockchain/consensus_pos/registry/"
 echo ""
 echo "----------------------------------------"
 echo "PGS Bootstrap Complete (env: $PGS_ENV)"
-echo "  Seven Python packages installed: runtime, governance, compiler,"
-echo "  transport, capabilities, blockchain, ai_governance"
-echo "  change_mgmt (authoring layer) verified — markdown data repo, not installed"
+echo "  Eight Python packages installed: runtime, governance, compiler,"
+echo "  transport, capabilities, blockchain, ai_governance, change_mgmt"
 echo "----------------------------------------"
 
 echo ""
