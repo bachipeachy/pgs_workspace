@@ -1,6 +1,6 @@
 {
   "cs": {
-    "292": {
+    "293": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -1448,8 +1448,8 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "297": {
-      "292": {
+    "298": {
+      "293": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

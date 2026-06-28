@@ -1,0 +1,149 @@
+{
+  "artifact_code": "ENTITY_ACTOR_V0",
+  "artifact_type": "ENTITY",
+  "content": "# ENTITY_ACTOR_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** ENTITY_ACTOR_V0\n- **Artifact Kind:** entity\n- **Governed By:** CONSTITUTION_ENTITY_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare the canonical protocol definition of an **Actor** \u2014 the identity root of the blockchain domain\n(an Actor owns Wallets, may be a Validator proposer, and is the authority an Intent binds). This is a\n**governed reconciliation**, not a copy of runtime or of any Change Request: the compiled entity is the\nauthoritative Actor definition (`pi entity blockchain::ENTITY_ACTOR_V0`).\n\n---\n\n## 2. Rationale\n\nAn Actor's definition lived only in runtime records and a transient data-model Change Request. Promoting\nit to a first-class entity gives the identity layer one canonical home. Other entities reference it\n(`WALLET.actor_id`, `BLOCK.proposer_id`, `VALIDATOR.actor_id`); none redefine it.\n\n---\n\n## 3. Definition\n\n**Identity:** `actor_id` (`A_<hex>`), unique. **Lifecycle:** `status` is a state machine.\nAttributes, semantics, lifecycle and invariants are in the Machine block; the field-by-field governed\ndecisions are in \u00a74 Reconciliation.\n\n---\n\n## 4. Reconciliation (governed)\n\nEvidence: runtime seed `genesis_actor.json` and the data-model CR (S2 Identity) **agree on every\nfield** \u2014 a clean *Accepted* reconciliation. The CR additionally contributes governed enums and field\nmeanings (adopted). No contested fields.\n\n| Field | Runtime | CR | Decision | Rationale |\n|-------|:---:|:---:|----------|-----------|\n| actor_id | \u2713 | \u2713 | Accepted (identity) | Deterministic unique identifier |\n| user_type | \u2713 | \u2713 | Accepted (enum from CR) | Governed role classification |\n| status | \u2713 | \u2713 | Accepted (lifecycle) | Governed lifecycle states |\n| kyc_verified | \u2713 | \u2713 | Accepted | Verification gate |\n| currency_preference | \u2713 | \u2713 | Accepted | Denomination preference |\n| language | \u2713 | \u2713 | Accepted | Locale preference |\n| first_name, last_name | \u2713 | \u2713 | Accepted | Identity attributes |\n| email_registration | \u2713 | \u2713 | Accepted (unique, immutable) | Registration key |\n| created_at, last_modified | \u2713 | \u2713 | Accepted | Lifecycle timestamps |\n\nNo runtime migration required (runtime already conforms).\n\n---\n\n## Machine\n\n```yaml\nentity_code: ENTITY_ACTOR_V0\nartifact_kind: entity\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_ENTITY_V0\n\ncore:\n  summary: Canonical Actor business object (identity root)\n  description: Protocol-level definition of an Actor \u2014 identity, attributes, semantics, lifecycle, invariants.\n  layer: DOMAINS\n  domain: blockchain\n\n  authority:\n    primary: compiler\n    runtime: observational\n    change_request: non_definitional\n\n  projection:\n    source_of_truth: compiler\n    allowed_sources:\n      - blockchain::ENTITY_ACTOR_V0\n    forbidden_sources:\n      - markdown\n      - change_requests\n      - runtime_snapshots\n\n  identity:\n    field: actor_id\n    type: string\n    unique: true\n\n  attributes:\n    - { name: user_type,           type: string,  enum: [INDIVIDUAL, BUSINESS, ORGANIZATION, VALIDATOR, DELEGATOR, INSTITUTIONAL, DEVELOPER, TESTNET, GENESIS] }\n    - { name: status,              type: string,  enum: [ACTIVE, INACTIVE, SUSPENDED, PENDING, VERIFIED, DELETED] }\n    - { name: kyc_verified,        type: boolean }\n    - { name: currency_preference, type: string }\n    - { name: language,            type: string }\n    - { name: first_name,          type: string }\n    - { name: last_name,           type: string }\n    - { name: email_registration,  type: string }\n    - { name: created_at,          type: string }\n    - { name: last_modified,       type: string }\n\n  semantics:\n    actor_id:            \"Deterministic unique actor identifier (A_<hex>)\"\n    user_type:           \"Governed role classification\"\n    status:              \"Identity lifecycle state (see lifecycle)\"\n    kyc_verified:        \"Whether the identity has been verified\"\n    currency_preference: \"Preferred currency denomination (BACHI default)\"\n    language:            \"Preferred language (en default)\"\n    first_name:          \"Given name\"\n    last_name:           \"Family name\"\n    email_registration:  \"Immutable registration email (unique key)\"\n    created_at:          \"Registration timestamp\"\n    last_modified:       \"Last update timestamp\"\n\n  lifecycle:\n    field: status\n    stages: [PENDING, ACTIVE, VERIFIED, SUSPENDED, INACTIVE, DELETED]\n    initial: PENDING\n    terminal: DELETED\n\n  relationships: []\n\n  invariants:\n    - invariant_id: ACTOR_ID_UNIQUE\n      constraint: actor_id MUST be globally unique\n    - invariant_id: ACTOR_EMAIL_UNIQUE_IMMUTABLE\n      constraint: email_registration MUST be unique and immutable after registration\n\n  versioning:\n    strategy: semantic\n    compatibility: backward_compatible_until_breaking_change\n```\n",
+  "content_hash": "a4214a3030b7c7dbd8f5283a5e5ebf5b2a7bfa0a9fe0328d66295fcc11fb3c41",
+  "fqdn_id": "blockchain::ENTITY_ACTOR_V0",
+  "frontmatter": {
+    "artifact_kind": "entity",
+    "core": {
+      "attributes": [
+        {
+          "enum": [
+            "INDIVIDUAL",
+            "BUSINESS",
+            "ORGANIZATION",
+            "VALIDATOR",
+            "DELEGATOR",
+            "INSTITUTIONAL",
+            "DEVELOPER",
+            "TESTNET",
+            "GENESIS"
+          ],
+          "name": "user_type",
+          "type": "string"
+        },
+        {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "SUSPENDED",
+            "PENDING",
+            "VERIFIED",
+            "DELETED"
+          ],
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "kyc_verified",
+          "type": "boolean"
+        },
+        {
+          "name": "currency_preference",
+          "type": "string"
+        },
+        {
+          "name": "language",
+          "type": "string"
+        },
+        {
+          "name": "first_name",
+          "type": "string"
+        },
+        {
+          "name": "last_name",
+          "type": "string"
+        },
+        {
+          "name": "email_registration",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "last_modified",
+          "type": "string"
+        }
+      ],
+      "authority": {
+        "change_request": "non_definitional",
+        "primary": "compiler",
+        "runtime": "observational"
+      },
+      "description": "Protocol-level definition of an Actor \u2014 identity, attributes, semantics, lifecycle, invariants.",
+      "domain": "blockchain",
+      "identity": {
+        "field": "actor_id",
+        "type": "string",
+        "unique": true
+      },
+      "invariants": [
+        {
+          "constraint": "actor_id MUST be globally unique",
+          "invariant_id": "ACTOR_ID_UNIQUE"
+        },
+        {
+          "constraint": "email_registration MUST be unique and immutable after registration",
+          "invariant_id": "ACTOR_EMAIL_UNIQUE_IMMUTABLE"
+        }
+      ],
+      "layer": "DOMAINS",
+      "lifecycle": {
+        "field": "status",
+        "initial": "PENDING",
+        "stages": [
+          "PENDING",
+          "ACTIVE",
+          "VERIFIED",
+          "SUSPENDED",
+          "INACTIVE",
+          "DELETED"
+        ],
+        "terminal": "DELETED"
+      },
+      "projection": {
+        "allowed_sources": [
+          "blockchain::ENTITY_ACTOR_V0"
+        ],
+        "forbidden_sources": [
+          "markdown",
+          "change_requests",
+          "runtime_snapshots"
+        ],
+        "source_of_truth": "compiler"
+      },
+      "relationships": [],
+      "semantics": {
+        "actor_id": "Deterministic unique actor identifier (A_<hex>)",
+        "created_at": "Registration timestamp",
+        "currency_preference": "Preferred currency denomination (BACHI default)",
+        "email_registration": "Immutable registration email (unique key)",
+        "first_name": "Given name",
+        "kyc_verified": "Whether the identity has been verified",
+        "language": "Preferred language (en default)",
+        "last_modified": "Last update timestamp",
+        "last_name": "Family name",
+        "status": "Identity lifecycle state (see lifecycle)",
+        "user_type": "Governed role classification"
+      },
+      "summary": "Canonical Actor business object (identity root)",
+      "versioning": {
+        "compatibility": "backward_compatible_until_breaking_change",
+        "strategy": "semantic"
+      }
+    },
+    "entity_code": "ENTITY_ACTOR_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_ENTITY_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.entities",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_ENTITY_V0"
+  ],
+  "version": "0"
+}

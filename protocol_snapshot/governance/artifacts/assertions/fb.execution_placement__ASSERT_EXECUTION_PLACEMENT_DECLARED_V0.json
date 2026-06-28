@@ -25,6 +25,8 @@
   "layer_code": "GOVERNANCE",
   "module_path": "pgs_governance.registry.FB_EXECUTION_PLACEMENT.assertions",
   "namespace": "fb.execution_placement",
-  "references": [],
+  "references": [
+    "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0"
+  ],
   "version": "0"
 }

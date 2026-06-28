@@ -6,7 +6,7 @@
       "metadata": {},
       "source_address": 0,
       "source_fqdn": "ai_governance::AC_AGENT_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -15,7 +15,7 @@
       "metadata": {},
       "source_address": 1,
       "source_fqdn": "ai_governance::AC_EMPLOYEE_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -24,7 +24,7 @@
       "metadata": {},
       "source_address": 2,
       "source_fqdn": "ai_governance::AC_ENTERPRISE_RUNTIME_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -33,7 +33,7 @@
       "metadata": {},
       "source_address": 3,
       "source_fqdn": "ai_governance::AC_SYSTEM_GOVERNOR_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -42,7 +42,7 @@
       "metadata": {},
       "source_address": 4,
       "source_fqdn": "ai_governance::AC_SYSTEM_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -84,7 +84,7 @@
       "metadata": {},
       "source_address": 5,
       "source_fqdn": "ai_governance::CC_APPEND_AUDIT_EVENT_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -174,7 +174,7 @@
       "metadata": {},
       "source_address": 6,
       "source_fqdn": "ai_governance::CC_BIND_AGENT_LICENSE_TO_TOOL_SURFACE_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -267,7 +267,7 @@
       "metadata": {},
       "source_address": 7,
       "source_fqdn": "ai_governance::CC_BIND_LICENSE_TO_TOOL_SURFACE_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -327,7 +327,7 @@
       "metadata": {},
       "source_address": 8,
       "source_fqdn": "ai_governance::CC_CHECK_AGENT_TOOL_DECLARED_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -387,7 +387,7 @@
       "metadata": {},
       "source_address": 9,
       "source_fqdn": "ai_governance::CC_CHECK_TOOL_DECLARED_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -430,7 +430,7 @@
       "metadata": {},
       "source_address": 10,
       "source_fqdn": "ai_governance::CC_COMPUTE_SEQUENCES_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -461,7 +461,7 @@
       "metadata": {},
       "source_address": 11,
       "source_fqdn": "ai_governance::CC_ENFORCE_LICENSE_CAP_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -521,7 +521,7 @@
       "metadata": {},
       "source_address": 12,
       "source_fqdn": "ai_governance::CC_NORMALIZE_AGENT_REQUEST_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -570,7 +570,7 @@
       "metadata": {},
       "source_address": 13,
       "source_fqdn": "ai_governance::CC_PROVISION_LICENSE_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -640,7 +640,7 @@
       "metadata": {},
       "source_address": 14,
       "source_fqdn": "ai_governance::CC_RECLAIM_UNUSED_LICENSE_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -710,7 +710,7 @@
       "metadata": {},
       "source_address": 15,
       "source_fqdn": "ai_governance::CC_RECORD_DENIED_ACTION_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -816,7 +816,7 @@
       "metadata": {},
       "source_address": 16,
       "source_fqdn": "ai_governance::CC_RECORD_GOVERNED_ACTION_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -953,7 +953,7 @@
       "metadata": {},
       "source_address": 17,
       "source_fqdn": "ai_governance::CC_RESOLVE_LICENSE_TIER_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -993,7 +993,7 @@
       "metadata": {},
       "source_address": 18,
       "source_fqdn": "ai_governance::CC_STORE_RESULTS_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -1096,7 +1096,7 @@
       "metadata": {},
       "source_address": 19,
       "source_fqdn": "ai_governance::CC_VALIDATE_AGENT_TOOL_PARAMETERS_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -1174,7 +1174,7 @@
       "metadata": {},
       "source_address": 20,
       "source_fqdn": "ai_governance::CC_VALIDATE_ELIGIBILITY_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -1293,7 +1293,7 @@
       "metadata": {},
       "source_address": 21,
       "source_fqdn": "ai_governance::CC_VALIDATE_TOOL_PARAMETERS_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -1337,7 +1337,7 @@
       "metadata": {},
       "source_address": 22,
       "source_fqdn": "ai_governance::CC_VERIFY_TERMINATION_V0",
-      "target_address": 209,
+      "target_address": 210,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
     },
     {
@@ -1346,7 +1346,7 @@
       "metadata": {},
       "source_address": 23,
       "source_fqdn": "ai_governance::CT_PURE_COLLATZ_STEP_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -1355,7 +1355,7 @@
       "metadata": {},
       "source_address": 24,
       "source_fqdn": "ai_governance::CT_PURE_TERMINATION_CHECK_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -1364,7 +1364,7 @@
       "metadata": {},
       "source_address": 25,
       "source_fqdn": "ai_governance::EV_AGENT_ACTION_AUTHORIZED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1373,7 +1373,7 @@
       "metadata": {},
       "source_address": 26,
       "source_fqdn": "ai_governance::EV_AGENT_ACTION_DENIED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1382,7 +1382,7 @@
       "metadata": {},
       "source_address": 27,
       "source_fqdn": "ai_governance::EV_EMPLOYEE_REGISTERED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1391,7 +1391,7 @@
       "metadata": {},
       "source_address": 28,
       "source_fqdn": "ai_governance::EV_LICENSE_CAP_SET_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1400,7 +1400,7 @@
       "metadata": {},
       "source_address": 29,
       "source_fqdn": "ai_governance::EV_LICENSE_PROVISIONED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1409,7 +1409,7 @@
       "metadata": {},
       "source_address": 30,
       "source_fqdn": "ai_governance::EV_LICENSE_REVOKED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1418,7 +1418,7 @@
       "metadata": {},
       "source_address": 31,
       "source_fqdn": "ai_governance::EV_PROVISION_DENIED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1427,7 +1427,7 @@
       "metadata": {},
       "source_address": 32,
       "source_fqdn": "ai_governance::EV_TRAINING_COMPLETED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1436,7 +1436,7 @@
       "metadata": {},
       "source_address": 33,
       "source_fqdn": "ai_governance::EV_USAGE_RECORDED_V0",
-      "target_address": 125,
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -1457,7 +1457,7 @@
       "metadata": {},
       "source_address": 34,
       "source_fqdn": "ai_governance::IN_AGENT_ACTION_REQUESTED_V0",
-      "target_address": 215,
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -1478,7 +1478,7 @@
       "metadata": {},
       "source_address": 35,
       "source_fqdn": "ai_governance::IN_AGENT_ADMISSION_REQUESTED_V0",
-      "target_address": 215,
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -1499,7 +1499,7 @@
       "metadata": {},
       "source_address": 36,
       "source_fqdn": "ai_governance::IN_COLLATZ_INPUT_VALIDATED_V0",
-      "target_address": 215,
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -1520,7 +1520,7 @@
       "metadata": {},
       "source_address": 37,
       "source_fqdn": "ai_governance::IN_DENY_PROVISION_V0",
-      "target_address": 215,
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -1541,7 +1541,7 @@
       "metadata": {},
       "source_address": 38,
       "source_fqdn": "ai_governance::IN_PROVISION_AI_LICENSE_V0",
-      "target_address": 215,
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -1562,7 +1562,7 @@
       "metadata": {},
       "source_address": 39,
       "source_fqdn": "ai_governance::IN_RECLAIM_LICENSE_V0",
-      "target_address": 215,
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -1604,7 +1604,7 @@
       "metadata": {},
       "source_address": 40,
       "source_fqdn": "ai_governance::RB_AGENT_ADMISSION_BINDINGS_V0",
-      "target_address": 216,
+      "target_address": 217,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
@@ -1646,7 +1646,7 @@
       "metadata": {},
       "source_address": 41,
       "source_fqdn": "ai_governance::RB_AGENT_GOVERNANCE_BINDINGS_V0",
-      "target_address": 216,
+      "target_address": 217,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
@@ -1666,7 +1666,7 @@
       "metadata": {},
       "source_address": 42,
       "source_fqdn": "ai_governance::RB_COLLATZ_V0",
-      "target_address": 216,
+      "target_address": 217,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
@@ -1697,7 +1697,7 @@
       "metadata": {},
       "source_address": 43,
       "source_fqdn": "ai_governance::RB_LICENSE_BINDINGS_V0",
-      "target_address": 216,
+      "target_address": 217,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
@@ -1706,7 +1706,7 @@
       "metadata": {},
       "source_address": 44,
       "source_fqdn": "ai_governance::STRUCTURE_AGENT_ADMISSION_STORAGE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -1715,7 +1715,7 @@
       "metadata": {},
       "source_address": 45,
       "source_fqdn": "ai_governance::STRUCTURE_AGENT_GOVERNANCE_STORAGE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -1724,7 +1724,7 @@
       "metadata": {},
       "source_address": 46,
       "source_fqdn": "ai_governance::STRUCTURE_COLLATZ_STORAGE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -1778,7 +1778,7 @@
       "metadata": {},
       "source_address": 47,
       "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
@@ -1787,7 +1787,7 @@
       "metadata": {},
       "source_address": 47,
       "source_fqdn": "ai_governance::WF_AUTO_RECLAIM_V0",
-      "target_address": 265,
+      "target_address": 266,
       "target_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0"
     },
     {
@@ -1850,7 +1850,7 @@
       "metadata": {},
       "source_address": 48,
       "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
@@ -1859,7 +1859,7 @@
       "metadata": {},
       "source_address": 48,
       "source_fqdn": "ai_governance::WF_DEMO_COLLATZ_CONJECTURE_V0",
-      "target_address": 265,
+      "target_address": 266,
       "target_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0"
     },
     {
@@ -1904,7 +1904,7 @@
       "metadata": {},
       "source_address": 49,
       "source_fqdn": "ai_governance::WF_DENY_PROVISION_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
@@ -1913,7 +1913,7 @@
       "metadata": {},
       "source_address": 49,
       "source_fqdn": "ai_governance::WF_DENY_PROVISION_V0",
-      "target_address": 265,
+      "target_address": 266,
       "target_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0"
     },
     {
@@ -2039,7 +2039,7 @@
       "metadata": {},
       "source_address": 50,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ACTION_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
@@ -2165,7 +2165,7 @@
       "metadata": {},
       "source_address": 51,
       "source_fqdn": "ai_governance::WF_GOVERN_AGENT_ADMISSION_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
@@ -2237,7 +2237,7 @@
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
@@ -2246,7 +2246,7 @@
       "metadata": {},
       "source_address": 52,
       "source_fqdn": "ai_governance::WF_PROVISION_AI_LICENSING_V0",
-      "target_address": 265,
+      "target_address": 266,
       "target_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0"
     },
     {
@@ -2255,7 +2255,7 @@
       "metadata": {},
       "source_address": 53,
       "source_fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2264,7 +2264,7 @@
       "metadata": {},
       "source_address": 54,
       "source_fqdn": "capability_side_effects::CS_CONCURRENT_WORKFLOWS_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2273,7 +2273,7 @@
       "metadata": {},
       "source_address": 55,
       "source_fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2282,7 +2282,7 @@
       "metadata": {},
       "source_address": 56,
       "source_fqdn": "capability_side_effects::CS_REGISTRY_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2291,7 +2291,7 @@
       "metadata": {},
       "source_address": 57,
       "source_fqdn": "capability_side_effects::CS_SEND_EMAIL_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2300,7 +2300,7 @@
       "metadata": {},
       "source_address": 58,
       "source_fqdn": "capability_side_effects::CS_WORKFLOW_GATEWAY_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2309,7 +2309,7 @@
       "metadata": {},
       "source_address": 59,
       "source_fqdn": "capability_side_effects::CS_WORKFLOW_LOOP_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
@@ -2318,7 +2318,7 @@
       "metadata": {},
       "source_address": 60,
       "source_fqdn": "capability_transforms::CT_EXEC_EMIT_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2327,7 +2327,7 @@
       "metadata": {},
       "source_address": 61,
       "source_fqdn": "capability_transforms::CT_PURE_ASSEMBLE_RECORD_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2336,7 +2336,7 @@
       "metadata": {},
       "source_address": 62,
       "source_fqdn": "capability_transforms::CT_PURE_CHECK_QUOTA_AVAILABLE_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2345,7 +2345,7 @@
       "metadata": {},
       "source_address": 63,
       "source_fqdn": "capability_transforms::CT_PURE_CHECK_TRAINING_STATUS_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2354,7 +2354,7 @@
       "metadata": {},
       "source_address": 64,
       "source_fqdn": "capability_transforms::CT_PURE_DERIVE_CHILD_KEY_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2363,7 +2363,7 @@
       "metadata": {},
       "source_address": 65,
       "source_fqdn": "capability_transforms::CT_PURE_DERIVE_MASTER_KEY_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2372,7 +2372,7 @@
       "metadata": {},
       "source_address": 66,
       "source_fqdn": "capability_transforms::CT_PURE_ECDSA_SIGN_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2381,7 +2381,7 @@
       "metadata": {},
       "source_address": 67,
       "source_fqdn": "capability_transforms::CT_PURE_ENTROPY_TO_MNEMONIC_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2390,7 +2390,7 @@
       "metadata": {},
       "source_address": 68,
       "source_fqdn": "capability_transforms::CT_PURE_EVALUATE_INACTIVITY_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2399,7 +2399,7 @@
       "metadata": {},
       "source_address": 69,
       "source_fqdn": "capability_transforms::CT_PURE_EXTRACT_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2408,7 +2408,7 @@
       "metadata": {},
       "source_address": 70,
       "source_fqdn": "capability_transforms::CT_PURE_FILTER_RECORDS_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2417,7 +2417,7 @@
       "metadata": {},
       "source_address": 71,
       "source_fqdn": "capability_transforms::CT_PURE_GENERATE_ENTROPY_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2426,7 +2426,7 @@
       "metadata": {},
       "source_address": 72,
       "source_fqdn": "capability_transforms::CT_PURE_GENERATE_ID_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2435,7 +2435,7 @@
       "metadata": {},
       "source_address": 73,
       "source_fqdn": "capability_transforms::CT_PURE_KECCAK256_HASH_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2444,7 +2444,7 @@
       "metadata": {},
       "source_address": 74,
       "source_fqdn": "capability_transforms::CT_PURE_LOOKUP_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2453,7 +2453,7 @@
       "metadata": {},
       "source_address": 75,
       "source_fqdn": "capability_transforms::CT_PURE_MAP_RESULT_TO_HTTP_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2462,7 +2462,7 @@
       "metadata": {},
       "source_address": 76,
       "source_fqdn": "capability_transforms::CT_PURE_MNEMONIC_TO_SEED_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2471,7 +2471,7 @@
       "metadata": {},
       "source_address": 77,
       "source_fqdn": "capability_transforms::CT_PURE_PASSTHROUGH_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2480,7 +2480,7 @@
       "metadata": {},
       "source_address": 78,
       "source_fqdn": "capability_transforms::CT_PURE_PRIVATE_KEY_TO_PUBLIC_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2489,7 +2489,7 @@
       "metadata": {},
       "source_address": 79,
       "source_fqdn": "capability_transforms::CT_PURE_PUBKEY_TO_ETH_ADDRESS_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2498,7 +2498,7 @@
       "metadata": {},
       "source_address": 80,
       "source_fqdn": "capability_transforms::CT_PURE_VALIDATE_PARAMETER_RULES_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2507,7 +2507,7 @@
       "metadata": {},
       "source_address": 81,
       "source_fqdn": "capability_transforms::CT_PURE_VALIDATE_RECORD_STRUCTURE_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2516,7 +2516,7 @@
       "metadata": {},
       "source_address": 82,
       "source_fqdn": "capability_transforms::CT_PURE_VALIDATE_SET_MEMBERSHIP_V0",
-      "target_address": 211,
+      "target_address": 212,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
     },
     {
@@ -2525,7 +2525,7 @@
       "metadata": {},
       "source_address": 83,
       "source_fqdn": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_CONFIG_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2534,7 +2534,7 @@
       "metadata": {},
       "source_address": 84,
       "source_fqdn": "fb.ai_governance::STRUCTURE_BUILD_AI_GOVERNANCE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2543,8 +2543,71 @@
       "metadata": {},
       "source_address": 85,
       "source_fqdn": "fb.ai_governance::STRUCTURE_REGISTRY_LOCATION_AI_GOVERNANCE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 86,
+      "source_fqdn": "fb.authority::ASSERT_ACTOR_AUTHORITY_SEPARATION_V0",
+      "target_address": 94,
+      "target_fqdn": "fb.authority::INVARIANT_ACTOR_AUTHORITY_SEPARATION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 87,
+      "source_fqdn": "fb.authority::ASSERT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0",
+      "target_address": 95,
+      "target_fqdn": "fb.authority::INVARIANT_AUTHORITY_REQUIRED_FOR_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 88,
+      "source_fqdn": "fb.authority::ASSERT_AUTHORITY_STATE_WELL_FORMED_V0",
+      "target_address": 96,
+      "target_fqdn": "fb.authority::INVARIANT_AUTHORITY_STATE_WELL_FORMED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 89,
+      "source_fqdn": "fb.authority::ASSERT_NO_AMBIENT_AUTHORITY_V0",
+      "target_address": 97,
+      "target_fqdn": "fb.authority::INVARIANT_NO_AMBIENT_AUTHORITY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 90,
+      "source_fqdn": "fb.authority::ASSERT_NO_RUNTIME_AUTHORIZATION_V0",
+      "target_address": 98,
+      "target_fqdn": "fb.authority::INVARIANT_NO_RUNTIME_AUTHORIZATION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 91,
+      "source_fqdn": "fb.authority::ASSERT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0",
+      "target_address": 99,
+      "target_fqdn": "fb.authority::INVARIANT_NO_WORKFLOW_AUTHORIZATION_LOGIC_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 92,
+      "source_fqdn": "fb.authority::ASSERT_TRACE_AUTHORITY_BINDING_REQUIRED_V0",
+      "target_address": 100,
+      "target_fqdn": "fb.authority::INVARIANT_TRACE_AUTHORITY_BINDING_REQUIRED_V0"
     },
     {
       "kind": "GOVERNED_BY",
@@ -2552,7 +2615,7 @@
       "metadata": {},
       "source_address": 93,
       "source_fqdn": "fb.authority::CONSTITUTION_AUTHORITY_GOVERNANCE_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -2624,7 +2687,7 @@
       "metadata": {},
       "source_address": 101,
       "source_fqdn": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_CONFIG_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2633,7 +2696,7 @@
       "metadata": {},
       "source_address": 102,
       "source_fqdn": "fb.blockchain::STRUCTURE_BUILD_BLOCKCHAIN_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2642,7 +2705,7 @@
       "metadata": {},
       "source_address": 103,
       "source_fqdn": "fb.blockchain::STRUCTURE_REGISTRY_LOCATION_BLOCKCHAIN_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2651,8 +2714,35 @@
       "metadata": {},
       "source_address": 104,
       "source_fqdn": "fb.change_mgmt::CONSTITUTION_CHANGE_MGMT_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 105,
+      "source_fqdn": "fb.conformance::ASSERT_ASSERT_PARITY_V0",
+      "target_address": 109,
+      "target_fqdn": "fb.conformance::INVARIANT_ASSERT_PARITY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 106,
+      "source_fqdn": "fb.conformance::ASSERT_CONFORMANCE_ASSERTION_MODE_VALID_V0",
+      "target_address": 110,
+      "target_fqdn": "fb.conformance::INVARIANT_CONFORMANCE_ASSERTION_MODE_VALID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 107,
+      "source_fqdn": "fb.conformance::ASSERT_TEST_DATA_MATCH_CT_OUTPUT_V0",
+      "target_address": 111,
+      "target_fqdn": "fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0"
     },
     {
       "kind": "GOVERNED_BY",
@@ -2660,7 +2750,7 @@
       "metadata": {},
       "source_address": 108,
       "source_fqdn": "fb.conformance::CONSTITUTION_TEST_DATA_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -2669,7 +2759,7 @@
       "metadata": {},
       "source_address": 109,
       "source_fqdn": "fb.conformance::INVARIANT_ASSERT_PARITY_V0",
-      "target_address": 128,
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -2687,7 +2777,7 @@
       "metadata": {},
       "source_address": 111,
       "source_fqdn": "fb.conformance::INVARIANT_TEST_DATA_MATCH_CT_OUTPUT_V0",
-      "target_address": 128,
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -2696,8 +2786,98 @@
       "metadata": {},
       "source_address": 112,
       "source_fqdn": "fb.conformance::STRUCTURE_CONFORMANCE_POLICY_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 113,
+      "source_fqdn": "fb.constitution::ASSERT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+      "target_address": 131,
+      "target_fqdn": "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 114,
+      "source_fqdn": "fb.constitution::ASSERT_COMPILER_GOVERNANCE_DECLARED_V0",
+      "target_address": 132,
+      "target_fqdn": "fb.constitution::INVARIANT_COMPILER_GOVERNANCE_DECLARED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 115,
+      "source_fqdn": "fb.constitution::ASSERT_COMPILER_NO_EXECUTION_V0",
+      "target_address": 133,
+      "target_fqdn": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 116,
+      "source_fqdn": "fb.constitution::ASSERT_EV_APPEND_ONLY_V0",
+      "target_address": 134,
+      "target_fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 117,
+      "source_fqdn": "fb.constitution::ASSERT_EV_SCHEMA_REQUIRED_V0",
+      "target_address": 135,
+      "target_fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 118,
+      "source_fqdn": "fb.constitution::ASSERT_FQDN_ONLY_REFERENCES_V0",
+      "target_address": 136,
+      "target_fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 119,
+      "source_fqdn": "fb.constitution::ASSERT_HANDLER_REGISTRY_CLOSED_V0",
+      "target_address": 137,
+      "target_fqdn": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 120,
+      "source_fqdn": "fb.constitution::ASSERT_IDENTITY_FQDN_CONSISTENCY_V0",
+      "target_address": 138,
+      "target_fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 121,
+      "source_fqdn": "fb.constitution::ASSERT_NO_SHORT_NAME_REFERENCE_V0",
+      "target_address": 139,
+      "target_fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 122,
+      "source_fqdn": "fb.constitution::ASSERT_UNIQUE_ARTIFACT_ID_V0",
+      "target_address": 140,
+      "target_fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0"
     },
     {
       "kind": "GOVERNED_BY",
@@ -2705,7 +2885,7 @@
       "metadata": {},
       "source_address": 123,
       "source_fqdn": "fb.constitution::CONSTITUTION_ASSERT_V0",
-      "target_address": 285,
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
@@ -2714,7 +2894,7 @@
       "metadata": {},
       "source_address": 124,
       "source_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0",
-      "target_address": 285,
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
@@ -2722,8 +2902,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 125,
-      "source_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0",
-      "target_address": 127,
+      "source_fqdn": "fb.constitution::CONSTITUTION_ENTITY_V0",
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -2731,8 +2911,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 126,
-      "source_fqdn": "fb.constitution::CONSTITUTION_FEDERATION_BOUNDARY_V0",
-      "target_address": 127,
+      "source_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0",
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -2740,17 +2920,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 127,
-      "source_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
-      "target_address": 285,
-      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+      "source_fqdn": "fb.constitution::CONSTITUTION_FEDERATION_BOUNDARY_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 128,
-      "source_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
-      "target_address": 285,
+      "source_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
@@ -2758,15 +2938,24 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 129,
-      "source_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+      "target_address": 286,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 130,
+      "source_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 131,
       "source_fqdn": "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
       "target_address": 124,
       "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
@@ -2775,7 +2964,7 @@
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 131,
+      "source_address": 132,
       "source_fqdn": "fb.constitution::INVARIANT_COMPILER_GOVERNANCE_DECLARED_V0",
       "target_address": 124,
       "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
@@ -2784,7 +2973,7 @@
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 132,
+      "source_address": 133,
       "source_fqdn": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0",
       "target_address": 124,
       "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
@@ -2793,18 +2982,9 @@
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 133,
-      "source_fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
-      "target_address": 125,
-      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
       "source_address": 134,
-      "source_fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
-      "target_address": 125,
+      "source_fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -2812,15 +2992,24 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 135,
-      "source_fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
-      "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "source_fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 136,
+      "source_fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 137,
       "source_fqdn": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
       "target_address": 124,
       "target_fqdn": "fb.constitution::CONSTITUTION_COMPILER_V0"
@@ -2829,18 +3018,9 @@
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 137,
-      "source_fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
-      "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
       "source_address": 138,
-      "source_fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -2848,8 +3028,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 139,
-      "source_fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -2857,17 +3037,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 140,
-      "source_fqdn": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
+      "source_fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
       "target_address": 129,
-      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 141,
-      "source_fqdn": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2875,8 +3055,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 142,
-      "source_fqdn": "fb.constitution::STRUCTURE_DISCOVERY_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2884,8 +3064,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 143,
-      "source_fqdn": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.constitution::STRUCTURE_DISCOVERY_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2893,8 +3073,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 144,
-      "source_fqdn": "fb.constitution::STRUCTURE_IDENTITY_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2902,8 +3082,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 145,
-      "source_fqdn": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.constitution::STRUCTURE_IDENTITY_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2911,8 +3091,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 146,
+      "source_fqdn": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
+      "target_address": 130,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 147,
       "source_fqdn": "fb.constitution::STRUCTURE_REGISTRY_LOCATION_GOVERNANCE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -2920,26 +3109,35 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 148,
-      "source_fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.cryptographic_trust::ASSERT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+      "target_address": 150,
+      "target_fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 149,
-      "source_fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+      "source_fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
       "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 150,
+      "source_fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 151,
       "source_fqdn": "fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
-      "target_address": 148,
+      "target_address": 149,
       "target_fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0"
     },
     {
@@ -2947,26 +3145,35 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 152,
-      "source_fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.execution_placement::ASSERT_EXECUTION_PLACEMENT_DECLARED_V0",
+      "target_address": 154,
+      "target_fqdn": "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 153,
-      "source_fqdn": "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0",
+      "source_fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0",
       "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 154,
+      "source_fqdn": "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 155,
       "source_fqdn": "fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
-      "target_address": 152,
+      "target_address": 153,
       "target_fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0"
     },
     {
@@ -2974,26 +3181,35 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 156,
-      "source_fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.execution_scheduling::ASSERT_EXECUTION_SCHEDULING_DECLARED_V0",
+      "target_address": 158,
+      "target_fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 157,
-      "source_fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+      "source_fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
       "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 158,
+      "source_fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 159,
       "source_fqdn": "fb.execution_scheduling::STRUCTURE_EXECUTION_SCHEDULING_SERIAL_SINGLE_WORKER_V0",
-      "target_address": 156,
+      "target_address": 157,
       "target_fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0"
     },
     {
@@ -3001,17 +3217,26 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 160,
-      "source_fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.identity::ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0",
+      "target_address": 162,
+      "target_fqdn": "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 161,
+      "source_fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 162,
       "source_fqdn": "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
-      "target_address": 160,
+      "target_address": 161,
       "target_fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0"
     },
     {
@@ -3019,53 +3244,440 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 163,
-      "source_fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.security_domain::ASSERT_SECURITY_DOMAIN_DECLARED_V0",
+      "target_address": 165,
+      "target_fqdn": "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 164,
-      "source_fqdn": "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0",
+      "source_fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0",
       "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 165,
-      "source_fqdn": "fb.security_domain::STRUCTURE_SECURITY_DOMAIN_UNCLASSIFIED_LOCAL_V0",
-      "target_address": 163,
-      "target_fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 209,
-      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
-      "target_address": 127,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 165,
+      "source_fqdn": "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 166,
+      "source_fqdn": "fb.security_domain::STRUCTURE_SECURITY_DOMAIN_UNCLASSIFIED_LOCAL_V0",
+      "target_address": 164,
+      "target_fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 167,
+      "source_fqdn": "fb.topology::ASSERT_ATOM_OUTPUT_PURITY_V0",
+      "target_address": 220,
+      "target_fqdn": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 168,
+      "source_fqdn": "fb.topology::ASSERT_BINDING_INTEGRITY_V0",
+      "target_address": 221,
+      "target_fqdn": "fb.topology::INVARIANT_BINDING_INTEGRITY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 169,
+      "source_fqdn": "fb.topology::ASSERT_BINDING_SURFACE_CLOSED_V0",
+      "target_address": 222,
+      "target_fqdn": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 170,
+      "source_fqdn": "fb.topology::ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
+      "target_address": 223,
+      "target_fqdn": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 171,
+      "source_fqdn": "fb.topology::ASSERT_CC_INPUTS_SATISFIED_V0",
+      "target_address": 224,
+      "target_fqdn": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 172,
+      "source_fqdn": "fb.topology::ASSERT_CC_NO_IMPLICIT_CHAINING_V0",
+      "target_address": 225,
+      "target_fqdn": "fb.topology::INVARIANT_CC_NO_IMPLICIT_CHAINING_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 173,
+      "source_fqdn": "fb.topology::ASSERT_CC_NO_MISSING_DEPENDENCIES_V0",
+      "target_address": 226,
+      "target_fqdn": "fb.topology::INVARIANT_CC_NO_MISSING_DEPENDENCIES_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 174,
+      "source_fqdn": "fb.topology::ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
+      "target_address": 227,
+      "target_fqdn": "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 175,
+      "source_fqdn": "fb.topology::ASSERT_CC_STORAGE_OP_CONFORMANCE_V0",
+      "target_address": 228,
+      "target_fqdn": "fb.topology::INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 176,
+      "source_fqdn": "fb.topology::ASSERT_CS_ISOLATED_EXECUTION_V0",
+      "target_address": 229,
+      "target_fqdn": "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 177,
+      "source_fqdn": "fb.topology::ASSERT_CS_SURFACE_CLOSED_V0",
+      "target_address": 230,
+      "target_fqdn": "fb.topology::INVARIANT_CS_SURFACE_CLOSED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 178,
+      "source_fqdn": "fb.topology::ASSERT_CS_TRACEABLE_V0",
+      "target_address": 231,
+      "target_fqdn": "fb.topology::INVARIANT_CS_TRACEABLE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 179,
+      "source_fqdn": "fb.topology::ASSERT_CT_OUTPUT_CONTRACT_MATCH_V0",
+      "target_address": 232,
+      "target_fqdn": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 180,
+      "source_fqdn": "fb.topology::ASSERT_CT_SURFACE_CLOSED_V0",
+      "target_address": 233,
+      "target_fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 181,
+      "source_fqdn": "fb.topology::ASSERT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
+      "target_address": 234,
+      "target_fqdn": "fb.topology::INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 182,
+      "source_fqdn": "fb.topology::ASSERT_IMPLEMENTATION_ADMISSIBLE_V0",
+      "target_address": 235,
+      "target_fqdn": "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 183,
+      "source_fqdn": "fb.topology::ASSERT_IN_NO_EXECUTION_LOGIC_V0",
+      "target_address": 236,
+      "target_fqdn": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 184,
+      "source_fqdn": "fb.topology::ASSERT_IN_SCHEMA_REQUIRED_V0",
+      "target_address": 237,
+      "target_fqdn": "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 185,
+      "source_fqdn": "fb.topology::ASSERT_IN_WORKFLOW_BINDING_V0",
+      "target_address": 238,
+      "target_fqdn": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 186,
+      "source_fqdn": "fb.topology::ASSERT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+      "target_address": 239,
+      "target_fqdn": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 187,
+      "source_fqdn": "fb.topology::ASSERT_NO_SMART_EXECUTION_V0",
+      "target_address": 240,
+      "target_fqdn": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 188,
+      "source_fqdn": "fb.topology::ASSERT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+      "target_address": 241,
+      "target_fqdn": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 189,
+      "source_fqdn": "fb.topology::ASSERT_PROTOCOL_SURFACE_CLOSED_V0",
+      "target_address": 242,
+      "target_fqdn": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 190,
+      "source_fqdn": "fb.topology::ASSERT_RB_BINDING_POLICY_CONFORMANCE_V0",
+      "target_address": 243,
+      "target_fqdn": "fb.topology::INVARIANT_RB_BINDING_POLICY_CONFORMANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 191,
+      "source_fqdn": "fb.topology::ASSERT_RB_CS_ONLY_V0",
+      "target_address": 244,
+      "target_fqdn": "fb.topology::INVARIANT_RB_CS_ONLY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 192,
+      "source_fqdn": "fb.topology::ASSERT_RB_NO_LOGIC_V0",
+      "target_address": 245,
+      "target_fqdn": "fb.topology::INVARIANT_RB_NO_LOGIC_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 193,
+      "source_fqdn": "fb.topology::ASSERT_RUNTIME_INVARIANT_WIRED_V0",
+      "target_address": 246,
+      "target_fqdn": "fb.topology::INVARIANT_RUNTIME_INVARIANT_WIRED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 194,
+      "source_fqdn": "fb.topology::ASSERT_SCHEMA_CONFORMANCE_V0",
+      "target_address": 247,
+      "target_fqdn": "fb.topology::INVARIANT_SCHEMA_CONFORMANCE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 195,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_ACYCLIC_V0",
+      "target_address": 248,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 196,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+      "target_address": 249,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 197,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+      "target_address": 250,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 198,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0",
+      "target_address": 251,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 199,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+      "target_address": 252,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 200,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
+      "target_address": 253,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 201,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0",
+      "target_address": 254,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 202,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_STEP_DECLARED_V0",
+      "target_address": 255,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 203,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+      "target_address": 256,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 204,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0",
+      "target_address": 257,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 205,
+      "source_fqdn": "fb.topology::ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+      "target_address": 258,
+      "target_fqdn": "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 206,
+      "source_fqdn": "fb.topology::ASSERT_WF_CC_ONLY_NODES_V0",
+      "target_address": 259,
+      "target_fqdn": "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 207,
+      "source_fqdn": "fb.topology::ASSERT_WF_ENTRY_INTENT_V0",
+      "target_address": 260,
+      "target_fqdn": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 208,
+      "source_fqdn": "fb.topology::ASSERT_WF_EXECUTION_PATH_VALID_V0",
+      "target_address": 261,
+      "target_fqdn": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 209,
+      "source_fqdn": "fb.topology::ASSERT_WF_NODE_KEY_BINDING_UNIQUE_V0",
+      "target_address": 262,
+      "target_fqdn": "fb.topology::INVARIANT_WF_NODE_KEY_BINDING_UNIQUE_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 210,
-      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
-      "target_address": 285,
-      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+      "target_address": 128,
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 211,
-      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
-      "target_address": 285,
+      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
@@ -3073,44 +3685,44 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 212,
-      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
-      "target_address": 214,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 213,
-      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
-      "target_address": 209,
-      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 214,
-      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0",
-      "target_address": 285,
+      "source_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 213,
+      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
+      "target_address": 215,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 214,
+      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
+      "target_address": 210,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 215,
-      "source_fqdn": "fb.topology::CONSTITUTION_INTENT_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0",
+      "target_address": 286,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 216,
-      "source_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
-      "target_address": 127,
+      "source_fqdn": "fb.topology::CONSTITUTION_INTENT_V0",
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -3118,35 +3730,35 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 217,
-      "source_fqdn": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
-      "target_address": 214,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 218,
-      "source_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0",
-      "target_address": 127,
+      "source_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 218,
+      "source_fqdn": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
+      "target_address": 215,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 219,
-      "source_fqdn": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0",
+      "source_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0",
       "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 220,
-      "source_fqdn": "fb.topology::INVARIANT_BINDING_INTEGRITY_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3154,8 +3766,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 221,
-      "source_fqdn": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_BINDING_INTEGRITY_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3163,8 +3775,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 222,
-      "source_fqdn": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3172,8 +3784,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 223,
-      "source_fqdn": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3181,8 +3793,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 224,
-      "source_fqdn": "fb.topology::INVARIANT_CC_NO_IMPLICIT_CHAINING_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3190,8 +3802,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 225,
-      "source_fqdn": "fb.topology::INVARIANT_CC_NO_MISSING_DEPENDENCIES_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_CC_NO_IMPLICIT_CHAINING_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3199,8 +3811,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 226,
-      "source_fqdn": "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_CC_NO_MISSING_DEPENDENCIES_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3208,8 +3820,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 227,
-      "source_fqdn": "fb.topology::INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3217,44 +3829,44 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 228,
-      "source_fqdn": "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0",
-      "target_address": 210,
-      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+      "source_fqdn": "fb.topology::INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 229,
-      "source_fqdn": "fb.topology::INVARIANT_CS_SURFACE_CLOSED_V0",
-      "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 230,
-      "source_fqdn": "fb.topology::INVARIANT_CS_TRACEABLE_V0",
-      "target_address": 210,
+      "source_fqdn": "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0",
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 231,
-      "source_fqdn": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
-      "target_address": 128,
+      "source_address": 230,
+      "source_fqdn": "fb.topology::INVARIANT_CS_SURFACE_CLOSED_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 231,
+      "source_fqdn": "fb.topology::INVARIANT_CS_TRACEABLE_V0",
+      "target_address": 211,
+      "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 232,
-      "source_fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3262,44 +3874,44 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 233,
-      "source_fqdn": "fb.topology::INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
-      "target_address": 213,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+      "source_fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 234,
-      "source_fqdn": "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0",
-      "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "source_fqdn": "fb.topology::INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
+      "target_address": 214,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 235,
-      "source_fqdn": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
-      "target_address": 215,
-      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 236,
-      "source_fqdn": "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 236,
+      "source_fqdn": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
+      "target_address": 216,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 237,
-      "source_fqdn": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3307,26 +3919,26 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 238,
-      "source_fqdn": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
-      "target_address": 213,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
-      "source_address": 239,
-      "source_fqdn": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 239,
+      "source_fqdn": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
+      "target_address": 214,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 240,
-      "source_fqdn": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3334,8 +3946,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 241,
-      "source_fqdn": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3343,17 +3955,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 242,
-      "source_fqdn": "fb.topology::INVARIANT_RB_BINDING_POLICY_CONFORMANCE_V0",
-      "target_address": 216,
-      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
+      "source_fqdn": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 243,
-      "source_fqdn": "fb.topology::INVARIANT_RB_CS_ONLY_V0",
-      "target_address": 216,
+      "source_fqdn": "fb.topology::INVARIANT_RB_BINDING_POLICY_CONFORMANCE_V0",
+      "target_address": 217,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
@@ -3361,17 +3973,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 244,
-      "source_fqdn": "fb.topology::INVARIANT_RB_NO_LOGIC_V0",
-      "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "source_fqdn": "fb.topology::INVARIANT_RB_CS_ONLY_V0",
+      "target_address": 217,
+      "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 245,
-      "source_fqdn": "fb.topology::INVARIANT_RUNTIME_INVARIANT_WIRED_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_RB_NO_LOGIC_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3379,8 +3991,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 246,
-      "source_fqdn": "fb.topology::INVARIANT_SCHEMA_CONFORMANCE_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_RUNTIME_INVARIANT_WIRED_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3388,8 +4000,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 247,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_SCHEMA_CONFORMANCE_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3397,17 +4009,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 248,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
-      "target_address": 213,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 249,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3415,8 +4027,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 250,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3424,8 +4036,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 251,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3433,8 +4045,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 252,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3442,8 +4054,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 253,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3451,8 +4063,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 254,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3460,8 +4072,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 255,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3469,8 +4081,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 256,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3478,8 +4090,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 257,
-      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3487,17 +4099,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 258,
-      "source_fqdn": "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0",
-      "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "source_fqdn": "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
+      "target_address": 214,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 259,
-      "source_fqdn": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3505,8 +4117,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 260,
-      "source_fqdn": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3514,26 +4126,26 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 261,
-      "source_fqdn": "fb.topology::INVARIANT_WF_NODE_KEY_BINDING_UNIQUE_V0",
-      "target_address": 213,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+      "source_fqdn": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 262,
-      "source_fqdn": "fb.topology::STRUCTURE_CT_IR_CONTRACT_V0",
-      "target_address": 129,
-      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+      "source_fqdn": "fb.topology::INVARIANT_WF_NODE_KEY_BINDING_UNIQUE_V0",
+      "target_address": 214,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 263,
-      "source_fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_SIDE_EFFECTS_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.topology::STRUCTURE_CT_IR_CONTRACT_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -3541,8 +4153,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 264,
-      "source_fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_SIDE_EFFECTS_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -3550,8 +4162,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 265,
-      "source_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
-      "target_address": 129,
+      "source_fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
@@ -3559,17 +4171,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 266,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_CT_PURE_V0",
-      "target_address": 213,
-      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+      "source_fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
+      "target_address": 130,
+      "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 267,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_COUNT_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_CT_PURE_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3577,8 +4189,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 268,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_COUNT_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3586,8 +4198,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 269,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_REGISTER_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3595,8 +4207,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 270,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_REGISTER_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3604,8 +4216,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 271,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3613,8 +4225,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 272,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_READ_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
@@ -3622,44 +4234,80 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 273,
-      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_WRITE_V0",
-      "target_address": 213,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_READ_V0",
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
+      "source_address": 274,
+      "source_fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_WRITE_V0",
+      "target_address": 214,
+      "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 275,
+      "source_fqdn": "fb.transport::ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+      "target_address": 281,
+      "target_fqdn": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 276,
+      "source_fqdn": "fb.transport::ASSERT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+      "target_address": 282,
+      "target_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 277,
+      "source_fqdn": "fb.transport::ASSERT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+      "target_address": 283,
+      "target_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
       "source_address": 278,
-      "source_fqdn": "fb.transport::CONSTITUTION_ADMISSION_V0",
-      "target_address": 285,
-      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+      "source_fqdn": "fb.transport::ASSERT_TRANSPORT_TARGET_EXISTS_V0",
+      "target_address": 284,
+      "target_fqdn": "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 279,
-      "source_fqdn": "fb.transport::CONSTITUTION_TRANSPORT_V0",
-      "target_address": 127,
-      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
+      "source_fqdn": "fb.transport::CONSTITUTION_ADMISSION_V0",
+      "target_address": 286,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 280,
-      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+      "source_fqdn": "fb.transport::CONSTITUTION_TRANSPORT_V0",
       "target_address": 128,
-      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+      "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 281,
-      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3667,8 +4315,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 282,
-      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3676,8 +4324,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 283,
-      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0",
-      "target_address": 128,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
+      "target_address": 129,
       "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
     },
     {
@@ -3685,35 +4333,35 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 284,
+      "source_fqdn": "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0",
+      "target_address": 129,
+      "target_fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 285,
       "source_fqdn": "fb.transport::SURFACE_CONTRACT_TRANSPORT_SEND_V0",
-      "target_address": 213,
+      "target_address": 214,
       "target_fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 286,
+      "source_address": 287,
       "source_fqdn": "fb.vocabulary::STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0",
-      "target_address": 129,
+      "target_address": 130,
       "target_fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 287,
-      "source_fqdn": "fb.vocabulary::VOCAB_EXECUTION_STATES_V0",
-      "target_address": 285,
-      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
       "source_address": 288,
-      "source_fqdn": "fb.vocabulary::VOCAB_LANGUAGE_CONSTRAINTS_V0",
-      "target_address": 285,
+      "source_fqdn": "fb.vocabulary::VOCAB_EXECUTION_STATES_V0",
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
@@ -3721,8 +4369,8 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 289,
-      "source_fqdn": "fb.vocabulary::VOCAB_PROTOCOL_KINDS_V0",
-      "target_address": 285,
+      "source_fqdn": "fb.vocabulary::VOCAB_LANGUAGE_CONSTRAINTS_V0",
+      "target_address": 286,
       "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
     },
     {
@@ -3730,8 +4378,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 290,
+      "source_fqdn": "fb.vocabulary::VOCAB_PROTOCOL_KINDS_V0",
+      "target_address": 286,
+      "target_fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 291,
       "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -3755,18 +4412,18 @@
         "step_id": "lookup",
         "store": ""
       },
-      "source_address": 290,
+      "source_address": 291,
       "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
-      "target_address": 292,
+      "target_address": 293,
       "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 291,
+      "source_address": 292,
       "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
-      "target_address": 127,
+      "target_address": 128,
       "target_fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0"
     },
     {
@@ -3790,36 +4447,27 @@
         "step_id": "register",
         "store": ""
       },
-      "source_address": 291,
+      "source_address": 292,
       "source_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
-      "target_address": 292,
+      "target_address": 293,
       "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 292,
+      "source_address": 293,
       "source_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
-      "target_address": 210,
+      "target_address": 211,
       "target_fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 293,
-      "source_fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
-      "target_address": 125,
-      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
-    },
-    {
-      "kind": "GOVERNED_BY",
-      "kind_address": 16388,
-      "metadata": {},
       "source_address": 294,
-      "source_fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
-      "target_address": 125,
+      "source_fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
+      "target_address": 126,
       "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
@@ -3827,17 +4475,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 295,
-      "source_fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_LOOKEDUP_V0",
-      "target_address": 215,
-      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+      "source_fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
+      "target_address": 126,
+      "target_fqdn": "fb.constitution::CONSTITUTION_EVENT_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
       "source_address": 296,
-      "source_fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_REGISTERED_V0",
-      "target_address": 215,
+      "source_fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_LOOKEDUP_V0",
+      "target_address": 216,
       "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
     },
     {
@@ -3845,8 +4493,17 @@
       "kind_address": 16388,
       "metadata": {},
       "source_address": 297,
-      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+      "source_fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_REGISTERED_V0",
       "target_address": 216,
+      "target_fqdn": "fb.topology::CONSTITUTION_INTENT_V0"
+    },
+    {
+      "kind": "GOVERNED_BY",
+      "kind_address": 16388,
+      "metadata": {},
+      "source_address": 298,
+      "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
+      "target_address": 217,
       "target_fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0"
     },
     {
@@ -3855,63 +4512,63 @@
       "metadata": {
         "handler_ref": ""
       },
-      "source_address": 297,
+      "source_address": 298,
       "source_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
-      "target_address": 292,
+      "target_address": 293,
       "target_fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 298,
+      "source_address": 299,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
       "kind": "WF_CONTAINS_NODE",
       "kind_address": 16397,
       "metadata": {},
-      "source_address": 298,
+      "source_address": 299,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
-      "target_address": 290,
+      "target_address": 291,
       "target_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0"
     },
     {
       "kind": "WF_BINDS_RB",
       "kind_address": 16396,
       "metadata": {},
-      "source_address": 298,
+      "source_address": 299,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
-      "target_address": 297,
+      "target_address": 298,
       "target_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0"
     },
     {
       "kind": "GOVERNED_BY",
       "kind_address": 16388,
       "metadata": {},
-      "source_address": 299,
+      "source_address": 300,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
-      "target_address": 218,
+      "target_address": 219,
       "target_fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0"
     },
     {
       "kind": "WF_CONTAINS_NODE",
       "kind_address": 16397,
       "metadata": {},
-      "source_address": 299,
+      "source_address": 300,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
-      "target_address": 291,
+      "target_address": 292,
       "target_fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0"
     },
     {
       "kind": "WF_BINDS_RB",
       "kind_address": 16396,
       "metadata": {},
-      "source_address": 299,
+      "source_address": 300,
       "source_fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
-      "target_address": 297,
+      "target_address": 298,
       "target_fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0"
     }
   ],
@@ -4121,7 +4778,7 @@
       }
     },
     {
-      "address": 293,
+      "address": 294,
       "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
       "kind": "EV",
       "kind_address": 16645,
@@ -4150,7 +4807,7 @@
       }
     },
     {
-      "address": 294,
+      "address": 295,
       "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
       "kind": "EV",
       "kind_address": 16645,
@@ -4932,1050 +5589,1056 @@
     },
     {
       "address": 125,
-      "fqdn": "fb.constitution::CONSTITUTION_EVENT_V0",
+      "fqdn": "fb.constitution::CONSTITUTION_ENTITY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 126,
-      "fqdn": "fb.constitution::CONSTITUTION_FEDERATION_BOUNDARY_V0",
+      "fqdn": "fb.constitution::CONSTITUTION_EVENT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 127,
-      "fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
+      "fqdn": "fb.constitution::CONSTITUTION_FEDERATION_BOUNDARY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 128,
-      "fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
+      "fqdn": "fb.constitution::CONSTITUTION_GOVERNANCE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 129,
-      "fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+      "fqdn": "fb.constitution::CONSTITUTION_INVARIANTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 130,
-      "fqdn": "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
+      "fqdn": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 131,
-      "fqdn": "fb.constitution::INVARIANT_COMPILER_GOVERNANCE_DECLARED_V0",
+      "fqdn": "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 132,
-      "fqdn": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0",
+      "fqdn": "fb.constitution::INVARIANT_COMPILER_GOVERNANCE_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 133,
-      "fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
+      "fqdn": "fb.constitution::INVARIANT_COMPILER_NO_EXECUTION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 134,
-      "fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
+      "fqdn": "fb.constitution::INVARIANT_EV_APPEND_ONLY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 135,
-      "fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
+      "fqdn": "fb.constitution::INVARIANT_EV_SCHEMA_REQUIRED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 136,
-      "fqdn": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
+      "fqdn": "fb.constitution::INVARIANT_FQDN_ONLY_REFERENCES_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 137,
-      "fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
+      "fqdn": "fb.constitution::INVARIANT_HANDLER_REGISTRY_CLOSED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 138,
-      "fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
+      "fqdn": "fb.constitution::INVARIANT_IDENTITY_FQDN_CONSISTENCY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 139,
-      "fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
+      "fqdn": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 140,
-      "fqdn": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
+      "fqdn": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 141,
-      "fqdn": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
+      "fqdn": "fb.constitution::STRUCTURE_ARTIFACT_IDENTITY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 142,
-      "fqdn": "fb.constitution::STRUCTURE_DISCOVERY_V0",
+      "fqdn": "fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 143,
-      "fqdn": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
+      "fqdn": "fb.constitution::STRUCTURE_DISCOVERY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 144,
-      "fqdn": "fb.constitution::STRUCTURE_IDENTITY_V0",
+      "fqdn": "fb.constitution::STRUCTURE_FQDN_TREE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 145,
-      "fqdn": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
+      "fqdn": "fb.constitution::STRUCTURE_IDENTITY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 146,
-      "fqdn": "fb.constitution::STRUCTURE_REGISTRY_LOCATION_GOVERNANCE_V0",
+      "fqdn": "fb.constitution::STRUCTURE_MODULE_DATA_ROOTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
       "address": 147,
+      "fqdn": "fb.constitution::STRUCTURE_REGISTRY_LOCATION_GOVERNANCE_V0",
+      "kind": "GOVERNANCE",
+      "kind_address": 16646
+    },
+    {
+      "address": 148,
       "fqdn": "fb.cryptographic_trust::ASSERT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 148,
+      "address": 149,
       "fqdn": "fb.cryptographic_trust::CONSTITUTION_CRYPTOGRAPHIC_TRUST_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 149,
+      "address": 150,
       "fqdn": "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 150,
+      "address": 151,
       "fqdn": "fb.cryptographic_trust::STRUCTURE_CRYPTOGRAPHIC_TRUST_LOCAL_DEV_UNSIGNED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 151,
+      "address": 152,
       "fqdn": "fb.execution_placement::ASSERT_EXECUTION_PLACEMENT_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 152,
+      "address": 153,
       "fqdn": "fb.execution_placement::CONSTITUTION_EXECUTION_PLACEMENT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 153,
+      "address": 154,
       "fqdn": "fb.execution_placement::INVARIANT_EXECUTION_PLACEMENT_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 154,
+      "address": 155,
       "fqdn": "fb.execution_placement::STRUCTURE_EXECUTION_PLACEMENT_LOCAL_SINGLE_NODE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 155,
+      "address": 156,
       "fqdn": "fb.execution_scheduling::ASSERT_EXECUTION_SCHEDULING_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 156,
+      "address": 157,
       "fqdn": "fb.execution_scheduling::CONSTITUTION_EXECUTION_SCHEDULING_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 157,
+      "address": 158,
       "fqdn": "fb.execution_scheduling::INVARIANT_EXECUTION_SCHEDULING_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 158,
+      "address": 159,
       "fqdn": "fb.execution_scheduling::STRUCTURE_EXECUTION_SCHEDULING_SERIAL_SINGLE_WORKER_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 159,
+      "address": 160,
       "fqdn": "fb.identity::ASSERT_IDENTITY_AUTHORITY_SEPARATION_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 160,
+      "address": 161,
       "fqdn": "fb.identity::CONSTITUTION_ACTOR_IDENTITY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 161,
+      "address": 162,
       "fqdn": "fb.identity::INVARIANT_IDENTITY_AUTHORITY_SEPARATION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 162,
+      "address": 163,
       "fqdn": "fb.security_domain::ASSERT_SECURITY_DOMAIN_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 163,
+      "address": 164,
       "fqdn": "fb.security_domain::CONSTITUTION_SECURITY_DOMAIN_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 164,
+      "address": 165,
       "fqdn": "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 165,
+      "address": 166,
       "fqdn": "fb.security_domain::STRUCTURE_SECURITY_DOMAIN_UNCLASSIFIED_LOCAL_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 166,
+      "address": 167,
       "fqdn": "fb.topology::ASSERT_ATOM_OUTPUT_PURITY_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 167,
+      "address": 168,
       "fqdn": "fb.topology::ASSERT_BINDING_INTEGRITY_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 168,
+      "address": 169,
       "fqdn": "fb.topology::ASSERT_BINDING_SURFACE_CLOSED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 169,
+      "address": 170,
       "fqdn": "fb.topology::ASSERT_CC_CAPABILITY_BINDING_VALID_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 170,
+      "address": 171,
       "fqdn": "fb.topology::ASSERT_CC_INPUTS_SATISFIED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 171,
+      "address": 172,
       "fqdn": "fb.topology::ASSERT_CC_NO_IMPLICIT_CHAINING_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 172,
+      "address": 173,
       "fqdn": "fb.topology::ASSERT_CC_NO_MISSING_DEPENDENCIES_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 173,
+      "address": 174,
       "fqdn": "fb.topology::ASSERT_CC_NO_UNUSED_OUTPUTS_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 174,
+      "address": 175,
       "fqdn": "fb.topology::ASSERT_CC_STORAGE_OP_CONFORMANCE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 175,
+      "address": 176,
       "fqdn": "fb.topology::ASSERT_CS_ISOLATED_EXECUTION_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 176,
+      "address": 177,
       "fqdn": "fb.topology::ASSERT_CS_SURFACE_CLOSED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 177,
+      "address": 178,
       "fqdn": "fb.topology::ASSERT_CS_TRACEABLE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 178,
+      "address": 179,
       "fqdn": "fb.topology::ASSERT_CT_OUTPUT_CONTRACT_MATCH_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 179,
+      "address": 180,
       "fqdn": "fb.topology::ASSERT_CT_SURFACE_CLOSED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 180,
+      "address": 181,
       "fqdn": "fb.topology::ASSERT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 181,
+      "address": 182,
       "fqdn": "fb.topology::ASSERT_IMPLEMENTATION_ADMISSIBLE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 182,
+      "address": 183,
       "fqdn": "fb.topology::ASSERT_IN_NO_EXECUTION_LOGIC_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 183,
+      "address": 184,
       "fqdn": "fb.topology::ASSERT_IN_SCHEMA_REQUIRED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 184,
+      "address": 185,
       "fqdn": "fb.topology::ASSERT_IN_WORKFLOW_BINDING_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 185,
+      "address": 186,
       "fqdn": "fb.topology::ASSERT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 186,
+      "address": 187,
       "fqdn": "fb.topology::ASSERT_NO_SMART_EXECUTION_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 187,
+      "address": 188,
       "fqdn": "fb.topology::ASSERT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 188,
+      "address": 189,
       "fqdn": "fb.topology::ASSERT_PROTOCOL_SURFACE_CLOSED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 189,
+      "address": 190,
       "fqdn": "fb.topology::ASSERT_RB_BINDING_POLICY_CONFORMANCE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 190,
+      "address": 191,
       "fqdn": "fb.topology::ASSERT_RB_CS_ONLY_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 191,
+      "address": 192,
       "fqdn": "fb.topology::ASSERT_RB_NO_LOGIC_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 192,
+      "address": 193,
       "fqdn": "fb.topology::ASSERT_RUNTIME_INVARIANT_WIRED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 193,
+      "address": 194,
       "fqdn": "fb.topology::ASSERT_SCHEMA_CONFORMANCE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 194,
+      "address": 195,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_ACYCLIC_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 195,
+      "address": 196,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 196,
+      "address": 197,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 197,
+      "address": 198,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_CONTRACT_CLOSED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 198,
+      "address": 199,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 199,
+      "address": 200,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 200,
+      "address": 201,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_ROUTING_COMPLETE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 201,
+      "address": 202,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_STEP_DECLARED_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 202,
+      "address": 203,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_STEP_ID_UNIQUE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 203,
+      "address": 204,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_SURFACE_CANONICAL_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 204,
+      "address": 205,
       "fqdn": "fb.topology::ASSERT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 205,
+      "address": 206,
       "fqdn": "fb.topology::ASSERT_WF_CC_ONLY_NODES_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 206,
+      "address": 207,
       "fqdn": "fb.topology::ASSERT_WF_ENTRY_INTENT_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 207,
+      "address": 208,
       "fqdn": "fb.topology::ASSERT_WF_EXECUTION_PATH_VALID_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 208,
+      "address": 209,
       "fqdn": "fb.topology::ASSERT_WF_NODE_KEY_BINDING_UNIQUE_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 209,
+      "address": 210,
       "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 210,
+      "address": 211,
       "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_SIDE_EFFECTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 211,
+      "address": 212,
       "fqdn": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 212,
+      "address": 213,
       "fqdn": "fb.topology::CONSTITUTION_EXECUTION_POLICY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 213,
+      "address": 214,
       "fqdn": "fb.topology::CONSTITUTION_EXECUTION_TOPOLOGY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 214,
+      "address": 215,
       "fqdn": "fb.topology::CONSTITUTION_EXECUTION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 215,
+      "address": 216,
       "fqdn": "fb.topology::CONSTITUTION_INTENT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 216,
+      "address": 217,
       "fqdn": "fb.topology::CONSTITUTION_RUNTIME_BINDING_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 217,
+      "address": 218,
       "fqdn": "fb.topology::CONSTITUTION_TRACE_EXECUTION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 218,
+      "address": 219,
       "fqdn": "fb.topology::CONSTITUTION_WORKFLOW_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 219,
+      "address": 220,
       "fqdn": "fb.topology::INVARIANT_ATOM_OUTPUT_PURITY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 220,
+      "address": 221,
       "fqdn": "fb.topology::INVARIANT_BINDING_INTEGRITY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 221,
+      "address": 222,
       "fqdn": "fb.topology::INVARIANT_BINDING_SURFACE_CLOSED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 222,
+      "address": 223,
       "fqdn": "fb.topology::INVARIANT_CC_CAPABILITY_BINDING_VALID_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 223,
+      "address": 224,
       "fqdn": "fb.topology::INVARIANT_CC_INPUTS_SATISFIED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 224,
+      "address": 225,
       "fqdn": "fb.topology::INVARIANT_CC_NO_IMPLICIT_CHAINING_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 225,
+      "address": 226,
       "fqdn": "fb.topology::INVARIANT_CC_NO_MISSING_DEPENDENCIES_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 226,
+      "address": 227,
       "fqdn": "fb.topology::INVARIANT_CC_NO_UNUSED_OUTPUTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 227,
+      "address": 228,
       "fqdn": "fb.topology::INVARIANT_CC_STORAGE_OP_CONFORMANCE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 228,
+      "address": 229,
       "fqdn": "fb.topology::INVARIANT_CS_ISOLATED_EXECUTION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 229,
+      "address": 230,
       "fqdn": "fb.topology::INVARIANT_CS_SURFACE_CLOSED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 230,
+      "address": 231,
       "fqdn": "fb.topology::INVARIANT_CS_TRACEABLE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 231,
+      "address": 232,
       "fqdn": "fb.topology::INVARIANT_CT_OUTPUT_CONTRACT_MATCH_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 232,
+      "address": 233,
       "fqdn": "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 233,
+      "address": 234,
       "fqdn": "fb.topology::INVARIANT_CT_TEST_DATA_OUTCOME_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 234,
+      "address": 235,
       "fqdn": "fb.topology::INVARIANT_IMPLEMENTATION_ADMISSIBLE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 235,
+      "address": 236,
       "fqdn": "fb.topology::INVARIANT_IN_NO_EXECUTION_LOGIC_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 236,
+      "address": 237,
       "fqdn": "fb.topology::INVARIANT_IN_SCHEMA_REQUIRED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 237,
+      "address": 238,
       "fqdn": "fb.topology::INVARIANT_IN_WORKFLOW_BINDING_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 238,
+      "address": 239,
       "fqdn": "fb.topology::INVARIANT_NO_RUNTIME_TOPOLOGY_SYNTHESIS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 239,
+      "address": 240,
       "fqdn": "fb.topology::INVARIANT_NO_SMART_EXECUTION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 240,
+      "address": 241,
       "fqdn": "fb.topology::INVARIANT_NO_UNDECLARED_BEHAVIOR_SURFACE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 241,
+      "address": 242,
       "fqdn": "fb.topology::INVARIANT_PROTOCOL_SURFACE_CLOSED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 242,
+      "address": 243,
       "fqdn": "fb.topology::INVARIANT_RB_BINDING_POLICY_CONFORMANCE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 243,
+      "address": 244,
       "fqdn": "fb.topology::INVARIANT_RB_CS_ONLY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 244,
+      "address": 245,
       "fqdn": "fb.topology::INVARIANT_RB_NO_LOGIC_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 245,
+      "address": 246,
       "fqdn": "fb.topology::INVARIANT_RUNTIME_INVARIANT_WIRED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 246,
+      "address": 247,
       "fqdn": "fb.topology::INVARIANT_SCHEMA_CONFORMANCE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 247,
+      "address": 248,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_ACYCLIC_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 248,
+      "address": 249,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_AUTHORITY_ORTHOGONAL_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 249,
+      "address": 250,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_CAPABILITY_REFERENCE_UNIQUE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 250,
+      "address": 251,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_CONTRACT_CLOSED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 251,
+      "address": 252,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_IMMUTABLE_AFTER_COMPILATION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 252,
+      "address": 253,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_INPUT_REFERENCE_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 253,
+      "address": 254,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_ROUTING_COMPLETE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 254,
+      "address": 255,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_DECLARED_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 255,
+      "address": 256,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_STEP_ID_UNIQUE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 256,
+      "address": 257,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_SURFACE_CANONICAL_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 257,
+      "address": 258,
       "fqdn": "fb.topology::INVARIANT_TOPOLOGY_TRANSPORT_ORTHOGONAL_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 258,
+      "address": 259,
       "fqdn": "fb.topology::INVARIANT_WF_CC_ONLY_NODES_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 259,
+      "address": 260,
       "fqdn": "fb.topology::INVARIANT_WF_ENTRY_INTENT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 260,
+      "address": 261,
       "fqdn": "fb.topology::INVARIANT_WF_EXECUTION_PATH_VALID_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 261,
+      "address": 262,
       "fqdn": "fb.topology::INVARIANT_WF_NODE_KEY_BINDING_UNIQUE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 262,
+      "address": 263,
       "fqdn": "fb.topology::STRUCTURE_CT_IR_CONTRACT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 263,
+      "address": 264,
       "fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_SIDE_EFFECTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 264,
+      "address": 265,
       "fqdn": "fb.topology::STRUCTURE_REGISTRY_LOCATION_REUSABLE_TRANSFORMS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 265,
+      "address": 266,
       "fqdn": "fb.topology::STRUCTURE_RUNTIME_EXECUTION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 266,
+      "address": 267,
       "fqdn": "fb.topology::SURFACE_CONTRACT_CT_PURE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 267,
+      "address": 268,
       "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_COUNT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 268,
+      "address": 269,
       "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_DEREGISTER_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 269,
+      "address": 270,
       "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_REGISTER_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 270,
+      "address": 271,
       "fqdn": "fb.topology::SURFACE_CONTRACT_REGISTRY_RESOLVE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 271,
+      "address": 272,
       "fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_APPENDONLY_APPEND_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 272,
+      "address": 273,
       "fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_READ_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 273,
+      "address": 274,
       "fqdn": "fb.topology::SURFACE_CONTRACT_STORAGE_WRITE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 274,
+      "address": 275,
       "fqdn": "fb.transport::ASSERT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 275,
+      "address": 276,
       "fqdn": "fb.transport::ASSERT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 276,
+      "address": 277,
       "fqdn": "fb.transport::ASSERT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 277,
+      "address": 278,
       "fqdn": "fb.transport::ASSERT_TRANSPORT_TARGET_EXISTS_V0",
       "kind": "ASSERT",
       "kind_address": 16641
     },
     {
-      "address": 278,
+      "address": 279,
       "fqdn": "fb.transport::CONSTITUTION_ADMISSION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 279,
+      "address": 280,
       "fqdn": "fb.transport::CONSTITUTION_TRANSPORT_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 280,
+      "address": 281,
       "fqdn": "fb.transport::INVARIANT_TRANSPORT_CANONICAL_NORMALIZATION_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 281,
+      "address": 282,
       "fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_DYNAMIC_ROUTING_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 282,
+      "address": 283,
       "fqdn": "fb.transport::INVARIANT_TRANSPORT_NO_WORKFLOW_SEMANTICS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 283,
+      "address": 284,
       "fqdn": "fb.transport::INVARIANT_TRANSPORT_TARGET_EXISTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 284,
+      "address": 285,
       "fqdn": "fb.transport::SURFACE_CONTRACT_TRANSPORT_SEND_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 285,
+      "address": 286,
       "fqdn": "fb.vocabulary::CONSTITUTION_VOCABULARY_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 286,
+      "address": 287,
       "fqdn": "fb.vocabulary::STRUCTURE_BUILD_VOCABULARY_AGGREGATE_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 287,
+      "address": 288,
       "fqdn": "fb.vocabulary::VOCAB_EXECUTION_STATES_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 288,
+      "address": 289,
       "fqdn": "fb.vocabulary::VOCAB_LANGUAGE_CONSTRAINTS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 289,
+      "address": 290,
       "fqdn": "fb.vocabulary::VOCAB_PROTOCOL_KINDS_V0",
       "kind": "GOVERNANCE",
       "kind_address": 16646
     },
     {
-      "address": 290,
+      "address": 291,
       "fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_LOOKUP_NAME_V0",
       "kind": "CC",
       "kind_address": 16642
     },
     {
-      "address": 291,
+      "address": 292,
       "fqdn": "pgs_capabilities.registry.name_service.capability_contracts::CC_REGISTER_NAME_V0",
       "kind": "CC",
       "kind_address": 16642
     },
     {
-      "address": 292,
+      "address": 293,
       "fqdn": "pgs_capabilities.registry.name_service.capability_side_effects::CS_NAME_REGISTRY_V0",
       "kind": "CS",
       "kind_address": 16643
     },
     {
-      "address": 293,
+      "address": 294,
       "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_LOOKEDUP_V0",
       "kind": "EV",
       "kind_address": 16645
     },
     {
-      "address": 294,
+      "address": 295,
       "fqdn": "pgs_capabilities.registry.name_service.events::EV_NAME_REGISTERED_V0",
       "kind": "EV",
       "kind_address": 16645
     },
     {
-      "address": 295,
+      "address": 296,
       "fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_LOOKEDUP_V0",
       "kind": "IN",
       "kind_address": 16647
     },
     {
-      "address": 296,
+      "address": 297,
       "fqdn": "pgs_capabilities.registry.name_service.intents::IN_NAME_REGISTERED_V0",
       "kind": "IN",
       "kind_address": 16647
     },
     {
-      "address": 297,
+      "address": 298,
       "fqdn": "pgs_capabilities.registry.name_service.runtime_bindings::RB_NAME_SERVICE_V0",
       "kind": "RB",
       "kind_address": 16648
     },
     {
-      "address": 298,
+      "address": 299,
       "fqdn": "pgs_capabilities.registry.name_service.workflows::WF_LOOKUP_NAME_V0",
       "kind": "WF",
       "kind_address": 16652
     },
     {
-      "address": 299,
+      "address": 300,
       "fqdn": "pgs_capabilities.registry.name_service.workflows::WF_REGISTER_NAME_V0",
       "kind": "WF",
       "kind_address": 16652

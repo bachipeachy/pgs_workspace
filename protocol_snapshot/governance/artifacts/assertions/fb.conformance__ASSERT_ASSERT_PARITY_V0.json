@@ -30,6 +30,8 @@
   "layer_code": "GOVERNANCE",
   "module_path": "pgs_governance.registry.FB_CONFORMANCE.assertions",
   "namespace": "fb.conformance",
-  "references": [],
+  "references": [
+    "fb.conformance::INVARIANT_ASSERT_PARITY_V0"
+  ],
   "version": "0"
 }

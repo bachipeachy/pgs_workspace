@@ -232,7 +232,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
       }
     },
-    "262": {
+    "263": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -1381,8 +1381,8 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "267": {
-      "262": {
+    "268": {
+      "263": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

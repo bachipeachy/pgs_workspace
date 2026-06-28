@@ -25,6 +25,8 @@
   "layer_code": "GOVERNANCE",
   "module_path": "pgs_governance.registry.FB_CRYPTOGRAPHIC_TRUST.assertions",
   "namespace": "fb.cryptographic_trust",
-  "references": [],
+  "references": [
+    "fb.cryptographic_trust::INVARIANT_CRYPTOGRAPHIC_TRUST_DECLARED_V0"
+  ],
   "version": "0"
 }

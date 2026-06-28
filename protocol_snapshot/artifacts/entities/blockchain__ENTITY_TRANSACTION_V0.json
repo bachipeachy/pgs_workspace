@@ -1,0 +1,173 @@
+{
+  "artifact_code": "ENTITY_TRANSACTION_V0",
+  "artifact_type": "ENTITY",
+  "content": "# ENTITY_TRANSACTION_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** ENTITY_TRANSACTION_V0\n- **Artifact Kind:** entity\n- **Governed By:** CONSTITUTION_ENTITY_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare the canonical protocol definition of a **Transaction** \u2014 a governed value movement authorized by\nan Actor, optionally between Wallets, optionally included in a Block. A governed reconciliation modeling\nprotocol *semantics*, not the EVM-shaped implementation layout an earlier CR carried.\n\n---\n\n## 2. Rationale\n\nThe transaction definition had diverged badly: runtime stored a thin event with a nested `payload`; the\ndata-model CR carried a 20-field EVM-gas schema, most of it JIT-computed. This entity keeps only intrinsic\nprotocol state and expresses block inclusion and the parties as *relationships*, not duplicated ids.\n\n---\n\n## 3. Definition\n\n**Identity:** `tx_id` (`T_<hex>`). **Lifecycle:** `status`. **Relationships:** `authorized_by \u2192 ACTOR`,\n`from`/`to \u2192 WALLET` (asymmetric by tx_type), `included_in \u2192 BLOCK`. Governed decisions in \u00a74.\n\n---\n\n## 4. Reconciliation (governed)\n\nIntrinsic-state + semantics-over-layout applied (relationships preferred over duplicated identifiers;\nderived/abandoned-design values rejected).\n\n| Field(s) | Outcome | Rationale |\n|----------|---------|-----------|\n| tx_id | **Accept** (identity) | canonical identifier |\n| tx_type, amount, currency, status, timestamp | **Accept** | intrinsic transaction state |\n| parties / inclusion | **Adopt as relationships** | `authorized_by \u2192 ACTOR`, `from`/`to \u2192 WALLET`, `included_in \u2192 BLOCK` |\n| nonce | **Defer** | intrinsic concept, no governed consumer; null for system txs |\n| tx_hash | **Reject** (projected) | not the identity; not independently-governed reference today |\n| block_number, block_hash | **Reject** | block inclusion is the `included_in` relationship, not duplicated ids |\n| gas_limit, max_fee_per_gas, max_priority_fee_per_gas, base_fee_per_gas, effective_gas_price, gas_used, total_fee | **Reject** | the protocol has NOT adopted a resource-accounting model; EVM gas is an abandoned design direction, not a protocol concept \u2014 returns only via a fresh CR |\n| network | **Reject** | deployment context, not transaction state |\n| memo | **Reject** | presentation |\n| payload, event_code | **Reject** | runtime event-wrapper implementation nesting |\n\nMigration: the EVM gas vocabulary is dropped; a future resource-accounting CR introduces its own.\n\n---\n\n## Machine\n\n```yaml\nentity_code: ENTITY_TRANSACTION_V0\nartifact_kind: entity\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_ENTITY_V0\n\ncore:\n  summary: Canonical Transaction business object (governed value movement)\n  description: Protocol-level definition of a Transaction \u2014 identity, intrinsic attributes, semantics, lifecycle, relationships, invariants.\n  layer: DOMAINS\n  domain: blockchain\n\n  authority:\n    primary: compiler\n    runtime: observational\n    change_request: non_definitional\n\n  projection:\n    source_of_truth: compiler\n    allowed_sources:\n      - blockchain::ENTITY_TRANSACTION_V0\n    forbidden_sources:\n      - markdown\n      - change_requests\n      - runtime_snapshots\n\n  identity:\n    field: tx_id\n    type: string\n    unique: true\n\n  attributes:\n    - { name: tx_type,      type: string, enum: [TRANSFER, MINT, BURN, POOL, STAKE, UNSTAKE, REWARD, SLASH] }\n    - { name: amount,       type: number }\n    - { name: currency,     type: string }\n    - { name: status,       type: string, enum: [PENDING, SUBMITTED, INCLUDED, FINALIZED, FAILED] }\n    - { name: timestamp,    type: string }\n    - { name: initiated_by, type: string }                     # actor_id of the authorizing actor\n    - { name: from_wallet,  type: string, optional: true }     # null for MINT / REWARD (system-sourced)\n    - { name: to_wallet,    type: string, optional: true }     # null for SLASH / BURN (protocol-routed)\n    - { name: in_block,     type: string, optional: true }     # block_id once included (else null)\n\n  semantics:\n    tx_id:        \"Canonical transaction identifier (T_<hex>)\"\n    tx_type:      \"Governed transaction classification\"\n    amount:       \"Value moved, in the stated currency\"\n    currency:     \"Denomination (BACHI)\"\n    status:       \"Transaction lifecycle state (see lifecycle)\"\n    timestamp:    \"Submission time\"\n    initiated_by: \"Actor that authorized the transaction (A_<hex>)\"\n    from_wallet:  \"Source wallet (W_<hex>); absent for system-sourced types\"\n    to_wallet:    \"Destination wallet (W_<hex>); absent for protocol-routed types\"\n    in_block:     \"Including block once finalized; absent while pending\"\n\n  lifecycle:\n    field: status\n    stages: [PENDING, SUBMITTED, INCLUDED, FINALIZED, FAILED]\n    initial: PENDING\n    terminal: FINALIZED\n\n  relationships:\n    - { name: authorized_by, field: initiated_by, target: blockchain::ENTITY_ACTOR_V0,  cardinality: one }\n    - { name: from,          field: from_wallet,  target: blockchain::ENTITY_WALLET_V0, cardinality: zero_or_one }\n    - { name: to,            field: to_wallet,    target: blockchain::ENTITY_WALLET_V0, cardinality: zero_or_one }\n    - { name: included_in,   field: in_block,     target: blockchain::ENTITY_BLOCK_V0,  cardinality: zero_or_one }\n\n  invariants:\n    - invariant_id: TX_ID_UNIQUE\n      constraint: tx_id MUST be globally unique\n    - invariant_id: TX_AMOUNT_NONNEGATIVE\n      constraint: amount MUST NOT be negative\n    - invariant_id: TX_AUTHORIZED\n      constraint: initiated_by MUST reference a valid blockchain::ENTITY_ACTOR_V0\n\n  versioning:\n    strategy: semantic\n    compatibility: backward_compatible_until_breaking_change\n```\n",
+  "content_hash": "43100629214598f5ca11452df7eea9768cc8fc542ae840e4cdfa4bfb62f97051",
+  "fqdn_id": "blockchain::ENTITY_TRANSACTION_V0",
+  "frontmatter": {
+    "artifact_kind": "entity",
+    "core": {
+      "attributes": [
+        {
+          "enum": [
+            "TRANSFER",
+            "MINT",
+            "BURN",
+            "POOL",
+            "STAKE",
+            "UNSTAKE",
+            "REWARD",
+            "SLASH"
+          ],
+          "name": "tx_type",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "enum": [
+            "PENDING",
+            "SUBMITTED",
+            "INCLUDED",
+            "FINALIZED",
+            "FAILED"
+          ],
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "timestamp",
+          "type": "string"
+        },
+        {
+          "name": "initiated_by",
+          "type": "string"
+        },
+        {
+          "name": "from_wallet",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "to_wallet",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "in_block",
+          "optional": true,
+          "type": "string"
+        }
+      ],
+      "authority": {
+        "change_request": "non_definitional",
+        "primary": "compiler",
+        "runtime": "observational"
+      },
+      "description": "Protocol-level definition of a Transaction \u2014 identity, intrinsic attributes, semantics, lifecycle, relationships, invariants.",
+      "domain": "blockchain",
+      "identity": {
+        "field": "tx_id",
+        "type": "string",
+        "unique": true
+      },
+      "invariants": [
+        {
+          "constraint": "tx_id MUST be globally unique",
+          "invariant_id": "TX_ID_UNIQUE"
+        },
+        {
+          "constraint": "amount MUST NOT be negative",
+          "invariant_id": "TX_AMOUNT_NONNEGATIVE"
+        },
+        {
+          "constraint": "initiated_by MUST reference a valid blockchain::ENTITY_ACTOR_V0",
+          "invariant_id": "TX_AUTHORIZED"
+        }
+      ],
+      "layer": "DOMAINS",
+      "lifecycle": {
+        "field": "status",
+        "initial": "PENDING",
+        "stages": [
+          "PENDING",
+          "SUBMITTED",
+          "INCLUDED",
+          "FINALIZED",
+          "FAILED"
+        ],
+        "terminal": "FINALIZED"
+      },
+      "projection": {
+        "allowed_sources": [
+          "blockchain::ENTITY_TRANSACTION_V0"
+        ],
+        "forbidden_sources": [
+          "markdown",
+          "change_requests",
+          "runtime_snapshots"
+        ],
+        "source_of_truth": "compiler"
+      },
+      "relationships": [
+        {
+          "cardinality": "one",
+          "field": "initiated_by",
+          "name": "authorized_by",
+          "target": "blockchain::ENTITY_ACTOR_V0"
+        },
+        {
+          "cardinality": "zero_or_one",
+          "field": "from_wallet",
+          "name": "from",
+          "target": "blockchain::ENTITY_WALLET_V0"
+        },
+        {
+          "cardinality": "zero_or_one",
+          "field": "to_wallet",
+          "name": "to",
+          "target": "blockchain::ENTITY_WALLET_V0"
+        },
+        {
+          "cardinality": "zero_or_one",
+          "field": "in_block",
+          "name": "included_in",
+          "target": "blockchain::ENTITY_BLOCK_V0"
+        }
+      ],
+      "semantics": {
+        "amount": "Value moved, in the stated currency",
+        "currency": "Denomination (BACHI)",
+        "from_wallet": "Source wallet (W_<hex>); absent for system-sourced types",
+        "in_block": "Including block once finalized; absent while pending",
+        "initiated_by": "Actor that authorized the transaction (A_<hex>)",
+        "status": "Transaction lifecycle state (see lifecycle)",
+        "timestamp": "Submission time",
+        "to_wallet": "Destination wallet (W_<hex>); absent for protocol-routed types",
+        "tx_id": "Canonical transaction identifier (T_<hex>)",
+        "tx_type": "Governed transaction classification"
+      },
+      "summary": "Canonical Transaction business object (governed value movement)",
+      "versioning": {
+        "compatibility": "backward_compatible_until_breaking_change",
+        "strategy": "semantic"
+      }
+    },
+    "entity_code": "ENTITY_TRANSACTION_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_ENTITY_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.entities",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_ENTITY_V0"
+  ],
+  "version": "0"
+}

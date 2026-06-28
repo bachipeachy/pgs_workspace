@@ -33,6 +33,8 @@
   "layer_code": "BLOCKCHAIN",
   "module_path": "pgs_blockchain.registry.assertions",
   "namespace": "blockchain",
-  "references": [],
+  "references": [
+    "fb.topology::INVARIANT_CT_SURFACE_CLOSED_V0"
+  ],
   "version": "0"
 }

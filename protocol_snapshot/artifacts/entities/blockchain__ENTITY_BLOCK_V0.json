@@ -1,0 +1,158 @@
+{
+  "artifact_code": "ENTITY_BLOCK_V0",
+  "artifact_type": "ENTITY",
+  "content": "# ENTITY_BLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** ENTITY_BLOCK_V0\n- **Artifact Kind:** entity\n- **Governed By:** CONSTITUTION_ENTITY_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare the canonical protocol definition of a **Block** \u2014 *what a Block is*, independent of where it\nis stored (STRUCTURE), how it is persisted (RUNTIME BINDING), or what is done with it (WORKFLOW/CC).\n\nThis is the authoritative source of a Block's identity, attributes, meaning, lifecycle, and invariants.\nNo CC, WF, Build Sheet, or generator may invent or redefine a Block's fields; they reference this\nentity. Once compiled, the normalized entity (via `pi entity blockchain::ENTITY_BLOCK_V0`) is protocol\ntruth \u2014 not this markdown, not runtime data, not any Change Request.\n\n---\n\n## 2. Rationale\n\nA Block's definition was previously undefined at protocol level \u2014 it existed only in runtime data and in\ntransient Change Requests, forcing builders to invent field names. Promoting the entity to a\nfirst-class artifact closes that gap and keeps concerns orthogonal:\n\n- **Entity** \u2014 what a Block *is* (this artifact)\n- **Structure** \u2014 where Blocks are stored (`STRUCTURE_BLOCKCHAIN_STORAGE_V0` references this entity)\n- **Runtime Binding** \u2014 how the store is accessed\n- **Workflow / CC** \u2014 what happens to Blocks\n\nA Block is a protocol business object, not a storage schema; generated forms (JSON Schema, SQL DDL)\nare projections of this entity, never its source. This is the first real *type declaration* in the\ngoverned type system that happens to execute a blockchain.\n\n---\n\n## 3. Definition\n\nThe Machine block declares, as separate addressable layers:\n\n- **authority** \u2014 the compiler is the sole *definitional* truth; runtime is observational; a Change\n  Request is never the entity's source. (Resolves the \"truth by existence\" tension explicitly.)\n- **projection** \u2014 what may feed a projection of this entity (compiler only), the semantic boundary\n  `ASSERT_PROJECTION_FIDELITY` enforces.\n- **identity** \u2014 `block_id`, unique.\n- **attributes** \u2014 structure only: name, type, cardinality, enum. No meaning here.\n- **semantics** \u2014 the meaning of each field, kept separate from structure so the two cannot drift.\n- **lifecycle** \u2014 `status` is a state machine (`PROPOSED \u2192 JUSTIFIED \u2192 FINALIZED`), not just a field, so\n  workflows do not re-invent state logic.\n- **relationships** \u2014 `proposer \u2192 ENTITY_ACTOR_V0` and `transactions \u2192 ENTITY_TRANSACTION_V0`, now\n  resolved (both entities are declared).\n- **invariants** \u2014 system-level truths.\n- **versioning** \u2014 evolution strategy.\n\nFields are governed reconciliations (\u00a74), not copied from runtime or any CR.\n\n---\n\n## 4. Reconciliation (governed)\n\nIntrinsic-state + semantics-over-layout applied. Consensus concepts are adopted now to position the\nprotocol for the consensus_pos subdomain; the cryptographic hash is projected, not canonicalized.\n\n| Field(s) | Outcome | Rationale |\n|----------|---------|-----------|\n| block_id | **Accept** (identity) | canonical identifier (B_<hex>) |\n| epoch, round_id, slot, status, is_canonical, timestamp | **Accept** | intrinsic block/consensus state (runtime) |\n| height | **Adopt** | block number in the canonical chain \u2014 protocol-intrinsic ordering |\n| justified_epoch, finalized_epoch | **Adopt** | consensus finality state \u2014 belong in the protocol now that consensus_pos is planned (runtime \u2192 migration) |\n| proposer, transactions | **Adopt as relationships** | `proposer \u2192 ACTOR`, `transactions \u2192 TRANSACTION` |\n| block_hash | **Reject** (projected) | `block_id` is the identity; the hash is not an independently-governed reference today \u2014 project, don't canonicalize |\n\n---\n\n## Machine\n\n```yaml\nentity_code: ENTITY_BLOCK_V0\nartifact_kind: entity\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_ENTITY_V0\n\ncore:\n  summary: Canonical Block business object\n  description: Protocol-level definition of a Block \u2014 identity, attributes, semantics, lifecycle, relationships, invariants.\n  layer: DOMAINS\n  domain: blockchain\n\n  authority:\n    primary: compiler                  # the compiled entity is the sole definitional truth\n    runtime: observational             # runtime records conform to this entity; they never define it\n    change_request: non_definitional   # a CR changes the entity; it is never its source of truth\n\n  projection:\n    source_of_truth: compiler\n    allowed_sources:\n      - blockchain::ENTITY_BLOCK_V0\n    forbidden_sources:\n      - markdown\n      - change_requests\n      - runtime_snapshots\n\n  identity:\n    field: block_id\n    type: string\n    unique: true\n\n  attributes:\n    - { name: height,          type: integer, cardinality: \"1\" }\n    - { name: epoch,           type: integer, cardinality: \"1\" }\n    - { name: round_id,        type: integer, cardinality: \"1\" }\n    - { name: slot,            type: integer, cardinality: \"1\" }\n    - { name: proposer_id,     type: string,  cardinality: \"1\" }\n    - { name: timestamp,       type: string,  cardinality: \"1\" }\n    - { name: status,          type: string,  cardinality: \"1\", enum: [PROPOSED, JUSTIFIED, FINALIZED] }\n    - { name: is_canonical,    type: boolean, cardinality: \"1\" }\n    - { name: justified_epoch, type: integer, optional: true }\n    - { name: finalized_epoch, type: integer, optional: true }\n    - { name: tx_ids,          type: array,   item_type: string, cardinality: \"0..n\" }\n\n  semantics:\n    block_id:        \"Canonical block identifier (B_<hex>)\"\n    height:          \"Block number in the canonical chain\"\n    epoch:           \"Consensus epoch, derived as slot // 32\"\n    round_id:        \"Consensus round within the epoch\"\n    slot:            \"Total-ordering unit of the consensus timeline\"\n    proposer_id:     \"Actor (A_<hex>) that proposed the block\"\n    timestamp:       \"ISO-8601 block production time\"\n    status:          \"Lifecycle state in the block finalization pipeline (see lifecycle)\"\n    is_canonical:    \"Whether the block is part of the canonical chain\"\n    justified_epoch: \"Consensus epoch in which the block was justified\"\n    finalized_epoch: \"Consensus epoch in which the block was finalized\"\n    tx_ids:          \"Transactions (T_<hex>) included in the block\"\n\n  lifecycle:\n    field: status\n    stages: [PROPOSED, JUSTIFIED, FINALIZED]\n    initial: PROPOSED\n    terminal: FINALIZED\n\n  relationships:\n    - { name: proposer,     field: proposer_id, target: blockchain::ENTITY_ACTOR_V0,       cardinality: one }\n    - { name: transactions, field: tx_ids,      target: blockchain::ENTITY_TRANSACTION_V0, cardinality: many }\n\n  invariants:\n    - invariant_id: BLOCK_ID_UNIQUE\n      constraint: block_id MUST be globally unique\n\n  versioning:\n    strategy: semantic\n    compatibility: backward_compatible_until_breaking_change\n```",
+  "content_hash": "117e20a71e2a7c5a47ca6200bb8bf71d578024479f112e1123869bc7bfd8a7c9",
+  "fqdn_id": "blockchain::ENTITY_BLOCK_V0",
+  "frontmatter": {
+    "artifact_kind": "entity",
+    "core": {
+      "attributes": [
+        {
+          "cardinality": "1",
+          "name": "height",
+          "type": "integer"
+        },
+        {
+          "cardinality": "1",
+          "name": "epoch",
+          "type": "integer"
+        },
+        {
+          "cardinality": "1",
+          "name": "round_id",
+          "type": "integer"
+        },
+        {
+          "cardinality": "1",
+          "name": "slot",
+          "type": "integer"
+        },
+        {
+          "cardinality": "1",
+          "name": "proposer_id",
+          "type": "string"
+        },
+        {
+          "cardinality": "1",
+          "name": "timestamp",
+          "type": "string"
+        },
+        {
+          "cardinality": "1",
+          "enum": [
+            "PROPOSED",
+            "JUSTIFIED",
+            "FINALIZED"
+          ],
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "cardinality": "1",
+          "name": "is_canonical",
+          "type": "boolean"
+        },
+        {
+          "name": "justified_epoch",
+          "optional": true,
+          "type": "integer"
+        },
+        {
+          "name": "finalized_epoch",
+          "optional": true,
+          "type": "integer"
+        },
+        {
+          "cardinality": "0..n",
+          "item_type": "string",
+          "name": "tx_ids",
+          "type": "array"
+        }
+      ],
+      "authority": {
+        "change_request": "non_definitional",
+        "primary": "compiler",
+        "runtime": "observational"
+      },
+      "description": "Protocol-level definition of a Block \u2014 identity, attributes, semantics, lifecycle, relationships, invariants.",
+      "domain": "blockchain",
+      "identity": {
+        "field": "block_id",
+        "type": "string",
+        "unique": true
+      },
+      "invariants": [
+        {
+          "constraint": "block_id MUST be globally unique",
+          "invariant_id": "BLOCK_ID_UNIQUE"
+        }
+      ],
+      "layer": "DOMAINS",
+      "lifecycle": {
+        "field": "status",
+        "initial": "PROPOSED",
+        "stages": [
+          "PROPOSED",
+          "JUSTIFIED",
+          "FINALIZED"
+        ],
+        "terminal": "FINALIZED"
+      },
+      "projection": {
+        "allowed_sources": [
+          "blockchain::ENTITY_BLOCK_V0"
+        ],
+        "forbidden_sources": [
+          "markdown",
+          "change_requests",
+          "runtime_snapshots"
+        ],
+        "source_of_truth": "compiler"
+      },
+      "relationships": [
+        {
+          "cardinality": "one",
+          "field": "proposer_id",
+          "name": "proposer",
+          "target": "blockchain::ENTITY_ACTOR_V0"
+        },
+        {
+          "cardinality": "many",
+          "field": "tx_ids",
+          "name": "transactions",
+          "target": "blockchain::ENTITY_TRANSACTION_V0"
+        }
+      ],
+      "semantics": {
+        "block_id": "Canonical block identifier (B_<hex>)",
+        "epoch": "Consensus epoch, derived as slot // 32",
+        "finalized_epoch": "Consensus epoch in which the block was finalized",
+        "height": "Block number in the canonical chain",
+        "is_canonical": "Whether the block is part of the canonical chain",
+        "justified_epoch": "Consensus epoch in which the block was justified",
+        "proposer_id": "Actor (A_<hex>) that proposed the block",
+        "round_id": "Consensus round within the epoch",
+        "slot": "Total-ordering unit of the consensus timeline",
+        "status": "Lifecycle state in the block finalization pipeline (see lifecycle)",
+        "timestamp": "ISO-8601 block production time",
+        "tx_ids": "Transactions (T_<hex>) included in the block"
+      },
+      "summary": "Canonical Block business object",
+      "versioning": {
+        "compatibility": "backward_compatible_until_breaking_change",
+        "strategy": "semantic"
+      }
+    },
+    "entity_code": "ENTITY_BLOCK_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_ENTITY_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.entities",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_ENTITY_V0"
+  ],
+  "version": "0"
+}

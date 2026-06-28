@@ -1,0 +1,143 @@
+{
+  "artifact_code": "ENTITY_WALLET_V0",
+  "artifact_type": "ENTITY",
+  "content": "# ENTITY_WALLET_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** ENTITY_WALLET_V0\n- **Artifact Kind:** entity\n- **Governed By:** CONSTITUTION_ENTITY_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n\n---\n\n## 1. Intent\n\nDeclare the canonical protocol definition of a **Wallet** \u2014 the balance/aggregation state owned by an\nActor. A governed reconciliation, not a copy of runtime or any Change Request.\n\n---\n\n## 2. Rationale\n\nA Wallet's definition diverged across runtime and the data-model CR. This entity is the single canonical\nhome; `actor_id` references the Actor identity (`ENTITY_ACTOR_V0`).\n\n---\n\n## 3. Definition\n\n**Identity:** `wallet_id`. **Lifecycle:** `status`. **Owner:** `actor_id \u2192 ENTITY_ACTOR_V0`.\nField-by-field governed decisions are in \u00a74 Reconciliation.\n\n---\n\n## 4. Reconciliation (governed)\n\nIntrinsic-state rule applied: canonicalize a field only if it is intrinsic protocol state; project\nderived/observational/implementation-specific data.\n\n| Field | Runtime | CR | Outcome | Rationale |\n|-------|:--:|:--:|---------|-----------|\n| wallet_id | \u2713 | \u2713 | **Accept** (identity) | governed identifier |\n| actor_id | \u2713 | \u2713 | **Accept** (\u2192 ENTITY_ACTOR_V0) | owning identity |\n| balance | \u2713 | \u2713 | **Accept** | intrinsic ledger state |\n| status | \u2713 | \u2713 | **Accept** (lifecycle) | governed lifecycle |\n| wallet_type | \u2713 | \u2713 | **Accept** (enum, uppercase) | CR governs the enum; runtime casing drift (`business`) \u2192 migration |\n| address | \u2713 | \u2717 | **Adopt** | wallet's on-chain identity \u2014 intrinsic |\n| currency | \u2713 | \u2717 | **Adopt** | governed denomination |\n| created_at, last_modified | \u2713 | \u2717 | **Adopt** | lifecycle timestamps |\n| state (`{eoa:{nonce}}`) | \u2713 | \u2717 | **Reject** | EOA-style implementation wrapper, not intrinsic protocol state |\n| nonce | \u2713(nested) | \u2713 | **Defer** | intrinsic concept (replay/ordering) but no governed consumer yet; exists dormant at `state.eoa.nonce` \u2014 Adopt (flat) when tx ordering becomes a protocol requirement |\n| name | \u2717 | \u2713 | **Reject** | presentation label, not protocol identity |\n| last_tx_at | \u2717 | \u2713 | **Reject** | derivable from transaction history \u2014 project, never canonicalize |\n\nMigrations: `wallet_type` casing \u2192 uppercase; `state.eoa` wrapper retired if/when `nonce` is adopted flat.\n\n---\n\n## Machine\n\n```yaml\nentity_code: ENTITY_WALLET_V0\nartifact_kind: entity\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_ENTITY_V0\n\ncore:\n  summary: Canonical Wallet business object (balance state owned by an Actor)\n  description: Protocol-level definition of a Wallet \u2014 identity, attributes, semantics, lifecycle, relationships, invariants.\n  layer: DOMAINS\n  domain: blockchain\n\n  authority:\n    primary: compiler\n    runtime: observational\n    change_request: non_definitional\n\n  projection:\n    source_of_truth: compiler\n    allowed_sources:\n      - blockchain::ENTITY_WALLET_V0\n    forbidden_sources:\n      - markdown\n      - change_requests\n      - runtime_snapshots\n\n  identity:\n    field: wallet_id\n    type: string\n    unique: true\n\n  attributes:\n    - { name: actor_id,      type: string }\n    - { name: address,       type: string }\n    - { name: balance,       type: number }\n    - { name: currency,      type: string }\n    - { name: status,        type: string, enum: [ACTIVE, INACTIVE, CLOSED] }\n    - { name: wallet_type,   type: string, enum: [DEFAULT, PRIVATE, BUSINESS, SAVINGS, INVESTMENT, MINT, BURN, POOL] }\n    - { name: created_at,    type: string }\n    - { name: last_modified, type: string }\n\n  semantics:\n    wallet_id:     \"Governed wallet identifier\"\n    actor_id:      \"Owning actor (A_<hex>)\"\n    address:       \"Wallet on-chain address\"\n    balance:       \"Current ledger balance\"\n    currency:      \"Denomination (BACHI default)\"\n    status:        \"Wallet lifecycle state (see lifecycle)\"\n    wallet_type:   \"Governed wallet classification\"\n    created_at:    \"Creation timestamp\"\n    last_modified: \"Last update timestamp\"\n\n  lifecycle:\n    field: status\n    stages: [ACTIVE, INACTIVE, CLOSED]\n    initial: ACTIVE\n    terminal: CLOSED\n\n  relationships:\n    - name: owner\n      field: actor_id\n      target: blockchain::ENTITY_ACTOR_V0\n      cardinality: one\n\n  invariants:\n    - invariant_id: WALLET_ID_UNIQUE\n      constraint: wallet_id MUST be globally unique\n    - invariant_id: WALLET_BALANCE_NONNEGATIVE\n      constraint: balance MUST NOT be negative\n    - invariant_id: WALLET_OWNER_EXISTS\n      constraint: actor_id MUST reference a valid blockchain::ENTITY_ACTOR_V0\n\n  versioning:\n    strategy: semantic\n    compatibility: backward_compatible_until_breaking_change\n```\n",
+  "content_hash": "e43d8c117c66598d5b7cf06ff26f356c3bdf6cacc83636e66a1dd8f068db47cf",
+  "fqdn_id": "blockchain::ENTITY_WALLET_V0",
+  "frontmatter": {
+    "artifact_kind": "entity",
+    "core": {
+      "attributes": [
+        {
+          "name": "actor_id",
+          "type": "string"
+        },
+        {
+          "name": "address",
+          "type": "string"
+        },
+        {
+          "name": "balance",
+          "type": "number"
+        },
+        {
+          "name": "currency",
+          "type": "string"
+        },
+        {
+          "enum": [
+            "ACTIVE",
+            "INACTIVE",
+            "CLOSED"
+          ],
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "enum": [
+            "DEFAULT",
+            "PRIVATE",
+            "BUSINESS",
+            "SAVINGS",
+            "INVESTMENT",
+            "MINT",
+            "BURN",
+            "POOL"
+          ],
+          "name": "wallet_type",
+          "type": "string"
+        },
+        {
+          "name": "created_at",
+          "type": "string"
+        },
+        {
+          "name": "last_modified",
+          "type": "string"
+        }
+      ],
+      "authority": {
+        "change_request": "non_definitional",
+        "primary": "compiler",
+        "runtime": "observational"
+      },
+      "description": "Protocol-level definition of a Wallet \u2014 identity, attributes, semantics, lifecycle, relationships, invariants.",
+      "domain": "blockchain",
+      "identity": {
+        "field": "wallet_id",
+        "type": "string",
+        "unique": true
+      },
+      "invariants": [
+        {
+          "constraint": "wallet_id MUST be globally unique",
+          "invariant_id": "WALLET_ID_UNIQUE"
+        },
+        {
+          "constraint": "balance MUST NOT be negative",
+          "invariant_id": "WALLET_BALANCE_NONNEGATIVE"
+        },
+        {
+          "constraint": "actor_id MUST reference a valid blockchain::ENTITY_ACTOR_V0",
+          "invariant_id": "WALLET_OWNER_EXISTS"
+        }
+      ],
+      "layer": "DOMAINS",
+      "lifecycle": {
+        "field": "status",
+        "initial": "ACTIVE",
+        "stages": [
+          "ACTIVE",
+          "INACTIVE",
+          "CLOSED"
+        ],
+        "terminal": "CLOSED"
+      },
+      "projection": {
+        "allowed_sources": [
+          "blockchain::ENTITY_WALLET_V0"
+        ],
+        "forbidden_sources": [
+          "markdown",
+          "change_requests",
+          "runtime_snapshots"
+        ],
+        "source_of_truth": "compiler"
+      },
+      "relationships": [
+        {
+          "cardinality": "one",
+          "field": "actor_id",
+          "name": "owner",
+          "target": "blockchain::ENTITY_ACTOR_V0"
+        }
+      ],
+      "semantics": {
+        "actor_id": "Owning actor (A_<hex>)",
+        "address": "Wallet on-chain address",
+        "balance": "Current ledger balance",
+        "created_at": "Creation timestamp",
+        "currency": "Denomination (BACHI default)",
+        "last_modified": "Last update timestamp",
+        "status": "Wallet lifecycle state (see lifecycle)",
+        "wallet_id": "Governed wallet identifier",
+        "wallet_type": "Governed wallet classification"
+      },
+      "summary": "Canonical Wallet business object (balance state owned by an Actor)",
+      "versioning": {
+        "compatibility": "backward_compatible_until_breaking_change",
+        "strategy": "semantic"
+      }
+    },
+    "entity_code": "ENTITY_WALLET_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_ENTITY_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.entities",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_ENTITY_V0"
+  ],
+  "version": "0"
+}

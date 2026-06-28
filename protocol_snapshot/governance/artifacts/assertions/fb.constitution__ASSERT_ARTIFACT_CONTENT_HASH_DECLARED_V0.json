@@ -20,6 +20,8 @@
   "layer_code": "GOVERNANCE",
   "module_path": "pgs_governance.registry.FB_CONSTITUTION.assertions",
   "namespace": "fb.constitution",
-  "references": [],
+  "references": [
+    "fb.constitution::INVARIANT_ARTIFACT_CONTENT_HASH_DECLARED_V0"
+  ],
   "version": "0"
 }

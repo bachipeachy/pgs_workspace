@@ -1,6 +1,6 @@
 {
   "bindings": {
-    "128": {
+    "132": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "SYSTEM",
         "data": {
@@ -34,7 +34,7 @@
         "tx_type": "BURN"
       }
     },
-    "129": {
+    "133": {
       "CC_APPEND_WALLET_EVENT_V0": {
         "actor_id": "$.results.39.actor_id",
         "record": {
@@ -84,7 +84,7 @@
         "actor_record": "$.payload.actor_record"
       }
     },
-    "130": {
+    "134": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "SYSTEM",
         "data": {
@@ -118,7 +118,7 @@
         "tx_type": "MINT"
       }
     },
-    "131": {
+    "135": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "SYSTEM",
         "data": {
@@ -149,7 +149,7 @@
         "tx_type": "POOL"
       }
     },
-    "132": {
+    "136": {
       "CC_ADVANCE_SLOT_CLOCK_V0": {
         "simulation_id": "$.payload.simulation_id",
         "triggered_by": "$.payload.triggered_by"
@@ -170,7 +170,7 @@
         "triggered_by": "$.payload.triggered_by"
       }
     },
-    "133": {
+    "137": {
       "CC_CLAIM_MEMPOOL_TXS_V0": {
         "proposer_id": "$.results.42.proposer_id"
       },
@@ -205,7 +205,7 @@
         "timestamp": "$.payload.timestamp"
       }
     },
-    "134": {
+    "138": {
       "CC_APPEND_ACTOR_EVENT_V0": {
         "actor_id": "$.results.19.actor_id",
         "data": "$.payload.actor_record",
@@ -219,7 +219,7 @@
         "actor_record": "$.payload.actor_record"
       }
     },
-    "135": {
+    "139": {
       "CC_APPEND_VALIDATOR_EVENT_V0": {
         "actor_id": "$.payload.validator_record.actor_id",
         "data": "$.payload.validator_record",
@@ -235,7 +235,7 @@
         "validator_record": "$.payload.validator_record"
       }
     },
-    "136": {
+    "140": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "SYSTEM",
         "data": {
@@ -271,7 +271,7 @@
         "tx_type": "REWARD"
       }
     },
-    "137": {
+    "141": {
       "CC_DISPATCH_SIMULATION_WORKERS_V0": {
         "simulation_id": "$.payload.simulation_id",
         "slot_schedule": "$.payload.slot_schedule",
@@ -290,14 +290,14 @@
         "triggered_by": "$.payload.triggered_by"
       }
     },
-    "138": {
+    "142": {
       "CC_RUN_SLOT_SEQUENCE_V0": {
         "simulation_id": "$.payload.simulation_id",
         "slot_schedule": "$.payload.slot_schedule",
         "triggered_by": "$.payload.triggered_by"
       }
     },
-    "139": {
+    "143": {
       "CC_EXECUTE_SLOT_SEQUENCE_V0": {
         "slot_schedule": "$.payload.slot_schedule",
         "triggered_by": "$.payload.triggered_by"
@@ -306,13 +306,13 @@
         "slots_executed": "$.results.17.slots_executed"
       }
     },
-    "140": {
+    "144": {
       "CC_RUN_TX_SEQUENCE_V0": {
         "triggered_by": "$.payload.triggered_by",
         "tx_sequence": "$.payload.tx_sequence"
       }
     },
-    "141": {
+    "145": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "SYSTEM",
         "data": {
@@ -348,7 +348,7 @@
         "tx_type": "SLASH"
       }
     },
-    "142": {
+    "146": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "$.results.39.actor_id",
         "data": {
@@ -389,7 +389,7 @@
         "tx_type": "STAKE"
       }
     },
-    "143": {
+    "147": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "$.results.39.actor_id",
         "data": {
@@ -461,7 +461,7 @@
         "wallet_id": "$.payload.wallet_id"
       }
     },
-    "144": {
+    "148": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "$.results.39.actor_id",
         "data": {
@@ -506,7 +506,7 @@
         "tx_type": "TRANSFER"
       }
     },
-    "145": {
+    "149": {
       "CC_APPEND_TX_EVENT_V0": {
         "actor_id": "$.results.39.actor_id",
         "data": {
@@ -549,7 +549,7 @@
         "tx_type": "UNSTAKE"
       }
     },
-    "146": {
+    "150": {
       "CC_APPEND_ACTOR_EVENT_V0": {
         "actor_id": "$.results.39.actor_id",
         "data": {
@@ -577,106 +577,106 @@
     }
   },
   "entry": {
-    "128": {
-      "rb": 98,
-      "start": 82,
-      "start_key": "IN_BURN_V0"
-    },
-    "129": {
-      "rb": 99,
-      "start": 97,
-      "start_key": "IN_WALLET_CREATED_V0"
-    },
-    "130": {
-      "rb": 100,
-      "start": 85,
-      "start_key": "IN_MINT_V0"
-    },
-    "131": {
-      "rb": 101,
-      "start": 86,
-      "start_key": "IN_POOL_V0"
-    },
     "132": {
       "rb": 102,
-      "start": 90,
-      "start_key": "IN_SLOT_EXECUTION_STARTED_V0"
+      "start": 86,
+      "start_key": "IN_BURN_V0"
     },
     "133": {
       "rb": 103,
-      "start": 81,
-      "start_key": "IN_BLOCK_PROPOSED_V0"
+      "start": 101,
+      "start_key": "IN_WALLET_CREATED_V0"
     },
     "134": {
       "rb": 104,
-      "start": 79,
-      "start_key": "IN_ACTOR_REGISTERED_V0"
+      "start": 89,
+      "start_key": "IN_MINT_V0"
     },
     "135": {
       "rb": 105,
-      "start": 96,
-      "start_key": "IN_VALIDATOR_REGISTERED_V0"
+      "start": 90,
+      "start_key": "IN_POOL_V0"
     },
     "136": {
       "rb": 106,
-      "start": 87,
-      "start_key": "IN_REWARD_V0"
+      "start": 94,
+      "start_key": "IN_SLOT_EXECUTION_STARTED_V0"
     },
     "137": {
       "rb": 107,
-      "start": 88,
-      "start_key": "IN_RUN_CHAIN_SIMULATION_V0"
+      "start": 85,
+      "start_key": "IN_BLOCK_PROPOSED_V0"
     },
     "138": {
       "rb": 108,
       "start": 83,
-      "start_key": "IN_CONSENSUS_LOOP_STARTED_V0"
+      "start_key": "IN_ACTOR_REGISTERED_V0"
     },
     "139": {
       "rb": 109,
-      "start": 84,
-      "start_key": "IN_CONSENSUS_SLOTS_V0"
+      "start": 100,
+      "start_key": "IN_VALIDATOR_REGISTERED_V0"
     },
     "140": {
       "rb": 110,
-      "start": 94,
-      "start_key": "IN_TX_WORKLOAD_STARTED_V0"
+      "start": 91,
+      "start_key": "IN_REWARD_V0"
     },
     "141": {
       "rb": 111,
-      "start": 89,
-      "start_key": "IN_SLASH_V0"
+      "start": 92,
+      "start_key": "IN_RUN_CHAIN_SIMULATION_V0"
     },
     "142": {
       "rb": 112,
-      "start": 91,
-      "start_key": "IN_STAKE_V0"
+      "start": 87,
+      "start_key": "IN_CONSENSUS_LOOP_STARTED_V0"
     },
     "143": {
       "rb": 113,
-      "start": 92,
-      "start_key": "IN_TRANSACTION_SUBMITTED_V0"
+      "start": 88,
+      "start_key": "IN_CONSENSUS_SLOTS_V0"
     },
     "144": {
       "rb": 114,
-      "start": 93,
-      "start_key": "IN_TRANSFER_V0"
+      "start": 98,
+      "start_key": "IN_TX_WORKLOAD_STARTED_V0"
     },
     "145": {
       "rb": 115,
-      "start": 95,
-      "start_key": "IN_UNSTAKE_V0"
+      "start": 93,
+      "start_key": "IN_SLASH_V0"
     },
     "146": {
       "rb": 116,
-      "start": 80,
+      "start": 95,
+      "start_key": "IN_STAKE_V0"
+    },
+    "147": {
+      "rb": 117,
+      "start": 96,
+      "start_key": "IN_TRANSACTION_SUBMITTED_V0"
+    },
+    "148": {
+      "rb": 118,
+      "start": 97,
+      "start_key": "IN_TRANSFER_V0"
+    },
+    "149": {
+      "rb": 119,
+      "start": 99,
+      "start_key": "IN_UNSTAKE_V0"
+    },
+    "150": {
+      "rb": 120,
+      "start": 84,
       "start_key": "IN_ACTOR_VERIFIED_V0"
     }
   },
   "pipeline": {
     "10": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "VALIDATOR",
           "key": "$.inputs.actor_id"
@@ -696,7 +696,7 @@
     ],
     "11": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.wallet_id"
@@ -716,7 +716,7 @@
     ],
     "12": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "MEMPOOL",
           "filter": {
@@ -741,7 +741,7 @@
     ],
     "13": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.wallet_id",
@@ -769,10 +769,10 @@
         "step_id": "write_wallet_state"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "key": "$.inputs.wallet_id",
-          "target_cs": 149,
+          "target_cs": 153,
           "target_ref": "$.inputs.wallet_id"
         },
         "on_result": {
@@ -829,12 +829,12 @@
     ],
     "15": [
       {
-        "addr": 148,
+        "addr": 152,
         "inputs": {
           "triggered_by": "$.inputs.triggered_by",
           "workflows": [
             {
-              "code": 138,
+              "code": 142,
               "payload": {
                 "simulation_id": "$.inputs.simulation_id",
                 "slot_schedule": "$.inputs.slot_schedule",
@@ -842,7 +842,7 @@
               }
             },
             {
-              "code": 140,
+              "code": 144,
               "payload": {
                 "triggered_by": "$.inputs.triggered_by",
                 "tx_interval_seconds": "$.inputs.tx_interval_seconds",
@@ -867,7 +867,7 @@
     ],
     "16": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "MEMPOOL",
           "keys": "$.inputs.tx_ids"
@@ -886,26 +886,26 @@
     ],
     "17": [
       {
-        "addr": 153,
+        "addr": 157,
         "inputs": {
           "item_sub_sequence": {
             "field": "transactions",
             "wf_dispatch": {
               "key_field": "tx_type",
               "mapping": {
-                "BURN": 128,
-                "MINT": 130,
-                "POOL": 131,
-                "REWARD": 136,
-                "SLASH": 141,
-                "STAKE": 142,
-                "TRANSFER": 144,
-                "UNSTAKE": 145
+                "BURN": 132,
+                "MINT": 134,
+                "POOL": 135,
+                "REWARD": 140,
+                "SLASH": 145,
+                "STAKE": 146,
+                "TRANSFER": 148,
+                "UNSTAKE": 149
               }
             }
           },
           "item_wf": {
-            "code": 133,
+            "code": 137,
             "inject": {
               "triggered_by": "$.inputs.triggered_by"
             },
@@ -934,7 +934,7 @@
     ],
     "18": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": "$.inputs.round_id",
           "prefix": "B"
@@ -950,7 +950,7 @@
         "step_id": "generate_block_id"
       },
       {
-        "addr": 155,
+        "addr": 159,
         "inputs": {
           "fields": {
             "block_id": "$.results.generate_block_id.block_id",
@@ -975,7 +975,7 @@
         "step_id": "assemble_block_record"
       },
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "BLOCKS",
           "key": "$.results.generate_block_id.block_id",
@@ -991,7 +991,7 @@
         "step_id": "write_block"
       },
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "BLOCK_EVENTS",
           "record": {
@@ -1020,7 +1020,7 @@
     ],
     "19": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": "$.inputs.actor_record",
           "prefix": "A"
@@ -1038,7 +1038,7 @@
     ],
     "20": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "actor_id": "$.inputs.actor_id",
@@ -1060,7 +1060,7 @@
         "step_id": "generate_tx_id"
       },
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "actor_id": "$.inputs.actor_id",
@@ -1084,7 +1084,7 @@
     ],
     "21": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": "$.inputs.seed_record",
           "prefix": "W"
@@ -1102,7 +1102,7 @@
     ],
     "22": [
       {
-        "addr": 167,
+        "addr": 171,
         "inputs": {
           "input_bytes": "$.inputs.signed_tx_bytes"
         },
@@ -1119,7 +1119,7 @@
     ],
     "23": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "SLOT_CLOCK",
           "key": "$.inputs.simulation_id",
@@ -1143,7 +1143,7 @@
     ],
     "24": [
       {
-        "addr": 152,
+        "addr": 156,
         "inputs": {
           "payload": {
             "epoch": "$.inputs.epoch_number",
@@ -1152,7 +1152,7 @@
             "timestamp": "$.inputs.timestamp",
             "triggered_by": "$.inputs.triggered_by"
           },
-          "workflow_code": 133
+          "workflow_code": 137
         },
         "on_result": {
           "BACKEND_ERROR": "exit",
@@ -1169,7 +1169,7 @@
     ],
     "25": [
       {
-        "addr": 151,
+        "addr": 155,
         "inputs": {
           "body": "Your wallet has been created successfully.",
           "recipient": "$.inputs.recipient_email",
@@ -1189,7 +1189,7 @@
     ],
     "26": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "tx_id": "$.inputs.tx_id",
@@ -1208,7 +1208,7 @@
         "step_id": "generate_tx_key"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "key": "$.results.generate_tx_key.tx_key",
           "metadata": {
@@ -1216,7 +1216,7 @@
             "to_wallet_id": "$.inputs.to_wallet_id",
             "tx_type": "$.inputs.tx_type"
           },
-          "target_cs": 149,
+          "target_cs": 153,
           "target_ref": "$.inputs.tx_id"
         },
         "on_result": {
@@ -1232,7 +1232,7 @@
         "step_id": "register_tx_key"
       },
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "TRANSACTION_EVENTS",
           "actor_id": "$.inputs.actor_id",
@@ -1264,7 +1264,7 @@
         "step_id": "append_mempool_tx"
       },
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "MEMPOOL",
           "key": "$.inputs.tx_id",
@@ -1289,7 +1289,7 @@
         "step_id": "write_pending_tx"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "key": "$.inputs.tx_id",
           "metadata": {
@@ -1297,7 +1297,7 @@
             "status": "PENDING",
             "tx_type": "$.inputs.tx_type"
           },
-          "target_cs": 147,
+          "target_cs": 151,
           "target_ref": "$.inputs.tx_hash"
         },
         "on_result": {
@@ -1315,7 +1315,7 @@
     ],
     "27": [
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "ACTOR",
           "key": "$.inputs.actor_id",
@@ -1359,7 +1359,7 @@
     ],
     "29": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "VALIDATOR"
         },
@@ -1375,7 +1375,7 @@
         "step_id": "list_validators"
       },
       {
-        "addr": 164,
+        "addr": 168,
         "inputs": {
           "filter": {
             "effective_balance": "present",
@@ -1396,7 +1396,7 @@
     ],
     "3": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "SLOT_CLOCK",
           "key": "$.inputs.simulation_id"
@@ -1414,7 +1414,7 @@
         "step_id": "read_slot_clock"
       },
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "SLOT_CLOCK",
           "key": "$.inputs.simulation_id",
@@ -1440,7 +1440,7 @@
     ],
     "30": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "MEMPOOL"
         },
@@ -1457,7 +1457,7 @@
         "step_id": "list_mempool_entries"
       },
       {
-        "addr": 164,
+        "addr": 168,
         "inputs": {
           "filter": {
             "status": "PENDING"
@@ -1475,7 +1475,7 @@
     ],
     "31": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "TRANSACTION"
         },
@@ -1492,7 +1492,7 @@
         "step_id": "list_pending_transactions"
       },
       {
-        "addr": 164,
+        "addr": 168,
         "inputs": {
           "filter": {
             "status": "PENDING"
@@ -1510,7 +1510,7 @@
     ],
     "32": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "SLOT_CLOCK",
           "key": "$.inputs.simulation_id"
@@ -1531,7 +1531,7 @@
     ],
     "33": [
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "ACTOR_EVENTS",
           "actor_id": "$.inputs.actor_id",
@@ -1558,7 +1558,7 @@
     ],
     "34": [
       {
-        "addr": 155,
+        "addr": 159,
         "inputs": {
           "fields": {
             "block_id": "$.inputs.block_id",
@@ -1579,7 +1579,7 @@
         "step_id": "assemble_round_record"
       },
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "CONSENSUS_ROUNDS",
           "record": "$.results.assemble_round_record.round_record",
@@ -1597,7 +1597,7 @@
     ],
     "35": [
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "SIMULATION_SUMMARY",
           "actor_id": "$.inputs.triggered_by",
@@ -1623,7 +1623,7 @@
     ],
     "36": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "email": "$.inputs.actor_record.email_registration",
@@ -1643,7 +1643,7 @@
         "step_id": "generate_kyc_key"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "ACTOR",
           "key": "$.results.generate_kyc_key.kyc_key",
@@ -1662,7 +1662,7 @@
         "step_id": "register_kyc_mapping"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "ACTOR",
           "key": "$.inputs.actor_id",
@@ -1682,7 +1682,7 @@
     ],
     "37": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "MEMPOOL",
           "filter": {
@@ -1724,7 +1724,7 @@
         "step_id": "increment_wallet_nonce"
       },
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.wallet_id",
@@ -1742,9 +1742,9 @@
         "step_id": "write_updated_wallet"
       }
     ],
-    "384": [
+    "389": [
       {
-        "addr": 386,
+        "addr": 391,
         "inputs": {
           "name": "$.inputs.name"
         },
@@ -1761,28 +1761,9 @@
         "step_id": "lookup"
       }
     ],
-    "385": [
-      {
-        "addr": 386,
-        "inputs": {
-          "name": "$.inputs.name",
-          "resource_addresses": "$.inputs.resource_addresses"
-        },
-        "on_result": {
-          "BACKEND_ERROR": "exit",
-          "SUCCESS": "exit",
-          "VIOLATION": "exit"
-        },
-        "op": "WRITE",
-        "outputs": {
-          "success": "$.capability_result.value.success"
-        },
-        "step_id": "register"
-      }
-    ],
     "39": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "email": "$.inputs.actor_record.email_registration",
@@ -1802,7 +1783,7 @@
         "step_id": "generate_kyc_key"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "ACTOR",
           "key_or_address": "$.results.generate_kyc_key.kyc_key"
@@ -1820,9 +1801,28 @@
         "step_id": "resolve_actor_from_kyc"
       }
     ],
+    "390": [
+      {
+        "addr": 391,
+        "inputs": {
+          "name": "$.inputs.name",
+          "resource_addresses": "$.inputs.resource_addresses"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "WRITE",
+        "outputs": {
+          "success": "$.capability_result.value.success"
+        },
+        "step_id": "register"
+      }
+    ],
     "4": [
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "ACTOR_EVENTS",
           "actor_id": "$.inputs.actor_id",
@@ -1848,10 +1848,10 @@
     ],
     "40": [
       {
-        "addr": 153,
+        "addr": 157,
         "inputs": {
           "item_wf": {
-            "code": 132,
+            "code": 136,
             "inject": {
               "simulation_id": "$.inputs.simulation_id",
               "triggered_by": "$.inputs.triggered_by"
@@ -1877,20 +1877,20 @@
     ],
     "41": [
       {
-        "addr": 153,
+        "addr": 157,
         "inputs": {
           "item_wf": {
             "wf_dispatch": {
               "key_field": "tx_type",
               "mapping": {
-                "BURN": 128,
-                "MINT": 130,
-                "POOL": 131,
-                "REWARD": 136,
-                "SLASH": 141,
-                "STAKE": 142,
-                "TRANSFER": 144,
-                "UNSTAKE": 145
+                "BURN": 132,
+                "MINT": 134,
+                "POOL": 135,
+                "REWARD": 140,
+                "SLASH": 145,
+                "STAKE": 146,
+                "TRANSFER": 148,
+                "UNSTAKE": 149
               }
             }
           },
@@ -1929,7 +1929,7 @@
     ],
     "43": [
       {
-        "addr": 170,
+        "addr": 174,
         "inputs": {
           "mnemonic": "$.inputs.mnemonic"
         },
@@ -1944,7 +1944,7 @@
         "step_id": "mnemonic_to_seed"
       },
       {
-        "addr": 159,
+        "addr": 163,
         "inputs": {
           "seed_bytes": "$.results.mnemonic_to_seed.seed_bytes"
         },
@@ -1960,7 +1960,7 @@
         "step_id": "derive_master_key"
       },
       {
-        "addr": 158,
+        "addr": 162,
         "inputs": {
           "index": 2147483692,
           "parent_chain_code_bytes": "$.results.derive_master_key.master_chain_code_bytes",
@@ -1978,7 +1978,7 @@
         "step_id": "derive_44h"
       },
       {
-        "addr": 158,
+        "addr": 162,
         "inputs": {
           "index": 2147483714,
           "parent_chain_code_bytes": "$.results.derive_44h.child_chain_code_bytes",
@@ -1996,7 +1996,7 @@
         "step_id": "derive_66h"
       },
       {
-        "addr": 158,
+        "addr": 162,
         "inputs": {
           "index": 2147483648,
           "parent_chain_code_bytes": "$.results.derive_66h.child_chain_code_bytes",
@@ -2014,7 +2014,7 @@
         "step_id": "derive_0h"
       },
       {
-        "addr": 158,
+        "addr": 162,
         "inputs": {
           "index": 0,
           "parent_chain_code_bytes": "$.results.derive_0h.child_chain_code_bytes",
@@ -2032,7 +2032,7 @@
         "step_id": "derive_0_change"
       },
       {
-        "addr": 158,
+        "addr": 162,
         "inputs": {
           "index": 0,
           "parent_chain_code_bytes": "$.results.derive_0_change.child_chain_code_bytes",
@@ -2049,7 +2049,7 @@
         "step_id": "derive_0_address"
       },
       {
-        "addr": 167,
+        "addr": 171,
         "inputs": {
           "input_bytes": "$.inputs.unsigned_tx_bytes"
         },
@@ -2064,7 +2064,7 @@
         "step_id": "hash_unsigned_tx"
       },
       {
-        "addr": 160,
+        "addr": 164,
         "inputs": {
           "curve": "secp256k1",
           "message_hash": "$.results.hash_unsigned_tx.message_hash",
@@ -2088,7 +2088,7 @@
     ],
     "44": [
       {
-        "addr": 155,
+        "addr": 159,
         "inputs": {
           "fields": {
             "outcome": "SKIPPED",
@@ -2108,7 +2108,7 @@
         "step_id": "assemble_skip_record"
       },
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "CONSENSUS_ROUNDS",
           "record": "$.results.assemble_skip_record.skip_record",
@@ -2124,7 +2124,7 @@
         "step_id": "append_to_rounds"
       },
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "CONSENSUS_EVENTS",
           "record": {
@@ -2148,7 +2148,7 @@
     ],
     "45": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.from_wallet_id"
@@ -2168,7 +2168,7 @@
     ],
     "46": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.to_wallet_id"
@@ -2188,7 +2188,7 @@
     ],
     "47": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.pool_wallet_id"
@@ -2208,7 +2208,7 @@
     ],
     "48": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.to_wallet_id"
@@ -2228,7 +2228,7 @@
     ],
     "49": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.from_wallet_id"
@@ -2248,7 +2248,7 @@
     ],
     "5": [
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "TRANSACTION_EVENTS",
           "actor_id": "$.inputs.actor_id",
@@ -2276,7 +2276,7 @@
     ],
     "50": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.from_wallet_id"
@@ -2296,7 +2296,7 @@
     ],
     "51": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.from_wallet_id"
@@ -2316,7 +2316,7 @@
     ],
     "52": [
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "key_or_address": "$.inputs.wallet_id"
         },
@@ -2333,7 +2333,7 @@
         "step_id": "resolve_wallet_registry"
       },
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.wallet_id"
@@ -2370,7 +2370,7 @@
     ],
     "53": [
       {
-        "addr": 175,
+        "addr": 179,
         "inputs": {
           "record": {
             "data": "$.inputs.data",
@@ -2423,7 +2423,7 @@
     ],
     "54": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "WALLET",
           "key": "$.inputs.to_wallet_id"
@@ -2443,7 +2443,7 @@
     ],
     "55": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "BLOCKS"
         },
@@ -2459,7 +2459,7 @@
         "step_id": "list_blocks"
       },
       {
-        "addr": 164,
+        "addr": 168,
         "inputs": {
           "filter": {
             "status": "PROPOSED"
@@ -2479,7 +2479,7 @@
     ],
     "56": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "tx_id": "$.inputs.tx_id",
@@ -2498,11 +2498,11 @@
         "step_id": "generate_mempool_key"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "MEMPOOL_INDEX",
           "key": "$.results.generate_mempool_key.mempool_key",
-          "target_cs": 149,
+          "target_cs": 153,
           "target_ref": "$.inputs.tx_id"
         },
         "on_result": {
@@ -2518,7 +2518,7 @@
         "step_id": "register_tx_id"
       },
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "MEMPOOL",
           "key": "$.inputs.tx_id",
@@ -2553,11 +2553,11 @@
         "step_id": "write_pending_tx"
       },
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "MEMPOOL_INDEX",
           "key": "$.inputs.tx_hash",
-          "target_cs": 149,
+          "target_cs": 153,
           "target_ref": "$.inputs.tx_id"
         },
         "on_result": {
@@ -2575,7 +2575,7 @@
     ],
     "57": [
       {
-        "addr": 149,
+        "addr": 153,
         "inputs": {
           "__store__": "VALIDATOR",
           "key": "$.inputs.validator_record.actor_id",
@@ -2593,7 +2593,7 @@
     ],
     "6": [
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "VALIDATOR_EVENTS",
           "actor_id": "$.inputs.actor_id",
@@ -2619,7 +2619,7 @@
     ],
     "7": [
       {
-        "addr": 147,
+        "addr": 151,
         "inputs": {
           "__store__": "WALLET_EVENTS",
           "actor_id": "$.inputs.actor_id",
@@ -2640,7 +2640,7 @@
     ],
     "8": [
       {
-        "addr": 166,
+        "addr": 170,
         "inputs": {
           "data": {
             "chain_id": "$.inputs.chain_id",
@@ -2687,7 +2687,7 @@
     ],
     "9": [
       {
-        "addr": 150,
+        "addr": 154,
         "inputs": {
           "__store__": "ACTOR",
           "key_or_address": "$.inputs.actor_id"
@@ -2706,7 +2706,7 @@
   },
   "projection_class": "machine_projection",
   "routing": {
-    "128": {
+    "132": {
       "20": {
         "24582": {
           "addr": 56,
@@ -2725,14 +2725,20 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "82": {
+      "86": {
         "24576": {
           "addr": 45,
           "key": "CC_VALIDATE_BURN_POLICY_V0"
         }
       }
     },
-    "129": {
+    "133": {
+      "101": {
+        "24576": {
+          "addr": 39,
+          "key": "CC_RESOLVE_ACTOR_ID_V0"
+        }
+      },
       "11": {
         "24580": {
           "addr": 14,
@@ -2768,15 +2774,9 @@
           "addr": 25,
           "key": "CC_NOTIFY_WALLET_CREATED_V0"
         }
-      },
-      "97": {
-        "24576": {
-          "addr": 39,
-          "key": "CC_RESOLVE_ACTOR_ID_V0"
-        }
       }
     },
-    "130": {
+    "134": {
       "20": {
         "24582": {
           "addr": 56,
@@ -2795,14 +2795,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "85": {
+      "89": {
         "24576": {
           "addr": 46,
           "key": "CC_VALIDATE_MINT_POLICY_V0"
         }
       }
     },
-    "131": {
+    "135": {
       "20": {
         "24582": {
           "addr": 56,
@@ -2821,14 +2821,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "86": {
+      "90": {
         "24576": {
           "addr": 47,
           "key": "CC_VALIDATE_POOL_POLICY_V0"
         }
       }
     },
-    "132": {
+    "136": {
       "24": {
         "24582": {
           "addr": 3,
@@ -2847,14 +2847,14 @@
           "key": "CC_PREPARE_SLOT_CONTEXT_V0"
         }
       },
-      "90": {
+      "94": {
         "24576": {
           "addr": 32,
           "key": "CC_READ_SLOT_CLOCK_V0"
         }
       }
     },
-    "133": {
+    "137": {
       "12": {
         "24582": {
           "addr": 18,
@@ -2897,14 +2897,14 @@
           "key": "CC_CLAIM_MEMPOOL_TXS_V0"
         }
       },
-      "81": {
+      "85": {
         "24576": {
           "addr": 29,
           "key": "CC_QUERY_ELIGIBLE_VALIDATORS_V0"
         }
       }
     },
-    "134": {
+    "138": {
       "19": {
         "24582": {
           "addr": 36,
@@ -2921,18 +2921,24 @@
           "key": "CC_APPEND_ACTOR_EVENT_V0"
         }
       },
-      "79": {
+      "83": {
         "24576": {
           "addr": 19,
           "key": "CC_GENERATE_ACTOR_ID_V0"
         }
       }
     },
-    "135": {
+    "139": {
       "10": {
         "24580": {
           "addr": 57,
           "key": "CC_WRITE_VALIDATOR_RECORD_V0"
+        }
+      },
+      "100": {
+        "24576": {
+          "addr": 9,
+          "key": "CC_CHECK_ACTOR_EXISTS_V0"
         }
       },
       "57": {
@@ -2946,15 +2952,9 @@
           "addr": 10,
           "key": "CC_CHECK_VALIDATOR_EXISTS_V0"
         }
-      },
-      "96": {
-        "24576": {
-          "addr": 9,
-          "key": "CC_CHECK_ACTOR_EXISTS_V0"
-        }
       }
     },
-    "136": {
+    "140": {
       "20": {
         "24582": {
           "addr": 56,
@@ -2973,14 +2973,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "87": {
+      "91": {
         "24576": {
           "addr": 48,
           "key": "CC_VALIDATE_REWARD_POLICY_V0"
         }
       }
     },
-    "137": {
+    "141": {
       "15": {
         "24581": {
           "addr": 35,
@@ -2997,44 +2997,44 @@
           "key": "CC_DISPATCH_SIMULATION_WORKERS_V0"
         }
       },
-      "88": {
+      "92": {
         "24576": {
           "addr": 23,
           "key": "CC_INITIALIZE_SLOT_CLOCK_V0"
         }
       }
     },
-    "138": {
-      "83": {
+    "142": {
+      "87": {
         "24576": {
           "addr": 40,
           "key": "CC_RUN_SLOT_SEQUENCE_V0"
         }
       }
     },
-    "139": {
+    "143": {
       "17": {
         "24582": {
           "addr": 55,
           "key": "CC_VERIFY_SLOT_RESULTS_V0"
         }
       },
-      "84": {
+      "88": {
         "24576": {
           "addr": 17,
           "key": "CC_EXECUTE_SLOT_SEQUENCE_V0"
         }
       }
     },
-    "140": {
-      "94": {
+    "144": {
+      "98": {
         "24576": {
           "addr": 41,
           "key": "CC_RUN_TX_SEQUENCE_V0"
         }
       }
     },
-    "141": {
+    "145": {
       "20": {
         "24582": {
           "addr": 56,
@@ -3053,14 +3053,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "89": {
+      "93": {
         "24576": {
           "addr": 49,
           "key": "CC_VALIDATE_SLASH_POLICY_V0"
         }
       }
     },
-    "142": {
+    "146": {
       "20": {
         "24582": {
           "addr": 56,
@@ -3085,14 +3085,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "91": {
+      "95": {
         "24576": {
           "addr": 39,
           "key": "CC_RESOLVE_ACTOR_ID_V0"
         }
       }
     },
-    "143": {
+    "147": {
       "22": {
         "24582": {
           "addr": 56,
@@ -3141,14 +3141,14 @@
           "key": "CC_SIGN_TRANSACTION_V0"
         }
       },
-      "92": {
+      "96": {
         "24576": {
           "addr": 39,
           "key": "CC_RESOLVE_ACTOR_ID_V0"
         }
       }
     },
-    "144": {
+    "148": {
       "20": {
         "24582": {
           "addr": 56,
@@ -3173,14 +3173,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "93": {
+      "97": {
         "24576": {
           "addr": 39,
           "key": "CC_RESOLVE_ACTOR_ID_V0"
         }
       }
     },
-    "145": {
+    "149": {
       "20": {
         "24582": {
           "addr": 56,
@@ -3205,14 +3205,14 @@
           "key": "CC_APPEND_TX_EVENT_V0"
         }
       },
-      "95": {
+      "99": {
         "24576": {
           "addr": 39,
           "key": "CC_RESOLVE_ACTOR_ID_V0"
         }
       }
     },
-    "146": {
+    "150": {
       "33": {
         "24582": {
           "addr": 4,
@@ -3231,7 +3231,7 @@
           "key": "CC_PERSIST_VERIFIED_ACTOR_V0"
         }
       },
-      "80": {
+      "84": {
         "24576": {
           "addr": 39,
           "key": "CC_RESOLVE_ACTOR_ID_V0"

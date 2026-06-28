@@ -25,6 +25,8 @@
   "layer_code": "GOVERNANCE",
   "module_path": "pgs_governance.registry.FB_SECURITY_DOMAIN.assertions",
   "namespace": "fb.security_domain",
-  "references": [],
+  "references": [
+    "fb.security_domain::INVARIANT_SECURITY_DOMAIN_DECLARED_V0"
+  ],
   "version": "0"
 }
