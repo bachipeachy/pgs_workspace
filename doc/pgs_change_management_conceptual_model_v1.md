@@ -510,6 +510,22 @@ Whether that agent is powered by an LLM is an implementation detail. The pipelin
 
 > **The pipeline is LLM-agnostic by design and agent-suited by structure. These are not the same thing.**
 
+### 11.1 Execution Modes --- The Authoring Trifecta
+
+Authority invariance is a claim about *who* authors a stage. The **authoring trifecta** is the mechanism that makes the claim operational: three execution modes that share one worker interface, one validation path, one set of projection contracts, and one figure of merit. Only the *transport* between a stage's governed prompt and the actor changes.
+
+- **Automated** --- an in-loop model worker (a local model over a daemon, or a frontier model over an API) grounds itself through a tool loop and emits the stage's registers. The API/CI path.
+- **Guided Authoring Mode** --- the actor is a human, or a human operating a conversational assistant that can ground (for example a coding agent with the Protocol-Inspection surface, `pi`, in its session). PGS exports a governed **Stage Package**; the actor runs it through the assistant, reviews, and pastes the response back; PGS imports and validates. Zero API cost, the human stays in the governance loop, and every stage becomes a permanent, hash-linked artifact.
+- **Offline replay** --- a recorded response replays deterministically for regression. Same interface.
+
+The unit of export is the **Stage Package**: a directory of machine-contract artifacts, not human-readable prose the validator cannot reason about. Its canonical, hashed `prompt_bundle.json` --- the serialization of a structured **Prompt Execution IR** (system mandate, user task, and a typed grounding constraint) --- is the source of truth; the Markdown `system_prompt`/`user_prompt` files are rendered *views* of it, hash-linked back. The package also carries the stage's bounded upstream handoff, its register schema (with a `schema_hash`), and a typed `grounding_spec` declaring the stage's grounding *frontier*: the protocol code-tokens the actor must confirm before asserting them. The frontier is derived from the stage's bounded scope --- its consumed handoff plus, for the first stage, the elicitation seed's vocabulary --- never the domain at large; it is a frontier to verify, never an answer key. This resolves a recurring failure of ungoverned prompting --- the actor querying with natural-language phrases instead of protocol identifiers --- *by declaration rather than heuristic*.
+
+Guided Mode introduces exactly one new structural risk: the human is a **mutation layer between stages**, and an untyped paste would be the one place the pipeline could bypass the compiler, the semantic-preservation gate, and the structural oracle. The **Human Mutation Boundary** is closed by a transport-specific ingress validator that runs *before* the engine sees a pasted response: it parses the response against the package's register schema and grounding constraint, rejecting an undeclared register, a malformed row, an ungrounded assertion, or a protocol identifier smuggled into a business-language column. The accepted response carries provenance metadata --- origin, the boundary marker, the validating gate, the prompt hash, and a model label --- so a guided stage is as auditable and reproducible as an automated one. The engine's downstream oracle still runs; the ingress validator is an *additional*, fail-fast gate, not a replacement.
+
+Worker Observability extends to the new transport honestly. A guided stage's grounding happens out-of-band, in the actor's own session, and is therefore not visible in a PGS tool loop. The Worker Protocol Trace records this for what it is --- a terminus at the human mutation boundary, gated by the ingress validator --- rather than fabricating an in-loop grounding failure. Observation stops where observability ends, and says so.
+
+The consequence is the deployment claim that completes the authority-invariance argument. The same registers produce the same governance verdict whether they arrive from an automated worker or a guided paste; the modes differ only in transport. **The protocol is the system of record; automation is an optimization layered on top of it, not a prerequisite for it.** Any conversational model --- a local model, a frontier API, a coding assistant, a future open model, or a human expert --- is just another worker conforming to the same governed contract. That is worker independence realized, not merely asserted.
+
 ## 12. Future Direction
 
 The governed pipeline currently operates as a governed human-agent process with external tooling. The pipeline stages are document artifacts in a dossier. The Authoring Mandate is the compiler's input. The Authoring Manifest closes the evidence record.
@@ -589,6 +605,18 @@ The Protocol Snapshot is the governed artifact that construction produces. The g
 **Closed-Loop Evolution**: The architectural property that the output of each change cycle --- the new Protocol Snapshot and the completed dossier --- becomes the authoritative baseline for the next change cycle. Evolution is not external to the governed system; it is the mechanism by which the governed system changes itself.
 
 **Agent Engagement**: The design property that the governed pipeline provides a structured, bounded, evidence-bearing interface for any change agent --- human, automated, or hybrid --- to execute each stage with the same governance authority.
+
+**Authoring Trifecta**: The three execution modes that share one worker interface, validation path, and figure of merit --- Automated (in-loop model), Guided Authoring Mode (human/assistant with a Stage Package), and Offline replay (recorded response). Only the transport between the governed prompt and the actor differs.
+
+**Guided Authoring Mode**: The execution mode in which a human --- optionally operating a grounding-capable assistant --- is the synchronization point between stages. PGS exports a Stage Package; the actor authors the response and pastes it back; PGS ingress-validates and imports. Deployable now, with no automation prerequisite.
+
+**Stage Package**: The governed export artifact of Guided Mode: a directory whose canonical, hashed `prompt_bundle.json` (a serialized Prompt Execution IR) is the contract, with Markdown prompt files as hash-linked rendered views, plus the bounded handoff, the register schema, and a typed grounding constraint. Machine-verifiable, reproducible forever.
+
+**Prompt Execution IR**: The structured, hashable prompt object behind a Stage Package --- system mandate, user task, and grounding constraint --- making a stage's prompt diffable, testable, and stable under a `prompt_hash`.
+
+**Grounding Frontier**: The typed set of protocol code-tokens a stage's actor must confirm (via the inspection surface) before asserting them, derived from the stage's bounded scope. A frontier to verify, never an answer key; a zero-result search is a final answer.
+
+**Human Mutation Boundary**: The point at which a human injects a pasted response between stages. Closed by a transport-specific ingress validator that checks the response against the package schema and grounding constraint before the engine sees it, and by provenance metadata that keeps a guided stage as auditable and reproducible as an automated one.
 
 ## Appendix B: Reference Implementation Notes
 

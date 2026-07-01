@@ -3,11 +3,7 @@
   "graph_address_hash": "a6304e16909cf7ec9395c9d9df3f51aee056df61b9ffa47fc7a6a6ce239c6fe6",
   "graph_topology_hash": "",
   "projection_class": "canonical_artifact",
-<<<<<<< HEAD
-  "projection_hash": "01135f3679fd76bfb970bc1d43ab2595e767925958d18797a46bd8d2b80530af",
-=======
   "projection_hash": "39c8fb7bc1ebec1f23b573fddddaf491fd0d41b9a1a06acab10b5813ac984c89",
->>>>>>> update
   "projection_schema_version": "v0",
   "projection_type": "canonical",
   "requires_fqdn_identity": true
