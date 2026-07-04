@@ -862,3 +862,95 @@ Where the event-decoupling finding earlier made cross-boundary surface look empt
 formulation surfaces it (≈46 public artifacts in the current snapshot). The `artifact_index` is query
 metadata (not part of the snapshot identity), so emitting a new dimension is additive and leaves the
 snapshot hash unchanged — a semantic dimension can graduate to compiler-emitted without a behavioral recompile.
+
+# The Construction Compiler grounds on contracts — candidate capability contracts
+
+The Construction Compiler (S8) is a deterministic back-end: it turns the S1–S7 Construction Projection into
+candidate protocol artifacts a second, independent compiler (the Protocol Compiler) admits. Proving that
+end-to-end forced a sequence of concepts about *where semantics live* — each one the same discipline seen
+elsewhere in this ledger (one dimension = one concept; one authority; propagate, never invent).
+
+## Candidate capability contracts — the unifying artifact (D4 dissolves, it does not relocate)
+
+The first honest thing the pipeline exposed was a scaffolding file ("D4", `capability_interfaces.json`): a
+hand-authored side-table of typed capability interfaces the Construction Compiler read to seed and
+propagate types. It looked like "the missing type declarations." It was not. Interrogated against *what is
+the authoritative source of a capability contract?*, "typed interfaces" turned out to be a **conflation of
+three distinct jobs**, each with a different rightful home:
+
+- **operation vocabulary + I/O field names** for *existing* capabilities — already declared in the CS/CT
+  contract (`core.operations`, `core.policy.operations`) and already read from the compiled snapshot. Not
+  missing; duplicated.
+- **field types** for existing CS capabilities — the CS contract declares op I/O *names* but not *types*;
+  the type belongs *in the contract*.
+- **interface + machine binding** for *new* capabilities — the capability does not exist yet, so there is
+  no contract to read.
+
+The wrong fix is to relocate D4 to a nicer place (an S6b "typed-interface register" — which would make the
+composition stage author *capabilities*, violating separation of concerns; the composition stage composes
+capabilities, it does not define them). The right fix is to recognize the missing artifact for what it is:
+not a typed-interface blob but a **candidate capability contract** — the *same artifact shape* that will
+eventually live in the canonical registry. A new CT is not special; it is a CC/WF/IN/RB that simply does
+not exist yet. So S8 emits candidate CT and IN contracts exactly as it emits candidate CCs, and **D4
+dissolves**: existing capabilities are read from their contracts, new capabilities *are* candidate
+contracts. Nothing is relocated, translated, or duplicated. This is the strongest possible end-state: the
+Construction Compiler, Protocol Compiler, and Promotion all operate on one artifact shape.
+
+**Contracts own semantics — there is exactly one authority.** D4's real sin was being a *second* authority
+for something contracts already own; two authorities is the defect, independent of where the second one
+sits. The candidate-capability-contract model collapses the two authorities back into one.
+
+## The Compilation Unit: canonical + candidate, and the compiler cannot tell which is which
+
+Admission runs in a **Compilation Unit** — a virtual federation workspace that mounts read-only copies of
+every involved repository and overlays the candidates, so the Protocol Compiler answers "can I consume what
+the Construction Compiler emitted?" **with zero mutation of any canonical repo** (`SINGLE_COMPILATION_CONTEXT`).
+The Protocol Compiler does not know which contracts are canonical and which are candidate; it just compiles
+the unit. After a PASS, **Promotion is administrative, not analytical** — it *applies an admitted Compilation
+Unit to the canonical federation* (copies the candidate contracts into their owning repos, changing
+*ownership*, not correctness) and never recompiles. The single authority for correctness stays the Protocol
+Compiler's admission. (C-toolchain analogy: release ships the validated executable; it does not re-invoke
+the compiler.) This also answers the testing objection directly: if S8 already emits the artifacts that get
+promoted, the end-to-end test validates the *end-state*, and Promotion changes nothing but ownership — a far
+stronger proof than testing a transitional shape that will later be replaced.
+
+Two supporting mechanisms were needed and generalize cleanly:
+- **Candidate governance overlays.** Declaring a new CT *legal* extends a governed `allowed_capability_transforms`
+  surface (`CT_SURFACE_CLOSED`) — the ISA-spec "declare the new opcode" act. That surface delta is a
+  *candidate governance artifact* overlaid inside the unit, never a canonical edit; only Promotion writes
+  the surface. Editing the canonical surface to make admission pass is the same class of error as a
+  false-pass — it mutates canonical truth before the artifact earns admission.
+- **Mount-by-package, layout-agnostic.** Repos are heterogeneous (doubly-nested domain packages vs the
+  singly-nested, namespace-package governance repo). The unit mounts the *importable package* under one
+  synthetic root and shadows editable installs via `PYTHONPATH` — so a candidate compiles in the domain's
+  real import context regardless of repository layout.
+
+## Propagate, never invent — and TYPED_PORT as the forcing function
+
+A compiler **propagates** types along dataflow; it does not **invent** them. `block → hash:string`,
+`is_equal:boolean` are irreducible semantic decisions that must be *declared* on the capability's own
+contract; the compiler flows them, but it may not conjure them. The construction graph enforces this
+honestly: every required port that cannot trace a type back to a declared contract interface raises
+`TYPED_PORT`, and any violation is **fatal** to admission. That fatality is a feature — scaffolding cannot
+hide. It is precisely what proved D4 was doing three admission-critical jobs (removing its external-input
+block raised five `TYPED_PORT`; removing its CS entries, one), and it is what guarantees that after
+grounding, *every* typed port in an admitted artifact traces to a contract, not to a side-file.
+
+A subtlety the forcing function exposed: a CS operation declares `[result_status, value]` — a **control**
+field plus a **data** field. Type seeding must distinguish them and seed the produced field from the *data*
+output (output minus control fields), which is exactly the simplification D4 had silently baked in by
+declaring a single-output `{value: object}`. Grounding makes that rule explicit in the compiler instead of
+implicit in scaffolding.
+
+## Generate, never patch — the correction belongs at the authoring source
+
+The op-vocabulary bug (a composition invoked `SET`/`GET` on a store whose governed vocabulary is
+`WRITE`/`READ`) tempted a fix at three successive layers, each wrong: the projection JSON, the D4 side-file,
+then the S6b design markdown. All three are *authoring outputs*; patching any of them usurps the authoring
+authority and is overwritten by the next regeneration. The correction belongs at the **authoring source**,
+and better still, the illegal op should be *unauthorable*: an **S6b oracle gate** reads the referenced CS
+contract's `core.policy.operations` and rejects any step operation not in it — catching the ungrounded op at
+design time (Gate-1) rather than at admission. The Protocol Compiler already catches it at admission; the
+gate closes the **authoring-grounding gap** so the design converges before it ever reaches the back-end.
+This is the thesis in miniature: construction converges only when design is grounded in the governed
+vocabulary of the contracts it references.

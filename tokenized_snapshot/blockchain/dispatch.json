@@ -1742,25 +1742,6 @@
         "step_id": "write_updated_wallet"
       }
     ],
-    "389": [
-      {
-        "addr": 391,
-        "inputs": {
-          "name": "$.inputs.name"
-        },
-        "on_result": {
-          "BACKEND_ERROR": "exit",
-          "NOT_FOUND": "exit",
-          "SUCCESS": "exit",
-          "VIOLATION": "exit"
-        },
-        "op": "READ",
-        "outputs": {
-          "resource_addresses": "$.capability_result.value.resource_addresses"
-        },
-        "step_id": "lookup"
-      }
-    ],
     "39": [
       {
         "addr": 170,
@@ -1803,7 +1784,26 @@
     ],
     "390": [
       {
-        "addr": 391,
+        "addr": 392,
+        "inputs": {
+          "name": "$.inputs.name"
+        },
+        "on_result": {
+          "BACKEND_ERROR": "exit",
+          "NOT_FOUND": "exit",
+          "SUCCESS": "exit",
+          "VIOLATION": "exit"
+        },
+        "op": "READ",
+        "outputs": {
+          "resource_addresses": "$.capability_result.value.resource_addresses"
+        },
+        "step_id": "lookup"
+      }
+    ],
+    "391": [
+      {
+        "addr": 392,
         "inputs": {
           "name": "$.inputs.name",
           "resource_addresses": "$.inputs.resource_addresses"

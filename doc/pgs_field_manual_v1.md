@@ -401,10 +401,10 @@ fb.constitution::STRUCTURE_BUILD_PLATFORM_CONFIG_V0
 | 6 | `governance_intent_<sub>_v0.md` | WHERE — domain/subdomain, ownership, dependencies | No new artifact codes; cross-subdomain writes forbidden |
 | 6b | `design_intent_<sub>_v0.md` | HOW — FQDNs, topology, schemas, stores, module paths, RBs | **Gate 1 — Design Approval** (full dossier reviewed as a body) |
 | 7 | `authoring_mandate_<sub>_v0.md` | IN WHAT ORDER — topologically sorted build waves | Mechanical derivation; must reconcile with 6b exactly. **Gate 2 — Mandate Approval** (dossier locked) |
-| 8 | `authoring_manifest_<sub>_v0.md` | Evidence closure: deviations, discoveries, conformance, lessons | Baseline created at Gate 2; populated with actual execution data only |
-| 9 | (manifest status → APPROVED) | CR Closure | Completion criterion met, never aspirational |
+| 8 | `build_sheet_<sub>_v0.md` | Construction projection — governed design assembled into a per-artifact Build Sheet Set (no new design) | Assembled not authored; governed by `CONSTITUTION_CONSTRUCTION_V0` |
+| 9 | `construction_record_<sub>_v0.md` | Construction evidence: built artifacts, compiler/runtime results, deviations, discoveries | Evidence only; CR closes after the Record is complete and artifacts compile clean |
 
-Every dossier stage (1–7) is a **structured register document**: the actor emits register rows, a deterministic renderer owns the document, and a **structural oracle** validates it mechanically (well-formed FQDNs, controlled vocabularies, per-row traceability, cross-stage code reconciliation) before human review. The dossier pipeline ends at Stage 7; artifact authoring, compilation, runtime testing, and the Stage 8 manifest are the post-Gate-2 **authoring tier**.
+Every dossier stage (1–7) is a **structured register document**: the actor emits register rows, a deterministic renderer owns the document, and a **structural oracle** validates it mechanically (well-formed FQDNs, controlled vocabularies, per-row traceability, cross-stage code reconciliation) before human review. The **design/authoring pipeline (Stages 1–7)** ends at Stage 7. The post-Gate-2 **construction phase** — Stage 8 Build Sheet Set → construct → compiler-gated promotion → Stage 9 Construction Record — is a *distinct governance authority*, governed by `fb.change_mgmt::CONSTITUTION_CONSTRUCTION_V0` (rationale: `pgs_change_mgmt/doc/CONSTRUCTION_MODEL_V0.md`). Design is open and human-gated; construction is non-authorial transcription in which the builder decides nothing.
 
 **Discovery Saturation (Stage 3 stop condition)** — all three simultaneously: no unresolved CRITICAL gaps · no open analyst questions · no dependency expansion in the last pass.
 

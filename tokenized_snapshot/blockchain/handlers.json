@@ -443,7 +443,7 @@
         "module": "pgs_side_effects.implementation.side_effects.internal.CS_WORKFLOW_LOOP_V0.runtime"
       }
     },
-    "391": {
+    "392": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -6486,8 +6486,8 @@
         }
       }
     },
-    "396": {
-      "391": {
+    "397": {
+      "392": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },
