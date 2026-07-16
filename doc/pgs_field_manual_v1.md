@@ -470,6 +470,39 @@ How authored output (and the agent producing it) is judged is itself governed �
 - **Trace Beats Aggregates.** A load-bearing claim requires end-to-end artifact-identity tracing. Aggregate counts, query tallies, and regex matches are insufficient evidence for any conclusion doctrine will rest on.
 - **System Boundary.** The harness and the evaluator are part of the system under test. Distinguish **worker** vs **harness** vs **evaluator** variation before attributing a finding — e.g. ollama silently front-truncating at the ~4k default `num_ctx` is a harness fault, not a worker failure. Never encode worker-specific traits (verbosity, discovery depth, run-to-run variance) as doctrine — see *Research Classification* below.
 
+### 4.8 Authoring Transports — the Trifecta
+
+The actor-invariance of §4.6 is realized as **three interchangeable transports over one worker interface** (`execute_stage(StageInput) → StageOutput`). Only the transport between stage-prompt and worker differs; validation, handoff, gates, and figure-of-merit are identical.
+
+| Transport | Worker | How |
+|-----------|--------|-----|
+| **Automated** | a model (local or frontier) | drives the stage in a tool-loop, grounding via `pi` |
+| **Guided** | a human — or Claude Code, a *grounding-capable* worker with `pi`/Bash in-session | export a governed **Stage Package** (`run_interactive --export`), paste the reply into `response.md`, `--import`; the engine ingress-validates at the **Human Mutation Boundary**, then runs the identical engine |
+| **Offline replay** | a recorded response | re-run deterministically |
+
+Two rules keep the transports honest:
+- **Worker Isolation.** A worker authors from the Stage Package + prior handoffs + `pi` + gate feedback **only** — never from platform (oracle/gate/compiler) source. Worker Mode is binary: *Package-only* (valid) vs *Used platform internals* (contaminates the interchangeability measurement).
+- **Worker Conformance ≠ model quality.** A worker that emits an invalid governed projection or skips required grounding is *correctly rejected* by the compiler/oracle — a **Worker Conformance** failure, not evidence "the model is weak." The compiler is the stable component; the worker is the variable one. *The actor proposes; governance disposes.*
+
+**Knowledge Partition** (the framing that makes this sound): **PI = what is · CR = what is desired · Worker = how to transform what-is into what-is-desired.** The worker owns *disposition* (how); it never owns *evidence* (what-is, supplied by the platform) or *desire* (what-is-desired, supplied by the human through the seed).
+
+### 4.9 Governed Authoring Properties
+
+Each is a mechanically-checked property, not a review convention — the pipeline can no longer silently lose it:
+- **Authoring Completeness (Boundary 2 — "you cannot compute authority from meaning").** A human-owned, non-derivable input (e.g. a subdomain's Purpose) must be supplied by a human *before its first use*, or the stage halts `AUTHORING_INCOMPLETE` — the pre-stage dual of ingress `NACK`. A seed gap *is* an authoring gap, caught at the earliest phase.
+- **Belief Preservation = k/N.** A worker cannot silently drop a previously-VERIFIED belief between stages: the oracle detects the omission → the worker re-queries `pi` and re-establishes evidence → the oracle confirms closure. Belief continuity is governed.
+- **Projection Fidelity.** Each stage's authoritative JSON handoff must project *identically* to its markdown (no dropped rows, no missing required register). The gate that would have caught the original lossy baseline stands permanently.
+- **Design Review Contract.** Every stage certifies **Part A** (engine-certified readiness, classified unknowns) and advertises a bounded **Part B** (human-engagement — decisions `pi`/governance genuinely cannot answer; questions only). A human's Part-B answer re-enters *only* through the seed (business truth), after which the pipeline replays forward; the agent never injects it mid-pipeline.
+
+### 4.10 The Construction Compiler (Stage 8)
+
+Construction is a **second compiler** — deterministic, no worker, no authorship — that lowers the locked mandate into protocol artifacts. Its input is the **`cr_ir/`** set: the per-stage governed handoffs (`cr_ir/<stage>.json`), the authoritative **Construction Projection** S8 consumes (the stage markdown is human-facing; the JSON is the source of truth downstream).
+
+- **Contracts own semantics; exactly one authority.** New capabilities enter as *candidate capability contracts* in a single **Compilation Unit** beside canonical ones — the compiler cannot tell candidate from canonical and applies identical rules (the former "D4" second authority dissolves rather than relocating).
+- **Pipeline:** Project → Lower (execution expansion · binding propagation · store join · type propagation) → Validate → Serialize. The constraints are the gap census; the renderer only formats.
+- **Propagate, never invent (`TYPED_PORT` as forcing function).** A port type is either declared on a contract Interface or propagated from one; an unresolved port is reported `TYPED_PORT / GAP_DOSSIER`, never guessed. The fix belongs at the authoring source — regenerate the stage, never patch the artifact.
+- **Persistence is a binding, not a port.** A `CS` store access is a Store-Join `ACCESSES` edge (from the capability's `storage_type` + STRUCTURE), never a typed dataflow port; `TYPED_PORT` never models storage. (Full model + rationale: `pgs_change_mgmt/doc/CONSTRUCTION_MODEL_V0.md`.)
+
 ---
 
 ## 5. Compiler Model
@@ -865,6 +898,7 @@ Understanding why the architecture looks as it does prevents re-introducing solv
 | Closed-loop governed evolution (v0.5.0) | Change management became a governed concern: `FB_CHANGE_MGMT` boundary, `pgs_change_mgmt` repo, staged CR→Mandate pipeline with dossiers, gates, and purity ladder (§4) | Construction and execution were governed; evolution was not. An ungoverned change process accumulates the same rationale decay PGS eliminates elsewhere — the pipeline closes the loop |
 | Orchestration substrate | Workflow composition gained governed primitives: `CS_WORKFLOW_GATEWAY_V0`, `CS_WORKFLOW_LOOP_V0`, `CS_CONCURRENT_WORKFLOWS_V0`; events confirmed as facts, never triggers | Workflow-to-workflow engagement, iteration, and parallelism are declared side effects — not runtime orchestration logic, not event subscriptions |
 | Subdomain store ownership | A store is written only by its owning subdomain's CCs; peer writes are dependency-gap CCs owned by the peer | Store ownership is a governance boundary; cross-subdomain writes were never legal — the doctrine is now explicit and template-enforced |
+| Trifecta authoring + Construction Compiler | Authoring became transport-invariant (automated · guided · offline over one worker interface, §4.8); Stage 8 gained a deterministic Construction Compiler that lowers `cr_ir/` mandates into artifacts under contract authority — candidate capability contracts, propagate-never-invent, `TYPED_PORT` gaps (§4.10) | Proved the *pipeline*, not the model, carries the intelligence: a weaker worker needs more gate iterations but converges on the same governed output. Governed authoring properties — Authoring Completeness, Belief Preservation, Projection Fidelity — are now mechanically enforced, not review conventions (§4.9) |
 
 ---
 

@@ -194,7 +194,7 @@ All in `pgs_change_mgmt`, on branch `trifecta`:
    - `--seed <s> --stage <N> --export [--dir <path>]` → writes `stage_<N>/`; prints next steps + the
      grounding affordance (Claude Code may run `pi …`).
    - `--seed <s> --stage <N> --import` → ingress-validate → run `DossierEngine` for stage N with
-     `InteractiveWorker(dir)` → doc + `_handoff/<N>.json` + figure-of-merit, **identical** to Automated.
+     `InteractiveWorker(dir)` → doc + `cr_ir/<N>.json` + figure-of-merit, **identical** to Automated.
 6. **Shared refactor (small):** extract `SYSTEM_PROMPT`, `_render_task`, and the parse core from
    `ollama_worker.py` into `worker/_authoring.py`; expose `parse_output(mode, raw)` *(P3)* (one core +
    per-mode pre-normalizers). No behavior change for existing workers (`OllamaWorker` calls
@@ -244,7 +244,7 @@ answer key.
   `_parse_output` (accepts enveloped `{registers,...}` and bare contract object). Shared tool-loop in
   `worker/_loop.py` (sovereign; transport-agnostic).
 - **Engine:** `engine/dossier.py` — `DossierEngine.run` / `_run_stage` (builds `StageInput`, calls the
-  worker, renders the doc, runs the structural oracle, persists `_handoff/<N>.json`, computes the
+  worker, renders the doc, runs the structural oracle, persists `cr_ir/<N>.json`, computes the
   figure-of-merit). `_stage_input(cfg, stage, template)` builds the task. `DOSSIER_SEEDS["blockchain_chain"]`
   seed config (seed_path = the golden `chain/1_input_elicitation_*`).
 - **Stage dispatch:** structured stages assemble via `STAGE_PROJECTORS` (S8 build sheet); worker-authored

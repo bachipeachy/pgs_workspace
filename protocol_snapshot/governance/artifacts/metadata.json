@@ -3,7 +3,7 @@
   "graph_address_hash": "e8c04abf02c0ba6647da5a490cf07c7d6abe808a8f7266f17f9fb4442a56cfb3",
   "graph_topology_hash": "",
   "projection_class": "canonical_artifact",
-  "projection_hash": "71c24f1c38c32c17dd08edc85c5a394294cea7a71ab8749d68b8a3153aea4fe1",
+  "projection_hash": "cbc37597f8f757c0a1eb52be7fd29c75caadc5079bdac3a412e7ca6700473b38",
   "projection_schema_version": "v0",
   "projection_type": "canonical",
   "requires_fqdn_identity": true

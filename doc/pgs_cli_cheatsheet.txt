@@ -14,6 +14,44 @@ python -m pgs_compiler.cli build-pps --workspace ~/pgs/pgs_workspace
 
 
 =========
+# change_mgmt — SDLC authoring + construction  (CR -> dossier S1..S7 -> S8 construct -> admission)
+# Run from ~/pgs/pgs_change_mgmt with the venv active. PGS_WORKSPACE must be declared (read-only pi grounding).
+
+export PGS_WORKSPACE=~/pgs/pgs_workspace
+
+# -- guided authoring: one governed Stage Package per stage (human / Claude-Code is the worker) --
+# EXPORT the Stage Package (system_prompt.md + user_prompt.md + schema.json + grounding_spec.json):
+python -m pgs_change_mgmt.engine.run_interactive --seed blockchain_chain --stage 1 --export
+#   -> paste the model's full reply into  <dossier>/_packages/stage_<N>/response.md   (ground via pi as you go)
+# IMPORT: ingress-validate the pasted response, then run the engine for that ONE stage
+#   (writes the stage doc + cr_ir/<N>.json handoff + figure-of-merit; identical to the automated path):
+python -m pgs_change_mgmt.engine.run_interactive --seed blockchain_chain --stage 1 --import --model-label claude-code
+#   stage order: 1 2 3 4 5 6 6b 7   (6b = design intent / composition; 7 = authoring mandate / build_order)
+
+# -- cr_ir/ = the governed per-stage handoffs = the Construction Projection S8 consumes (TRACKED; source of truth) --
+#   layout: change_mgmt/dossiers/<domain>/<subdomain>/cr_ir/<stage>.json
+# REPAIR ONLY (NOT a pipeline stage): regenerate cr_ir/*.json from the locked markdown baseline.
+#   Migration can be lossy — never run against a good golden unless you intend to overwrite it.
+python -m pgs_change_mgmt.engine._migrate_cr_ir_from_baseline --dossier change_mgmt/dossiers/blockchain/chain --stages 5 6b 7
+
+# -- S8 construction: deterministic Construction Compiler (no worker, no registry writes) --
+#   build = construct + admissibility-validate -> writes artifacts to --out ; exit 0 = CONSTRUCTION_VALID, 2 = INVALID
+python -m pgs_change_mgmt.engine.construction_cli build    --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain --out constructed/
+python -m pgs_change_mgmt.engine.construction_cli validate --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain
+python -m pgs_change_mgmt.engine.construction_cli explain  --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # per-pass status + violation detail (GAP_DOSSIER etc.)
+python -m pgs_change_mgmt.engine.construction_cli graph    --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # node/edge dump
+
+# -- admission ("the bridge": promote constructed artifacts into the domain repo) --
+#   CAUTION: MUTATES the sibling domain repo (protocol source, pgs_<domain>). Gate behind a runtime smoke test first.
+python -m pgs_change_mgmt.engine.construction_cli admit --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # deterministic (default --domain-repo = sibling pgs_blockchain)
+#   worker-driven S8->S9 variant (transcribe via ollama + bridge promote + S9 Construction Record + semantic-preservation gate):
+python -m pgs_change_mgmt.engine.construct_chain --registry-root ~/pgs/pgs_blockchain/pgs_blockchain/registry --models qwen3:14b --kinds CC
+
+# -- selftests (hermetic; the change_mgmt engine regression suite) --
+bash ~/pgs/pgs_change_mgmt/scripts/verify_change_mgmt_engine.sh
+
+
+=========
 # pgs_blockchain domain
 
 pgs_runtime run --wf blockchain::WF_REGISTER_ACTOR_UNVERIFIED_V0 --payload ~/pgs/pgs_blockchain/pgs_blockchain/testbed/identity/test_payloads/register_actor_unverified_payload.json --data-root ~/pgs/pgs_workspace/data --workspace ~/pgs/pgs_workspace --behavior-logic
