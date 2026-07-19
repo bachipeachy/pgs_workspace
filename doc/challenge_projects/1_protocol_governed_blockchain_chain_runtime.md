@@ -10,23 +10,29 @@
 
 ## The Premise
 
-Unlike the other two challenge projects, this one is **not open-ended**. The design is finished. A complete governed change dossier already exists for a new blockchain subdomain — `blockchain::chain` — that takes the platform from *proposing* blocks to *committing* them onto a canonical, hash-linked chain.
+Unlike the other two challenge projects, this one is **not open-ended**. The design is finished — and so is the reference build. A complete governed change dossier exists for the `blockchain::chain` subdomain (taking the platform from *proposing* blocks to *committing* them onto a canonical, hash-linked chain), **and** that Change Request has since been authored, compiled into the snapshot, and shipped as the golden reference in `pgs_blockchain`.
 
-Every stage of the governed SDLC has been authored except the last one: **the protocol artifacts themselves do not exist yet.** Your job is to take the dossier — a real Change Request that advanced through Design Intent, an Authoring Mandate, and a pre-authoring Manifest — and *build it*. Author the artifacts, compile them into the snapshot, prove them with end-to-end tests, and close the CR.
+That makes this the rare challenge with **two answer keys**: the **dossier** (what was mandated) and the **shipped implementation** (a working, admissible realization you can diff against). Your job is to reproduce the feature yourself — author the artifacts in an **isolated copy or branch**, compile them into a scratch snapshot, prove them with end-to-end tests — and then **compare your build against the golden reference** to see whether you converged.
 
-This is the PGS authoring loop in miniature, on a real, non-trivial feature, with a known-good answer key (the dossier) and an objective definition of done (the tests pass and the CR closes).
+This is the PGS authoring loop in miniature, on a real, non-trivial feature, with a known-good answer key and an objective definition of done: your build is admissible, your tests pass, and your artifacts converge with the shipped reference — or you can explain every deviation.
+
+> **Reality check — the shipped reference refined the mandate.** The architecture and artifact lists below reflect the **original dossier** (Stage 6b Design Intent / Stage 7 Mandate). During real construction the design was refined, so the live `blockchain/chain` subdomain differs from the mandate in specifics — most visibly:
+> - Genesis shipped as **`WF_BOOTSTRAP_GENESIS_CHAIN_V0`** (the mandate called it `WF_INITIALIZE_CHAIN_V0`).
+> - The single `CT_PURE_COMPARE_ROUND_IDS_V0` became three CTs — `CT_PURE_HASH_BLOCK_V0`, `CT_PURE_EXTRACT_PREDECESSOR_HASH_V0`, `CT_PURE_DERIVE_BALANCES_V0` — and the chain CC set shipped as `CC_CREATE_GENESIS_BLOCK_V0`, `CC_COMMIT_BLOCK_CANONICAL_V0`, `CC_VALIDATE_PREDECESSOR_LINK_V0`, `CC_RECONCILE_BALANCES_V0` (explicit predecessor-link validation and balance reconciliation were added).
+>
+> Treat that gap as *part of the exercise*: build to the mandate, then study where and why construction diverged. The live subdomain to diff against is `pgs_blockchain/pgs_blockchain/registry/chain/`.
 
 ---
 
 ## What This Is
 
-A bounded implementation of a fully-specified CR. You will:
+A bounded re-implementation of a fully-specified, already-shipped CR. Working in an isolated copy or branch, you will:
 
 - **Author 21 new protocol artifacts** (Markdown source with `## Machine` YAML blocks) across three subdomains
 - **Extend one workflow** and **update one event's metadata**
-- **Compile and sync** the snapshot, watching `chain` appear as a new governed subdomain
+- **Compile and sync** a scratch snapshot, watching `chain` appear as a new governed subdomain
 - **Extend the existing E2E harness** (`scripts/test_blockchain_e2e.py`) to exercise chain
-- **Close the CR** by populating the Stage 8 Authoring Manifest and flipping it to APPROVED
+- **Reconcile against the reference** — populate a Stage 8-style close-out (as-designed vs as-built) and diff your artifacts against the shipped `blockchain/chain`
 
 ## What This Is NOT
 
@@ -92,6 +98,8 @@ Read **Stage 6b (Design Intent)** for the per-artifact specification and **Stage
 
 ## The Build — follow the Authoring Mandate
 
+> **Work in isolation.** `blockchain/chain` already exists in the live `pgs_blockchain` registry and the workspace snapshot — so you must build in a **branch or a throwaway clone**, not the shipped tree, or you'll find the artifacts already there instead of authoring them. Keep the shipped `registry/chain/` as the reference you diff against, never the file you edit.
+
 **23 authoring actions:** 21 NEW + 1 EXTEND + 1 metadata UPDATE. Source artifacts are Markdown with a `## Machine` YAML block — mirror existing precedents (`CC_INVOKE_BLOCK_PROPOSAL_V0` for gateway CCs, `STRUCTURE_BLOCKCHAIN_ORCHESTRATION_STORAGE_V0` for the chain STRUCTURE).
 
 Where the files go (all under `pgs_blockchain/pgs_blockchain/registry/`):
@@ -139,7 +147,7 @@ Extend `pgs_workspace/scripts/test_blockchain_e2e.py` to cover chain, and run th
 
 Genesis init must run **before** the simulation (the slot loop's commit step reads `CHAIN_STATE`). The happy-path commit is exercised *inside* the simulation once `WF_PROCESS_SLOT_V0` is extended. Add a chain diagnostics block that reads `CHAIN_STATE` head, `CHAIN` length, and `CHAIN_EVENTS`.
 
-**The CR is closed when** (Stage 8 §10): all 21 artifacts are compiled into `protocol_snapshot/`; all six scenarios produce the expected decision; traces are verified (non-empty, correct outcome, correct denial reason); the determinism invariant holds; no artifact outside the declared scope was modified. Then populate the Manifest's PENDING sections and flip its status `DRAFT → APPROVED`.
+**Your build is done when** (mirroring Stage 8 §10): all 21 artifacts compile into your scratch `protocol_snapshot/`; all six scenarios produce the expected decision; traces are verified (non-empty, correct outcome, correct denial reason); the determinism invariant holds; no artifact outside the declared scope was modified. Then populate an as-designed-vs-as-built close-out and **diff against the shipped reference** (`pgs_blockchain/.../registry/chain/`): every place your build differs from the golden implementation is either a defect to fix or a construction-time refinement you can name and justify (see the *Reality check* above — the shipped version added predecessor-link validation and balance reconciliation).
 
 ---
 
@@ -189,7 +197,7 @@ Anyone learning PGS who wants to experience the full governed loop — author, c
 
 *PGS Workspace: [github.com/bachipeachy/pgs_workspace](https://github.com/bachipeachy/pgs_workspace)*
 
-*Field Manual: `doc/pgs_field_manual_v1.md`*
+*Field Manual: `doc/pgs_field_manual_v2.md`*
 
 *Onboarding: `doc/onboarding_build_first_workflow.md`*
 

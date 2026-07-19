@@ -1,6 +1,6 @@
 {
   "cs": {
-    "294": {
+    "295": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -705,6 +705,42 @@
         "atom_stream": [
           {
             "args": {
+              "left": "$.inputs.left",
+              "right": "$.inputs.right"
+            },
+            "atom": "capability_transforms::CT_PURE_COMPARE_EQUAL_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_compare_equal_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_COMPARE_EQUAL_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_COMPARE_EQUAL_V0",
+        "inputs": {
+          "left": {
+            "required": true,
+            "type": "string"
+          },
+          "right": {
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "is_equal": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "65": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
               "index": "$.inputs.index",
               "parent_chain_code_bytes": "$.inputs.parent_chain_code_bytes",
               "parent_private_key_bytes": "$.inputs.parent_private_key_bytes"
@@ -747,7 +783,7 @@
         }
       }
     },
-    "65": {
+    "66": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -782,7 +818,7 @@
         }
       }
     },
-    "66": {
+    "67": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -836,7 +872,7 @@
         }
       }
     },
-    "67": {
+    "68": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -868,7 +904,7 @@
         }
       }
     },
-    "68": {
+    "69": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -917,7 +953,7 @@
         }
       }
     },
-    "69": {
+    "70": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -961,7 +997,7 @@
         }
       }
     },
-    "70": {
+    "71": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -999,7 +1035,7 @@
         }
       }
     },
-    "71": {
+    "72": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1038,7 +1074,7 @@
         }
       }
     },
-    "72": {
+    "73": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1076,7 +1112,7 @@
         }
       }
     },
-    "73": {
+    "74": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1108,7 +1144,7 @@
         }
       }
     },
-    "74": {
+    "75": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1146,7 +1182,7 @@
         }
       }
     },
-    "75": {
+    "76": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1190,7 +1226,7 @@
         }
       }
     },
-    "76": {
+    "77": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1222,7 +1258,7 @@
         }
       }
     },
-    "77": {
+    "78": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1254,7 +1290,7 @@
         }
       }
     },
-    "78": {
+    "79": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1296,7 +1332,7 @@
         }
       }
     },
-    "79": {
+    "80": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1328,7 +1364,7 @@
         }
       }
     },
-    "80": {
+    "81": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1369,7 +1405,7 @@
         }
       }
     },
-    "81": {
+    "82": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1407,7 +1443,7 @@
         }
       }
     },
-    "82": {
+    "83": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1448,8 +1484,8 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "299": {
-      "294": {
+    "300": {
+      "295": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

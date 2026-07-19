@@ -1,0 +1,60 @@
+{
+  "artifact_code": "WF_BOOTSTRAP_GENESIS_CHAIN_V0",
+  "artifact_type": "WF",
+  "content": "# WF_BOOTSTRAP_GENESIS_CHAIN_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_BOOTSTRAP_GENESIS_CHAIN_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** blockchain::IN_BOOTSTRAP_GENESIS_CHAIN_V0, blockchain::CC_CREATE_GENESIS_BLOCK_V0\n\n---\n\n## 1. Intent\n\nBootstrap the genesis chain and initialise the supply\n\n---\n\n## 2. Rationale\n\n\n\n---\n\n## 3. Execution Graph\n\n```\nstart: IN_BOOTSTRAP_GENESIS_CHAIN_V0\n\nIN_BOOTSTRAP_GENESIS_CHAIN_V0 [IN] ACK \u2192 CC_CREATE_GENESIS_BLOCK_V0, NACK \u2192 EXIT\nCC_CREATE_GENESIS_BLOCK_V0 [CC] SUCCESS \u2192 EXIT_SUCCESS\nEXIT_SUCCESS [EXIT] reason=COMPLETED\nEXIT [EXIT] reason=EXITED\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Code/Reason |\n|---|---|---|\n| IN_BOOTSTRAP_GENESIS_CHAIN_V0 | IN | blockchain::IN_BOOTSTRAP_GENESIS_CHAIN_V0 |\n| CC_CREATE_GENESIS_BLOCK_V0 | CC | blockchain::CC_CREATE_GENESIS_BLOCK_V0 |\n| EXIT_SUCCESS | EXIT | COMPLETED |\n| EXIT | EXIT | EXITED |\n\n---\n\n## 5. Admission\n\n- **Requires:** NONE\n- **Forbids:** NONE\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_BOOTSTRAP_GENESIS_CHAIN_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\nruntime_binding: blockchain::RB_BOOTSTRAP_GENESIS_CHAIN_V0\ncore:\n  runtime_binding: blockchain::RB_BOOTSTRAP_GENESIS_CHAIN_V0\n  summary: Bootstrap the genesis chain and initialise the supply\n  admission:\n    requires: []\n    forbids: []\n  start_node: IN_BOOTSTRAP_GENESIS_CHAIN_V0\n  nodes:\n    IN_BOOTSTRAP_GENESIS_CHAIN_V0:\n      type: IN\n      code: blockchain::IN_BOOTSTRAP_GENESIS_CHAIN_V0\n      next:\n        ACK: CC_CREATE_GENESIS_BLOCK_V0\n        NACK: EXIT\n    CC_CREATE_GENESIS_BLOCK_V0:\n      type: CC\n      code: blockchain::CC_CREATE_GENESIS_BLOCK_V0\n      inputs:\n        genesis_block_content: $.payload.genesis_block_content\n      next:\n        SUCCESS: EXIT_SUCCESS\n    EXIT_SUCCESS:\n      type: EXIT\n      reason: COMPLETED\n    EXIT:\n      type: EXIT\n      reason: EXITED\n```\n",
+  "content_hash": "8e9f5e09bddfc41150fcff5e5a907e5d31862e69c0740db304975698891faeec",
+  "fqdn_id": "blockchain::WF_BOOTSTRAP_GENESIS_CHAIN_V0",
+  "frontmatter": {
+    "core": {
+      "admission": {
+        "forbids": [],
+        "requires": []
+      },
+      "nodes": {
+        "CC_CREATE_GENESIS_BLOCK_V0": {
+          "code": "blockchain::CC_CREATE_GENESIS_BLOCK_V0",
+          "fqdn_id": "blockchain::CC_CREATE_GENESIS_BLOCK_V0",
+          "inputs": {
+            "genesis_block_content": "$.payload.genesis_block_content"
+          },
+          "next": {
+            "SUCCESS": "EXIT_SUCCESS"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "EXIT_SUCCESS": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "IN_BOOTSTRAP_GENESIS_CHAIN_V0": {
+          "code": "blockchain::IN_BOOTSTRAP_GENESIS_CHAIN_V0",
+          "fqdn_id": "blockchain::IN_BOOTSTRAP_GENESIS_CHAIN_V0",
+          "next": {
+            "ACK": "CC_CREATE_GENESIS_BLOCK_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "runtime_binding": "blockchain::RB_BOOTSTRAP_GENESIS_CHAIN_V0",
+      "start_node": "IN_BOOTSTRAP_GENESIS_CHAIN_V0",
+      "summary": "Bootstrap the genesis chain and initialise the supply"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_BOOTSTRAP_GENESIS_CHAIN_V0",
+    "version": "v0",
+    "wf_code": "WF_BOOTSTRAP_GENESIS_CHAIN_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_BOOTSTRAP_GENESIS_CHAIN_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

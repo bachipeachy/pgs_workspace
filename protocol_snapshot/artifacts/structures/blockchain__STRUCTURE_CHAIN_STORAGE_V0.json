@@ -1,0 +1,61 @@
+{
+  "artifact_code": "STRUCTURE_CHAIN_STORAGE_V0",
+  "artifact_type": "STRUCTURE",
+  "content": "# STRUCTURE_CHAIN_STORAGE_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** STRUCTURE_CHAIN_STORAGE_V0\n- **Artifact Kind:** structure\n- **Governed By:** CONSTITUTION_STRUCTURE_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n\n---\n\n## 1. Storage Model\n\n- **chain** \u2014 Append-only JSONL store (CS_APPENDONLY_JSONL_V0) \u2192 `blockchain/chain/chain.jsonl`\n- **chain_head** \u2014 Mutable JSON store (CS_MUTABLE_JSON_V0) \u2192 `blockchain/chain/chain_head.json`\n\n---\n\n## Machine\n\n```yaml\nstructure_code: STRUCTURE_CHAIN_STORAGE_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_STRUCTURE_V0\ncore:\n  summary: Declare the chain storage (block log and head pointer)\n  description: Maps chain entity stores to storage implementations and paths\n  layer: DOMAINS\n  domain: blockchain\n  storage_roots:\n    base_path: '{{module_data_root}}'\n    description: Root path for all blockchain domain storage (resolved at runtime)\n  entity_stores:\n    chain:\n      description: Append-only JSONL store (CS_APPENDONLY_JSONL_V0)\n      path: blockchain/chain/chain.jsonl\n    chain_head:\n      description: Mutable JSON store (CS_MUTABLE_JSON_V0)\n      path: blockchain/chain/chain_head.json\n  resolution:\n    description: Runtime path resolution strategy\n    algorithm: base_path / entity_stores[entity_type].path\n    example: '{{module_data_root}}/blockchain/chain/chain.jsonl'\n  isolation:\n    description: Entity storage isolation constraints\n    rules:\n    - Each entity type has dedicated storage\n    - Cross-entity queries forbidden (no joins)\n    - Entity reads must specify entity type explicitly\n    - Storage paths resolved via STRUCTURE only\n  migration:\n    description: Storage migration policy\n    rules:\n    - Path changes are STRUCTURE updates (versioned)\n    - CC artifacts remain unchanged during migration\n    - Runtime resolves paths from active STRUCTURE version\n```\n",
+  "content_hash": "1e9a0b0f485a54571331fbec99663c00ea43490ad57688196224e3d4e037b04f",
+  "fqdn_id": "blockchain::STRUCTURE_CHAIN_STORAGE_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Maps chain entity stores to storage implementations and paths",
+      "domain": "blockchain",
+      "entity_stores": {
+        "chain": {
+          "description": "Append-only JSONL store (CS_APPENDONLY_JSONL_V0)",
+          "path": "blockchain/chain/chain.jsonl"
+        },
+        "chain_head": {
+          "description": "Mutable JSON store (CS_MUTABLE_JSON_V0)",
+          "path": "blockchain/chain/chain_head.json"
+        }
+      },
+      "isolation": {
+        "description": "Entity storage isolation constraints",
+        "rules": [
+          "Each entity type has dedicated storage",
+          "Cross-entity queries forbidden (no joins)",
+          "Entity reads must specify entity type explicitly",
+          "Storage paths resolved via STRUCTURE only"
+        ]
+      },
+      "layer": "DOMAINS",
+      "migration": {
+        "description": "Storage migration policy",
+        "rules": [
+          "Path changes are STRUCTURE updates (versioned)",
+          "CC artifacts remain unchanged during migration",
+          "Runtime resolves paths from active STRUCTURE version"
+        ]
+      },
+      "resolution": {
+        "algorithm": "base_path / entity_stores[entity_type].path",
+        "description": "Runtime path resolution strategy",
+        "example": "{{module_data_root}}/blockchain/chain/chain.jsonl"
+      },
+      "storage_roots": {
+        "base_path": "{{module_data_root}}",
+        "description": "Root path for all blockchain domain storage (resolved at runtime)"
+      },
+      "summary": "Declare the chain storage (block log and head pointer)"
+    },
+    "governed_by": "fb.constitution::CONSTITUTION_STRUCTURE_V0",
+    "structure_code": "STRUCTURE_CHAIN_STORAGE_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.structures",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_STRUCTURE_V0"
+  ],
+  "version": "0"
+}

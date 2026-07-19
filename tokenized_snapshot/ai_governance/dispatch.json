@@ -240,7 +240,7 @@
     ],
     "12": [
       {
-        "addr": 72,
+        "addr": 73,
         "inputs": {
           "data": {
             "domain_context": "$.inputs.domain_context",
@@ -283,7 +283,7 @@
     ],
     "14": [
       {
-        "addr": 68,
+        "addr": 69,
         "inputs": {
           "last_active_date": "$.inputs.last_active_date",
           "threshold_days": "$.inputs.threshold_days"
@@ -318,7 +318,7 @@
     ],
     "15": [
       {
-        "addr": 72,
+        "addr": 73,
         "inputs": {
           "data": {
             "domain_context": "$.inputs.domain_context",
@@ -366,7 +366,7 @@
     ],
     "16": [
       {
-        "addr": 72,
+        "addr": 73,
         "inputs": {
           "data": {
             "intent_hash": "$.inputs.intent_hash",
@@ -461,7 +461,7 @@
         "step_id": "read_license_record"
       },
       {
-        "addr": 82,
+        "addr": 83,
         "inputs": {
           "allowed_set": [
             "active"
@@ -509,7 +509,7 @@
     ],
     "19": [
       {
-        "addr": 74,
+        "addr": 75,
         "inputs": {
           "key": "$.inputs.tool_name",
           "map": {
@@ -548,7 +548,7 @@
         "step_id": "lookup_parameter_rules"
       },
       {
-        "addr": 80,
+        "addr": 81,
         "inputs": {
           "parameters": "$.inputs.parameters",
           "rules": "$.results.lookup_parameter_rules.rules"
@@ -600,7 +600,7 @@
     ],
     "21": [
       {
-        "addr": 74,
+        "addr": 75,
         "inputs": {
           "key": "$.inputs.tool_name",
           "map": {
@@ -655,7 +655,7 @@
         "step_id": "lookup_parameter_rules"
       },
       {
-        "addr": 80,
+        "addr": 81,
         "inputs": {
           "parameters": "$.inputs.parameters",
           "rules": "$.results.lookup_parameter_rules.rules"
@@ -690,9 +690,9 @@
         "step_id": "check_termination"
       }
     ],
-    "292": [
+    "293": [
       {
-        "addr": 294,
+        "addr": 295,
         "inputs": {
           "name": "$.inputs.name"
         },
@@ -709,9 +709,9 @@
         "step_id": "lookup"
       }
     ],
-    "293": [
+    "294": [
       {
-        "addr": 294,
+        "addr": 295,
         "inputs": {
           "name": "$.inputs.name",
           "resource_addresses": "$.inputs.resource_addresses"
@@ -757,7 +757,7 @@
     ],
     "6": [
       {
-        "addr": 74,
+        "addr": 75,
         "inputs": {
           "key": "$.inputs.license_tier",
           "map": {
@@ -783,7 +783,7 @@
         "step_id": "lookup_tier_tools"
       },
       {
-        "addr": 82,
+        "addr": 83,
         "inputs": {
           "allowed_set": "$.results.lookup_tier_tools.allowed_tools",
           "value": "$.inputs.tool_name"
@@ -802,7 +802,7 @@
     ],
     "7": [
       {
-        "addr": 74,
+        "addr": 75,
         "inputs": {
           "key": "$.inputs.license_tier",
           "map": {
@@ -831,7 +831,7 @@
         "step_id": "lookup_tier_tools"
       },
       {
-        "addr": 82,
+        "addr": 83,
         "inputs": {
           "allowed_set": "$.results.lookup_tier_tools.allowed_tools",
           "value": "$.inputs.tool_name"
@@ -850,7 +850,7 @@
     ],
     "8": [
       {
-        "addr": 82,
+        "addr": 83,
         "inputs": {
           "allowed_set": [
             "web_search",
@@ -872,7 +872,7 @@
     ],
     "9": [
       {
-        "addr": 82,
+        "addr": 83,
         "inputs": {
           "allowed_set": [
             "READ_RECORD",

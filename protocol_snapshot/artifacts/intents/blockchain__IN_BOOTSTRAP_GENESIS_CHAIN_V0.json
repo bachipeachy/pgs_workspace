@@ -1,0 +1,37 @@
+{
+  "artifact_code": "IN_BOOTSTRAP_GENESIS_CHAIN_V0",
+  "artifact_type": "IN",
+  "content": "# IN_BOOTSTRAP_GENESIS_CHAIN_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** IN_BOOTSTRAP_GENESIS_CHAIN_V0\n- **Artifact Kind:** intent\n- **Governed By:** CONSTITUTION_INTENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** WF_BOOTSTRAP_GENESIS_CHAIN_V0\n\n---\n\n## 1. Intent\n\nAdmit a request to bootstrap the genesis chain and initialise the supply.\n\n---\n\n## 2. Rationale\n\n\n\n---\n\n## 3. Workflow Binding\n\n| Target | Description |\n|---|---|\n| WF_BOOTSTRAP_GENESIS_CHAIN_V0 | Workflow that processes this intent |\n\n---\n\n## 4. Inputs\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| genesis_block_content | object | true |  |\n\n---\n\n## 5. Outcomes\n\n| Outcome | Description |\n|---|---|\n| ACK |  |\n| NACK |  |\n\n---\n\n## Machine\n\n```yaml\nin_code: IN_BOOTSTRAP_GENESIS_CHAIN_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_INTENT_V0\ncore:\n  summary: Admit a request to bootstrap the genesis chain and initialise the supply.\n  workflow: WF_BOOTSTRAP_GENESIS_CHAIN_V0\n  inputs:\n    genesis_block_content:\n      type: object\n      required: true\n  outcomes:\n    ACK:\n      description: ''\n    NACK:\n      description: ''\n```\n",
+  "content_hash": "1aa672b89aef2a82ba07334c48590cd1b3a3cb31e1bf6f1fc53e4214da2af62f",
+  "fqdn_id": "blockchain::IN_BOOTSTRAP_GENESIS_CHAIN_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "genesis_block_content": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outcomes": {
+        "ACK": {
+          "description": ""
+        },
+        "NACK": {
+          "description": ""
+        }
+      },
+      "summary": "Admit a request to bootstrap the genesis chain and initialise the supply.",
+      "workflow": "WF_BOOTSTRAP_GENESIS_CHAIN_V0"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_INTENT_V0",
+    "in_code": "IN_BOOTSTRAP_GENESIS_CHAIN_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.intents",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_INTENT_V0"
+  ],
+  "version": "0"
+}

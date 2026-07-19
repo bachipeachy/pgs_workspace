@@ -6,8 +6,6 @@ Contact: [mailto:bachipeachy@gmail.com](mailto:bachipeachy@gmail.com)
 
 ORCID Profile: <https://orcid.org/0009-0007-3810-6520>
 
-**Status:** v1 --- revised for the all-structured pipeline and the authority-invariance result (PGS 0.6.1). The v0 edition is the published DOI record; this revision supersedes it as the working source.
-
 ## Preface
 
 This paper is part of the PGS technical paper series. The paper [*Protocol-Governed Systems: Conceptual Model*](https://doi.org/10.5281/zenodo.20300611) established the architectural foundations: constitutional governance, the four-layer stack, and the separation of governance from execution. The paper [*Protocol-Governed Systems: Compiler Conceptual Model*](https://doi.org/10.5281/zenodo.20471804) described how the compiler converts protocol declarations into a governed execution boundary called the Protocol Snapshot. The paper [*Protocol-Governed Systems: Runtime Conceptual Model*](https://doi.org/10.5281/zenodo.20478471) described how the runtime consumes that snapshot and executes workflow instances without any domain knowledge. The paper [*Protocol-Governed Systems: Architecture Inversion Concepts*](https://doi.org/10.5281/zenodo.20497732) established why inverting the traditional relationship between specification and implementation is a structural requirement, not a design preference. Together, those four papers establish that behavior is fully determined before execution begins and that the protocol is the sole source of behavioral truth.
@@ -393,7 +391,7 @@ The dividend has three components:
 
 ### Empirical Basis: Completed Change Requests
 
-As of this writing the governed pipeline has carried seven Change Requests in the blockchain domain --- six executed through authoring into the compiled snapshot (consensus_pos, block, data_model, consensus_propose, mempool, orchestration) and the seventh (chain) at design approval. The first three established the pipeline's foundational rules and are described here; the later cycles are the source of the doctrinal discoveries reported in Section 8.
+As of this writing the governed pipeline has carried seven Change Requests in the blockchain domain --- six executed through authoring into the compiled snapshot (consensus_pos, block, data_model, consensus_propose, mempool, orchestration) and the seventh (chain) since carried through authoring into a compiled, validated candidate, not yet promoted into the baseline. The first three established the pipeline's foundational rules and are described here; the later cycles are the source of the doctrinal discoveries reported in Section 8.
 
 **blockchain::consensus_pos** --- governed the Proof-of-Stake consensus mechanism: validator registration, staking and unstaking, reward and slashing policies, pool management, and the full block formation path from mempool transaction to proposed block. This was the first complete governance cycle and the one from which the pipeline's foundational rules --- GI Purity, BI Purity, Authoring Manifest --- were discovered and formalized.
 
@@ -414,7 +412,7 @@ The first complete PGS governance cycle --- the blockchain::consensus_pos Change
 
 The three additional artifacts --- produced because the governance process discovered gaps not in the CR --- are the observable Governance Dividend from the first cycle. They were not additional scope added by engineering judgment. They were architectural requirements that the governed process surfaced and captured.
 
-Since the consensus_pos CR, five additional Change Requests have been executed through the pipeline, and a seventh is at design approval. Across these cycles the Governance Dividend is accumulating in observable forms: the purity rules are internalized, the canonical documentation set is richer, and the stage definitions themselves have absorbed each cycle's methodology lessons --- so that a change agent entering the pipeline today inherits, as enforced structure, everything earlier cycles learned the hard way.
+Since the consensus_pos CR, five additional Change Requests have been executed through the pipeline, and a seventh (chain) has since been carried through authoring into a validated candidate, not yet promoted. Across these cycles the Governance Dividend is accumulating in observable forms: the purity rules are internalized, the canonical documentation set is richer, and the stage definitions themselves have absorbed each cycle's methodology lessons --- so that a change agent entering the pipeline today inherits, as enforced structure, everything earlier cycles learned the hard way.
 
 The comparison to traditional SDLC KPIs is instructive. Traditional methodologies measure governance cost as overhead: the cost of review meetings, approval cycles, and documentation. The Governance Dividend inverts this framing: **governance is not a cost center for change. It is an investment in the quality of the next change.**
 
@@ -626,7 +624,7 @@ The conceptual model presented in this paper has been realized in the open-sourc
 
 The governed change pipeline is implemented as `FB_CHANGE_MGMT` --- a first-class governance boundary within `pgs_governance`, with its own constitution, dossier artifact templates, and lifecycle declarations. The `pgs_change_mgmt` repository contains the pipeline implementation: stage templates, dossier directory structure, and the pipeline execution tooling.
 
-Seven Change Requests have entered the pipeline as of the time of publication --- six executed through authoring into the compiled snapshot, one at design approval:
+Seven Change Requests have entered the pipeline as of the time of publication --- six executed through authoring into the compiled snapshot, one (chain) carried through authoring into a validated candidate not yet promoted:
 
 1.  **blockchain::consensus_pos** --- the first and most extensively documented cycle; produced 16 mandated authoring actions, 77/77 conformance PASS, and VALID snapshot status
 2.  **blockchain::block** --- peer subdomain declared during consensus_pos GI stage; governed independently as a CR
@@ -634,7 +632,7 @@ Seven Change Requests have entered the pipeline as of the time of publication --
 4.  **blockchain::consensus_propose** --- governed block proposal: proposer selection, block formation, and consensus round recording
 5.  **blockchain::mempool** --- governed staging of pending transactions; authoring manifest approved with full end-to-end regression
 6.  **blockchain::orchestration** --- governed simulation and consensus-loop coordination; the source of the workflow-invocation and dedicated-storage-structure precedents
-7.  **blockchain::chain** --- canonical chain and genesis bootstrap; executed as a deliberate agent stress test of the pipeline (Section 11) and at design approval as of this writing
+7.  **blockchain::chain** --- canonical chain and genesis bootstrap; executed as a deliberate agent stress test of the pipeline (Section 11), and since carried through authoring into a compiled, validated candidate --- not yet promoted into the baseline --- as of this writing
 
 The examples, governance rules, and architectural properties in this paper reflect the state of the project at the time of publication. The pipeline has been validated empirically. The conceptual model has remained materially stable across all completed cycles. The governance rules that emerged from the first cycle --- GI Purity, BI Purity, Discovery Saturation, Authoring Manifest --- have held across all subsequent cycles; the stage templates that operationalize them continue to absorb each cycle's methodology lessons.
 

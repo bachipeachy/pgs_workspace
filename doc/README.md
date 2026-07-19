@@ -31,7 +31,7 @@ Also available as: parkinglot/pgs_conceptual_model_v0.md
 
 ## Field Manual
 
-**pgs_field_manual_v1.md**
+**pgs_field_manual_v2.md**
 Authoritative architectural reference for working with PGS. Covers doctrine, invariants,
 the nine execution concerns, federation boundary model, compiler pipeline, and
 operational rules. Intended as a context-free cognitive digest -- read this to restore

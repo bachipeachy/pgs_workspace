@@ -14,19 +14,40 @@ python -m pgs_compiler.cli build-pps --workspace ~/pgs/pgs_workspace
 
 
 =========
-# change_mgmt — SDLC authoring + construction  (CR -> dossier S1..S7 -> S8 construct -> admission)
+# change_mgmt — SDLC lifecycle: ONE CLI, FOUR verbs  (author -> construct -> validate -> promote)
 # Run from ~/pgs/pgs_change_mgmt with the venv active. PGS_WORKSPACE must be declared (read-only pi grounding).
+# `pgs_change <verb>` after the next editable reinstall; `python -m pgs_change_mgmt.engine.cli <verb>` works today.
+# User thinks in PHASES; stages S1..S9 + compiler mechanics (build/admit/persist) stay internal (--stage = debug only).
+# `pgs_construct` is a deprecated alias for `construct`.
 
 export PGS_WORKSPACE=~/pgs/pgs_workspace
 
-# -- guided authoring: one governed Stage Package per stage (human / Claude-Code is the worker) --
-# EXPORT the Stage Package (system_prompt.md + user_prompt.md + schema.json + grounding_spec.json):
-python -m pgs_change_mgmt.engine.run_interactive --seed blockchain_chain --stage 1 --export
-#   -> paste the model's full reply into  <dossier>/_packages/stage_<N>/response.md   (ground via pi as you go)
-# IMPORT: ingress-validate the pasted response, then run the engine for that ONE stage
-#   (writes the stage doc + cr_ir/<N>.json handoff + figure-of-merit; identical to the automated path):
-python -m pgs_change_mgmt.engine.run_interactive --seed blockchain_chain --stage 1 --import --model-label claude-code
-#   stage order: 1 2 3 4 5 6 6b 7   (6b = design intent / composition; 7 = authoring mandate / build_order)
+# 1) AUTHOR  (Design: S1..S7 -> CR-IR).  Automated worker by default; --guided = interactive export/import.
+#    --worker/--model REQUIRED (a conscious choice).  stage order: 1 2 3 4 5 6 6b 7
+python -m pgs_change_mgmt.engine.cli author --worker qwen --model qwen3.5:latest              # full S1..S7
+python -m pgs_change_mgmt.engine.cli author --worker qwen --model qwen3.5:latest --stage 6b   # one stage (debug)
+#    -- guided authoring (human / Claude-Code is the worker): one governed Stage Package per stage --
+python -m pgs_change_mgmt.engine.cli author --guided --seed blockchain_chain --stage 1 --export
+#      -> paste the model's full reply into <dossier>/_packages/stage_<N>/response.md  (ground via pi as you go)
+python -m pgs_change_mgmt.engine.cli author --guided --seed blockchain_chain --stage 1 --import --model-label claude-code
+
+# 2) CONSTRUCT  (S8 + Admission: CR-IR -> ADMITTED_UNVALIDATED).  build->admit as ONE verb (admit is internal).
+#    writes finale .md to --out (default constructed/, the input to promote); --persist writes a full test-snapshot.
+python -m pgs_change_mgmt.engine.cli construct --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain
+python -m pgs_change_mgmt.engine.cli construct --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain --persist /abs/test_ws
+#    -> Construction Status: CONSTRUCTION COMPLETE | Admission: PASS | Snapshot: ADMITTED_UNVALIDATED  (exit 0; 2 = INVALID)
+
+# 3) VALIDATE  (Execution Validation -> EXECUTION_VALIDATED).  Runs the CR's declared acceptance scenario.
+python -m pgs_change_mgmt.engine.cli validate --dossier blockchain/chain          # -> Validation Status: PASS
+
+# 4) PROMOTE  (S9 -> PROMOTED).  KISS: gated on PASS evidence + --confirm; copy finale .md to the domain SOURCE
+#    registry, then the compiler is the gate (compile -> build -> pi validate --strict); rollback-all-on-red.
+#    --registry-root REQUIRED (the protocol SOURCE, never protocol_snapshot/).  Rebuilds the whole workspace snapshot.
+python -m pgs_change_mgmt.engine.cli promote --dossier blockchain/chain --registry-root ~/pgs/pgs_blockchain/pgs_blockchain/registry            # gate preview (no mutation)
+python -m pgs_change_mgmt.engine.cli promote --dossier blockchain/chain --registry-root ~/pgs/pgs_blockchain/pgs_blockchain/registry --confirm  # perform S9
+
+# -- workspace shell wrapper (sets PGS_WORKSPACE + venv): ~/pgs/pgs_workspace/scripts/run_change_mgmt.sh <verb> ... --
+#    (older run_change_mgmt_dossier.sh / _interactive.sh still work as deprecated forwarders to `author` / `author --guided`)
 
 # -- cr_ir/ = the governed per-stage handoffs = the Construction Projection S8 consumes (TRACKED; source of truth) --
 #   layout: change_mgmt/dossiers/<domain>/<subdomain>/cr_ir/<stage>.json
@@ -34,17 +55,11 @@ python -m pgs_change_mgmt.engine.run_interactive --seed blockchain_chain --stage
 #   Migration can be lossy — never run against a good golden unless you intend to overwrite it.
 python -m pgs_change_mgmt.engine._migrate_cr_ir_from_baseline --dossier change_mgmt/dossiers/blockchain/chain --stages 5 6b 7
 
-# -- S8 construction: deterministic Construction Compiler (no worker, no registry writes) --
-#   build = construct + admissibility-validate -> writes artifacts to --out ; exit 0 = CONSTRUCTION_VALID, 2 = INVALID
-python -m pgs_change_mgmt.engine.construction_cli build    --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain --out constructed/
-python -m pgs_change_mgmt.engine.construction_cli validate --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain
-python -m pgs_change_mgmt.engine.construction_cli explain  --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # per-pass status + violation detail (GAP_DOSSIER etc.)
-python -m pgs_change_mgmt.engine.construction_cli graph    --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # node/edge dump
-
-# -- admission ("the bridge": promote constructed artifacts into the domain repo) --
-#   CAUTION: MUTATES the sibling domain repo (protocol source, pgs_<domain>). Gate behind a runtime smoke test first.
-python -m pgs_change_mgmt.engine.construction_cli admit --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # deterministic (default --domain-repo = sibling pgs_blockchain)
-#   worker-driven S8->S9 variant (transcribe via ollama + bridge promote + S9 Construction Record + semantic-preservation gate):
+# -- internal / advanced (construct dispatches into these; use directly only for isolated debugging) --
+#   raw Construction Compiler subcommands: build | validate | explain | graph | admit (admit = zero-pollution gate, no repo writes)
+python -m pgs_change_mgmt.engine.construction_cli explain --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # per-pass status + violation detail (GAP_DOSSIER etc.)
+python -m pgs_change_mgmt.engine.construction_cli graph   --projection change_mgmt/dossiers/blockchain/chain/cr_ir --domain blockchain --subdomain chain   # node/edge dump
+#   worker-driven S8->S9 transcription variant (ollama + bridge promote + S9 Construction Record + semantic-preservation gate):
 python -m pgs_change_mgmt.engine.construct_chain --registry-root ~/pgs/pgs_blockchain/pgs_blockchain/registry --models qwen3:14b --kinds CC
 
 # -- selftests (hermetic; the change_mgmt engine regression suite) --

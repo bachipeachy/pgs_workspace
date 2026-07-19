@@ -1,0 +1,38 @@
+{
+  "artifact_code": "EV_GENESIS_CREATED_V0",
+  "artifact_type": "EV",
+  "content": "# EV_GENESIS_CREATED_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** EV_GENESIS_CREATED_V0\n- **Artifact Kind:** event\n- **Governed By:** CONSTITUTION_EVENT_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** NONE\n\n---\n\n## 1. Fact\n\nAnnounce that the genesis chain was created\n\n---\n\n## 2. Emitted By\n\n- `blockchain::CC_CREATE_GENESIS_BLOCK_V0`\n\n---\n\n## 3. Schema\n\n| Field | Type | Required | Format | Description |\n|-------|------|----------|--------|-------------|\n| genesis_hash | string | true |  | Genesis block content hash |\n| height | integer | true |  | Block height (0 for genesis) |\n| timestamp | string | true | date-time | When genesis was created |\n\n---\n\n## Machine\n\n```yaml\nev_code: EV_GENESIS_CREATED_V0\nversion: v0\ngoverned_by: fb.constitution::CONSTITUTION_EVENT_V0\ncore:\n  summary: Announce that the genesis chain was created\n  description: Announce that the genesis chain was created\n  schema:\n    genesis_hash:\n      type: string\n      required: true\n    height:\n      type: integer\n      required: true\n    timestamp:\n      type: string\n      required: true\n      format: date-time\n```\n",
+  "content_hash": "5948bac323801e7eebe6720b2e30de1e6809918a50fb9a25603f9c50c01cb95b",
+  "fqdn_id": "blockchain::EV_GENESIS_CREATED_V0",
+  "frontmatter": {
+    "core": {
+      "description": "Announce that the genesis chain was created",
+      "schema": {
+        "genesis_hash": {
+          "required": true,
+          "type": "string"
+        },
+        "height": {
+          "required": true,
+          "type": "integer"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "required": true,
+          "type": "string"
+        }
+      },
+      "summary": "Announce that the genesis chain was created"
+    },
+    "ev_code": "EV_GENESIS_CREATED_V0",
+    "governed_by": "fb.constitution::CONSTITUTION_EVENT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.events",
+  "namespace": "blockchain",
+  "references": [
+    "fb.constitution::CONSTITUTION_EVENT_V0"
+  ],
+  "version": "0"
+}

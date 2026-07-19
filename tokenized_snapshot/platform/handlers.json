@@ -232,7 +232,7 @@
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
       }
     },
-    "264": {
+    "265": {
       "cs_metadata": {
         "capability": {
           "supported_operation_specs": [
@@ -536,6 +536,42 @@
         "atom_stream": [
           {
             "args": {
+              "left": "$.inputs.left",
+              "right": "$.inputs.right"
+            },
+            "atom": "capability_transforms::CT_PURE_COMPARE_EQUAL_V0",
+            "handler_ref": {
+              "callable": "execute",
+              "module": "pgs_transforms.implementation.transforms.atoms.ct_pure_compare_equal_v0"
+            },
+            "out": "__atom_result__"
+          }
+        ],
+        "ct_code": "CT_PURE_COMPARE_EQUAL_V0",
+        "ct_composition_version": "V0",
+        "ct_fqdn": "capability_transforms::CT_PURE_COMPARE_EQUAL_V0",
+        "inputs": {
+          "left": {
+            "required": true,
+            "type": "string"
+          },
+          "right": {
+            "required": true,
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "is_equal": {
+            "from": "__atom_result__"
+          }
+        }
+      }
+    },
+    "12": {
+      "ct_ir": {
+        "atom_stream": [
+          {
+            "args": {
               "index": "$.inputs.index",
               "parent_chain_code_bytes": "$.inputs.parent_chain_code_bytes",
               "parent_private_key_bytes": "$.inputs.parent_private_key_bytes"
@@ -578,7 +614,7 @@
         }
       }
     },
-    "12": {
+    "13": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -613,7 +649,7 @@
         }
       }
     },
-    "13": {
+    "14": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -667,7 +703,7 @@
         }
       }
     },
-    "14": {
+    "15": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -699,7 +735,7 @@
         }
       }
     },
-    "15": {
+    "16": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -748,7 +784,7 @@
         }
       }
     },
-    "16": {
+    "17": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -792,7 +828,7 @@
         }
       }
     },
-    "17": {
+    "18": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -830,7 +866,7 @@
         }
       }
     },
-    "18": {
+    "19": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -869,7 +905,7 @@
         }
       }
     },
-    "19": {
+    "20": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -907,7 +943,7 @@
         }
       }
     },
-    "20": {
+    "21": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -939,7 +975,7 @@
         }
       }
     },
-    "21": {
+    "22": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -977,7 +1013,7 @@
         }
       }
     },
-    "22": {
+    "23": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1021,7 +1057,7 @@
         }
       }
     },
-    "23": {
+    "24": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1053,7 +1089,7 @@
         }
       }
     },
-    "24": {
+    "25": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1085,7 +1121,7 @@
         }
       }
     },
-    "25": {
+    "26": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1127,7 +1163,7 @@
         }
       }
     },
-    "26": {
+    "27": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1159,7 +1195,7 @@
         }
       }
     },
-    "27": {
+    "28": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1200,7 +1236,7 @@
         }
       }
     },
-    "28": {
+    "29": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1238,7 +1274,7 @@
         }
       }
     },
-    "29": {
+    "30": {
       "ct_ir": {
         "atom_stream": [
           {
@@ -1381,8 +1417,8 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "269": {
-      "264": {
+    "270": {
+      "265": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

@@ -1,0 +1,95 @@
+{
+  "wf_id": "WF_COMMIT_BLOCK_V0",
+  "entry": "IN_COMMIT_BLOCK_V0",
+  "nodes": [
+    {
+      "id": "CC_COMMIT_BLOCK_CANONICAL_V0",
+      "type": "CC",
+      "cc_code": "blockchain::CC_COMMIT_BLOCK_CANONICAL_V0",
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "proposed_block": "IN.proposed_block"
+        }
+      }
+    },
+    {
+      "id": "CC_RECONCILE_BALANCES_V0",
+      "type": "CC",
+      "cc_code": "blockchain::CC_RECONCILE_BALANCES_V0"
+    },
+    {
+      "id": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "type": "CC",
+      "cc_code": "blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "input_bindings": {
+        "type": "wf_boundary",
+        "bindings": {
+          "proposed_block": "IN.proposed_block"
+        }
+      }
+    },
+    {
+      "id": "EXIT",
+      "type": "EXIT"
+    },
+    {
+      "id": "EXIT_SUCCESS",
+      "type": "EXIT"
+    },
+    {
+      "id": "IN_COMMIT_BLOCK_V0",
+      "type": "IN"
+    }
+  ],
+  "edges": [
+    {
+      "from": "CC_COMMIT_BLOCK_CANONICAL_V0",
+      "to": "CC_RECONCILE_BALANCES_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_RECONCILE_BALANCES_V0",
+      "to": "EXIT_SUCCESS",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "to": "CC_COMMIT_BLOCK_CANONICAL_V0",
+      "condition": "SUCCESS"
+    },
+    {
+      "from": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "to": "EXIT",
+      "condition": "VIOLATION"
+    },
+    {
+      "from": "IN_COMMIT_BLOCK_V0",
+      "to": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "condition": "ACK"
+    },
+    {
+      "from": "IN_COMMIT_BLOCK_V0",
+      "to": "EXIT",
+      "condition": "NACK"
+    }
+  ],
+  "execution_paths": [
+    [
+      "IN_COMMIT_BLOCK_V0",
+      "CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "CC_COMMIT_BLOCK_CANONICAL_V0",
+      "CC_RECONCILE_BALANCES_V0",
+      "EXIT_SUCCESS"
+    ],
+    [
+      "IN_COMMIT_BLOCK_V0",
+      "CC_VALIDATE_PREDECESSOR_LINK_V0",
+      "EXIT"
+    ],
+    [
+      "IN_COMMIT_BLOCK_V0",
+      "EXIT"
+    ]
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "artifact_code": "CT_PURE_HASH_BLOCK_V0",
+  "artifact_type": "CT",
+  "content": "# CT_PURE_HASH_BLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CT_PURE_HASH_BLOCK_V0\n- **Artifact Kind:** capability_transform\n- **Governed By:** CONSTITUTION_CAPABILITY_TRANSFORMS_V0\n- **Version:** v0\n- **Status:** canonical\n\n---\n\n## 1. Summary\n\nCompute a block's content signature by canonically hashing the block.\n\n---\n\n## 2. Inputs\n\n| Field | Type |\n|---|---|\n| block | object |\n\n---\n\n## 3. Outputs\n\n| Field | Type |\n|---|---|\n| content_hash | string |\n\n---\n\n## Machine\n\n```yaml\nct_code: CT_PURE_HASH_BLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0\ncore:\n  summary: Compute a block's content signature by canonically hashing the block.\n  inputs:\n    block:\n      type: object\n      required: true\n  outputs:\n    content_hash:\n      type: string\nmachine:\n  ct_kind: atom\n  ct_purity: ct_pure\n  operation: COMPUTE\n  implementation:\n    module: pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_hash_block_v0\n    callable: execute\n```\n",
+  "content_hash": "e45ec9a255baef7ef9d1889bd927e6617f3dd1d2504a09dfb4836ce912ff68e5",
+  "ct_ir": {
+    "atom_stream": [
+      {
+        "args": {
+          "block": "$.inputs.block"
+        },
+        "atom": "blockchain::CT_PURE_HASH_BLOCK_V0",
+        "handler_ref": {
+          "callable": "execute",
+          "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_hash_block_v0"
+        },
+        "out": "__atom_result__"
+      }
+    ],
+    "ct_code": "CT_PURE_HASH_BLOCK_V0",
+    "ct_composition_version": "V0",
+    "ct_fqdn": "blockchain::CT_PURE_HASH_BLOCK_V0",
+    "inputs": {
+      "block": {
+        "required": true,
+        "type": "object"
+      }
+    },
+    "outputs": {
+      "content_hash": {
+        "from": "__atom_result__"
+      }
+    }
+  },
+  "fqdn_id": "blockchain::CT_PURE_HASH_BLOCK_V0",
+  "frontmatter": {
+    "core": {
+      "inputs": {
+        "block": {
+          "required": true,
+          "type": "object"
+        }
+      },
+      "outputs": {
+        "content_hash": {
+          "type": "string"
+        }
+      },
+      "summary": "Compute a block's content signature by canonically hashing the block."
+    },
+    "ct_code": "CT_PURE_HASH_BLOCK_V0",
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0",
+    "machine": {
+      "ct_kind": "atom",
+      "ct_purity": "ct_pure",
+      "implementation": {
+        "callable": "execute",
+        "module": "pgs_blockchain.implementation.capability_transforms.atoms.ct_pure_hash_block_v0"
+      },
+      "operation": "COMPUTE"
+    },
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.capability_transforms",
+  "namespace": "blockchain",
+  "references": [
+    "fb.topology::CONSTITUTION_CAPABILITY_TRANSFORMS_V0"
+  ],
+  "version": "0"
+}

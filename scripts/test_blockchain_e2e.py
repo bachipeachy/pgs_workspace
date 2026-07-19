@@ -16,6 +16,12 @@ Phases:
   2. Identity   — register 5 individual actors (idempotent)
   3. Wallets    — create PRIVATE + BUSINESS wallets per actor_population wallet_types (idempotent)
   4. Simulation — resolve tx_specs → tx_sequence; invoke WF_RUN_CHAIN_SIMULATION_V0 once
+  5. Chain (BRIDGE HACK) — materialize the consensus BLOCKS store as the hash-linked `chain`
+       module: first block → WF_BOOTSTRAP_GENESIS_CHAIN_V0, rest → WF_COMMIT_BLOCK_V0 (predecessor
+       continuum). TEMPORARY driver. The target pipeline is
+         actor → registration → wallet → transaction → mempool → blocks → attestation → finalization → chain
+       (attestation + finalization not built yet); once those exist, block execution commits to the
+       chain in the protocol topology and this bridge is deleted.
 
 Usage:
   python3 scripts/test_blockchain_e2e.py              # idempotent setup + simulation
@@ -54,6 +60,9 @@ SIM_SUMMARY       = DATA_ROOT / "blockchain" / "orchestration" / "events" / "sim
 BLOCKS_STATE      = DATA_ROOT / "blockchain" / "block" / "blocks" / "blocks.json"
 BLOCK_EVENTS      = DATA_ROOT / "blockchain" / "block" / "events" / "block_events.jsonl"
 MEMPOOL_STATE     = DATA_ROOT / "blockchain" / "mempool" / "state" / "mempool.json"
+TX_EVENTS         = DATA_ROOT / "blockchain" / "transaction" / "events" / "transaction_events.jsonl"
+CHAIN_STATE       = DATA_ROOT / "blockchain" / "chain" / "chain.jsonl"
+CHAIN_HEAD        = DATA_ROOT / "blockchain" / "chain" / "chain_head.json"
 
 # ── Protocol constants (from seeds) ───────────────────────────────────────────
 GENESIS_ACTOR_ID = "A_7a77a0461083f938"
@@ -577,6 +586,9 @@ def main() -> None:
 
         _print_simulation_diagnostics(sim_config["simulation_id"], slot_schedule)
 
+    # ── Phase 5: Chain bridge — materialize consensus blocks as the hash-linked chain ──────────
+    total_failures += run_chain_bridge(behavior_logic=bl)
+
     # ── Summary ────────────────────────────────────────────────────────────────
     print(f"\n{BOLD}{'='*60}{RESET}")
     if total_failures == 0:
@@ -725,6 +737,101 @@ def _print_simulation_diagnostics(sim_id: str, slot_schedule: list) -> None:
         except Exception as e:
             info(f"  (mempool unreadable: {e})")
     print()
+
+
+def run_chain_bridge(behavior_logic: bool = False) -> int:
+    """Phase 5 (BRIDGE HACK) — materialize the consensus BLOCKS store as the hash-linked `chain`.
+
+    TEMPORARY driver: read the blocks the PoS simulation produced (BLOCKS store), resolve each
+    block's tx_ids to transaction content, and commit them to the `chain` module in slot order —
+    first block → genesis, the rest → predecessor-linked commits. This stands in for the eventual
+    protocol path (blocks → attestation → finalization → chain); once attestors/finalizers exist,
+    block execution commits to the chain in the topology and this function is deleted.
+    """
+    section("Phase 5 — Chain: materialize consensus blocks (BRIDGE HACK → future protocol)")
+    if not BLOCKS_STATE.exists():
+        skip("no BLOCKS store — run the simulation (Phase 4) first")
+        return 0
+    raw = json.load(open(BLOCKS_STATE))
+    blocks = sorted((raw.values() if isinstance(raw, dict) else raw), key=lambda b: b.get("slot", 0))
+    if not blocks:
+        skip("BLOCKS store empty — nothing to materialize")
+        return 0
+
+    # tx_id → payload (resolve each block's tx_ids to transaction content)
+    txmap: dict = {}
+    if TX_EVENTS.exists():
+        with open(TX_EVENTS) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    r = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+                sid, payload = r.get("stream_id"), r.get("record", {}).get("payload")
+                if sid and payload:
+                    txmap[sid] = payload
+
+    def resolve(b) -> list:
+        return [{"tx_type":   txmap.get(t, {}).get("tx_type", "TRANSFER"),
+                 "amount":     txmap.get(t, {}).get("amount", 0),
+                 "from_wallet": txmap.get(t, {}).get("from_wallet_id"),
+                 "to_wallet":   txmap.get(t, {}).get("to_wallet_id")}
+                for t in b.get("tx_ids", [])]
+
+    # start a fresh chain from this run's blocks
+    CHAIN_STATE.unlink(missing_ok=True)
+    CHAIN_HEAD.unlink(missing_ok=True)
+
+    failures, committed = 0, 0
+    g = blocks[0]
+    status, output = run_wf(
+        "blockchain::WF_BOOTSTRAP_GENESIS_CHAIN_V0",
+        {"genesis_block_content": {"predecessor_hash": "0x" + "0"*64, "height": 0,
+                                   "transactions": resolve(g)}},
+        behavior_logic=behavior_logic)
+    if status == "SUCCESS":
+        ok(f"slot {g.get('slot')}  {g.get('block_id')}  → genesis")
+        committed = 1
+    else:
+        fail(f"slot {g.get('slot')}  {g.get('block_id')}  → genesis  [{status}]")
+        for line in output.strip().splitlines()[-6:]:
+            print(f"       {line}")
+        return 1
+
+    for h, b in enumerate(blocks[1:], start=1):
+        if not CHAIN_HEAD.exists():
+            fail("chain head missing — cannot continue"); failures += 1; break
+        head = json.load(open(CHAIN_HEAD))["head"]
+        status, output = run_wf(
+            "blockchain::WF_COMMIT_BLOCK_V0",
+            {"proposed_block": {"predecessor_hash": head, "height": h, "transactions": resolve(b)}},
+            behavior_logic=behavior_logic)
+        if status == "SUCCESS":
+            ok(f"slot {b.get('slot')}  {b.get('block_id')}  → commit h{h}")
+            committed += 1
+        else:
+            fail(f"slot {b.get('slot')}  {b.get('block_id')}  → commit h{h}  [{status}]")
+            for line in output.strip().splitlines()[-6:]:
+                print(f"       {line}")
+            failures += 1
+            break
+
+    # render the materialized chain
+    recs = ([json.loads(l)["record"] for l in CHAIN_STATE.read_text().splitlines()]
+            if CHAIN_STATE.exists() else [])
+    print(f"\n  {'h':>2}  {'predecessor':<14}  {'slot':>4}  {'block_id':<20}  {'tx':>2}  Proposer")
+    print(f"  {'─'*2}  {'─'*14}  {'─'*4}  {'─'*20}  {'─'*2}  {'─'*20}")
+    for cb, rec in zip(blocks, recs):
+        prop = cb.get("proposer_id", "?")
+        if isinstance(prop, str) and len(prop) > 20:
+            prop = prop[:18] + "…"
+        print(f"  {rec['height']:>2}  {rec['predecessor_hash'][:12]}…  {cb.get('slot','?'):>4}  "
+              f"{str(cb.get('block_id','?')):<20}  {len(rec['transactions']):>2}  {prop}")
+    info(f"\n{committed}/{len(blocks)} consensus blocks committed to the chain (BRIDGE — future protocol)")
+    return failures
 
 
 if __name__ == "__main__":

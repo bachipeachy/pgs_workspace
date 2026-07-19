@@ -25,4 +25,5 @@ if [[ ! -x "$VENV_PY" ]]; then
 fi
 
 echo "PGS_WORKSPACE=$PGS_WORKSPACE"
-exec "$VENV_PY" -m pgs_change_mgmt.engine.run_dossier "$@"
+echo "DEPRECATED: use  ./run_change_mgmt.sh author $*  — forwarding ..." >&2
+exec "$VENV_PY" -m pgs_change_mgmt.engine.cli author "$@"

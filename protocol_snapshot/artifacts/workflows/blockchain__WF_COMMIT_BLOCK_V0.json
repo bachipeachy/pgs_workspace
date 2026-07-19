@@ -1,0 +1,80 @@
+{
+  "artifact_code": "WF_COMMIT_BLOCK_V0",
+  "artifact_type": "WF",
+  "content": "# WF_COMMIT_BLOCK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** WF_COMMIT_BLOCK_V0\n- **Artifact Kind:** workflow\n- **Governed By:** CONSTITUTION_WORKFLOW_V0\n- **Version:** v0\n- **Status:** draft\n- **Supersedes:** NONE\n- **Dependencies:** blockchain::IN_COMMIT_BLOCK_V0, blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0, blockchain::CC_COMMIT_BLOCK_CANONICAL_V0, blockchain::CC_RECONCILE_BALANCES_V0\n\n---\n\n## 1. Intent\n\nCommit a proposed block to the canonical chain\n\n---\n\n## 2. Rationale\n\n\n\n---\n\n## 3. Execution Graph\n\n```\nstart: IN_COMMIT_BLOCK_V0\n\nIN_COMMIT_BLOCK_V0 [IN] ACK \u2192 CC_VALIDATE_PREDECESSOR_LINK_V0, NACK \u2192 EXIT\nCC_VALIDATE_PREDECESSOR_LINK_V0 [CC] SUCCESS \u2192 CC_COMMIT_BLOCK_CANONICAL_V0, VIOLATION \u2192 EXIT\nCC_COMMIT_BLOCK_CANONICAL_V0 [CC] SUCCESS \u2192 CC_RECONCILE_BALANCES_V0\nCC_RECONCILE_BALANCES_V0 [CC] SUCCESS \u2192 EXIT_SUCCESS\nEXIT_SUCCESS [EXIT] reason=COMPLETED\nEXIT [EXIT] reason=EXITED\n```\n\n---\n\n## 4. Nodes\n\n| Node | Type | Code/Reason |\n|---|---|---|\n| IN_COMMIT_BLOCK_V0 | IN | blockchain::IN_COMMIT_BLOCK_V0 |\n| CC_VALIDATE_PREDECESSOR_LINK_V0 | CC | blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0 |\n| CC_COMMIT_BLOCK_CANONICAL_V0 | CC | blockchain::CC_COMMIT_BLOCK_CANONICAL_V0 |\n| CC_RECONCILE_BALANCES_V0 | CC | blockchain::CC_RECONCILE_BALANCES_V0 |\n| EXIT_SUCCESS | EXIT | COMPLETED |\n| EXIT | EXIT | EXITED |\n\n---\n\n## 5. Admission\n\n- **Requires:** NONE\n- **Forbids:** NONE\n\n---\n\n## Machine\n\n```yaml\nwf_code: WF_COMMIT_BLOCK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_WORKFLOW_V0\nruntime_binding: blockchain::RB_COMMIT_BLOCK_V0\ncore:\n  runtime_binding: blockchain::RB_COMMIT_BLOCK_V0\n  summary: Commit a proposed block to the canonical chain\n  admission:\n    requires: []\n    forbids: []\n  start_node: IN_COMMIT_BLOCK_V0\n  nodes:\n    IN_COMMIT_BLOCK_V0:\n      type: IN\n      code: blockchain::IN_COMMIT_BLOCK_V0\n      next:\n        ACK: CC_VALIDATE_PREDECESSOR_LINK_V0\n        NACK: EXIT\n    CC_VALIDATE_PREDECESSOR_LINK_V0:\n      type: CC\n      code: blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0\n      inputs:\n        proposed_block: $.payload.proposed_block\n      next:\n        SUCCESS: CC_COMMIT_BLOCK_CANONICAL_V0\n        VIOLATION: EXIT\n    CC_COMMIT_BLOCK_CANONICAL_V0:\n      type: CC\n      code: blockchain::CC_COMMIT_BLOCK_CANONICAL_V0\n      inputs:\n        proposed_block: $.payload.proposed_block\n      next:\n        SUCCESS: CC_RECONCILE_BALANCES_V0\n    CC_RECONCILE_BALANCES_V0:\n      type: CC\n      code: blockchain::CC_RECONCILE_BALANCES_V0\n      next:\n        SUCCESS: EXIT_SUCCESS\n    EXIT_SUCCESS:\n      type: EXIT\n      reason: COMPLETED\n    EXIT:\n      type: EXIT\n      reason: EXITED\n```\n",
+  "content_hash": "73fa51f87e41f2045be13069fdf3fc975daa88ac1c58ff0de8dcb818b07e4e38",
+  "fqdn_id": "blockchain::WF_COMMIT_BLOCK_V0",
+  "frontmatter": {
+    "core": {
+      "admission": {
+        "forbids": [],
+        "requires": []
+      },
+      "nodes": {
+        "CC_COMMIT_BLOCK_CANONICAL_V0": {
+          "code": "blockchain::CC_COMMIT_BLOCK_CANONICAL_V0",
+          "fqdn_id": "blockchain::CC_COMMIT_BLOCK_CANONICAL_V0",
+          "inputs": {
+            "proposed_block": "$.payload.proposed_block"
+          },
+          "next": {
+            "SUCCESS": "CC_RECONCILE_BALANCES_V0"
+          },
+          "type": "CC"
+        },
+        "CC_RECONCILE_BALANCES_V0": {
+          "code": "blockchain::CC_RECONCILE_BALANCES_V0",
+          "fqdn_id": "blockchain::CC_RECONCILE_BALANCES_V0",
+          "next": {
+            "SUCCESS": "EXIT_SUCCESS"
+          },
+          "type": "CC"
+        },
+        "CC_VALIDATE_PREDECESSOR_LINK_V0": {
+          "code": "blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0",
+          "fqdn_id": "blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0",
+          "inputs": {
+            "proposed_block": "$.payload.proposed_block"
+          },
+          "next": {
+            "SUCCESS": "CC_COMMIT_BLOCK_CANONICAL_V0",
+            "VIOLATION": "EXIT"
+          },
+          "type": "CC"
+        },
+        "EXIT": {
+          "reason": "EXITED",
+          "type": "EXIT"
+        },
+        "EXIT_SUCCESS": {
+          "reason": "COMPLETED",
+          "type": "EXIT"
+        },
+        "IN_COMMIT_BLOCK_V0": {
+          "code": "blockchain::IN_COMMIT_BLOCK_V0",
+          "fqdn_id": "blockchain::IN_COMMIT_BLOCK_V0",
+          "next": {
+            "ACK": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+            "NACK": "EXIT"
+          },
+          "type": "IN"
+        }
+      },
+      "runtime_binding": "blockchain::RB_COMMIT_BLOCK_V0",
+      "start_node": "IN_COMMIT_BLOCK_V0",
+      "summary": "Commit a proposed block to the canonical chain"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_WORKFLOW_V0",
+    "runtime_binding": "blockchain::RB_COMMIT_BLOCK_V0",
+    "version": "v0",
+    "wf_code": "WF_COMMIT_BLOCK_V0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.workflows",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::RB_COMMIT_BLOCK_V0",
+    "fb.topology::CONSTITUTION_WORKFLOW_V0"
+  ],
+  "version": "0"
+}

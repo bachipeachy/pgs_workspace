@@ -1,0 +1,139 @@
+{
+  "artifact_code": "CC_COMMIT_BLOCK_CANONICAL_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "bindings": {
+          "block": "in.proposed_block"
+        },
+        "fqdn": "blockchain::CT_PURE_HASH_BLOCK_V0",
+        "id": "CT_PURE_HASH_BLOCK_V0",
+        "inputs": [
+          "block"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "content_hash"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_COMMIT_BLOCK_CANONICAL_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_COMMIT_BLOCK_CANONICAL_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CT_PURE_HASH_BLOCK_V0, CS_APPENDONLY_JSONL_V0, CS_MUTABLE_JSON_V0\n\n---\n\n## 1. Intent\n\nCC_COMMIT_BLOCK_CANONICAL_V0\n\n---\n\n## 2. Rationale\n\n\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|---|---|---|---|\n| s1 | CT_PURE_HASH_BLOCK_V0 | CT | COMPUTE |\n| s2 | CS_APPENDONLY_JSONL_V0 | CS | APPEND |\n| s3 | CS_MUTABLE_JSON_V0 | CS | WRITE |\n\n---\n\n## 4. Inputs\n\n(none)\n\n---\n\n## 5. Result Status Contract\n\nAllowed outcomes: SUCCESS\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_COMMIT_BLOCK_CANONICAL_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\ncore:\n  summary: CC_COMMIT_BLOCK_CANONICAL_V0\n  inputs: {}\n  outputs:\n    result_status:\n      type: string\n  result_status_contract:\n    allowed:\n    - SUCCESS\n    on_input_failure: VIOLATION\n  pipeline:\n  - step: s1\n    transform: blockchain::CT_PURE_HASH_BLOCK_V0\n    op: COMPUTE\n    inputs:\n      block: $.inputs.proposed_block\n    outputs:\n      content_hash: $.capability_result.content_hash\n    result_surface:\n    - SUCCESS\n    on_result:\n      SUCCESS: continue\n  - step: s2\n    side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n    store: chain\n    op: APPEND\n    inputs:\n      record: $.inputs.proposed_block\n    outputs:\n      committed_block: $.capability_result.record_id\n    result_surface:\n    - SUCCESS\n    on_result:\n      SUCCESS: continue\n  - step: s3\n    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n    store: chain_head\n    op: WRITE\n    inputs:\n      key: head\n      value: $.results.s1.content_hash\n    outputs: {}\n    result_surface:\n    - SUCCESS\n    on_result:\n      SUCCESS: exit\nextensions:\n  subdomain: chain\n  notes: []\n```\n",
+  "content_hash": "946f9bfe3cf51942e887e2b90dae30c7892887e5ef4af517582f54d7f97a00ae",
+  "fqdn_id": "blockchain::CC_COMMIT_BLOCK_CANONICAL_V0",
+  "frontmatter": {
+    "cc_code": "CC_COMMIT_BLOCK_CANONICAL_V0",
+    "core": {
+      "inputs": {},
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "block": "$.inputs.proposed_block"
+          },
+          "on_result": {
+            "SUCCESS": "continue"
+          },
+          "op": "COMPUTE",
+          "outputs": {
+            "content_hash": "$.capability_result.content_hash"
+          },
+          "result_surface": [
+            "SUCCESS"
+          ],
+          "step": "s1",
+          "transform": "blockchain::CT_PURE_HASH_BLOCK_V0"
+        },
+        {
+          "inputs": {
+            "record": "$.inputs.proposed_block"
+          },
+          "on_result": {
+            "SUCCESS": "continue"
+          },
+          "op": "APPEND",
+          "outputs": {
+            "committed_block": "$.capability_result.record_id"
+          },
+          "result_surface": [
+            "SUCCESS"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "s2",
+          "store": "chain"
+        },
+        {
+          "inputs": {
+            "key": "head",
+            "value": "$.results.s1.content_hash"
+          },
+          "on_result": {
+            "SUCCESS": "exit"
+          },
+          "op": "WRITE",
+          "outputs": {},
+          "result_surface": [
+            "SUCCESS"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "s3",
+          "store": "chain_head"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "CC_COMMIT_BLOCK_CANONICAL_V0"
+    },
+    "extensions": {
+      "notes": [],
+      "subdomain": "chain"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_HASH_BLOCK_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

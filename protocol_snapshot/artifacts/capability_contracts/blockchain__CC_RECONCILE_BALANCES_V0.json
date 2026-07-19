@@ -1,0 +1,104 @@
+{
+  "artifact_code": "CC_RECONCILE_BALANCES_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+        "id": "CS_APPENDONLY_JSONL_V0",
+        "kind": "CS",
+        "ops": [
+          "APPEND",
+          "GET_ALL"
+        ],
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "committed_history": "s1.committed_history"
+        },
+        "fqdn": "blockchain::CT_PURE_DERIVE_BALANCES_V0",
+        "id": "CT_PURE_DERIVE_BALANCES_V0",
+        "inputs": [
+          "committed_history"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "reconciled_balances"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_RECONCILE_BALANCES_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_RECONCILE_BALANCES_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_APPENDONLY_JSONL_V0, CT_PURE_DERIVE_BALANCES_V0\n\n---\n\n## 1. Intent\n\nCC_RECONCILE_BALANCES_V0\n\n---\n\n## 2. Rationale\n\n\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|---|---|---|---|\n| s1 | CS_APPENDONLY_JSONL_V0 | CS | GET_ALL |\n| s2 | CT_PURE_DERIVE_BALANCES_V0 | CT | COMPUTE |\n\n---\n\n## 4. Inputs\n\n(none)\n\n---\n\n## 5. Result Status Contract\n\nAllowed outcomes: SUCCESS\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_RECONCILE_BALANCES_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\ncore:\n  summary: CC_RECONCILE_BALANCES_V0\n  inputs: {}\n  outputs:\n    result_status:\n      type: string\n  result_status_contract:\n    allowed:\n    - SUCCESS\n    on_input_failure: VIOLATION\n  pipeline:\n  - step: s1\n    side_effect: capability_side_effects::CS_APPENDONLY_JSONL_V0\n    store: chain\n    op: GET_ALL\n    inputs: {}\n    outputs:\n      committed_history: $.capability_result.entries\n    result_surface:\n    - SUCCESS\n    on_result:\n      SUCCESS: continue\n  - step: s2\n    transform: blockchain::CT_PURE_DERIVE_BALANCES_V0\n    op: COMPUTE\n    inputs:\n      committed_history: $.results.s1.committed_history\n    outputs:\n      reconciled_balances: $.capability_result.reconciled_balances\n    result_surface:\n    - SUCCESS\n    on_result:\n      SUCCESS: exit\nextensions:\n  subdomain: chain\n  notes: []\n```\n",
+  "content_hash": "1df304c2882a90beb4f7bca96ab2d44b9308ffbbd152ec2e6e71b818f9aa3874",
+  "fqdn_id": "blockchain::CC_RECONCILE_BALANCES_V0",
+  "frontmatter": {
+    "cc_code": "CC_RECONCILE_BALANCES_V0",
+    "core": {
+      "inputs": {},
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {},
+          "on_result": {
+            "SUCCESS": "continue"
+          },
+          "op": "GET_ALL",
+          "outputs": {
+            "committed_history": "$.capability_result.entries"
+          },
+          "result_surface": [
+            "SUCCESS"
+          ],
+          "side_effect": "capability_side_effects::CS_APPENDONLY_JSONL_V0",
+          "step": "s1",
+          "store": "chain"
+        },
+        {
+          "inputs": {
+            "committed_history": "$.results.s1.committed_history"
+          },
+          "on_result": {
+            "SUCCESS": "exit"
+          },
+          "op": "COMPUTE",
+          "outputs": {
+            "reconciled_balances": "$.capability_result.reconciled_balances"
+          },
+          "result_surface": [
+            "SUCCESS"
+          ],
+          "step": "s2",
+          "transform": "blockchain::CT_PURE_DERIVE_BALANCES_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "CC_RECONCILE_BALANCES_V0"
+    },
+    "extensions": {
+      "notes": [],
+      "subdomain": "chain"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_DERIVE_BALANCES_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

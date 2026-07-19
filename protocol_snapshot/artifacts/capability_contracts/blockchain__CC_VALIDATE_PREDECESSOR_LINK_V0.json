@@ -1,0 +1,152 @@
+{
+  "artifact_code": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+  "artifact_type": "CC",
+  "cc_projection": {
+    "steps": [
+      {
+        "fqdn": "capability_side_effects::CS_MUTABLE_JSON_V0",
+        "id": "CS_MUTABLE_JSON_V0",
+        "kind": "CS",
+        "ops": [
+          "READ",
+          "WRITE",
+          "DELETE",
+          "DELETE_MANY",
+          "EXISTS"
+        ],
+        "ops_truncated": true,
+        "outputs": [
+          "result_status"
+        ]
+      },
+      {
+        "bindings": {
+          "block": "in.proposed_block"
+        },
+        "fqdn": "blockchain::CT_PURE_EXTRACT_PREDECESSOR_HASH_V0",
+        "id": "CT_PURE_EXTRACT_PREDECESSOR_HASH_V0",
+        "inputs": [
+          "block"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "predecessor_hash"
+        ]
+      },
+      {
+        "bindings": {
+          "left": "s2.predecessor_hash",
+          "right": "s1.current_head"
+        },
+        "fqdn": "capability_transforms::CT_PURE_COMPARE_EQUAL_V0",
+        "id": "CT_PURE_COMPARE_EQUAL_V0",
+        "inputs": [
+          "left",
+          "right"
+        ],
+        "kind": "CT",
+        "outputs": [
+          "is_equal"
+        ]
+      }
+    ]
+  },
+  "content": "# CC_VALIDATE_PREDECESSOR_LINK_V0\n\n## Header (Mandatory)\n\n- **Artifact Code:** CC_VALIDATE_PREDECESSOR_LINK_V0\n- **Artifact Kind:** capability_contract\n- **Governed By:** CONSTITUTION_CAPABILITY_CONTRACT_V0\n- **Version:** v0\n- **Status:** canonical\n- **Supersedes:** NONE\n- **Dependencies:** CS_MUTABLE_JSON_V0, CT_PURE_EXTRACT_PREDECESSOR_HASH_V0, CT_PURE_COMPARE_EQUAL_V0\n\n---\n\n## 1. Intent\n\nCC_VALIDATE_PREDECESSOR_LINK_V0\n\n---\n\n## 2. Rationale\n\n\n\n---\n\n## 3. Pipeline\n\n| Step | Capability | Type | Operation |\n|---|---|---|---|\n| s1 | CS_MUTABLE_JSON_V0 | CS | READ |\n| s2 | CT_PURE_EXTRACT_PREDECESSOR_HASH_V0 | CT | COMPUTE |\n| s3 | CT_PURE_COMPARE_EQUAL_V0 | CT | COMPUTE |\n\n---\n\n## 4. Inputs\n\n(none)\n\n---\n\n## 5. Result Status Contract\n\nAllowed outcomes: SUCCESS, VIOLATION\n\n---\n\n## Machine\n\n```yaml\ncc_code: CC_VALIDATE_PREDECESSOR_LINK_V0\nversion: v0\ngoverned_by: fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0\ncore:\n  summary: CC_VALIDATE_PREDECESSOR_LINK_V0\n  inputs: {}\n  outputs:\n    result_status:\n      type: string\n  result_status_contract:\n    allowed:\n    - SUCCESS\n    - VIOLATION\n    on_input_failure: VIOLATION\n  pipeline:\n  - step: s1\n    side_effect: capability_side_effects::CS_MUTABLE_JSON_V0\n    store: chain_head\n    op: READ\n    inputs:\n      key: head\n    outputs:\n      current_head: $.capability_result.value\n    result_surface:\n    - SUCCESS\n    - VIOLATION\n    on_result:\n      SUCCESS: continue\n      VIOLATION: exit\n  - step: s2\n    transform: blockchain::CT_PURE_EXTRACT_PREDECESSOR_HASH_V0\n    op: COMPUTE\n    inputs:\n      block: $.inputs.proposed_block\n    outputs:\n      predecessor_hash: $.capability_result.predecessor_hash\n    result_surface:\n    - SUCCESS\n    - VIOLATION\n    on_result:\n      SUCCESS: continue\n      VIOLATION: exit\n  - step: s3\n    transform: capability_transforms::CT_PURE_COMPARE_EQUAL_V0\n    op: COMPUTE\n    inputs:\n      left: $.results.s2.predecessor_hash\n      right: $.results.s1.current_head\n    outputs:\n      is_match: $.capability_result.is_equal\n    result_surface:\n    - SUCCESS\n    - VIOLATION\n    on_result:\n      SUCCESS: exit\n      VIOLATION: exit\nextensions:\n  subdomain: chain\n  notes: []\n```\n",
+  "content_hash": "f992ae1df6a9e153b581c2919d48688dd3f0fc1da30c9f5b5b58b3795361918e",
+  "fqdn_id": "blockchain::CC_VALIDATE_PREDECESSOR_LINK_V0",
+  "frontmatter": {
+    "cc_code": "CC_VALIDATE_PREDECESSOR_LINK_V0",
+    "core": {
+      "inputs": {},
+      "outputs": {
+        "result_status": {
+          "type": "string"
+        }
+      },
+      "pipeline": [
+        {
+          "inputs": {
+            "key": "head"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "READ",
+          "outputs": {
+            "current_head": "$.capability_result.value"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "side_effect": "capability_side_effects::CS_MUTABLE_JSON_V0",
+          "step": "s1",
+          "store": "chain_head"
+        },
+        {
+          "inputs": {
+            "block": "$.inputs.proposed_block"
+          },
+          "on_result": {
+            "SUCCESS": "continue",
+            "VIOLATION": "exit"
+          },
+          "op": "COMPUTE",
+          "outputs": {
+            "predecessor_hash": "$.capability_result.predecessor_hash"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "s2",
+          "transform": "blockchain::CT_PURE_EXTRACT_PREDECESSOR_HASH_V0"
+        },
+        {
+          "inputs": {
+            "left": "$.results.s2.predecessor_hash",
+            "right": "$.results.s1.current_head"
+          },
+          "on_result": {
+            "SUCCESS": "exit",
+            "VIOLATION": "exit"
+          },
+          "op": "COMPUTE",
+          "outputs": {
+            "is_match": "$.capability_result.is_equal"
+          },
+          "result_surface": [
+            "SUCCESS",
+            "VIOLATION"
+          ],
+          "step": "s3",
+          "transform": "capability_transforms::CT_PURE_COMPARE_EQUAL_V0"
+        }
+      ],
+      "result_status_contract": {
+        "allowed": [
+          "SUCCESS",
+          "VIOLATION"
+        ],
+        "on_input_failure": "VIOLATION"
+      },
+      "summary": "CC_VALIDATE_PREDECESSOR_LINK_V0"
+    },
+    "extensions": {
+      "notes": [],
+      "subdomain": "chain"
+    },
+    "governed_by": "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0",
+    "version": "v0"
+  },
+  "layer_code": "BLOCKCHAIN",
+  "module_path": "pgs_blockchain.registry.chain.capability_contracts",
+  "namespace": "blockchain",
+  "references": [
+    "blockchain::CT_PURE_EXTRACT_PREDECESSOR_HASH_V0",
+    "capability_transforms::CT_PURE_COMPARE_EQUAL_V0",
+    "fb.topology::CONSTITUTION_CAPABILITY_CONTRACT_V0"
+  ],
+  "version": "0"
+}

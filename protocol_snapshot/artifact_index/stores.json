@@ -2,7 +2,7 @@
   "compiler_version": "0.7.0",
   "generated_by": "pgs_compiler.cli build",
   "schema_version": "v0",
-  "store_count": 21,
+  "store_count": 23,
   "stores": {
     "ai_governance::COLLATZ_RESULTS": {
       "declarations": [
@@ -404,6 +404,30 @@
       ],
       "domain": "blockchain",
       "store": "WALLET_EVENTS"
+    },
+    "blockchain::chain": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_CHAIN_STORAGE_V0",
+          "description": "Append-only JSONL store (CS_APPENDONLY_JSONL_V0)",
+          "path": "blockchain/chain/chain.jsonl"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "chain"
+    },
+    "blockchain::chain_head": {
+      "declarations": [
+        {
+          "bindings": [],
+          "declared_by": "blockchain::STRUCTURE_CHAIN_STORAGE_V0",
+          "description": "Mutable JSON store (CS_MUTABLE_JSON_V0)",
+          "path": "blockchain/chain/chain_head.json"
+        }
+      ],
+      "domain": "blockchain",
+      "store": "chain_head"
     }
   }
 }

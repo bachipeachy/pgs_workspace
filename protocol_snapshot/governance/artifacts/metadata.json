@@ -1,9 +1,9 @@
 {
   "compiler_version": "0.7.0",
-  "graph_address_hash": "e8c04abf02c0ba6647da5a490cf07c7d6abe808a8f7266f17f9fb4442a56cfb3",
+  "graph_address_hash": "519a483105d72493dc6a269fe086e5a8f894a179d9edd16233a36aa48b777db3",
   "graph_topology_hash": "",
   "projection_class": "canonical_artifact",
-  "projection_hash": "cbc37597f8f757c0a1eb52be7fd29c75caadc5079bdac3a412e7ca6700473b38",
+  "projection_hash": "133b09512bc8462eb626f2eec3f60b5e147a956955938ec1e19104bb0afb6793",
   "projection_schema_version": "v0",
   "projection_type": "canonical",
   "requires_fqdn_identity": true

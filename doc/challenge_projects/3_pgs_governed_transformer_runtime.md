@@ -185,6 +185,6 @@ This is intentionally ambitious. The objective is not performance leadership. Th
 
 *PGS Workspace: [github.com/bachipeachy/pgs_workspace](https://github.com/bachipeachy/pgs_workspace)*
 
-*Field Manual: `doc/pgs_field_manual_v1.md`*
+*Field Manual: `doc/pgs_field_manual_v2.md`*
 
 *Onboarding: `doc/onboarding_build_first_workflow.md`*

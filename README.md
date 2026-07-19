@@ -205,10 +205,10 @@ without sacrificing extensibility.
 
 The full architectural model, governance system, compiler/runtime separation, and federated execution model are described in:
 
-- [Technical Paper](doc/techpaper_protocol-governed_systems_v2.pdf) — formal model, dual-space architecture, security inversion, scalability analysis
+- [Technical Paper](doc/techpaper_protocol-governed_systems_v2.md) — formal model, dual-space architecture, security inversion, scalability analysis
 - [DOI: 10.5281/zenodo.20330650](https://zenodo.org/doi/10.5281/zenodo.20330650) — persistent global reference (Zenodo)
 
-- [Conceptual Model](doc/pgs_conceptual_model_v0.pdf) — protocol snapshot, four-layer admissibility model, constitutional invariants, evidence model
+- [Conceptual Model](doc/pgs_conceptual_model_v0.md) — protocol snapshot, four-layer admissibility model, constitutional invariants, evidence model
 - [DOI: 10.5281/zenodo.20300611](https://zenodo.org/doi/10.5281/zenodo.20300611) — persistent global reference (Zenodo)
 
 The practitioner's guide (18 chapters, ~102K words) covers PGS from first principles through advanced topics:
@@ -238,7 +238,7 @@ To make a change, start with the change-management guide:
 
 - **[pgs_change_mgmt — Governed Change Management](https://github.com/bachipeachy/pgs_change_mgmt#readme)** — CR types, the staged pipeline, how to seed a Change Request, and what happens after the Authoring Mandate.
 
-Doctrine and reference: [`doc/pgs_change_management_conceptual_model_v1.md`](doc/pgs_change_management_conceptual_model_v1.md) and field manual [`doc/pgs_field_manual_v1.md`](doc/pgs_field_manual_v1.md) §4.
+Doctrine and reference: [`doc/pgs_change_management_conceptual_model_v3.md`](doc/pgs_change_management_conceptual_model_v3.md) and field manual [`doc/pgs_field_manual_v2.md`](doc/pgs_field_manual_v2.md) §4.
 
 ---
 
