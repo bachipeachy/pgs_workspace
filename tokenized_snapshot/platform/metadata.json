@@ -1,6 +1,6 @@
 {
   "allocation_strategy": "deterministic_fqdn_order",
-  "compiler_version": "0.7.0",
+  "compiler_version": "0.8.0",
   "edge_count": 279,
   "graph_address_hash": "ae7dc12b9822184d657f34d8b9a0b9822d4689177fac17ad499a7ebdc86f7d70",
   "graph_topology_hash": "",

@@ -1,7 +1,7 @@
 {
   "address_count": 347,
   "allocation_strategy": "deterministic_fqdn_order",
-  "compiler_version": "0.7.0",
+  "compiler_version": "0.8.0",
   "graph_address_hash": "519a483105d72493dc6a269fe086e5a8f894a179d9edd16233a36aa48b777db3",
   "graph_topology_hash": "",
   "projection_class": "symbol_substrate",
