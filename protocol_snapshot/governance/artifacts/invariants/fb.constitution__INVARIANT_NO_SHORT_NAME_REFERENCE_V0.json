@@ -1,11 +1,14 @@
 {
   "artifact_code": "INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
   "artifact_type": "INVARIANT",
-  "content": "# INVARIANT_NO_SHORT_NAME_REFERENCE_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_NO_SHORT_NAME_REFERENCE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    All artifact references in machine frontmatter must be fully qualified\n    (FQDN). Short names are prohibited to ensure deterministic, unambiguous\n    resolution across layers and domains.\n\n  enforcement_stage:\n    - compiler_assertion\n\n  scope:\n    - ALL_ARTIFACT_KINDS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_NO_SHORT_NAME_REFERENCE_V0\n\n  anti_patterns:\n    - short_name_in_id_field: \"vocabulary_id: VOCAB_STATES_V0 (should be fully qualified)\"\n    - short_name_in_governed_by: \"governed_by: CONSTITUTION_WF_V0 (should be fully qualified)\"\n    - ambiguous_reference: \"Any reference without double-colon separator\"\n```\n\n---\n\n## Purpose\n\nEnforce FQDN discipline at the source.\n\n**Constraint**: All references must be resolved to FQDNs during parsing, and the underlying frontmatter must store these as FQDNs.\n\n**Benefit**: Deterministic builds, no ambiguity, portable artifacts.\n",
-  "content_hash": "0a10c2fae1bc2f0230af466045b95999741bcd002e25c6d694b569d142f9ac2e",
+  "content": "# INVARIANT_NO_SHORT_NAME_REFERENCE_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_NO_SHORT_NAME_REFERENCE_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: >\n    All artifact references in machine frontmatter must be fully qualified\n    (FQDN). Short names are prohibited to ensure deterministic, unambiguous\n    resolution across layers and domains.\n\n  enforcement_stage:\n    - compiler_assertion\n\n  scope:\n    - ALL_ARTIFACT_KINDS\n\n  violation_response: FAIL_IMMEDIATELY\n\n\n  anti_patterns:\n    - short_name_in_id_field: \"vocabulary_id: VOCAB_STATES_V0 (should be fully qualified)\"\n    - short_name_in_governed_by: \"governed_by: CONSTITUTION_WF_V0 (should be fully qualified)\"\n    - ambiguous_reference: \"Any reference without double-colon separator\"\n\n# assert_projection \u2014 parameters the compiler-derived ASSERT carries (ASSERT is derived, not authored)\nassert_projection:\n  handler: pgs_governance.registry.handlers.assert_fqdn_only_references_v0\n```\n\n---\n\n## Purpose\n\nEnforce FQDN discipline at the source.\n\n**Constraint**: All references must be resolved to FQDNs during parsing, and the underlying frontmatter must store these as FQDNs.\n\n**Benefit**: Deterministic builds, no ambiguity, portable artifacts.\n",
+  "content_hash": "fe168dc26397ac97712184d79eb040741abc78d52716bf204c598541870e10e0",
   "fqdn_id": "fb.constitution::INVARIANT_NO_SHORT_NAME_REFERENCE_V0",
   "frontmatter": {
     "artifact_kind": "INVARIANT",
+    "assert_projection": {
+      "handler": "pgs_governance.registry.handlers.assert_fqdn_only_references_v0"
+    },
     "core": {
       "anti_patterns": [
         {
@@ -19,9 +22,6 @@
         }
       ],
       "description": "All artifact references in machine frontmatter must be fully qualified (FQDN). Short names are prohibited to ensure deterministic, unambiguous resolution across layers and domains.\n",
-      "enforced_by": [
-        "ASSERT_NO_SHORT_NAME_REFERENCE_V0"
-      ],
       "enforcement_stage": [
         "compiler_assertion"
       ],

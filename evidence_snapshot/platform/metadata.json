@@ -1,16 +1,16 @@
 {
-  "compiler_version": "0.8.0",
-  "edge_count": 279,
+  "compiler_version": "0.9.0",
+  "edge_count": 207,
   "ev_schema_count": 2,
-  "graph_address_hash": "ae7dc12b9822184d657f34d8b9a0b9822d4689177fac17ad499a7ebdc86f7d70",
+  "graph_address_hash": "d4d7d1eda9ebf98685dc089d92dc4aa7ca3e9be5000c5b8070e8950cda0e995f",
   "graph_topology_hash": "",
-  "node_count": 273,
+  "node_count": 201,
   "projection_class": "evidence_substrate",
-  "projection_hash": "65716507f0064ef83f79d5ea4ab2f48de177793627aa318bc0e9e6d9e98cbd03",
+  "projection_hash": "a914a5e8e068f82d44df5643c9b0a215d4c9ea910e6224c2fc3daaa4db9637a0",
   "projection_schema_version": "v0",
   "projection_type": "evidence",
   "requires_fqdn_identity": false,
   "structure_id": "platform",
-  "tokenized_hash": "ba5bff045cf5d12ae3f4776e9d7d8ada41b44299299b42c7d348315239d82bd5",
-  "vocabulary_hash": "215a90a67e347a07ea2a466e138713d37349cd639332050d335d119ec9398f99"
+  "tokenized_hash": "22cf80bce856b7aabac7b933af54311da1f210cf0880c4c2e99a811b0adb9228",
+  "vocabulary_hash": "0644cbf8c89c6bd437de3b208316277831cdbf950b90fcda5988e9b5fbe8afbb"
 }

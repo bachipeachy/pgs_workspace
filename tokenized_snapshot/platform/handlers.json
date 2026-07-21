@@ -89,6 +89,60 @@
         "module": "pgs_side_effects.implementation.side_effects.internal.CS_CONCURRENT_WORKFLOWS_V0.runtime"
       }
     },
+    "193": {
+      "cs_metadata": {
+        "capability": {
+          "supported_operation_specs": [
+            "READ",
+            "WRITE"
+          ]
+        },
+        "operations": {
+          "operations": {
+            "READ": {
+              "handler": "read",
+              "idempotent": true,
+              "input": [
+                "name"
+              ],
+              "output": [
+                "result_status",
+                "resource_addresses"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "NOT_FOUND",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Look up resource addresses for a given name"
+            },
+            "WRITE": {
+              "handler": "write",
+              "idempotent": true,
+              "input": [
+                "name",
+                "resource_addresses"
+              ],
+              "output": [
+                "result_status",
+                "success"
+              ],
+              "result_status_values": [
+                "SUCCESS",
+                "VIOLATION",
+                "BACKEND_ERROR"
+              ],
+              "summary": "Register or update name to resource addresses mapping"
+            }
+          }
+        }
+      },
+      "handler_ref": {
+        "callable": "NameRegistryRuntime",
+        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
+      }
+    },
     "2": {
       "cs_metadata": {
         "capability": {
@@ -230,60 +284,6 @@
       "handler_ref": {
         "callable": "MutableJsonRuntime",
         "module": "pgs_side_effects.implementation.side_effects.persistent.CS_MUTABLE_JSON_V0.runtime"
-      }
-    },
-    "265": {
-      "cs_metadata": {
-        "capability": {
-          "supported_operation_specs": [
-            "READ",
-            "WRITE"
-          ]
-        },
-        "operations": {
-          "operations": {
-            "READ": {
-              "handler": "read",
-              "idempotent": true,
-              "input": [
-                "name"
-              ],
-              "output": [
-                "result_status",
-                "resource_addresses"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "NOT_FOUND",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Look up resource addresses for a given name"
-            },
-            "WRITE": {
-              "handler": "write",
-              "idempotent": true,
-              "input": [
-                "name",
-                "resource_addresses"
-              ],
-              "output": [
-                "result_status",
-                "success"
-              ],
-              "result_status_values": [
-                "SUCCESS",
-                "VIOLATION",
-                "BACKEND_ERROR"
-              ],
-              "summary": "Register or update name to resource addresses mapping"
-            }
-          }
-        }
-      },
-      "handler_ref": {
-        "callable": "NameRegistryRuntime",
-        "module": "pgs_side_effects.implementation.side_effects.persistent.CS_NAME_REGISTRY_V0.runtime"
       }
     },
     "3": {
@@ -1417,8 +1417,8 @@
   },
   "projection_class": "machine_projection",
   "rb_policy": {
-    "270": {
-      "265": {
+    "198": {
+      "193": {
         "config": {
           "path": "{{module_data_root}}/name_registry.json"
         },

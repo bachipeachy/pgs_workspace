@@ -1,8 +1,8 @@
 {
   "artifact_code": "INVARIANT_UNIQUE_ARTIFACT_ID_V0",
   "artifact_type": "INVARIANT",
-  "content": "# INVARIANT_UNIQUE_ARTIFACT_ID_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_UNIQUE_ARTIFACT_ID_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: Each fqdn_id must be unique across compilation graph\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - ALL_ARTIFACT_KINDS\n\n  violation_response: FAIL_IMMEDIATELY\n\n  enforced_by:\n    - ASSERT_UNIQUE_ARTIFACT_ID_V0\n\n  anti_patterns:\n    - duplicate_fqdn: \"Multiple artifacts share same fqdn_id\"\n```\n\n---\n\n## Purpose\n\nEnsures that every artifact in the compilation graph has a globally unique identity (FQDN).\nPrevents silent overwrites where multiple physical files claim the same logical identity.\n",
-  "content_hash": "6f97c9f4a0e6eca28f65cdc8f754b36b7cddf781ab5442aca3348427b6d9db0a",
+  "content": "# INVARIANT_UNIQUE_ARTIFACT_ID_V0\n\n## Machine\n\n```yaml\ninvariant_code: INVARIANT_UNIQUE_ARTIFACT_ID_V0\nartifact_kind: INVARIANT\nversion: V0\ngoverned_by: fb.constitution::CONSTITUTION_INVARIANTS_V0\n\ncore:\n  description: Each fqdn_id must be unique across compilation graph\n\n  enforcement_stage:\n    - compiler_validation\n\n  scope:\n    - ALL_ARTIFACT_KINDS\n\n  violation_response: FAIL_IMMEDIATELY\n\n\n  anti_patterns:\n    - duplicate_fqdn: \"Multiple artifacts share same fqdn_id\"\n```\n\n---\n\n## Purpose\n\nEnsures that every artifact in the compilation graph has a globally unique identity (FQDN).\nPrevents silent overwrites where multiple physical files claim the same logical identity.\n",
+  "content_hash": "85ee0808e12a31e1b26e84c851c7c851bb81ed6e2c2d8c7b4624e9e743d55ba1",
   "fqdn_id": "fb.constitution::INVARIANT_UNIQUE_ARTIFACT_ID_V0",
   "frontmatter": {
     "artifact_kind": "INVARIANT",
@@ -13,9 +13,6 @@
         }
       ],
       "description": "Each fqdn_id must be unique across compilation graph",
-      "enforced_by": [
-        "ASSERT_UNIQUE_ARTIFACT_ID_V0"
-      ],
       "enforcement_stage": [
         "compiler_validation"
       ],
