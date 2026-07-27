@@ -1,8 +1,8 @@
 # Software Engineering --- The Next IT Wave in the Making
 
-The new millennium entered adolescence after the Dotcom Bust, followed by waves of Cloud Computing, Mobile/Social Networking, and now, the AI boom. Each wave follows a ten-year cycle, and the next one is already written on the wall in invisible ink, if you only connect the dots.
+The new millennium entered adolescence after the Dotcom Bust, followed by waves of Cloud Computing, Mobile/Social Networking, and now, the AI boom. Each wave followed roughly a ten-year cycle, and the next one is already written on the wall in invisible ink, if you only connect the dots.
 
-The next great IT wave will not be CapEx-rich Quantum Computing. It will be OpEx-rich **Software Engineering**.
+The next great IT wave may not be CapEx-rich Quantum Computing. It may have to be some OpEx-rich wave, perhaps **Software Engineering**?. That is if you believe AI will survive and thrive unlike Dotcom bust.
 
 ![Software Engineering --- The Next IT Wave in the Making](assets/blog_21.jpg)
 
@@ -12,19 +12,19 @@ Every major IT wave is born from a perfect storm of three converging forces: a p
 
 ### The Pressing Problem: Software Governance
 
-The most successful application of AI is code generation. Systems like OpenAI's ChatGPT and Anthropic's Claude are generating code at a staggering rate. This creates an urgent operational crisis: **Software Governance**. As AI generates software faster than humans can review it, how do we retain authority over what the code is allowed to do? The challenge is no longer just writing code, but governing its behavior.
+The most successful application of AI is code generation. Systems like OpenAI's ChatGPT and Anthropic's Claude and comparable products are generating code at a staggering rate. This creates an urgent operational crisis: **Software Governance**. As AI generates software faster than humans can review it, how do we retain authority over what the code is allowed to do? The challenge is no longer just writing code, but governing its behavior. We have covered these in previous twenty blogs.
 
 ### The Financial Engine: AI Must Generate Value
 
-The AI boom is fueled by enormous capital investment in data centers, chips, and energy. To avoid an "AI Bust," this investment must generate massive revenue. The killer app for AI isn't just creating new software; it's **transforming existing software**. By enabling the virtual rewriting of the world's legacy business software, AI can unlock a multi-trillion-dollar market, turning its token-burning engine into a fire hydrant of revenue.
+The AI boom is fueled by enormous capital investment in data centers, chips, and energy. To avoid an "AI Bust," this investment must generate massive revenue, almost ten times its current rate. The killer app for AI isn't just creating new software; it's **transforming existing software**. By enabling the virtual rewriting of the world's legacy business software, AI can unlock a multi-trillion-dollar market, turning its token-burning engine into a fire hydrant of revenue.
 
 ### The Human Opportunity: From Implementation to Governance
 
-The rise of AI doesn't mean the end of developers. It signals a shift in their role. As AI handles implementation, human resources can be redeployed to a higher level of abstraction: defining and governing software behavior, business logic, and rules. This creates an opportunity to build new software for finance, healthcare, and government services at a scale never before possible, with humans guiding the "what" and AI handling the "how."
+The rise of AI doesn't mean the end of developers. It signals a shift in their role. As AI handles implementation, human resources can be redeployed to a higher level of abstraction: defining and governing software behavior, business logic, and rules. This creates an opportunity to build new software for finance, healthcare, and government services at a scale never before possible, with humans guiding the "what" and AI handling the "how." So what is stopping us? Short answer -- our current model of software engineering.
 
 ## 2. The Next Wave: A New Computing Model
 
-The current crisis stems from our decades-old computing model. We have built our systems on the **Imperative Turing Machine**, where behavior is a side effect of a sequence of low-level instructions. To govern AI-generated code, we need a new model.
+The current crisis stems from our decades-old computing model. We have built our systems on the **Imperative Turing Machine**, where behavior is a side effect of a sequence of low-level instructions. To govern AI-generated code, we need a new model. Move over imperative coding of business rules, here comes declarative authoring.
 
 The next wave is the **Declarative Protocol-Governed Machine**.
 
