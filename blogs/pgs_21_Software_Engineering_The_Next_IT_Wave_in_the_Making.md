@@ -20,7 +20,7 @@ The AI boom is fueled by enormous capital investment in data centers, chips, and
 
 ### The Human Opportunity: From Implementation to Governance
 
-The rise of AI doesn't mean the end of developers. It signals a shift in their role. As AI handles implementation, human resources can be redeployed to a higher level of abstraction: defining and governing software behavior, business logic, and rules. This creates an opportunity to build new software for finance, healthcare, and government services at a scale never before possible, with humans guiding the "what" and AI handling the "how." So what is stopping us? Short answer -- our current model of software engineering.
+The rise of AI doesn't mean the end of developers. It signals a shift in their role. As AI handles implementation, human resources can be redeployed to a higher level of abstraction: defining and governing software behavior, business logic, and rules. This creates an opportunity to build new software for finance, healthcare, government services, e-commerce, insurance industry etc. at a scale never before possible, with humans guiding the “what” and AI handling the “how.” So what is stopping us? Short answer -- our current model of software engineering.
 
 ## 2. The Next Wave: A New Computing Model
 
@@ -58,4 +58,3 @@ Curious what is Protocol-Governed computing is? Read all about it at:
 Now you want see what it looks like? Go to:
 
 - [PGS Reference Implementation](https://github.com/bachipeachy/pgs_workspace)
-
