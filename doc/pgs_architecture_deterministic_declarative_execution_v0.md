@@ -978,44 +978,124 @@ runtime refuses to execute.
 *(Terms carried from the companion and the prior papers — Protocol Snapshot, Knowledge Partition,
 worker, compiler, admission, validation — retain their published definitions.)*
 
-## Appendix B — Reference Implementation Notes
+## Appendix B — The Shape of a Declarative Runtime
 
-The architecture was realized and exercised in the open-source Protocol-Governed Systems reference
-implementation. The conceptual model is what endures; the implementation will change. Repository
-names, command surfaces, and artifact formats are confined to this appendix by intent, and the prior
-*Runtime Conceptual Model* paper is the implementation-level treatment of the reference interpreter. The
-reference implementation is available at https://github.com/bachipeachy/pgs_workspace.
+The body argues why execution must be declarative. This appendix states what a conforming runtime
+looks like, without argument and without naming any engine, repository or command surface, so that a
+reader can recognise a conformant realization or build one. The conceptual model endures; engines do
+not, and none is named here.
 
-**Status at the time of writing:** one reference interpreter, `pgs_runtime`, executing two domains — a
-blockchain reference domain and an AI-governance domain — from a single compiled snapshot. No second,
-independently built interpreter yet exists (see §19). Because the papers in this series are live
-simultaneously and describe progress at different moments, this status governs the notes below.
+### Why a traversal and not a program
 
-**The runtime.** The reference interpreter is the `pgs_runtime` engine. It is generic: it has no domain
-logic, reads only from the compiled snapshot, and writes only traces. It realizes the Behavior
-Partition directly — every behavior it performs is declared in the snapshot, and it originates none.
+**Everything the system will do is decided before the run; the run only follows what was decided.**
+That single boundary — compile time against run time — is what the rest of this appendix elaborates,
+and it is drawn there for two reasons that are worth stating operationally rather than
+philosophically.
 
-**The nine execution concerns.** In the reference implementation, protocol artifacts belong to named
-execution concerns that make the traversal of §7 concrete: transport ingress and egress (boundary
-normalization and projection), intent (admission), actor context (authority binding), workflow
-(the governed DAG), capability contract (the dispatched node), capability transform (pure computation)
-and capability side effect (bounded external interaction), and event (observability). Runtime bindings
-map contract declarations to concrete implementations — the mechanism behind the contract-only dispatch
-of §10. The pure/side-effecting distinction among capabilities, and the invariant that pure
-computations never perform side effects, are enforced at compile time.
+- **Behaviour can be examined without running it.** If nothing is decided during execution, the
+  protocol is a complete account of what the system will do, and it can be read, checked and reasoned
+  about ahead of any run. A program that decides as it goes can only be interrogated by running it,
+  which is why exhaustive testing is the only assurance an imperative runtime can offer.
+- **A defect is attributable.** When behaviour is wrong, it is wrong in a declaration — a named,
+  versioned, reviewable artifact — rather than in an engine's handling of a case nobody wrote down.
+  The question "why did it do that?" has an answer that can be cited.
 
-**State and stores.** Storage topology is declared in structure and binding artifacts, never
-hardcoded in runtime code — the concrete form of §9's claim that state topology is protocol-governed.
-The runtime maintains stores at declared, absolute paths and performs only the declared transitions.
+The cost is that everything must be declared, including the things a conventional runtime would
+happily infer. That cost is the architecture, not an inconvenience within it.
 
-**Traces.** Each execution writes an append-only structured log, a human-readable summary, and a
-path visualization to a trace directory keyed by a deterministic trace identifier. Identical inputs
-produce an identical trace identifier — the reference implementation's expression of §8's determinism.
+### One execution, end to end
 
-**Worker independence at the execution boundary.** As the companion exercised interchangeable workers
-at authoring time, the reference runtime exercises interchangeable implementations beneath a contract
-at execution time: an implementation may be replaced by any other that satisfies the same contract
-without the runtime's knowledge.
+```
+Execution Lifecycle
+─────────────────────────────────
+Input:
+  A request arriving at a boundary
+  A verified, compiled protocol
+
+Process:
+  Boundary normalization   — what arrived, in canonical form
+  Admission                — may this enter at all?
+  Authority binding        — whose authority does it carry?
+  Graph traversal          — the structure was fixed at compile time
+  Contract dispatch        — pure computation, or bounded side effect,
+                             the two kept apart and checked apart
+  Observability record     — written, never read back
+
+Output:
+  A governed result, projected out
+  An append-only trace, keyed by a deterministic identifier
+```
+
+Nothing in the process column is a decision the runtime makes. Each is a decision the protocol
+already made, which the runtime carries out. The distinction is not stylistic: it is the difference
+between an engine that can be reasoned about from its inputs and one that can only be observed.
+
+### What the runtime is handed
+
+A single **compiled protocol** — immutable, verified before use, and complete. Everything the runtime
+will do is in it before the run begins. The runtime holds no domain logic of its own, and there is no
+second place for behavior to come from.
+
+### The execution concerns
+
+A conforming protocol separates the concerns a traversal passes through. The separation matters more
+than any naming of it:
+
+- a **boundary** — normalizing what arrives and projecting what leaves, carrying no behavior
+- an **admission** — deciding whether a request may enter at all
+- an **authority binding** — fixing whose authority the execution carries
+- a **graph** — the traversal structure, complete before the run
+- a **dispatched node** — the unit the runtime invokes, known only by its declared contract
+- **pure computation** and **bounded external interaction**, kept apart, with the separation enforced
+  before runtime rather than trusted at it
+- an **observability record** of what occurred
+
+The runtime dispatches against contracts and knows nothing of what satisfies them. A binding declares
+which implementation answers a contract; the runtime reads that declaration and does not infer it.
+**Inference is where a runtime originates behavior without meaning to** — deriving a handler from a
+name, defaulting an absent value, guessing an intent — and a conforming runtime does none of it.
+
+### State
+
+Storage topology is declared, never chosen. Which stores exist, who owns them, and where they live
+are protocol facts; the runtime maintains them at declared locations and performs only declared
+transitions. A runtime that decides where to put something has taken a decision the protocol was
+supposed to own.
+
+### Evidence
+
+Each execution emits an append-only record of what happened, keyed by an identifier that is a
+function of the execution's inputs. Identical inputs yield an identical identifier. Evidence is
+written and never read back as input, so it cannot become a channel through which behavior re-enters.
+
+### Interchangeability, at both ends
+
+The companion architecture exercises interchangeable *workers* at authoring time. This one exercises
+interchangeable *implementations* beneath a contract at execution time: an implementation may be
+replaced by any other satisfying the same contract, and the runtime cannot tell. Both follow from the
+same discipline — declare the contract, and whatever honors it is substitutable.
+
+### What was exercised, and the limits of it
+
+The architecture was realized as a generic interpreter carrying no domain logic, executing multiple
+independent domains from a single compiled protocol, and exercised through governed transformations
+that were validated by running the systems they produced against real state.
+
+Two limits bear stating. **No second, independently built interpreter yet exists** (see §19).
+Portability is argued from the architecture — behavior lives in the protocol, so any conforming
+interpreter must produce the same result — and it has not been demonstrated by a second team building
+one. Until that happens the claim is sound in principle and untested in practice, and this paper does
+not pretend otherwise. And the work comes from a single practitioner who is also the architecture's
+designer; what is offered is an existence proof, not a controlled evaluation.
+
+One observation is worth recording because it is evidence *for* an invariant rather than of a
+capability. The reference interpreter once derived which handler served a storage operation from the
+operation's own name, rather than reading a declaration. The guess was wrong twice, silently, and the
+correction was to make the operation declare its handler. That is §13's "the runtime performs no
+semantic inference" stated as a defect: a runtime that infers has begun to originate behavior, and it
+will do so quietly and in a way that no test of the protocol can detect.
+
+The reference implementation is available at https://github.com/protocol-governed-computing.
 
 ## Appendix C — References
 

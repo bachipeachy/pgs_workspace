@@ -522,6 +522,23 @@ which were already there is the whole point; it just compiles the whole. Because
 *admissibility* has exactly one arbiter — admission — and no candidate is admissible until it
 passes.
 
+Between the enrichment and the candidate artifacts there is a boundary worth naming, because
+the two sides fail differently and the difference decides who fixes what. On one side, the
+derivation can fail by being *incomplete or contradictory* — a register that does not say what
+the stage owed. On the other, it can fail in a way that reads as success: every register
+well-formed, every rule satisfied, and the design still does not fix the artifact it describes.
+The first is a fault in what was written. The second is a fault in what the language *allowed*
+to be left unwritten, and no amount of re-authoring a register will find it.
+
+That second failure is only visible if the boundary is measured rather than assumed. **The
+proportion of the facts an artifact requires that the design actually states is a quantity**, and
+construction must refuse to proceed below it. The reason is the paper's own thesis turned on
+itself: a generator that supplies a fact the design omitted has begun to author design. It
+becomes a second producer of meaning, unreviewed and ungoverned, sitting *below* the protocol
+where §4 argued the drift was finally removed. Specification drift does not need a specification
+document to reappear; it only needs somewhere unattended for a decision to be made. Measuring
+determination is what keeps that place from existing.
+
 One boundary must be drawn precisely here, because the paper later depends on it. Admission
 settles **buildability**: whether the proposed protocol is structurally and constitutionally
 sound. It does not, and cannot, settle whether the built system does what the business problem
@@ -553,6 +570,24 @@ so the drift the architecture removed above the protocol cannot reappear below i
 between protocol and code is not a separately authored specification kept in agreement by
 diligence — its agreement is compiler-maintained. There is no second description to reconcile
 here either.
+
+A consequence of this deserves stating, because it is invisible in a system's first change and
+unavoidable in every later one. A transformation schedules what it must build — and an artifact
+that already exists cannot be scheduled for authoring, because authoring it again would create a
+second artifact under the same name. Amendment and scheduling are therefore different acts, and a
+loop that realizes only what it schedules will leave every amendment silently unapplied while
+reporting that it built everything it was asked to. After the first change, most of what a
+transformation does is amend.
+
+This forces a discipline that is easy to get backwards. An amendment must be a **whole
+redeclaration** of the artifact as it will be, not a patch against the artifact as it is. The
+temptation is the reverse — state only what changes and let the builder merge it into what is
+already there — and it must be refused, because it would make the built artifact a function of
+the design *and the current system* rather than of the design alone. The same transformation
+would then build differently against two systems, and determination would stop meaning anything.
+The price of the discipline is that a design must restate what it is not changing; the protection
+against paying that price carelessly is to compare a redeclaration against what it replaces and
+refuse one that quietly drops what it did not mention.
 
 The second is **validation against the problem that initiated the change**. This is the stage the
 loop names Validation, and it is not a second admission. Admission asks a structural question:
@@ -687,6 +722,24 @@ It is not. AI is one convenient way to supply worker judgment, and a rapidly imp
 the guarantees in this paper come from the Knowledge Partition and the governed transformation,
 and those hold whether the worker is a person or a model. If every AI system in existence
 vanished tomorrow, the architecture would stand, and a room of human authors could run it.
+
+It is worth saying *how* that independence is achieved, because asserted independence is cheap
+and mechanical independence is not. It rests on three separations, none of which involve the
+worker at all. The rules a stage must satisfy are **declared as data** — each naming itself, what
+it governs, and the mechanism that evaluates it — so admissibility is decided by a rule set rather
+than by whoever is drafting. The set of evaluating mechanisms is **closed**, so an unrecognised
+one fails rather than being quietly skipped; a skipped rule is indistinguishable from a satisfied
+one. And where a rule set is read in more than one place, the copies **derive from a single
+declaration** and any divergence is detectable, because two readers disagreeing about whether a
+document is admissible is worse than either being wrong.
+
+Given those, what a worker may and may not do becomes exact. It may draft the prose that fills a
+register. It may not decide whether the result is admissible, and it may not answer a question the
+business has not answered — an unanswered question is recorded as a question, never filled in and
+never hedged, so it cannot be quietly resolved by whoever happens to be at the keyboard. The
+determinism that follows is precise rather than total: given the same human answers against the
+same baseline, any worker yields the same governed artifacts. Two workers will word a rationale
+differently. Nothing governed will differ.
 
 > The protocol is the system of record. Automation is layered on top of it, never underneath.
 
@@ -1134,51 +1187,205 @@ Intent, Governance Intent, Design Intent, Authoring Mandate — retain their pub
 "Governance Dividend" is deliberately omitted from this list: it is defined differently across the prior
 papers, and §14 describes the same phenomenon of accumulating knowledge without relying on the term.)*
 
-## Appendix B — Reference Implementation Notes
+## Appendix B — The Shape of a Governed Transformation
 
-The architecture was realized and exercised in the open-source Protocol-Governed Systems reference
-implementation. The conceptual model is what endures; the implementation will change. Repository names,
-command surfaces, and artifact formats are confined to this appendix and to Appendix D by intent. The
-reference implementation is available at https://github.com/bachipeachy/pgs_workspace.
+The body argues why the architecture takes this form. This appendix states the form itself, without
+argument and without reference to any implementation's names, so that a reader can recognise a
+conformant realization or build one. The conceptual model is what endures; repository layouts,
+command surfaces and artifact formats do not, and none appear here.
 
-**Status at the time of writing:** six transformations carried through to a promoted baseline; the seventh
-(chain) carried from a business problem through construction and admission, not yet promoted. Because the
-papers in this series are live simultaneously and describe progress at different moments, this status
-governs the counts below.
+### Why a sequence at all
 
-The architecture was exercised as a family of governed transformations in a blockchain reference domain —
-seven in all, six carried through to a promoted baseline and the seventh, the canonical **chain** subdomain,
-carried from a business problem through construction and admission:
+A business problem is informal and a compiled baseline is exact. Nothing bridges that distance in
+one move, and the attempt is what the body diagnoses: someone writes the artifacts directly, and the
+reasoning that produced them exists only in their head.
 
-1. **consensus_pos** — the Proof-of-Stake consensus mechanism; the first complete transformation, and the
-   one from which the foundational governance rules were first discovered. It produced sixteen mandated
-   authoring actions, a fully passing conformance suite, a valid baseline, and three artifacts beyond the
-   original scope — the first observable case of the system discovering structure the problem statement had
-   not named.
-2. **block** — the block as an entity shared across consensus mechanisms, placed as a peer rather than
-   nested, a boundary the previous transformation surfaced.
-3. **data_model** — the domain-wide data model all later transformations align with.
-4. **consensus_propose** — governed block proposal: proposer selection, block formation, round recording.
-5. **mempool** — governed staging of pending transactions, with full end-to-end regression.
-6. **orchestration** — governed simulation and consensus-loop coordination.
-7. **chain** — the canonical serial, hash-linked, immutable ledger of finalized blocks, with genesis
-   bootstrap; authored as the reference example and used as a deliberate worker stress test. It is walked
-   through in Appendix D.
+Staging replaces that with a **structured enrichment of the problem statement toward the baseline it
+must align with**. Each step adds one layer of meaning and is checked against the step before it, so
+the author's burden shifts from *authoring artifacts* to *answering questions* — and the artifacts
+become a consequence of the answers rather than a separate act of creation.
 
-Two observations from this body of work bear on the paper's central claims, stated with their limits (see
-§15). When a structural pre-filter was used to guess which parts of a change's neighborhood were relevant —
-a judgment the Knowledge Partition reserves for the worker — it surfaced artifacts the author later
-discarded and omitted ones the author kept. This is an illustration consistent with the partition, not a
-proof that relevance cannot be computed from structure; the in-principle argument in §7 carries that weight.
-And the evidentiary depth of a transformation was raised toward parity with a hand-authored reference by
-relocating evidence acquisition from the worker into a governed platform capability, without changing the
-worker, its instructions, or the validation oracle — the platform, not the worker, improved. Both
-observations come from a single reference domain and a single practitioner who is also the architecture's
-designer; they are existence proofs, not a controlled evaluation.
+Two properties follow, and they are the reason to accept the ceremony of stages:
+
+- **A fault is localised.** When a derivation is wrong, the stage that first stated the wrong thing
+  is identifiable, because every stage's output was checked against its input. A single-pass
+  derivation offers nowhere to look.
+- **Reproducibility is observable.** Because each step is judged by a declared rule set rather than
+  by taste, the same answers against the same baseline yield the same artifacts, and any divergence
+  is attributable to a step rather than to a person having a different day.
+
+A reader may reasonably ask how many stages. The answer is not a constant; it is however many are
+needed for each to add exactly one kind of meaning and no more. The reference implementation uses
+nine, which is offered below to ground the shape — not as a required number.
+
+### The stages, as the reference implementation names them
+
+Each stage establishes one thing and is judged before the next may begin. The right-hand column maps
+onto the altitudes of §9.
+
+```
+P0  Seed                what the business said, reorganised          ┐
+P1  Change Request      the seed restated, each row cited            ┘ Business Problem
+
+P2  Domain Model        what already exists, verified against        ┐
+                        the baseline rather than asserted            │
+P3  Analysis Loop       the decisions: reuse it, extend it,          │ Business Understanding
+                        or author it new                             │
+P4  Business Model      those decisions consolidated                 ┘
+
+P5  Business Intent     what the subdomain will be                   → Business Intent
+P6  Governance Intent   which part of the system owns what           → Governance Intent
+P7  Design Intent       the artifacts, their identities, wiring      → Design Intent
+P8  Authoring Mandate   what to build, and in what order             → Construction
+```
+
+The lower stages speak only business language; the upper ones may name identities. That ordering is
+the purity ladder of §9, and it is why a stage that reaches for vocabulary above its rung is
+detectable rather than merely discouraged.
+
+### Two lifecycles, and the boundary between them
+
+**The pipeline is where a change is carried to term; construction is where it takes material form —
+and nothing is built until the design that determines it is complete.** That boundary is the whole
+reason the two are drawn separately: everything to the left produces *meaning about* a change and
+nothing that runs, and everything to the right produces artifacts and originates no meaning.
+
+```
+Design Pipeline (P0–P8)                  Construction
+─────────────────────────────────        ─────────────────────────────────
+Input:                                   Input:
+  Problem statement                        P7 Design Intent
+                                           P8 Authoring Mandate
+
+Process:                                 Process:
+  P0 Change Seed                           Determination measured
+  P1 Change Request                          — refuse below threshold
+  P2 Domain Model                          Materialization (render)
+  P3 Analysis Loop                         Promotion    (a separate,
+  P4 Business Model                          deliberate act)
+  P5 Business Intent                       Compiler validation
+  P6 Governance Intent                     Assembly
+  P7 Design Intent                         Execution validation
+  P8 Authoring Mandate
+
+Output:                                  Output:
+  A design that determines its             Protocol artifacts, a compiled
+  artifacts, its verdicts, and             baseline contribution, and
+  the mandate to build them                behaviour observed against the
+                                           declared outcome
+```
+
+Four things in the right-hand column are worth reading closely, because each is a place a
+conventional build would have proceeded and this one does not.
+
+**Determination is measured first, and construction refuses below the threshold.** This is the gate
+that keeps the generator from becoming a second author (§9).
+
+**Materialization renders the artifact from the design alone** — never from the design merged with
+whatever is currently installed. That is what makes the same design build identically against two
+systems.
+
+**Promotion is a separate, deliberate act.** Rendering writes to a staging area; installing is its
+own step, and the gap between them is where a human decides. Collapsing them would make building and
+changing the system the same event, which §10 argues they must never be.
+
+**Execution validation closes it.** Artifacts that compile and assemble prove only that they are
+well-formed. The lifecycle is not complete until the system has run against real state and the
+outcome the problem declared has been observed.
+
+### The sequence
+
+A transformation is an **ordered sequence of gated steps**. Each step:
+
+- produces exactly **one document**, composed of *registers* — named tables with declared columns.
+  Prose in such a document is commentary and carries no governed content.
+- is judged by a **rule set declared as data**: each rule names itself, the register it governs, the
+  mechanism that evaluates it, and that mechanism's parameters. The set of mechanisms is closed, and
+  an unrecognised one fails rather than being skipped.
+- yields a **binary verdict**. Every finding names the rule and the location. A count is not a
+  verdict, and no rule is skipped once another has failed.
+- **hands off explicitly**: it declares what it emits and what its successor consumes. A handoff that
+  cannot be checked is reported as unchecked rather than passing silently, because an unchecked
+  handoff and a preserved one are otherwise indistinguishable.
+
+Steps differ in kind. Some decide; some only restate what precedes them. A step whose content its
+predecessor uniquely determines is produced mechanically rather than authored, and refuses to run
+against a predecessor that was not admitted.
+
+### What is checked between steps, not within one
+
+- **Preservation, in both directions.** A step may not drop what its predecessor committed to, and
+  may not state what its predecessor does not. Checking only the first admits invention; checking
+  only the second admits loss.
+- **Grounding.** A claim about what the existing system already provides is read from a named, frozen
+  baseline rather than asserted. Business truth, belief about what exists, and open question are kept
+  in separate registers: a belief recorded as a truth is never verified, and a question recorded as a
+  truth is answered by invention.
+- **Identity discipline.** A register may not name an implementation identity until the step that
+  assigns identities. Where a capability is named before it is identified, the provisional name and
+  the identity later bound to it are reconciled in both directions.
+
+### Where humans are engaged
+
+- A question the transformation cannot answer is **recorded as a question against a named owner**. It
+  is never filled in, and never hedged with a placeholder — a cell stating that a question is
+  unanswered reads as decided to every later step.
+- An unresolved question that blocks progress makes its document **inadmissible**. Otherwise the next
+  step answers it by invention.
+- Human semantic content enters **once**. A later step preserves it, references it, or declares that
+  it has superseded it. Silent replacement is refused.
+- **Acceptance is not admissibility.** A gate is a person accepting a document; a verdict is a rule
+  set admitting one. A document may be admissible and unaccepted, and the two are never conflated.
+
+### From design to artifacts
+
+- **Determination is measured before anything is built** — the proportion of facts an artifact
+  requires that the design actually states — and construction refuses below the declared threshold. A
+  generator that supplies a fact the design omits has become a second, ungoverned design authority.
+- A built artifact is a **function of the design alone**, never of the design and the current system.
+  Otherwise the same design builds differently against two systems and determination means nothing.
+- It follows that **amending an existing artifact is a whole redeclaration**, not a patch — and that a
+  redeclaration is compared against what it replaces and refused if it narrows it.
+- **Scheduling and amendment are different acts**, and both are realized. An artifact that already
+  exists cannot be scheduled for authoring, so a loop that realizes only what it schedules silently
+  leaves amendments unapplied — which is every change after the first one.
+- Everything the transformation asked for is built, and everything built traces to something it asked
+  for. Both directions are checked.
+
+### What proves it
+
+Document admissibility, determination in full, and faithful construction are **jointly insufficient**
+to show that anything works. A transformation is complete only when the system it produced has been
+executed against real state and the stated acceptance criteria observed. An acceptance criterion
+asserts the state it claims, never the status a call returned; a criterion satisfied by a success code
+over an operation that did the wrong thing is not satisfied, and a rule that passes because a value
+was absent has not passed.
+
+### What was exercised, and the limits of it
+
+The architecture was realized and exercised as a family of governed transformations in a reference
+domain, carried from informal business problems through construction, admission, promotion and
+execution against real state. A later transformation *extended* what an earlier one had built —
+amending existing artifacts rather than authoring new ones — which is the case every change after the
+first one presents and the one that exercises preservation, grounding and amendment together.
+
+Two observations bear on the paper's claims, stated with their limits (see §15). When a structural
+pre-filter was used to guess which parts of a change's neighborhood were relevant — a judgment the
+Knowledge Partition reserves for the worker — it surfaced artifacts the author later discarded and
+omitted ones the author kept. This is an illustration consistent with the partition, not a proof that
+relevance cannot be computed from structure; the in-principle argument in §7 carries that weight. And
+the evidentiary depth of a transformation was raised toward parity with a hand-authored reference by
+relocating evidence acquisition from the worker into a governed platform capability, without changing
+the worker, its instructions, or the validation oracle — the platform, not the worker, improved.
+
+Both observations come from a single reference domain and a single practitioner who is also the
+architecture's designer. They are existence proofs, not a controlled evaluation.
 
 Worker independence was exercised across an automated model worker, an interactive human-and-assistant
-session, and deterministic replay of a recorded response. The governed artifacts produced were identical in
-authority regardless of the worker.
+session, and deterministic replay of a recorded response. The governed artifacts produced were
+identical in authority regardless of the worker.
+
+The reference implementation is available at https://github.com/protocol-governed-computing.
 
 ## Appendix C — References
 
@@ -1225,7 +1432,7 @@ This appendix walks one real transformation from beginning to end, so that every
 in the abstract can be seen concretely. It is the transformation that authored a canonical **chain**
 subdomain — a serial, hash-linked, immutable ledger of finalized blocks — into a blockchain reference domain
 that already contained consensus, block, mempool, and related subdomains. The change-management engine that
-drives this transformation is available at https://github.com/bachipeachy/pgs_change_mgmt.
+drives this transformation is available at https://github.com/protocol-governed-computing.
 
 Throughout, watch for the one thing the architecture insists on: at no point does a human author a
 specification of the chain. The human states a problem and makes decisions; everything else is derived.
